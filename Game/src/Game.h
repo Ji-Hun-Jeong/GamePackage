@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/public/Application.h>
+#include "01.Base/World/World.h"
 
 class CGame : public Core::CApplication
 {
@@ -13,6 +14,7 @@ public:
 	void ShutDown() override;
 
 private:
-	
+	CWorld World;
 };
+
 

@@ -5,12 +5,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 namespace Core
 {
-	struct TMousePosition
-	{
-		int MouseX;
-		int MouseY;
-	};
-
 	class CWindow final
 	{
 		friend LRESULT CALLBACK ::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -38,8 +32,6 @@ namespace Core
 			return MouseMoveEvent;
 		}
 
-		const TMousePosition& GetMousePosition() const { return MousePosition; }
-
 	private:
 		HWND WindowHandle;
 		UINT ScreenWidth;
@@ -48,8 +40,6 @@ namespace Core
 		std::vector<std::unique_ptr<IWindowResize>> WindowResizeEvents;
 		std::vector<std::unique_ptr<IWindowMove>> WindowMoveEvents;
 		std::vector<std::unique_ptr<IMouseMove>> MouseMoveEvents;
-
-		TMousePosition MousePosition;
 
 	};
 

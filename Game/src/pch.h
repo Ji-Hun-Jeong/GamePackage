@@ -6,6 +6,11 @@
 #include <string>
 #include <cassert>
 #include <Windows.h>
+#include <unordered_map>
+#include <list>
+#include <queue>
+#include <set>
+#include <map>
 
 #include "Common/Define.h"
 

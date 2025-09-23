@@ -4,7 +4,7 @@
 #include <crtdbg.h>
 
 #include <Core/public/Core.h>
-#include "Game/Game.h"
+#include "Game.h"
 
 int main(int InArgc, char** InArgv)
 {
@@ -13,6 +13,6 @@ int main(int InArgc, char** InArgv)
 
 	CGame Game(1280, 960);
 	Core::CCore Core(Game);
-	Core.Run();
 
+	return Core.Run();
 }

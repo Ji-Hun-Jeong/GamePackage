@@ -53,9 +53,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int PosX = GET_X_LPARAM(lParam);
 			int PosY = GET_Y_LPARAM(lParam);
 
-			Window->MousePosition.MouseX = PosX;
-			Window->MousePosition.MouseY = PosY;
-
 			for (auto& MouseMoveEvent : Window->MouseMoveEvents)
 				MouseMoveEvent->MouseMove(PosX, PosY);
 		}
@@ -71,7 +68,6 @@ namespace Core
 		: WindowHandle(nullptr)
 		, ScreenWidth(InScreenWidth)
 		, ScreenHeight(InScreenHeight)
-		, MousePosition{}
 	{
 		HINSTANCE hInstance = GetModuleHandle(NULL);
 
@@ -86,14 +82,10 @@ namespace Core
 			assert(0);
 		}
 
-		// 1. 원하는 클라이언트 영역 크기를 RECT 구조체에 설정합니다.
 		RECT rect = { 0, 0, static_cast<LONG>(ScreenWidth), static_cast<LONG>(ScreenHeight) };
 
-		// 2. AdjustWindowRect를 호출하여 rect를 실제 윈도우 크기로 변환합니다.
-		//    창 스타일에 맞춰 정확한 크기를 계산해 줍니다.
 		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
 
-		// 3. 계산된 실제 윈도우의 너비와 높이를 구합니다.
 		UINT windowWidth = rect.right - rect.left;
 		UINT windowHeight = rect.bottom - rect.top;
 

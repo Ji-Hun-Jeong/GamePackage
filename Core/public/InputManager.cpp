@@ -1,16 +1,42 @@
 #include "pch.h"
 #include "InputManager.h"
+#include "Window.h"
 
 namespace Core
 {
 	const char KeyMapping[] =
 	{
 		VK_TAB, VK_SHIFT, VK_CONTROL, VK_MENU, VK_ESCAPE, VK_SPACE, VK_LEFT, VK_UP, VK_RIGHT, VK_DOWN,
-		VK_LBUTTON, VK_RBUTTON, VK_MBUTTON,
 		'0','1','2','3','4','5','6','7','8','9',
-		'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+		'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+		VK_LBUTTON, VK_RBUTTON, VK_MBUTTON
 	};
 	bool bPressed[(UINT)EKeyType::End] = { 0 };
+
+
+	class CSetMousePosition : public IMouseMove
+	{
+	public:
+		CSetMousePosition(CInputManager& InInputManager)
+			: InputManager(InInputManager)
+		{}
+	public:
+		void MouseMove(int InX, int InY) override
+		{
+			InputManager.MousePosition.MouseX = InX;
+			InputManager.MousePosition.MouseY = InY;
+		}
+
+	private:
+		CInputManager& InputManager;
+
+	};
+
+	CInputManager::CInputManager(CWindow& InWindow)
+		: MousePosition{}
+	{
+		InWindow.RegistMouseMoveEvent(std::make_unique<CSetMousePosition>(*this));
+	}
 
 	void CInputManager::Update()
 	{
@@ -35,11 +61,24 @@ namespace Core
 		}
 
 		UInputBlendValue InputBlendValue;
-		for (auto& Pair : InputEvents)
+		for (auto& Pair : KeyEvents)
 		{
 			InputBlendValue.RealKey = Pair.first;
-			for (auto& InputEvent : Pair.second)
-				InputEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState);
+			if (CorrectKeyState(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState) == false)
+				continue;
+
+			for (auto& KeyEvent : Pair.second)
+				KeyEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState);
+		}
+
+		for (auto& Pair : MouseEvents)
+		{
+			InputBlendValue.RealKey = Pair.first;
+			if (CorrectKeyState(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState) == false)
+				continue;
+
+			for (auto& MouseEvent : Pair.second)
+				MouseEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState, MousePosition);
 		}
 	}
 }

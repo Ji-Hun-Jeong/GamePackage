@@ -163,7 +163,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Game\Game.cpp" />
+    <ClCompile Include="src\01.Base\Object\Object\ObjectPtr.cpp" />
+    <ClCompile Include="src\03.Utils\NumberGenerator\NumberGenerator.cpp" />
+    <ClCompile Include="src\01.Base\Object\Actor\ActorComponent.cpp" />
+    <ClCompile Include="src\01.Base\Object\Actor\Actor.cpp" />
+    <ClCompile Include="src\01.Base\Object\Object\Object.cpp" />
+    <ClCompile Include="src\01.Base\Scene\Scene.cpp" />
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -171,11 +177,21 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\01.Base\World\World.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\TestScene\TestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\01.Base\Object\Object\ObjectPtr.h" />
+    <ClInclude Include="src\03.Utils\NumberGenerator\NumberGenerator.h" />
+    <ClInclude Include="src\01.Base\Object\Actor\ActorComponent.h" />
+    <ClInclude Include="src\01.Base\Object\Actor\Actor.h" />
+    <ClInclude Include="src\01.Base\Object\Object\Object.h" />
+    <ClInclude Include="src\01.Base\Scene\Scene.h" />
     <ClInclude Include="src\Common\Define.h" />
-    <ClInclude Include="src\Game\Game.h" />
+    <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\01.Base\World\World.h" />
+    <ClInclude Include="src\02.Contents\Scene\TestScene\TestScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
