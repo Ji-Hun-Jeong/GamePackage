@@ -31,6 +31,7 @@ namespace Core
 			MouseMoveEvents.push_back(std::move(InMouseMoveEvent));
 			return MouseMoveEvent;
 		}
+		HWND GetWindowHandle() { return WindowHandle; }
 
 	private:
 		HWND WindowHandle;

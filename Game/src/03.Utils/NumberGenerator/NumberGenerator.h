@@ -7,7 +7,7 @@ public:
 	CNumberGenerator()
 		: CurrentNumber(0)
 	{}
-	~CNumberGenerator() {}
+	~CNumberGenerator();
 
 public:
 	UINT GenerateNumber()

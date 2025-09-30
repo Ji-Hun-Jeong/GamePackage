@@ -15,6 +15,8 @@ public:
 
 private:
 	CWorld World;
+
+
 };
 
 

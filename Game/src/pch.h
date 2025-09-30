@@ -11,6 +11,7 @@
 #include <queue>
 #include <set>
 #include <map>
+#include <functional>
 
 #include "Common/Define.h"
 

@@ -1,18 +1,41 @@
 #include "pch.h"
 #include "World.h"
-#include "Core/public/Window.h"
-#include "02.Contents/Scene/TestScene/TestScene.h"
 
-CWorld::CWorld(Core::CWindow& InWindow)
-	: Window(InWindow)
-	, InputManager(Window)
-	, CurrentScene(nullptr)
+class CCO : public CObject
 {
-	AddScene(new TestScene(*this));
-	SetCurrentScene("Test");
+public:
+	void BeginPlay() override
+	{
+		CObject::BeginPlay();
+		std::cout << "CCO\n";
+	}
+	void Update(float InDeltaTime) override
+	{
+		CObject::Update(InDeltaTime);
+	}
+};
+
+class CO : public CObject
+{
+public:
+	void BeginPlay() override
+	{
+		CObject::BeginPlay();
+		std::cout << "CO\n";
+		auto p = GetWorld()->NewObject<CCO>(this);
+	}
+	void Update(float InDeltaTime) override
+	{
+		CObject::Update(InDeltaTime);
+	}
+};
+
+CWorld::CWorld()
+{
+	CO* co = NewObject<CO>();
 }
 
 CWorld::~CWorld()
 {
+	
 }
-

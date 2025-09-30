@@ -1,5 +1,6 @@
 #pragma once
 #include "Window.h"
+#include "InputManager.h"
 
 namespace Core
 {
@@ -17,6 +18,7 @@ namespace Core
 
 	protected:
 		CWindow Window;
+		CInputManager InputManager;
 
 	};
 }

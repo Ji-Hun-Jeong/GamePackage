@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "Game.h"
 
+
 CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
     : Core::CApplication(InScreenWidth, InScreenHeight)
-    , World(Window)
+    , World()
 {
-
 }
 
 CGame::~CGame()
@@ -15,6 +15,7 @@ CGame::~CGame()
 bool CGame::Process()
 {
     World.Update();
+    World.Render();
     return true;
 }
 

@@ -8,47 +8,67 @@ class IObjectDestroy
 
 class CObject
 {
-	friend class CWorld;
 	DONTASSN(CObject)
 public:
+	virtual ~CObject()
+	{
+		
+	}
+
+private:
+	friend class CWorld;
+	UINT InstanceId;
+	CObject* Owner;
+	class CWorld* World;
+	std::list<std::unique_ptr<CObject>> Childs;
+	bool bDestroy;
+	void SetInstanceId(UINT InInstanceId) { InstanceId = InInstanceId; }
+
+protected:
+	class CWorld* GetWorld() { return World; }
+	CObject* GetOwner() { return Owner; }
+	void AttachChild(std::unique_ptr<CObject> InChild)
+	{
+		InChild->Owner = this;
+		Childs.push_back(std::move(InChild));
+	}
+
+protected:
+	// 복사 생성같은거 때문에 생성자는 껍데기역할만 하고 나머지는 세팅해주는 식으로
 	CObject()
 		: InstanceId(0)
 		, World(nullptr)
 		, Owner(nullptr)
+		, bDestroy(false)
 	{
 	}
-
-	virtual ~CObject()
-	{
-		for (auto& ObjectDestroy : ObjectDestroyEvents)
-			ObjectDestroy->OnDestroy(*this);
-	}
-
-protected:
 	CObject(const CObject& InOther);
 	CObject(CObject&& InOther) noexcept;
 
 public:
-	virtual CObject* Clone() = 0;
+	virtual void BeginPlay()
+	{
+
+	}
 	virtual void Update(float InDeltaTime)
 	{
 		for (auto& Child : Childs)
 			Child->Update(InDeltaTime);
 	}
+	virtual void EndPlay()
+	{
+		std::cout << "EndPlay\n";
+		for (auto& ObjectDestroy : ObjectDestroyEvents)
+			ObjectDestroy->OnDestroy(*this);
+		for (auto& Child : Childs)
+			Child->EndPlay();
+	}
 
-private:
-	// Setting From World
-	void SetWorld(class CWorld* InWorld);
-	void SetInstanceId(class CNumberGenerator& InNumberGenerator);
-	void SetOwner(CObject* InOwner);
-
-	class CWorld* World;
-
-public:
+	void Destroy() { bDestroy = true; }
 	UINT GetInstanceId() const { return InstanceId; }
 
 	IObjectDestroy* RegistObjectDestroyEvent(std::unique_ptr<IObjectDestroy> InObjectDestroyEvent)
-	{ 
+	{
 		IObjectDestroy* ObjectDestroy = InObjectDestroyEvent.get();
 		ObjectDestroyEvents.push_back(std::move(InObjectDestroyEvent));
 		return ObjectDestroy;
@@ -67,14 +87,6 @@ public:
 	}
 
 private:
-	UINT InstanceId;
-
 	std::vector<std::unique_ptr<IObjectDestroy>> ObjectDestroyEvents;
 
-protected:
-	CObject* Owner;
-	std::vector<std::unique_ptr<CObject>> Childs;
-
-
 };
-

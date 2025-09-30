@@ -1,5 +1,5 @@
 #pragma once
-#include "ActorComponent.h"
+#include "../Object.h"
 
 class CActor : public CObject
 {
@@ -11,17 +11,14 @@ public:
 protected:
 	CActor(const CActor& InOther) : CObject(InOther) {}
 	CActor(CActor&& InOther) noexcept
-		: CObject(std::move(InOther)) 
+		: CObject(std::move(InOther))
 	{}
 
 public:
 	virtual void Update(float InDeltaTime)
 	{
-		CObject::Update(InDeltaTime);
+		// 자신 업뎃 하고 ActorComponent업데이트
 	}
-
-private:
-
 
 };
 

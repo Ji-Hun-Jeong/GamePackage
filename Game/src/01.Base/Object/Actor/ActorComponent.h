@@ -1,8 +1,8 @@
 #pragma once
-#include "../Object/Object.h"
+#include "../Object.h"
 
-class ActorComponent : public CObject
+class CActorComponent : public CObject
 {
-	virtual void Update(float InDeltaTime) = 0;
+	
 };
 
