@@ -27,6 +27,7 @@ public:
 	void Update(float InDeltaTime) override
 	{
 		CObject::Update(InDeltaTime);
+		Destroy();
 	}
 };
 

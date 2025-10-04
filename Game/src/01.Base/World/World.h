@@ -21,11 +21,22 @@ public:
 
 			Object->BeginPlay();
 
-			if (Object->GetOwner() == nullptr)
-				WorldObjects.emplace_back(Object);
+			WorldObjects.emplace_back(Object);
 		}
 		for (auto& WorldObject : WorldObjects)
 			WorldObject->Update(0.5f);
+
+		for (auto Iter = WorldObjects.begin(); Iter != WorldObjects.end();)
+		{
+			CObject* Object = Iter->get();
+			if (Object->bDestroy)
+			{
+				Object->EndPlay();
+				Iter = WorldObjects.erase(Iter);
+			}
+			else
+				++Iter;
+		}
 	}
 	void Render()
 	{
@@ -35,11 +46,11 @@ public:
 	T* NewObject(CObject* InOwner = nullptr)
 	{
 		T* Object = new T;
-		Object->SetInstanceId(NumberGenerator.GenerateNumber());
+		Object->InstanceId = NumberGenerator.GenerateNumber();
 		Object->World = this;
 
 		if (InOwner)
-			InOwner->AttachChild(std::unique_ptr<CObject>(Object));
+			InOwner->AttachChild(Object);
 
 		NextAddedWorldObjects.push(Object);
 		
@@ -47,8 +58,6 @@ public:
 	}
 
 private:
-	CWorldEventHandler WorldEventHandler;
-
 	std::list<std::unique_ptr<CObject>> WorldObjects;
 	std::queue<CObject*> NextAddedWorldObjects;
 

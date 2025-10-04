@@ -8,33 +8,33 @@ class IObjectDestroy
 
 class CObject
 {
-	DONTASSN(CObject)
+	DONTCOPY(CObject)
 public:
 	virtual ~CObject()
 	{
-		
+
 	}
 
 private:
 	friend class CWorld;
+	class CWorld* World;
 	UINT InstanceId;
 	CObject* Owner;
-	class CWorld* World;
-	std::list<std::unique_ptr<CObject>> Childs;
+
+	// 생명주기는 World가 관여
+	std::list<CObject*> Childs;
 	bool bDestroy;
-	void SetInstanceId(UINT InInstanceId) { InstanceId = InInstanceId; }
 
 protected:
 	class CWorld* GetWorld() { return World; }
 	CObject* GetOwner() { return Owner; }
-	void AttachChild(std::unique_ptr<CObject> InChild)
+	void AttachChild(CObject* InChild)
 	{
 		InChild->Owner = this;
-		Childs.push_back(std::move(InChild));
+		Childs.push_back(InChild);
 	}
 
 protected:
-	// 복사 생성같은거 때문에 생성자는 껍데기역할만 하고 나머지는 세팅해주는 식으로
 	CObject()
 		: InstanceId(0)
 		, World(nullptr)
@@ -42,8 +42,6 @@ protected:
 		, bDestroy(false)
 	{
 	}
-	CObject(const CObject& InOther);
-	CObject(CObject&& InOther) noexcept;
 
 public:
 	virtual void BeginPlay()
@@ -52,21 +50,26 @@ public:
 	}
 	virtual void Update(float InDeltaTime)
 	{
-		for (auto& Child : Childs)
-			Child->Update(InDeltaTime);
+		
 	}
 	virtual void EndPlay()
 	{
 		std::cout << "EndPlay\n";
+	}
+	// 표시해놓고 순회할때 지우는걸로 Render같은 때에
+	void Destroy()
+	{
+		bDestroy = true;
+		for (auto& Child : Childs)
+			Child->Destroy();
+
 		for (auto& ObjectDestroy : ObjectDestroyEvents)
 			ObjectDestroy->OnDestroy(*this);
-		for (auto& Child : Childs)
-			Child->EndPlay();
 	}
-
-	void Destroy() { bDestroy = true; }
 	UINT GetInstanceId() const { return InstanceId; }
 
+public:
+	// ObjectDestroy
 	IObjectDestroy* RegistObjectDestroyEvent(std::unique_ptr<IObjectDestroy> InObjectDestroyEvent)
 	{
 		IObjectDestroy* ObjectDestroy = InObjectDestroyEvent.get();
@@ -85,7 +88,6 @@ public:
 		}
 		return false;
 	}
-
 private:
 	std::vector<std::unique_ptr<IObjectDestroy>> ObjectDestroyEvents;
 

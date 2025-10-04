@@ -3,16 +3,12 @@
 
 class CActor : public CObject
 {
-	DONTASSN(CActor)
+	DONTCOPY(CActor)
 public:
 	CActor() {}
 	virtual ~CActor() {}
 
-protected:
-	CActor(const CActor& InOther) : CObject(InOther) {}
-	CActor(CActor&& InOther) noexcept
-		: CObject(std::move(InOther))
-	{}
+
 
 public:
 	virtual void Update(float InDeltaTime)
