@@ -167,7 +167,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Interface\Buffer.h" />
+    <ClInclude Include="Base\NumberGenerator.h" />
+    <ClInclude Include="Resource\InputLayout.h" />
+    <ClInclude Include="Resource\IResource.h" />
+    <ClInclude Include="Platform\DX\DXResourceStorage.h" />
+    <ClInclude Include="Platform\DX\DXContext.h" />
+    <ClInclude Include="Platform\DX\DXSwapChain.h" />
+    <ClInclude Include="Resource\Buffer.h" />
     <ClInclude Include="Interface\BlendState.h" />
     <ClInclude Include="Interface\ComputeShader.h" />
     <ClInclude Include="Interface\ConstBuffer.h" />
@@ -188,9 +194,17 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Base\RenderDevice.h" />
     <ClInclude Include="Base\RenderContext.h" />
+    <ClInclude Include="Base\SwapChain.h" />
+    <ClInclude Include="Resource\Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Interface\Buffer.cpp" />
+    <ClCompile Include="Base\NumberGenerator.cpp" />
+    <ClCompile Include="Resource\InputLayout.cpp" />
+    <ClCompile Include="Resource\IResource.cpp" />
+    <ClCompile Include="Platform\DX\DXResourceStorage.cpp" />
+    <ClCompile Include="Platform\DX\DXContext.cpp" />
+    <ClCompile Include="Platform\DX\DXSwapChain.cpp" />
+    <ClCompile Include="Resource\Buffer.cpp" />
     <ClCompile Include="Interface\BlendState.cpp" />
     <ClCompile Include="Interface\ComputeShader.cpp" />
     <ClCompile Include="Interface\ConstBuffer.cpp" />
@@ -215,6 +229,8 @@
     </ClCompile>
     <ClCompile Include="Base\RenderDevice.cpp" />
     <ClCompile Include="Base\RenderContext.cpp" />
+    <ClCompile Include="Base\SwapChain.cpp" />
+    <ClCompile Include="Resource\Shader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -23,29 +23,7 @@ namespace Graphics
 		RenderContext() = default;
 		virtual ~RenderContext() = 0 {}
 
-	public:
-		void IASetPrimitiveTopology(ITopology& InTopology)
-		{
-			InTopology.IASetPrimitiveTopology();
-		}
-		void VSSetShader(IVertexShader& InVertexShader)
-		{
-			InVertexShader.IASetInputLayout();
-			InVertexShader.VSSetShader();
-		}
-		void RSSetViewPort(IViewPort& InViewPort)
-		{
-			InViewPort.RSSetViewPort();
-		}
-		void RSSetRasterizerState(IRasterizerState& InRasterizerState)
-		{
-			InRasterizerState.RSSetState();
-		}
-		void PSSetShader(IPixelShader& InPixelShader)
-		{
-			InPixelShader.PSSetShader();
-		}
-		
+	public:		
 
 	private:
 

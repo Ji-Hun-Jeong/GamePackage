@@ -3,25 +3,7 @@
 
 namespace Graphics
 {
-	enum class eSementicName
-	{
-		Position, Color, UV,
-	};
-	enum class eFormat
-	{
-		Vector3, Vector2,
-	};
-	enum class eInputClass
-	{
-		VertexData,
-	};
-	struct InputElementDesc
-	{
-		eSementicName SementicName;
-		eFormat Format;
-		UINT Offset;
-		eInputClass InputClass;
-	};
+
 
 	class IVertexShader
 	{
