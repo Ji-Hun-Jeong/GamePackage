@@ -5,14 +5,13 @@ namespace Graphics
 {
 	class IPresenter
 	{
+		friend class RenderContext;
 	public:
 		IPresenter() {}
 		virtual ~IPresenter() {}
 
-	public:
+	private:
 		virtual void Present() const = 0;
-
-	protected:
 
 	};
 
@@ -22,9 +21,8 @@ namespace Graphics
 		class CDXPresenter : public IPresenter
 		{
 		public:
-			CDXPresenter(ComPtr<ID3D11DeviceContext>& _Context, ComPtr<IDXGISwapChain>& _SwapChain)
-				: Context(_Context)
-				, SwapChain(_SwapChain)
+			CDXPresenter(ComPtr<IDXGISwapChain> InSwapChain)
+				: SwapChain(InSwapChain)
 			{}
 			~CDXPresenter()
 			{}
@@ -36,8 +34,7 @@ namespace Graphics
 			}
 
 		private:
-			ComPtr<ID3D11DeviceContext>& Context;
-			ComPtr<IDXGISwapChain>& SwapChain;
+			ComPtr<IDXGISwapChain> SwapChain;
 
 		};
 	}

@@ -9,14 +9,13 @@ namespace Graphics
 	};
 	class ITopology
 	{
+		friend class RenderContext;
 	public:
 		ITopology() = default;
 		virtual ~ITopology() = default;
 
-	public:
+	private:
 		virtual void IASetPrimitiveTopology() const = 0;
-
-	protected:
 
 	};
 
@@ -26,9 +25,9 @@ namespace Graphics
 		class CDXTopology : public ITopology
 		{
 		public:
-			CDXTopology(ComPtr<ID3D11DeviceContext>& _Context, D3D11_PRIMITIVE_TOPOLOGY _TL)
-				: Context(_Context)
-				, Topology(_TL)
+			CDXTopology(ComPtr<ID3D11DeviceContext> InContext, D3D11_PRIMITIVE_TOPOLOGY InTL)
+				: Context(InContext)
+				, Topology(InTL)
 			{}
 			~CDXTopology()
 			{}
@@ -40,8 +39,8 @@ namespace Graphics
 			}
 
 		private:
+			ComPtr<ID3D11DeviceContext> Context;
 			D3D11_PRIMITIVE_TOPOLOGY Topology;
-			ComPtr<ID3D11DeviceContext>& Context;
 		};
 	}
 

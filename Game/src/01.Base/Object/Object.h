@@ -25,14 +25,15 @@ private:
 	std::list<CObject*> Childs;
 	bool bDestroy;
 
-protected:
-	class CWorld* GetWorld() { return World; }
-	CObject* GetOwner() { return Owner; }
 	void AttachChild(CObject* InChild)
 	{
 		InChild->Owner = this;
 		Childs.push_back(InChild);
 	}
+protected:
+	class CWorld* GetWorld() { return World; }
+	CObject* GetOwner() { return Owner; }
+
 
 protected:
 	CObject()

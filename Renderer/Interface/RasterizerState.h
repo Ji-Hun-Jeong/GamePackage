@@ -5,14 +5,14 @@ namespace Graphics
 {
 	class IRasterizerState
 	{
+		friend class RenderContext;
 	public:
 		IRasterizerState() = default;
 		virtual ~IRasterizerState() = default;
 
-	public:
+	private:
 		virtual void RSSetState() const = 0;
 
-	protected:
 
 	};
 
@@ -22,26 +22,24 @@ namespace Graphics
 		class CDXRasterizerState : public IRasterizerState
 		{
 		public:
-			CDXRasterizerState(ComPtr<ID3D11DeviceContext>& _Context, ComPtr<ID3D11RasterizerState>& _RS)
-				: Context(_Context)
-				, RasterizerState(_RS.Get())
+			CDXRasterizerState(ComPtr<ID3D11DeviceContext> InContext, ComPtr<ID3D11RasterizerState> InRS)
+				: Context(InContext)
+				, RasterizerState(InRS)
 			{
-				RasterizerState->AddRef();
 			}
 			~CDXRasterizerState()
 			{
-				RasterizerState->Release();
 			}
 
 		public:
 			void RSSetState() const override
 			{
-				Context->RSSetState(RasterizerState);
+				Context->RSSetState(RasterizerState.Get());
 			}
 
 		private:
-			ID3D11RasterizerState* RasterizerState;
-			ComPtr<ID3D11DeviceContext>& Context;
+			ComPtr<ID3D11RasterizerState> RasterizerState;
+			ComPtr<ID3D11DeviceContext> Context;
 		};
 	}
 

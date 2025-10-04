@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "IRenderTargetView.h"
+#include "RenderTargetView.h"
 
 namespace Graphics
 {

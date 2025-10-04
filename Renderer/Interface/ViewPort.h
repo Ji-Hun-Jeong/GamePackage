@@ -5,14 +5,13 @@ namespace Graphics
 {
 	class IViewPort
 	{
+		friend class RenderContext;
 	public:
 		IViewPort() = default;
 		virtual ~IViewPort() = default;
 
-	public:
+	private:
 		virtual void RSSetViewPort() const = 0;
-
-	protected:
 
 	};
 
@@ -22,13 +21,10 @@ namespace Graphics
 		class CDXViewPort : public IViewPort
 		{
 		public:
-			CDXViewPort(ComPtr<ID3D11DeviceContext>& _Context, const std::vector<D3D11_VIEWPORT>& _VP)
-				: Context(_Context)
-				, ViewPorts{}
-			{
-				for (auto& VP : _VP)
-					ViewPorts.push_back(VP);
-			}
+			CDXViewPort(ComPtr<ID3D11DeviceContext> InContext, std::vector<D3D11_VIEWPORT>&& InVP)
+				: Context(InContext)
+				, ViewPorts(InVP)
+			{}
 			~CDXViewPort()
 			{}
 
@@ -40,7 +36,7 @@ namespace Graphics
 
 		private:
 			std::vector<D3D11_VIEWPORT> ViewPorts;
-			ComPtr<ID3D11DeviceContext>& Context;
+			ComPtr<ID3D11DeviceContext> Context;
 		};
 	}
 

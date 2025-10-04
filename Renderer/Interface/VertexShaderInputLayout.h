@@ -25,15 +25,14 @@ namespace Graphics
 
 	class IVertexShader
 	{
+		friend class RenderContext;
 	public:
 		IVertexShader() = default;
 		virtual ~IVertexShader() = default;
 
-	public:
+	private:
 		virtual void VSSetShader() const = 0;
 		virtual void IASetInputLayout() const = 0;
-
-	protected:
 
 	};
 
@@ -43,34 +42,28 @@ namespace Graphics
 		class CDXVertexShader : public IVertexShader
 		{
 		public:
-			CDXVertexShader(ComPtr<ID3D11DeviceContext>& _Context, ComPtr<ID3D11VertexShader>& _VS, ComPtr<ID3D11InputLayout>& _IL)
-				: Context(_Context)
-				, VertexShader(_VS.Get())
-				, InputLayout(_IL.Get())
-			{
-				VertexShader->AddRef();
-				InputLayout->AddRef();
-			}
+			CDXVertexShader(ComPtr<ID3D11DeviceContext> InContext, ComPtr<ID3D11VertexShader> InVS, ComPtr<ID3D11InputLayout> InIL)
+				: Context(InContext)
+				, VertexShader(InVS)
+				, InputLayout(InIL)
+			{}
 			~CDXVertexShader()
-			{
-				VertexShader->Release();
-				InputLayout->Release();
-			}
+			{}
 
 		public:
 			void VSSetShader() const override
 			{
-				Context->VSSetShader(VertexShader, nullptr, 0);
+				Context->VSSetShader(VertexShader.Get(), nullptr, 0);
 			}
 			void IASetInputLayout() const override
 			{
-				Context->IASetInputLayout(InputLayout);
+				Context->IASetInputLayout(InputLayout.Get());
 			}
 
 		private:
-			ID3D11VertexShader* VertexShader;
-			ID3D11InputLayout* InputLayout;
-			ComPtr<ID3D11DeviceContext>& Context;
+			ComPtr<ID3D11VertexShader> VertexShader;
+			ComPtr<ID3D11InputLayout> InputLayout;
+			ComPtr<ID3D11DeviceContext> Context;
 		};
 	}
 

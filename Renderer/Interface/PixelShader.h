@@ -5,14 +5,13 @@ namespace Graphics
 {
 	class IPixelShader
 	{
+		friend class RenderContext;
 	public:
 		IPixelShader() = default;
 		virtual ~IPixelShader() = default;
 
-	public:
+	private:
 		virtual void PSSetShader() const = 0;
-
-	protected:
 
 	};
 
@@ -22,26 +21,24 @@ namespace Graphics
 		class CDXPixelShader : public IPixelShader
 		{
 		public:
-			CDXPixelShader(ComPtr<ID3D11DeviceContext>& _Context, ComPtr<ID3D11PixelShader>& _PS)
-				: Context(_Context)
-				, PixelShader(_PS.Get())
+			CDXPixelShader(ComPtr<ID3D11DeviceContext> InContext, ComPtr<ID3D11PixelShader> InPS)
+				: Context(InContext)
+				, PixelShader(InPS)
 			{
-				PixelShader->AddRef();
 			}
 			~CDXPixelShader()
 			{
-				PixelShader->Release();
 			}
 
 		public:
 			void PSSetShader() const override
 			{
-				Context->PSSetShader(PixelShader, nullptr, 0);
+				Context->PSSetShader(PixelShader.Get(), nullptr, 0);
 			}
 
 		private:
-			ID3D11PixelShader* PixelShader;
-			ComPtr<ID3D11DeviceContext>& Context;
+			ComPtr<ID3D11PixelShader> PixelShader;
+			ComPtr<ID3D11DeviceContext> Context;
 		};
 	}
 

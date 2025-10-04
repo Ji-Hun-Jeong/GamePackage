@@ -5,16 +5,15 @@ namespace Graphics
 {
 	class ISampler
 	{
+		friend class RenderContext;
 	public:
 		ISampler() = default;
 		virtual ~ISampler() = default;
 
-	public:
+	private:
 		virtual void VSSetSampler(UINT _StartSlot) const = 0;
 		virtual void CSSetSampler(UINT _StartSlot) const = 0;
 		virtual void PSSetSampler(UINT _StartSlot) const = 0;
-
-	protected:
 
 	};
 
@@ -24,39 +23,30 @@ namespace Graphics
 		class CDXSampler : public ISampler
 		{
 		public:
-			CDXSampler(ComPtr<ID3D11DeviceContext>& _Context, const std::vector<ComPtr<ID3D11SamplerState>>& _SS)
-				: Context(_Context)
-				, Samplers{}
-			{
-				for (auto& SS : _SS)
-				{
-					SS->AddRef();
-					Samplers.push_back(SS.Get());
-				}
-			}
+			CDXSampler(ComPtr<ID3D11DeviceContext> InContext, std::vector<ComPtr<ID3D11SamplerState>>&& InSamplers)
+				: Context(InContext)
+				, Samplers(InSamplers)
+			{}
 			~CDXSampler()
-			{
-				for (auto SS : Samplers)
-					SS->Release();
-			}
+			{}
 
 		public:
 			void VSSetSampler(UINT _StartSlot) const override
 			{
-				Context->VSSetSamplers(_StartSlot, Samplers.size(), Samplers.data());
+				Context->VSSetSamplers(_StartSlot, Samplers.size(), Samplers.data()->GetAddressOf());
 			}
 			void CSSetSampler(UINT _StartSlot) const override
 			{
-				Context->CSSetSamplers(_StartSlot, Samplers.size(), Samplers.data());
+				Context->CSSetSamplers(_StartSlot, Samplers.size(), Samplers.data()->GetAddressOf());
 			}
 			void PSSetSampler(UINT _StartSlot) const override
 			{
-				Context->PSSetSamplers(_StartSlot, Samplers.size(), Samplers.data());
+				Context->PSSetSamplers(_StartSlot, Samplers.size(), Samplers.data()->GetAddressOf());
 			}
 
 		private:
-			std::vector<ID3D11SamplerState*> Samplers;
-			ComPtr<ID3D11DeviceContext>& Context;
+			std::vector<ComPtr<ID3D11SamplerState>> Samplers;
+			ComPtr<ID3D11DeviceContext> Context;
 		};
 	}
 

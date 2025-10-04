@@ -27,49 +27,55 @@
     <ClInclude Include="Platform\DX\DX.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IBlendState.h">
+    <ClInclude Include="Interface\BlendState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IComputeShader.h">
+    <ClInclude Include="Interface\ComputeShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IConstBuffer.h">
+    <ClInclude Include="Interface\ConstBuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IDepthStencilState.h">
+    <ClInclude Include="Interface\DepthStencilState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IDraw.h">
+    <ClInclude Include="Interface\Draw.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IMesh.h">
+    <ClInclude Include="Interface\Mesh.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IPixelShader.h">
+    <ClInclude Include="Interface\PixelShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IRasterizerState.h">
+    <ClInclude Include="Interface\RasterizerState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IRenderTargetView.h">
+    <ClInclude Include="Interface\RenderTargetView.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\ISampler.h">
+    <ClInclude Include="Interface\Sampler.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IShaderResource.h">
+    <ClInclude Include="Interface\ShaderResource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\ITopology.h">
+    <ClInclude Include="Interface\Topology.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IUnorderedAccessView.h">
+    <ClInclude Include="Interface\UnorderedAccessView.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IVertexShaderInputLayout.h">
+    <ClInclude Include="Interface\VertexShaderInputLayout.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Interface\IViewPort.h">
+    <ClInclude Include="Interface\ViewPort.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\RenderContext.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\Buffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,49 +89,55 @@
     <ClCompile Include="Platform\DX\DXDevice.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IBlendState.cpp">
+    <ClCompile Include="Interface\BlendState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IComputeShader.cpp">
+    <ClCompile Include="Interface\ComputeShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IConstBuffer.cpp">
+    <ClCompile Include="Interface\ConstBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IDepthStencilState.cpp">
+    <ClCompile Include="Interface\DepthStencilState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IDraw.cpp">
+    <ClCompile Include="Interface\Draw.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IMesh.cpp">
+    <ClCompile Include="Interface\Mesh.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IPixelShader.cpp">
+    <ClCompile Include="Interface\PixelShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IRasterizerState.cpp">
+    <ClCompile Include="Interface\RasterizerState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IRenderTargetView.cpp">
+    <ClCompile Include="Interface\RenderTargetView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\ISampler.cpp">
+    <ClCompile Include="Interface\Sampler.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IShaderResource.cpp">
+    <ClCompile Include="Interface\ShaderResource.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\ITopology.cpp">
+    <ClCompile Include="Interface\Topology.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IUnorderedAccessView.cpp">
+    <ClCompile Include="Interface\UnorderedAccessView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IVertexShaderInputLayout.cpp">
+    <ClCompile Include="Interface\VertexShaderInputLayout.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Interface\IViewPort.cpp">
+    <ClCompile Include="Interface\ViewPort.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\RenderContext.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface\Buffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
