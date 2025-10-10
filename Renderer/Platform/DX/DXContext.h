@@ -1,31 +1,40 @@
 #pragma once
 #include "Base/RenderContext.h"
 #include "DX.h"
+#include "DXResourceStorage.h"
 
 namespace Graphics::DX
 {
 	using Microsoft::WRL::ComPtr;
-	class CDXContext : public RenderContext
+	class CDXContext : public CRenderContext
 	{
 	public:
-		CDXContext()
-			: Context(nullptr)
+		CDXContext(ComPtr<ID3D11DeviceContext> InContext, CDXResourceStorage& InDXResourceStorage)
+			: CRenderContext()
+			, Context(InContext)
+			, DXResourceStorage(InDXResourceStorage)
 		{}
 		~CDXContext() = default;
 
 	public:
-		void Initalize(ComPtr<ID3D11DeviceContext> InContext)
+		void OMSetRenderTarget(uint32_t InNumViews, const CRenderTargetView& InRenderTargetView, const CDepthStencilView* InDepthStencilView) override;
+		void ClearRenderTarget(const CRenderTargetView& InRenderTargetView, const float* InClearColor) override;
+		void IASetInputLayout(const CInputLayout& InInputLayout) override;
+		void IASetPrimitiveTopology(ETopology InTopology) override;
+		void IASetVertexBuffer(const CBuffer& InVertexBuffer, const uint32_t* InStride, const uint32_t* InOffset) override;
+		void IASetIndexBuffer(const CBuffer& InIndexBuffer, EGIFormat InFormat, uint32_t InOffset) override;
+		void VSSetShader(const CVertexShader& InVertexShader) override;
+		void RSSetViewPort(const TViewPort& InViewPort) override;
+		void RSSetState(const CRasterizerState& InRasterizerState) override;
+		void PSSetShader(const CPixelShader& InPixelShader) override;
+		void DrawIndexed(uint32_t InIndexCount) override
 		{
-			Context = InContext;
+			Context->DrawIndexed(InIndexCount, 0, 0);
 		}
-		void IASetInputLayout(class CInputLayout& InInputLayout)
-		{
-
-		}
-
 	private:
 		ComPtr<ID3D11DeviceContext> Context;
-		
+		CDXResourceStorage& DXResourceStorage;
+
 	};
 }
 

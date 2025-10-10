@@ -84,4 +84,8 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resources\shader\BasicVertexShader.hlsl" />
+    <FxCompile Include="resources\shader\BasicPixelShader.hlsl" />
+  </ItemGroup>
 </Project>

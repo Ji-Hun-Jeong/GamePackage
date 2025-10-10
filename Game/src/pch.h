@@ -14,11 +14,9 @@
 #include <functional>
 
 #include "Common/Define.h"
+#include "Renderer/pch.h"
 
 /*
-Game쪽에서만
-dll쪽은 모든걸 생포인터로 쓰고 stl사용 x
-
 생포인터: 내가 이녀석의 생명주기를 관리할거지만 너가 이걸 삭제하지 않는다면 내가 너한테 참조를 줄 순 있어.
 
 shared: 누구에게나 이녀석의 생명주기를 관리할 권한이 있고 참조도 가질 수 있어.

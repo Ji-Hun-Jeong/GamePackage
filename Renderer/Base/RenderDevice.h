@@ -1,16 +1,31 @@
 #pragma once
-#include "Resource/Buffer.h"
-#include "Resource/Shader.h"
-#include "Resource/InputLayout.h"
+#include "RenderContext.h"
+#include "RenderSwapChain.h"
 
 namespace Graphics
 {
-	class RenderDevice
+	struct TDeviceInitData
+	{
+		CRenderContext* Context;
+		CRenderSwapChain* SwapChain;
+	};
+
+	class CRenderDevice
 	{
 	public:
-		RenderDevice() = default;
-		virtual ~RenderDevice() = 0 {}
+		CRenderDevice() = default;
+		virtual ~CRenderDevice() = 0 {}
 
+	public:
+		virtual TDeviceInitData CreateContextAndSwapChain() = 0;
+		virtual std::unique_ptr<CPixelShader> CreatePixelShader(const std::wstring& InShaderPath) = 0;
+		virtual std::pair<std::unique_ptr<CVertexShader>, std::unique_ptr<CInputLayout>> CreateVertexShaderAndInputLayout(const std::wstring& InShaderPath
+			, const std::vector<TInputElementDesc>& InInputElementDescs) = 0;
+		virtual std::unique_ptr<CBuffer> CreateBuffer(const TBufferDesc& InBufferDesc, TBufferInitalizeData* InBufferInitalizeData) = 0;
+		virtual std::unique_ptr<CTexture2D> CreateTexture2D(const TTexture2DDesc& InTexture2DDesc, TBufferInitalizeData* InBufferInitalizeData) = 0;
+		virtual std::unique_ptr<CRenderTargetView> CreateRenderTargetView(const CTexture2D& InTexture2D) = 0;
+		virtual std::unique_ptr<CRasterizerState> CreateRasterizerState(const TRasterizerDesc& InRasterizerDesc) = 0;
+		virtual std::unique_ptr<CDepthStencilView> CreateDepthStencilView(const CTexture2D& InTexture2D) = 0;
 
 	};
 }

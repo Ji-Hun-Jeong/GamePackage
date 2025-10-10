@@ -86,6 +86,9 @@
     <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)build\intermediate\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -168,58 +171,46 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Base\NumberGenerator.h" />
-    <ClInclude Include="Resource\InputLayout.h" />
-    <ClInclude Include="Resource\IResource.h" />
+    <ClInclude Include="Base\GeometryGenerator.h" />
+    <ClInclude Include="RHI\RHIManager.h" />
+    <ClInclude Include="Rendering\MeshManager.h" />
+    <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="RHI\DepthStencilView.h" />
+    <ClInclude Include="RHI\RasterizerState.h" />
+    <ClInclude Include="RHI\RenderTargetView.h" />
+    <ClInclude Include="RHI\InputLayout.h" />
+    <ClInclude Include="RHI\RHI.h" />
     <ClInclude Include="Platform\DX\DXResourceStorage.h" />
     <ClInclude Include="Platform\DX\DXContext.h" />
     <ClInclude Include="Platform\DX\DXSwapChain.h" />
-    <ClInclude Include="Resource\Buffer.h" />
-    <ClInclude Include="Interface\BlendState.h" />
-    <ClInclude Include="Interface\ComputeShader.h" />
-    <ClInclude Include="Interface\ConstBuffer.h" />
-    <ClInclude Include="Interface\DepthStencilState.h" />
-    <ClInclude Include="Interface\Draw.h" />
-    <ClInclude Include="Interface\Mesh.h" />
-    <ClInclude Include="Interface\PixelShader.h" />
-    <ClInclude Include="Interface\RasterizerState.h" />
-    <ClInclude Include="Interface\RenderTargetView.h" />
-    <ClInclude Include="Interface\Sampler.h" />
-    <ClInclude Include="Interface\ShaderResource.h" />
-    <ClInclude Include="Interface\Topology.h" />
-    <ClInclude Include="Interface\UnorderedAccessView.h" />
-    <ClInclude Include="Interface\VertexShaderInputLayout.h" />
-    <ClInclude Include="Interface\ViewPort.h" />
+    <ClInclude Include="RHI\Buffer.h" />
     <ClInclude Include="Platform\DX\DX.h" />
     <ClInclude Include="Platform\DX\DXDevice.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Base\RenderDevice.h" />
     <ClInclude Include="Base\RenderContext.h" />
-    <ClInclude Include="Base\SwapChain.h" />
-    <ClInclude Include="Resource\Shader.h" />
+    <ClInclude Include="Base\RenderSwapChain.h" />
+    <ClInclude Include="RHI\PixelShader.h" />
+    <ClInclude Include="RenderCommon.h" />
+    <ClInclude Include="RHI\VertexShader.h" />
+    <ClInclude Include="RHI\Texture2D.h" />
+    <ClInclude Include="RHI\ViewPort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\NumberGenerator.cpp" />
-    <ClCompile Include="Resource\InputLayout.cpp" />
-    <ClCompile Include="Resource\IResource.cpp" />
+    <ClCompile Include="Base\GeometryGenerator.cpp" />
+    <ClCompile Include="RHI\RHIManager.cpp" />
+    <ClCompile Include="Rendering\MeshManager.cpp" />
+    <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="RHI\DepthStencilView.cpp" />
+    <ClCompile Include="RHI\RasterizerState.cpp" />
+    <ClCompile Include="RHI\RenderTargetView.cpp" />
+    <ClCompile Include="RHI\InputLayout.cpp" />
+    <ClCompile Include="RHI\RHI.cpp" />
     <ClCompile Include="Platform\DX\DXResourceStorage.cpp" />
     <ClCompile Include="Platform\DX\DXContext.cpp" />
     <ClCompile Include="Platform\DX\DXSwapChain.cpp" />
-    <ClCompile Include="Resource\Buffer.cpp" />
-    <ClCompile Include="Interface\BlendState.cpp" />
-    <ClCompile Include="Interface\ComputeShader.cpp" />
-    <ClCompile Include="Interface\ConstBuffer.cpp" />
-    <ClCompile Include="Interface\DepthStencilState.cpp" />
-    <ClCompile Include="Interface\Draw.cpp" />
-    <ClCompile Include="Interface\Mesh.cpp" />
-    <ClCompile Include="Interface\PixelShader.cpp" />
-    <ClCompile Include="Interface\RasterizerState.cpp" />
-    <ClCompile Include="Interface\RenderTargetView.cpp" />
-    <ClCompile Include="Interface\Sampler.cpp" />
-    <ClCompile Include="Interface\ShaderResource.cpp" />
-    <ClCompile Include="Interface\Topology.cpp" />
-    <ClCompile Include="Interface\UnorderedAccessView.cpp" />
-    <ClCompile Include="Interface\VertexShaderInputLayout.cpp" />
-    <ClCompile Include="Interface\ViewPort.cpp" />
+    <ClCompile Include="RHI\Buffer.cpp" />
     <ClCompile Include="Platform\DX\DXDevice.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -229,8 +220,11 @@
     </ClCompile>
     <ClCompile Include="Base\RenderDevice.cpp" />
     <ClCompile Include="Base\RenderContext.cpp" />
-    <ClCompile Include="Base\SwapChain.cpp" />
-    <ClCompile Include="Resource\Shader.cpp" />
+    <ClCompile Include="Base\RenderSwapChain.cpp" />
+    <ClCompile Include="RHI\PixelShader.cpp" />
+    <ClCompile Include="RHI\VertexShader.cpp" />
+    <ClCompile Include="RHI\Texture2D.cpp" />
+    <ClCompile Include="RHI\ViewPort.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

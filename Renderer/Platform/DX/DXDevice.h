@@ -8,133 +8,45 @@
 namespace Graphics::DX
 {
 	using Microsoft::WRL::ComPtr;
-	class CDXDevice : public RenderDevice
+	class CDXDevice : public CRenderDevice
 	{
 	public:
 		CDXDevice(HWND InWindowHandle);
-		~CDXDevice() = default;
+		~CDXDevice();
 
 	public:
-		void CreateContextAndSwapChain(class CDXContext& InContext, class CDXSwapChain& InSwapChain);
+		// unique_ptr전방선언할 때는 네임스페이스까지 다 써서 명시해주기
+		// 지금은 가상함수를 구현하는거라서 RenderDevice쪽에 선언되어있음
+		TDeviceInitData CreateContextAndSwapChain() override;
 
 	public:
-		void CreatePixelShader(std::shared_ptr<CShader>& InPixelShader)
+		std::unique_ptr<CPixelShader> CreatePixelShader(const std::wstring& InShaderPath);
+		std::pair<std::unique_ptr<CVertexShader>, std::unique_ptr<CInputLayout>> CreateVertexShaderAndInputLayout(const std::wstring& InShaderPath
+			, const std::vector<TInputElementDesc>& InInputElementDescs);
+		std::unique_ptr<CBuffer> CreateBuffer(const TBufferDesc& InBufferDesc, TBufferInitalizeData* InBufferInitalizeData);
+		std::unique_ptr<CTexture2D> CreateTexture2D(const TTexture2DDesc& InTexture2DDesc, TBufferInitalizeData* InBufferInitalizeData);
+		std::unique_ptr<CRenderTargetView> CreateRenderTargetView(const CTexture2D& InTexture2D);
+		std::unique_ptr<CRasterizerState> CreateRasterizerState(const TRasterizerDesc& InRasterizerDesc);
+		std::unique_ptr<CDepthStencilView> CreateDepthStencilView(const CTexture2D& InTexture2D);
+
+
+	private:
+		void ReleaseResource(size_t InResourceHandle)
 		{
-			ComPtr<ID3DBlob> shaderBlob;
-			ComPtr<ID3DBlob> errorBlob;
-
-			UINT compileFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-			compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-			const std::wstring& Wstr = InPixelShader->GetShaderPath();
-			HRESULT hr = D3DCompileFromFile(
-				Wstr.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
-				"ps_5_0", compileFlags, 0, shaderBlob.GetAddressOf(), errorBlob.GetAddressOf());
-			if (FAILED(hr))	assert(0);
-
-			ComPtr<ID3D11PixelShader> PixelShader;
-			hr = Device->CreatePixelShader(shaderBlob->GetBufferPointer(),
-				shaderBlob->GetBufferSize(), NULL,
-				PixelShader.GetAddressOf());
-			if (FAILED(hr))	assert(0);
-
-			InitalizeResource(InPixelShader.get(), PixelShader);
-		}
-		void CreateVertexShader(std::shared_ptr<CShader>& InShader, std::shared_ptr<CInputLayout>& InInputLayout)
-		{
-			ComPtr<ID3DBlob> shaderBlob;
-			ComPtr<ID3DBlob> errorBlob;
-
-			UINT compileFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-			compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-			const std::wstring& WStr = InShader->GetShaderPath();
-
-			HRESULT hr = D3DCompileFromFile(
-				WStr.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
-				"vs_5_0", compileFlags, 0, shaderBlob.GetAddressOf(), errorBlob.GetAddressOf());
-			if (FAILED(hr))	assert(0);
-
-			ComPtr<ID3D11VertexShader> VertexShader;
-			hr = Device->CreateVertexShader(shaderBlob->GetBufferPointer(),
-				shaderBlob->GetBufferSize(), NULL,
-				VertexShader.GetAddressOf());
-			if (FAILED(hr))	assert(0);
-
-			std::vector<D3D11_INPUT_ELEMENT_DESC> BasicInputElements;
-			auto& InputElementDescs = InInputLayout->GetInputElementDescs();
-			for (auto IED : InputElementDescs)
-			{
-				D3D11_INPUT_ELEMENT_DESC Desc;
-				ZeroMemory(&Desc, sizeof(Desc));
-				switch (IED.SementicName)
-				{
-				case ESementicName::Position:
-					Desc.SemanticName = "POSITION";
-					break;
-				case ESementicName::Color:
-					Desc.SemanticName = "COLOR";
-					break;
-				case ESementicName::UV:
-					Desc.SemanticName = "TEXCOORD";
-					break;
-				default:
-					assert(0);
-				}
-				switch (IED.Format)
-				{
-				case EFormat::Vector3:
-					Desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
-					break;
-				case EFormat::Vector2:
-					Desc.Format = DXGI_FORMAT_R32G32_FLOAT;
-					break;
-				default:
-					assert(0);
-				}
-				Desc.AlignedByteOffset = IED.Offset;
-				switch (IED.InputClass)
-				{
-				case EInputClass::VertexData:
-					Desc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-					break;
-				default:
-					assert(0);
-				}
-				BasicInputElements.push_back(Desc);
-			}
-			
-			ComPtr<ID3D11InputLayout> InputLayout;
-			hr = Device->CreateInputLayout(BasicInputElements.data(), UINT(BasicInputElements.size()),
-				shaderBlob->GetBufferPointer(),
-				shaderBlob->GetBufferSize(), InputLayout.GetAddressOf());
-			if (FAILED(hr))	assert(0);
-
-			InitalizeResource(InShader.get(), VertexShader);
-			InitalizeResource(InInputLayout.get(), InputLayout);
+			DXResourceStorage.VacateResource(InResourceHandle);
 		}
 
 	private:
-		void InitalizeResource(IResource* InResource, ComPtr<ID3D11DeviceChild> InRawResource)
-		{
-			size_t ResourceHandle = DXResourceStorage.InsertResource(InRawResource);
-			InResource->SetResourceHandle(ResourceHandle);
-			InResource->SetReleaseResourceEvent([this](size_t InResourceHandle)
-				{
-					DXResourceStorage.EraseResource(InResourceHandle);
-				});
-		}
+		CDXResourceStorage DXResourceStorage;
 
-	private:
 		ComPtr<ID3D11Device> Device;
 
 		HWND WindowHandle;
 		UINT ScreenWidth;
 		UINT ScreenHeight;
 
-		CDXResourceStorage DXResourceStorage;
+		std::unique_ptr<CRenderContext> Context;
+		std::unique_ptr<CRenderSwapChain> SwapChain;
 
 	};
 }

@@ -5,6 +5,7 @@
 namespace Graphics::DX
 {
 	using Microsoft::WRL::ComPtr;
+
 	class CDXResourceStorage
 	{
 	public:
@@ -21,17 +22,17 @@ namespace Graphics::DX
 			Resources[ResourceHandle] = InResource;
 			return ResourceHandle;
 		}
-		void EraseResource(size_t InResourceHandle)
+		void VacateResource(size_t InResourceHandle)
 		{
 			Resources[InResourceHandle] = nullptr;
 			HandleGenerator.ReleaseNumber(InResourceHandle);
 		}
 
 		template <typename T>
-		T* GetResource(size_t InResourceId)
+		T* GetResource(size_t InResourceHandle)
 		{
-			assert(Resources.size() > InResourceId);
-			return static_cast<T*>(Resources[InResourceId].Get());
+			assert(Resources.size() > InResourceHandle);
+			return static_cast<T*>(Resources[InResourceHandle].Get());
 		}
 
 	private:
