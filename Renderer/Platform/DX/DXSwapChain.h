@@ -1,24 +1,26 @@
 #pragma once
 #include "Base/RenderSwapChain.h"
 #include "DX.h"
+#include "DXResourceStorage.h"
 
 namespace Graphics::DX
 {
 	using Microsoft::WRL::ComPtr;
 	class CDXSwapChain : public CRenderSwapChain
 	{
+		friend class CDXInfra;
+		CDXSwapChain(ComPtr<IDXGISwapChain> InSwapChain, UINT InNumOfMultiSamplingLevel, CDXResourceStorage& InDXResourceStorage);
 	public:
-		CDXSwapChain(std::unique_ptr<class CTexture2D> InWindowTextureBuffer, ComPtr<IDXGISwapChain> InSwapChain, UINT InNumOfMultiSamplingLevel)
-			: CRenderSwapChain(std::move(InWindowTextureBuffer))
-			, SwapChain(InSwapChain)
-			, NumOfMultiSamplingLevel(InNumOfMultiSamplingLevel)
-		{}
 		~CDXSwapChain() 
 		{
-			int a = 1;
+			
 		}
 
 	public:
+		const CTexture2D* GetWindowTextureBuffer() const override
+		{
+			return WindowTexture.get();
+		}
 		void Present() override
 		{
 			SwapChain->Present(1, 0);
@@ -28,6 +30,9 @@ namespace Graphics::DX
 		ComPtr<IDXGISwapChain> SwapChain;
 		UINT NumOfMultiSamplingLevel;
 
+		CDXResourceStorage& DXResourceStorage;
+
+		std::unique_ptr<CTexture2D> WindowTexture;
 	};
 }
 

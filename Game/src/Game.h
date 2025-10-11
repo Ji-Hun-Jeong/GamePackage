@@ -1,8 +1,9 @@
 #pragma once
 #include <Core/public/Application.h>
-#include <Renderer/Platform/DX/DXDevice.h>
+#include <Renderer/Platform/DX/DXInfra.h>
 #include <Renderer/Rendering/Mesh.h>
 #include "01.Base/World/World.h"
+#include "04.Renderer/Renderer.h"
 
 /*
 리소스를 개발단계에서 사용한다음 빌드폴더에도 넣는 방법
@@ -22,7 +23,7 @@ class CGame : public Core::CApplication
 public:
 	CGame(UINT InScreenWidth, UINT InScreenHeight);
 	~CGame();
-	
+
 public:
 	bool Process() override;
 	void ShutDown() override;
@@ -31,9 +32,11 @@ private:
 	CWorld World;
 
 	Graphics::CMesh* Mesh = nullptr;
-	std::unique_ptr<Graphics::CRenderDevice> Device;
-	Graphics::CRenderContext* Context;
-	Graphics::CRenderSwapChain* SwapChain;
+
+	Graphics::DX::CDXInfra GraphicInfra;
+	Graphics::CRenderDevice& Device;
+	Graphics::CRenderContext& Context;
+	Graphics::CRenderSwapChain& SwapChain;
 
 };
 

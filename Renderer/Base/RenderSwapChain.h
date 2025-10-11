@@ -5,18 +5,13 @@ namespace Graphics
 	class CRenderSwapChain
 	{
 	public:
-		CRenderSwapChain(std::unique_ptr<class CTexture2D> InWindowTextureBuffer)
-			: WindowTextureBuffer(std::move(InWindowTextureBuffer))
-		{
-		}
+		CRenderSwapChain() = default;
 		virtual ~CRenderSwapChain() = default;
 
 	public:
 		virtual void Present() = 0;
-		const class CTexture2D* GetWindowTextureBuffer() const { return WindowTextureBuffer.get(); }
+		virtual const class CTexture2D* GetWindowTextureBuffer() const = 0;
 
-	private:
-		std::unique_ptr<class CTexture2D> WindowTextureBuffer;
 
 	};
 }

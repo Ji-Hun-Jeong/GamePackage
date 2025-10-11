@@ -8,12 +8,13 @@ namespace Graphics::DX
 	using Microsoft::WRL::ComPtr;
 	class CDXContext : public CRenderContext
 	{
-	public:
+		friend class CDXInfra;
 		CDXContext(ComPtr<ID3D11DeviceContext> InContext, CDXResourceStorage& InDXResourceStorage)
 			: CRenderContext()
 			, Context(InContext)
 			, DXResourceStorage(InDXResourceStorage)
 		{}
+	public:
 		~CDXContext() = default;
 
 	public:
@@ -31,6 +32,7 @@ namespace Graphics::DX
 		{
 			Context->DrawIndexed(InIndexCount, 0, 0);
 		}
+
 	private:
 		ComPtr<ID3D11DeviceContext> Context;
 		CDXResourceStorage& DXResourceStorage;

@@ -10,14 +10,14 @@ namespace Graphics::DX
 	using Microsoft::WRL::ComPtr;
 	class CDXDevice : public CRenderDevice
 	{
+		friend class CDXInfra;
+		CDXDevice(ComPtr<ID3D11Device> InDevice, CDXResourceStorage& InDXResourceStorage);
 	public:
-		CDXDevice(HWND InWindowHandle);
 		~CDXDevice();
 
 	public:
 		// unique_ptr전방선언할 때는 네임스페이스까지 다 써서 명시해주기
 		// 지금은 가상함수를 구현하는거라서 RenderDevice쪽에 선언되어있음
-		TDeviceInitData CreateContextAndSwapChain() override;
 
 	public:
 		std::unique_ptr<CPixelShader> CreatePixelShader(const std::wstring& InShaderPath);
@@ -31,22 +31,15 @@ namespace Graphics::DX
 
 
 	private:
-		void ReleaseResource(size_t InResourceHandle)
+		void ReleaseResource(size_t InRHIHandle)
 		{
-			DXResourceStorage.VacateResource(InResourceHandle);
+			DXResourceStorage.VacateResource(InRHIHandle);
 		}
 
 	private:
-		CDXResourceStorage DXResourceStorage;
+		CDXResourceStorage& DXResourceStorage;
 
 		ComPtr<ID3D11Device> Device;
-
-		HWND WindowHandle;
-		UINT ScreenWidth;
-		UINT ScreenHeight;
-
-		std::unique_ptr<CRenderContext> Context;
-		std::unique_ptr<CRenderSwapChain> SwapChain;
 
 	};
 }

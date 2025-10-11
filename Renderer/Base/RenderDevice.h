@@ -4,12 +4,6 @@
 
 namespace Graphics
 {
-	struct TDeviceInitData
-	{
-		CRenderContext* Context;
-		CRenderSwapChain* SwapChain;
-	};
-
 	class CRenderDevice
 	{
 	public:
@@ -17,7 +11,6 @@ namespace Graphics
 		virtual ~CRenderDevice() = 0 {}
 
 	public:
-		virtual TDeviceInitData CreateContextAndSwapChain() = 0;
 		virtual std::unique_ptr<CPixelShader> CreatePixelShader(const std::wstring& InShaderPath) = 0;
 		virtual std::pair<std::unique_ptr<CVertexShader>, std::unique_ptr<CInputLayout>> CreateVertexShaderAndInputLayout(const std::wstring& InShaderPath
 			, const std::vector<TInputElementDesc>& InInputElementDescs) = 0;

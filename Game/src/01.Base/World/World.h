@@ -40,10 +40,7 @@ public:
 				i += 1;
 		}
 	}
-	void Render()
-	{
-		
-	}
+
 	template <typename T>
 	T* NewObject(CObject* InOwner = nullptr)
 	{
