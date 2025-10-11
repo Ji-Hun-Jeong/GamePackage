@@ -23,19 +23,21 @@ public:
 
 			WorldObjects.emplace_back(Object);
 		}
+
 		for (auto& WorldObject : WorldObjects)
 			WorldObject->Update(0.5f);
 
-		for (auto Iter = WorldObjects.begin(); Iter != WorldObjects.end();)
+		for (size_t i = 0; i < WorldObjects.size();)
 		{
-			CObject* Object = Iter->get();
+			CObject* Object = WorldObjects[i].get();
 			if (Object->bDestroy)
 			{
 				Object->EndPlay();
-				Iter = WorldObjects.erase(Iter);
+				WorldObjects[i] = std::move(WorldObjects.back());
+				WorldObjects.pop_back();
 			}
 			else
-				++Iter;
+				i += 1;
 		}
 	}
 	void Render()
@@ -58,7 +60,7 @@ public:
 	}
 
 private:
-	std::list<std::unique_ptr<CObject>> WorldObjects;
+	std::vector<std::unique_ptr<CObject>> WorldObjects;
 	std::queue<CObject*> NextAddedWorldObjects;
 
 	CNumberGenerator NumberGenerator;
