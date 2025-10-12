@@ -121,7 +121,7 @@ namespace Graphics::DX
 		);
 	}
 
-	std::unique_ptr<CBuffer> CDXDevice::CreateBuffer(const TBufferDesc& InBufferDesc, TBufferInitalizeData* InBufferInitalizeData)
+	std::unique_ptr<CBuffer> CDXDevice::CreateBuffer(const TBufferDesc& InBufferDesc, const TBufferInitalizeData* InBufferInitalizeData)
 	{
 		if (InBufferDesc.Usage == EUsage::UsageImmutable && InBufferInitalizeData == nullptr)
 			assert(0);
@@ -145,7 +145,7 @@ namespace Graphics::DX
 		return std::make_unique<CBuffer>(BufferHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), InBufferDesc);
 	}
 
-	std::unique_ptr<CTexture2D> CDXDevice::CreateTexture2D(const TTexture2DDesc& InTexture2DDesc, TBufferInitalizeData* InBufferInitalizeData)
+	std::unique_ptr<CTexture2D> CDXDevice::CreateTexture2D(const TTexture2DDesc& InTexture2DDesc, const TBufferInitalizeData* InBufferInitalizeData)
 	{
 		D3D11_TEXTURE2D_DESC D3DTexture2DDesc;
 		memcpy(&D3DTexture2DDesc, &InTexture2DDesc, sizeof(TTexture2DDesc));

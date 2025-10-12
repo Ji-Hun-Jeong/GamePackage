@@ -3,6 +3,19 @@
 
 namespace Graphics
 {
+	struct TMeshData
+	{
+		Graphics::TBufferDesc VertexBufferDesc;
+		Graphics::TBufferInitalizeData VertexBufferInitData;
+		Graphics::TBufferDesc IndexBufferDesc;
+		Graphics::TBufferInitalizeData IndexBufferInitData;
+
+		Graphics::EGIFormat IndexFormat = Graphics::EGIFormat::GI_FORMAT_R32_UINT;
+		uint32_t IndexCount = 0;
+		uint32_t Stride = 0;
+		uint32_t Offset = 0;
+	};
+
 	class CMesh
 	{
 	public:

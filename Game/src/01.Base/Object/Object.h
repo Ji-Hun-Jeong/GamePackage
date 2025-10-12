@@ -1,4 +1,6 @@
 #pragma once
+#include "../Component/RenderComponent.h"
+#include "../Model/AssetLoader.h"
 
 class IObjectDestroy
 {
@@ -21,8 +23,7 @@ private:
 	UINT InstanceId;
 	CObject* Owner;
 
-	// 생명주기는 World가 관여
-	std::list<CObject*> Childs;
+	std::vector<CObject*> Childs;
 	bool bDestroy;
 
 	void AttachChild(CObject* InChild)
@@ -30,16 +31,37 @@ private:
 		InChild->Owner = this;
 		Childs.push_back(InChild);
 	}
+	void DetachChild(CObject* InChild)
+	{
+		for (auto Iter = Childs.begin(); Iter != Childs.end(); ++Iter)
+		{
+			if ((*Iter) == InChild)
+			{
+				Childs.erase(Iter);
+				break;
+			}
+		}
+	}
+
 protected:
 	class CWorld* GetWorld() { return World; }
 	CObject* GetOwner() { return Owner; }
 
+public:
+	UINT GetInstanceId() const { return InstanceId; }
+
+public:
+	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+
+protected:
+	CRenderComponent* RenderComponent;
 
 protected:
 	CObject()
 		: InstanceId(0)
 		, World(nullptr)
 		, Owner(nullptr)
+		, RenderComponent(nullptr)
 		, bDestroy(false)
 	{
 	}
@@ -47,30 +69,22 @@ protected:
 public:
 	virtual void BeginPlay()
 	{
-
 	}
 	virtual void Update(float InDeltaTime)
 	{
-		
+		for (auto& Child : Childs)
+			Child->Update(InDeltaTime);
 	}
 	virtual void EndPlay()
 	{
-		std::cout << "EndPlay\n";
-	}
-	// 표시해놓고 순회할때 지우는걸로 Render같은 때에
-	void Destroy()
-	{
-		bDestroy = true;
-		for (auto& Child : Childs)
-			Child->Destroy();
-
 		for (auto& ObjectDestroy : ObjectDestroyEvents)
 			ObjectDestroy->OnDestroy(*this);
 	}
-	UINT GetInstanceId() const { return InstanceId; }
 
 public:
 	// ObjectDestroy
+	// 표시해놓고 순회할때 지우는걸로 Render같은 때에
+	void Destroy();
 	IObjectDestroy* RegistObjectDestroyEvent(std::unique_ptr<IObjectDestroy> InObjectDestroyEvent)
 	{
 		IObjectDestroy* ObjectDestroy = InObjectDestroyEvent.get();

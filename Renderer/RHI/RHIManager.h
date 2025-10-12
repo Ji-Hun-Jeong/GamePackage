@@ -15,7 +15,8 @@ namespace Graphics
 		{
 			if (RHIs.contains(InRHIName))
 				std::cout << "CRenderResourceManager: Resource Is Already Contained\n";
-			RHIs.insert({ InRHIName, std::move(InRHI) });
+			else
+				RHIs.insert({ InRHIName, std::move(InRHI) });
 		}
 		void RemoveRHI(const std::string& InRHIName)
 		{

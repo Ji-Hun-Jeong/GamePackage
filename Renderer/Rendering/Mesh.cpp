@@ -8,6 +8,7 @@ namespace Graphics
 	{
 		InContext.IASetVertexBuffer(VertexBuffer, &Stride, &Offset);
 		InContext.IASetIndexBuffer(IndexBuffer, IndexFormat, 0);
+		InContext.DrawIndexed(IndexCount);
 	}
 }
 

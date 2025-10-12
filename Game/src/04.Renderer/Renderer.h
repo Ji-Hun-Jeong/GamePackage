@@ -3,7 +3,6 @@
 #include <Renderer/Base/RenderSwapChain.h>
 #include "RenderStateObject.h"
 
-// Todo: 렌더러가 World에서 가져오는 방식으로 변경
 class CRenderer
 {
 public:
@@ -14,13 +13,28 @@ public:
 	~CRenderer() = default;
 
 public:
-	void GetRenderStateObjectFromWorld(class CWorld& InWorld);
+	void InitalizeFromWorld(class CWorld& InWorld);
+	void AddRenderStateObject(std::unique_ptr<CRenderStateObject> InRenderStateObject)
+	{
+		RenderStateObjects.push_back(std::move(InRenderStateObject));
+	}
 	void Render()
 	{
-		for (auto& RenderStateObject : RenderStateObjects)
+		for (size_t i = 0; i < RenderStateObjects.size();)
 		{
-			RenderStateObject->BindRenderState(Context);
+			auto& RenderStateObject = RenderStateObjects[i];
+			if (RenderStateObject->bDestroy)
+			{
+				RenderStateObjects[i] = std::move(RenderStateObjects.back());
+				RenderStateObjects.pop_back();
+			}
+			else
+			{
+				RenderStateObject->BindRenderState(Context);
+				++i;
+			}
 		}
+
 		SwapChain.Present();
 	}
 
@@ -28,7 +42,7 @@ private:
 	Graphics::CRenderContext& Context;
 	Graphics::CRenderSwapChain& SwapChain;
 
-	std::vector<CRenderStateObject*> RenderStateObjects;
+	std::vector<std::unique_ptr<CRenderStateObject>> RenderStateObjects;
 
 };
 

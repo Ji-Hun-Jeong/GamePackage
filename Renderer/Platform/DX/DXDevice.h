@@ -23,8 +23,8 @@ namespace Graphics::DX
 		std::unique_ptr<CPixelShader> CreatePixelShader(const std::wstring& InShaderPath);
 		std::pair<std::unique_ptr<CVertexShader>, std::unique_ptr<CInputLayout>> CreateVertexShaderAndInputLayout(const std::wstring& InShaderPath
 			, const std::vector<TInputElementDesc>& InInputElementDescs);
-		std::unique_ptr<CBuffer> CreateBuffer(const TBufferDesc& InBufferDesc, TBufferInitalizeData* InBufferInitalizeData);
-		std::unique_ptr<CTexture2D> CreateTexture2D(const TTexture2DDesc& InTexture2DDesc, TBufferInitalizeData* InBufferInitalizeData);
+		std::unique_ptr<CBuffer> CreateBuffer(const TBufferDesc& InBufferDesc, const TBufferInitalizeData* InBufferInitalizeData);
+		std::unique_ptr<CTexture2D> CreateTexture2D(const TTexture2DDesc& InTexture2DDesc, const TBufferInitalizeData* InBufferInitalizeData);
 		std::unique_ptr<CRenderTargetView> CreateRenderTargetView(const CTexture2D& InTexture2D);
 		std::unique_ptr<CRasterizerState> CreateRasterizerState(const TRasterizerDesc& InRasterizerDesc);
 		std::unique_ptr<CDepthStencilView> CreateDepthStencilView(const CTexture2D& InTexture2D);
