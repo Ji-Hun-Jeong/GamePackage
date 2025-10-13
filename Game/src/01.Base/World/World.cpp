@@ -43,7 +43,7 @@ public:
 		MeshData.VertexBufferDesc.ByteWidth = uint32_t(sizeof(Vertex) * Vertices.size());
 		MeshData.VertexBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
 		MeshData.VertexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
-
+		
 		MeshData.VertexBufferInitData.CopyStartPoint = Vertices.data();
 
 		std::vector<uint32_t> Indices =
@@ -56,30 +56,23 @@ public:
 		MeshData.IndexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
 
 		MeshData.IndexBufferInitData.CopyStartPoint = Indices.data();
+		MeshData.PrimitiveTopology = Graphics::ETopology::PrimitiveTopologyTRIANGLELIST;
 		MeshData.IndexFormat = Graphics::EGIFormat::GI_FORMAT_R32_UINT;
 		MeshData.IndexCount = uint32_t(Indices.size());
 		MeshData.Stride = sizeof(Vertex);
 		MeshData.Offset = 0;
 
-		Graphics::TMaterialData MaterialData{ L"resources/shader/BasicPixelShader.hlsl" };
+		Graphics::TMaterialData MaterialData;
 
-		CModel& Model = CAssetLoader::GetInst().MakeModel("Triangle", MeshData, MaterialData);
+		CModel* Model = CAssetLoader::GetInst().MakeModel("Triangle", MeshData, MaterialData);
 
-		std::vector<Graphics::TInputElementDesc> InputElementDescs =
-		{
-			{Graphics::ESementicName::Position, Graphics::EFormat::Vector3, 0, Graphics::EInputClass::VertexData},
-			{Graphics::ESementicName::Color, Graphics::EFormat::Vector3, 12, Graphics::EInputClass::VertexData}
-		};
-		auto VSIA = CAssetLoader::GetInst().MakeVSAndInputLayout(L"resources/shader/BasicVertexShader.hlsl", InputElementDescs);
-
-		RenderComponent = std::make_unique<CRenderComponent>(new CBasicRenderStateObject(&Model.GetMesh(), &Model.GetMaterial()
-			, std::move(VSIA.first), std::move(VSIA.second)));
+		CPSO* BasicPSO = CPSOManager::GetInst().GetPSO("BasicPSO");
+		RenderComponent = std::make_unique<CRenderComponent>(new CRenderStateObject(&Model->GetMesh(), &Model->GetMaterial(), BasicPSO));
 		std::cout << "CO\n";
 	}
 	void Update(float InDeltaTime) override
 	{
 		CObject::Update(InDeltaTime);
-		Destroy();
 	}
 };
 

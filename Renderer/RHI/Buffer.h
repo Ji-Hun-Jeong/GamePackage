@@ -48,6 +48,19 @@ namespace Graphics
 	  - DYNAMIC : 프레임마다 바뀌는 상수 버퍼, UI 요소
 	  - STAGING : GPU에서 읽은 데이터를 CPU로 가져올 때(예 : 스크린샷)*/
 
+	enum class ETopology
+	{
+		PrimitiveTopologyUNDEFINED = 0,
+		PrimitiveTopologyPOINTLIST = 1,
+		PrimitiveTopologyLINELIST = 2,
+		PrimitiveTopologyLINESTRIP = 3,
+		PrimitiveTopologyTRIANGLELIST = 4,
+		PrimitiveTopologyTRIANGLESTRIP = 5,
+		PrimitiveTopologyLINELIST_ADJ = 10,
+		PrimitiveTopologyLINESTRIP_ADJ = 11,
+		PrimitiveTopologyTRIANGLELIST_ADJ = 12,
+		PrimitiveTopologyTRIANGLESTRIP_ADJ = 13,
+	};
 
 	class CBuffer : public CRHI
 	{

@@ -187,15 +187,15 @@
     <ClCompile Include="src\01.Base\Component\RenderComponent.cpp" />
     <ClCompile Include="src\01.Base\Component\Component.cpp" />
     <ClCompile Include="src\01.Base\World\WorldEvent.cpp" />
+    <ClCompile Include="src\04.Renderer\PSOManager.cpp" />
     <ClCompile Include="src\04.Renderer\RenderStateObject.cpp" />
     <ClCompile Include="src\04.Renderer\Renderer.cpp" />
     <ClCompile Include="src\01.Base\Object\Object.cpp" />
     <ClCompile Include="src\01.Base\Object\Actor\Level\Level.cpp" />
     <ClCompile Include="src\01.Base\Object\ObjectPtr.cpp" />
     <ClCompile Include="src\03.Utils\NumberGenerator\NumberGenerator.cpp" />
-    <ClCompile Include="src\01.Base\Object\Actor\ActorComponent.cpp" />
     <ClCompile Include="src\01.Base\Object\Actor\Actor.cpp" />
-    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\00.App\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -211,16 +211,16 @@
     <ClInclude Include="src\01.Base\Component\RenderComponent.h" />
     <ClInclude Include="src\01.Base\Component\Component.h" />
     <ClInclude Include="src\01.Base\World\WorldEvent.h" />
+    <ClInclude Include="src\04.Renderer\PSOManager.h" />
     <ClInclude Include="src\04.Renderer\RenderStateObject.h" />
     <ClInclude Include="src\04.Renderer\Renderer.h" />
     <ClInclude Include="src\01.Base\Object\Object.h" />
     <ClInclude Include="src\01.Base\Object\Actor\Level\Level.h" />
     <ClInclude Include="src\01.Base\Object\ObjectPtr.h" />
     <ClInclude Include="src\03.Utils\NumberGenerator\NumberGenerator.h" />
-    <ClInclude Include="src\01.Base\Object\Actor\ActorComponent.h" />
     <ClInclude Include="src\01.Base\Object\Actor\Actor.h" />
     <ClInclude Include="src\Common\Define.h" />
-    <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\00.App\Game.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\01.Base\World\World.h" />
   </ItemGroup>

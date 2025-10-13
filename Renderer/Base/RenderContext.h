@@ -11,20 +11,6 @@
 
 namespace Graphics
 {
-	enum class ETopology
-	{
-		PrimitiveTopologyUNDEFINED = 0,
-		PrimitiveTopologyPOINTLIST = 1,
-		PrimitiveTopologyLINELIST = 2,
-		PrimitiveTopologyLINESTRIP = 3,
-		PrimitiveTopologyTRIANGLELIST = 4,
-		PrimitiveTopologyTRIANGLESTRIP = 5,
-		PrimitiveTopologyLINELIST_ADJ = 10,
-		PrimitiveTopologyLINESTRIP_ADJ = 11,
-		PrimitiveTopologyTRIANGLELIST_ADJ = 12,
-		PrimitiveTopologyTRIANGLESTRIP_ADJ = 13,
-	};
-
 	class CRenderContext
 	{
 	public:

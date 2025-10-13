@@ -5,12 +5,13 @@ namespace Graphics
 {
 	struct TMeshData
 	{
-		Graphics::TBufferDesc VertexBufferDesc;
-		Graphics::TBufferInitalizeData VertexBufferInitData;
-		Graphics::TBufferDesc IndexBufferDesc;
-		Graphics::TBufferInitalizeData IndexBufferInitData;
+		TBufferDesc VertexBufferDesc;
+		TBufferInitalizeData VertexBufferInitData;
+		TBufferDesc IndexBufferDesc;
+		TBufferInitalizeData IndexBufferInitData;
 
-		Graphics::EGIFormat IndexFormat = Graphics::EGIFormat::GI_FORMAT_R32_UINT;
+		ETopology PrimitiveTopology = ETopology::PrimitiveTopologyTRIANGLELIST;
+		EGIFormat IndexFormat = EGIFormat::GI_FORMAT_R32_UINT;
 		uint32_t IndexCount = 0;
 		uint32_t Stride = 0;
 		uint32_t Offset = 0;
@@ -19,10 +20,11 @@ namespace Graphics
 	class CMesh
 	{
 	public:
-		CMesh(std::unique_ptr<CBuffer> InVertexBuffer, std::unique_ptr<CBuffer> InIndexBuffer, EGIFormat InIndexFormat, uint32_t InIndexCount
-			, uint32_t InStride, uint32_t InOffset)
+		CMesh(std::unique_ptr<CBuffer> InVertexBuffer, std::unique_ptr<CBuffer> InIndexBuffer, ETopology InPrimitiveTopology
+			, EGIFormat InIndexFormat, uint32_t InIndexCount, uint32_t InStride, uint32_t InOffset)
 			: VertexBuffer(std::move(InVertexBuffer))
 			, IndexBuffer(std::move(InIndexBuffer))
+			, PrimitiveTopology(InPrimitiveTopology)
 			, IndexFormat(InIndexFormat)
 			, IndexCount(InIndexCount)
 			, Stride(InStride)
@@ -37,6 +39,7 @@ namespace Graphics
 	private:
 		std::unique_ptr<CBuffer> VertexBuffer;
 		std::unique_ptr<CBuffer> IndexBuffer;
+		ETopology PrimitiveTopology;
 		EGIFormat IndexFormat;
 		uint32_t IndexCount;
 		uint32_t Stride;

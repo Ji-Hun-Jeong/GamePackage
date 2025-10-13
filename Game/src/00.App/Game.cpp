@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Game.h"
-
+#include "04.Renderer/PSOManager.h"
 CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	: Core::CApplication(InScreenWidth, InScreenHeight)
 	, World()
@@ -12,15 +12,9 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 {
 	Renderer.InitalizeFromWorld(World);
 	
+	CPSOManager::GetInst().InitalizePSO(Device);
 	CAssetLoader::GetInst().Initalize(&Device, &MeshManager);
 
-	Graphics::TRasterizerDesc RasterizerDesc;
-	RasterizerDesc.FillMode = Graphics::EFillMode::FillSolid;
-	RasterizerDesc.CullMode = Graphics::ECullMode::CullBack;
-	RasterizerDesc.FrontCounterClockwise = false;
-	RasterizerDesc.DepthClipEnable = true;
-	RasterizerDesc.MultisampleEnable = true;
-	auto RasterizerState = Device.CreateRasterizerState(RasterizerDesc);
 
 	const Graphics::CTexture2D* WindowTextureBuffer = SwapChain.GetWindowTextureBuffer();
 	auto RenderTargetView = Device.CreateRenderTargetView(*WindowTextureBuffer);
@@ -35,10 +29,6 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 
 	Context.RSSetViewPort(ViewPort);
 	Context.OMSetRenderTarget(1, *RenderTargetView.get(), nullptr);
-	Context.IASetPrimitiveTopology(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST);
-
-	Context.RSSetState(*RasterizerState.get());
-
 }
 
 CGame::~CGame()
@@ -55,4 +45,5 @@ bool CGame::Process()
 void CGame::ShutDown()
 {
 	CAssetLoader::GetInst().Finalize();
+	CPSOManager::GetInst().Finalize();
 }

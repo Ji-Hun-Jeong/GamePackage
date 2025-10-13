@@ -6,6 +6,6 @@ namespace Graphics
 {
 	void CMaterial::BindToPipeline(CRenderContext& InContext)
 	{
-		InContext.PSSetShader(*PixelShader);
+		
 	}
 }

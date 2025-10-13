@@ -1,27 +1,27 @@
 #pragma once
 #include <Renderer/Rendering/Mesh.h>
 #include <Renderer/Rendering/Material.h>
-#include <Renderer/RHI/VertexShader.h>
-#include <Renderer/RHI/InputLayout.h>
-
-namespace Graphics
-{
-	class CRenderContext;
-}
+#include "PSOManager.h"
 
 class CRenderStateObject
 {
 	friend class CRenderer;
 public:
-	CRenderStateObject(Graphics::CMesh* InMesh, Graphics::CMaterial* InMaterial)
+	CRenderStateObject(Graphics::CMesh* InMesh, Graphics::CMaterial* InMaterial, CPSO* InPSO)
 		: Mesh(InMesh)
 		, Material(InMaterial)
+		, PSO(InPSO)
 		, bDestroy(false)
 	{}
-	virtual ~CRenderStateObject() = default;
+	~CRenderStateObject() = default;
 
 public:
-	virtual void BindRenderState(Graphics::CRenderContext& InContext) const = 0;
+	void BindRenderState(Graphics::CRenderContext& InContext) const
+	{
+		PSO->BindToPipeline(InContext);
+		Material->BindToPipeline(InContext);
+		Mesh->BindToPipeline(InContext);
+	}
 	void Destroy() { bDestroy = true; }
 	bool operator > (CRenderStateObject& InOther) const
 	{
@@ -31,31 +31,7 @@ public:
 protected:
 	Graphics::CMesh* Mesh;
 	Graphics::CMaterial* Material;
+	CPSO* PSO;
 	bool bDestroy;
 
 };
-
-class CBasicRenderStateObject : public CRenderStateObject
-{
-public:
-	CBasicRenderStateObject(Graphics::CMesh* InMesh, Graphics::CMaterial* InMaterial
-		, std::unique_ptr<Graphics::CVertexShader> InVertexShader, std::unique_ptr<Graphics::CInputLayout> InInputLayout)
-		: CRenderStateObject(InMesh, InMaterial)
-		, VertexShader(std::move(InVertexShader))
-		, InputLayout(std::move(InInputLayout))
-	{}
-	~CBasicRenderStateObject() = default;
-
-public:
-	void BindRenderState(Graphics::CRenderContext& InContext) const override;
-
-private:
-	std::unique_ptr<Graphics::CVertexShader> VertexShader;
-	std::unique_ptr<Graphics::CInputLayout> InputLayout;
-
-};
-
-
-
-
-

@@ -21,13 +21,10 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game.cpp">
+    <ClCompile Include="src\00.App\Game.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\01.Base\Object\Actor\Actor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Actor\ActorComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\03.Utils\NumberGenerator\NumberGenerator.cpp">
@@ -66,21 +63,21 @@
     <ClCompile Include="src\01.Base\World\WorldEvent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\04.Renderer\PSOManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game.h">
+    <ClInclude Include="src\00.App\Game.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\Common\Define.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Object\Actor\Actor.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Actor\ActorComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\03.Utils\NumberGenerator\NumberGenerator.h">
@@ -117,6 +114,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\World\WorldEvent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\04.Renderer\PSOManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

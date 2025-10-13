@@ -8,12 +8,11 @@ public:
 	CActor() {}
 	virtual ~CActor() {}
 
-
-
 public:
 	virtual void Update(float InDeltaTime)
 	{
-		// 자신 업뎃 하고 ActorComponent업데이트
+		CObject::Update(InDeltaTime);
+
 	}
 
 };
