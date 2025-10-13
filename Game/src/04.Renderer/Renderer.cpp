@@ -2,27 +2,29 @@
 #include "Renderer.h"
 #include "01.Base/World/World.h"
 
-class CGetRenderStateObject : public IObjectEnterWorld
+class CGetRenderStateObject : public INewObjectEvent
 {
 public:
 	CGetRenderStateObject(CRenderer& InRenderer)
 		: Renderer(InRenderer)
 	{}
 private:
-	void EnterWorld(CWorld& InWorld, CObject& InEnterObject) override
+	// INewObjectEvent을(를) 통해 상속됨
+	void CreatedInWorld(CWorld& InWorld, CObject& InNewObject) override
 	{
-		CRenderComponent* RenderComponent = InEnterObject.GetRenderComponent();
-		if (RenderComponent)
-		{
-			Renderer.AddRenderStateObject(std::unique_ptr<CRenderStateObject>(RenderComponent->GetRenderStateObject()));
-			// Todo: Sort
-		}
-	}
+		if (CRenderComponent::GetStaticType() != InNewObject.GetType())
+			return;
 
+		CRenderComponent* RenderComponent = static_cast<CRenderComponent*>(&InNewObject);
+		RenderComponent->SetRenderStateObjectEvent = [this](CRenderStateObject* InRenderStateObject)
+			{
+				Renderer.AddRenderStateObject(std::unique_ptr<CRenderStateObject>(InRenderStateObject));
+			};
+	}
 	CRenderer& Renderer;
 
 };
 void CRenderer::InitalizeFromWorld(CWorld& InWorld)
 {
-	InWorld.AddObjectEnterWorldEvent(std::make_unique<CGetRenderStateObject>(*this));
+	InWorld.AddNewObjectEvent(std::make_unique<CGetRenderStateObject>(*this));
 }

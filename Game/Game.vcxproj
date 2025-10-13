@@ -184,8 +184,8 @@
   <ItemGroup>
     <ClCompile Include="src\01.Base\Model\Model.cpp" />
     <ClCompile Include="src\01.Base\Model\AssetLoader.cpp" />
-    <ClCompile Include="src\01.Base\Component\RenderComponent.cpp" />
-    <ClCompile Include="src\01.Base\Component\Component.cpp" />
+    <ClCompile Include="src\01.Base\Object\Component\RenderComponent.cpp" />
+    <ClCompile Include="src\01.Base\Object\Component\Component.cpp" />
     <ClCompile Include="src\01.Base\World\WorldEvent.cpp" />
     <ClCompile Include="src\04.Renderer\PSOManager.cpp" />
     <ClCompile Include="src\04.Renderer\RenderStateObject.cpp" />
@@ -208,8 +208,8 @@
   <ItemGroup>
     <ClInclude Include="src\01.Base\Model\Model.h" />
     <ClInclude Include="src\01.Base\Model\AssetLoader.h" />
-    <ClInclude Include="src\01.Base\Component\RenderComponent.h" />
-    <ClInclude Include="src\01.Base\Component\Component.h" />
+    <ClInclude Include="src\01.Base\Object\Component\RenderComponent.h" />
+    <ClInclude Include="src\01.Base\Object\Component\Component.h" />
     <ClInclude Include="src\01.Base\World\WorldEvent.h" />
     <ClInclude Include="src\04.Renderer\PSOManager.h" />
     <ClInclude Include="src\04.Renderer\RenderStateObject.h" />

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "World.h"
 
-class CCO : public CObject
+class CCO : public CActor
 {
 public:
 	void BeginPlay() override
@@ -9,14 +9,11 @@ public:
 		CObject::BeginPlay();
 		std::cout << "CCO\n";
 	}
-	void Update(float InDeltaTime) override
-	{
-		CObject::Update(InDeltaTime);
-	}
 };
 
-class CO : public CObject
+class CO : public CActor
 {
+	GenerateObject()
 public:
 	CO()
 	{
@@ -67,19 +64,17 @@ public:
 		CModel* Model = CAssetLoader::GetInst().MakeModel("Triangle", MeshData, MaterialData);
 
 		CPSO* BasicPSO = CPSOManager::GetInst().GetPSO("BasicPSO");
-		RenderComponent = std::make_unique<CRenderComponent>(new CRenderStateObject(&Model->GetMesh(), &Model->GetMaterial(), BasicPSO));
+		RenderComponent = GetWorld()->NewObject<CRenderComponent>();
+		CRenderStateObject* RenderStateObject = new CRenderStateObject(&Model->GetMesh(), &Model->GetMaterial(), BasicPSO);
+		RenderComponent->SetRenderStateObject(RenderStateObject);
 		std::cout << "CO\n";
-	}
-	void Update(float InDeltaTime) override
-	{
-		CObject::Update(InDeltaTime);
 	}
 };
 
 CWorld::CWorld()
 	: bFlagDestroyedWorldObject(false)
 {
-	CO* co = NewObject<CO>();
+	CO* co = SpawnActor<CO>();
 }
 
 CWorld::~CWorld()

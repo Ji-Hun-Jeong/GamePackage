@@ -4,17 +4,21 @@
 
 class CRenderComponent : public CComponent
 {
-	GenerateComponent()
+	GenerateObject()
 public:
-	CRenderComponent(CRenderStateObject* InRenderStateObject)
-		: RenderStateObject(InRenderStateObject)
+	CRenderComponent()
+		: RenderStateObject(nullptr)
 	{}
 	~CRenderComponent() = default;
 
 public:
-	void SetRenderStateObject(CRenderStateObject* InRenderStateObject) { RenderStateObject = InRenderStateObject; }
+	void SetRenderStateObject(CRenderStateObject* InRenderStateObject)
+	{
+		RenderStateObject = InRenderStateObject;
+		SetRenderStateObjectEvent(RenderStateObject);
+	}
 	CRenderStateObject* GetRenderStateObject() const { return RenderStateObject; }
-
+	std::function<void(CRenderStateObject*)> SetRenderStateObjectEvent;
 private:
 	CRenderStateObject* RenderStateObject;
 

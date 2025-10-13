@@ -11,3 +11,9 @@ class IObjectExitWorld
 	friend class CWorld;
 	virtual void ExitWorld(class CWorld& InWorld, class CObject& InExitObject) = 0;
 };
+
+class INewObjectEvent
+{
+	friend class CWorld;
+	virtual void CreatedInWorld(class CWorld& InWorld, class CObject& InNewObject) = 0;
+};

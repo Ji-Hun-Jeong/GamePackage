@@ -5,17 +5,12 @@
 
 #include "03.Utils/NumberGenerator/NumberGenerator.h"
 
+size_t CObject::sObjectType = 0;
 void CObject::Destroy()
 {
 	World->MarkDestroyed();
 
-	for (auto& Child : Childs)
-		Child->Destroy();
-
 	bDestroy = true;
 
 	EndPlay();
-
-	if (Owner)
-		Owner->DetachChild(this);
 }

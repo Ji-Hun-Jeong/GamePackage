@@ -1,6 +1,6 @@
 #pragma once
 #include "WorldEvent.h"
-#include "01.Base/Object/Object.h"
+#include "01.Base/Object/Actor/Actor.h"
 #include "03.Utils/NumberGenerator/NumberGenerator.h"
 
 class CWorld
@@ -12,57 +12,68 @@ public:
 public:
 	void Update()
 	{
-		while (NextAddedWorldObjects.empty() == false)
+		while (NextAddedWorldActors.empty() == false)
 		{
-			CObject* Object = NextAddedWorldObjects.front();
-			NextAddedWorldObjects.pop();
+			std::unique_ptr<CActor> Actor = std::move(NextAddedWorldActors.front());
+			NextAddedWorldActors.pop();
 
-			Object->BeginPlay();
+			Actor->BeginPlay();
 
 			for (auto& ObjectEnterWorldEvent : ObjectEnterWorldEvents)
-				ObjectEnterWorldEvent->EnterWorld(*this, *Object);
+				ObjectEnterWorldEvent->EnterWorld(*this, *Actor);
 
-			WorldObjects.emplace_back(Object);
+			WorldActors.push_back(std::move(Actor));
 		}
 
-		for (auto& WorldObject : WorldObjects)
-			WorldObject->Update(0.5f);
+		for (auto& WorldActor : WorldActors)
+			WorldActor->Update(0.5f);
 
 		if (bFlagDestroyedWorldObject == false)
 			return;
 
-		auto removeIter = std::remove_if(WorldObjects.begin(), WorldObjects.end(),
-			[&](const std::unique_ptr<CObject>& Object) {
-				if (Object->bDestroy)
+		auto removeIter = std::remove_if(WorldActors.begin(), WorldActors.end(),
+			[&](const std::unique_ptr<CActor>& InActor) {
+				if (InActor->bDestroy)
 				{
-					NumberGenerator.ReleaseNumber(Object->GetInstanceId());
+					NumberGenerator.ReleaseNumber(InActor->GetInstanceId());
 					for (auto& ObjectExitWorldEvent : ObjectExitWorldEvents)
-						ObjectExitWorldEvent->ExitWorld(*this, *Object.get());
+						ObjectExitWorldEvent->ExitWorld(*this, *InActor.get());
 				}
-				return Object->bDestroy;
+				return InActor->bDestroy;
 			});
 
-		WorldObjects.erase(removeIter, WorldObjects.end());
+		WorldActors.erase(removeIter, WorldActors.end());
 
 		bFlagDestroyedWorldObject = false;
 	}
 
 	template <typename T>
-	T* NewObject(CObject* InOwner = nullptr)
+	std::unique_ptr<T> NewObject()
 	{
 		T* Object = new T;
 		Object->InstanceId = NumberGenerator.GenerateNumber();
 		Object->World = this;
 
-		if (InOwner)
-			InOwner->AttachChild(Object);
+		for (auto& NewObjectEvent : NewObjectEvents)
+			NewObjectEvent->CreatedInWorld(*this, *Object);
 
-		NextAddedWorldObjects.push(Object);
-		
-		return Object;
+		return std::unique_ptr<T>(Object);
 	}
 
-	const std::vector<std::unique_ptr<CObject>>& GetWorldObjects() const { return WorldObjects; }
+	template <typename T>
+	T* SpawnActor(CActor* InOwner = nullptr)
+	{
+		std::unique_ptr<T> Actor = NewObject<T>();
+
+		if (InOwner)
+			InOwner->AttachChild(Actor.get());
+
+		NextAddedWorldActors.push(std::move(Actor));
+
+		return Actor.get();
+	}
+
+	const std::vector<std::unique_ptr<CActor>>& GetWorldActors() const { return WorldActors; }
 	void MarkDestroyed() { bFlagDestroyedWorldObject = true; }
 	void AddObjectEnterWorldEvent(std::unique_ptr<IObjectEnterWorld> InObjectEnterWorldEvent)
 	{
@@ -72,14 +83,19 @@ public:
 	{
 		ObjectExitWorldEvents.push_back(std::move(InObjectExitWorldEvent));
 	}
+	void AddNewObjectEvent(std::unique_ptr<INewObjectEvent> InNewObjectEvent)
+	{
+		NewObjectEvents.push_back(std::move(InNewObjectEvent));
+	}
 
 private:
-	std::vector<std::unique_ptr<CObject>> WorldObjects;
-	std::queue<CObject*> NextAddedWorldObjects;
+	std::vector<std::unique_ptr<CActor>> WorldActors;
+	std::queue<std::unique_ptr<CActor>> NextAddedWorldActors;
 	bool bFlagDestroyedWorldObject;
 
 	CNumberGenerator NumberGenerator;
 
 	std::vector<std::unique_ptr<IObjectEnterWorld>> ObjectEnterWorldEvents;
 	std::vector<std::unique_ptr<IObjectExitWorld>> ObjectExitWorldEvents;
+	std::vector<std::unique_ptr<INewObjectEvent>> NewObjectEvents;
 };

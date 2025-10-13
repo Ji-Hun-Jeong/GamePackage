@@ -48,10 +48,10 @@
     <ClCompile Include="src\04.Renderer\RenderStateObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Component\Component.cpp">
+    <ClCompile Include="src\01.Base\Object\Component\Component.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Component\RenderComponent.cpp">
+    <ClCompile Include="src\01.Base\Object\Component\RenderComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\01.Base\Model\AssetLoader.cpp">
@@ -101,10 +101,10 @@
     <ClInclude Include="src\04.Renderer\RenderStateObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Component\Component.h">
+    <ClInclude Include="src\01.Base\Object\Component\Component.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Component\RenderComponent.h">
+    <ClInclude Include="src\01.Base\Object\Component\RenderComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Model\AssetLoader.h">
