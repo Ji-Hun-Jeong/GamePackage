@@ -173,6 +173,7 @@
     <ClInclude Include="Base\NumberGenerator.h" />
     <ClInclude Include="Base\GeometryGenerator.h" />
     <ClInclude Include="Base\GraphicInfra.h" />
+    <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Platform\DX\DXInfra.h" />
     <ClInclude Include="RHI\RHIManager.h" />
     <ClInclude Include="Rendering\MeshManager.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="Base\NumberGenerator.cpp" />
     <ClCompile Include="Base\GeometryGenerator.cpp" />
     <ClCompile Include="Base\GraphicInfra.cpp" />
+    <ClCompile Include="Rendering\Material.cpp" />
     <ClCompile Include="Platform\DX\DXInfra.cpp" />
     <ClCompile Include="RHI\RHIManager.cpp" />
     <ClCompile Include="Rendering\MeshManager.cpp" />

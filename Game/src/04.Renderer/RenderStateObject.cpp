@@ -4,9 +4,9 @@
 
 void CBasicRenderStateObject::BindRenderState(Graphics::CRenderContext& InContext) const
 {
-	InContext.IASetInputLayout(InputLayout);
-	InContext.VSSetShader(VertexShader);
-	InContext.PSSetShader(PixelShader);
+	InContext.IASetInputLayout(*InputLayout);
+	InContext.VSSetShader(*VertexShader);
 
-	Mesh.BindToPipeline(InContext);
+	Material->BindToPipeline(InContext);
+	Mesh->BindToPipeline(InContext);
 }

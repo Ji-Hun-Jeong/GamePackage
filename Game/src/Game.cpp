@@ -54,4 +54,5 @@ bool CGame::Process()
 
 void CGame::ShutDown()
 {
+	CAssetLoader::GetInst().Finalize();
 }

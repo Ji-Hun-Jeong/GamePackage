@@ -61,7 +61,9 @@ public:
 		MeshData.Stride = sizeof(Vertex);
 		MeshData.Offset = 0;
 
-		Graphics::CMesh& Mesh = CAssetLoader::GetInst().MakeMesh("Basic", MeshData);
+		Graphics::TMaterialData MaterialData{ L"resources/shader/BasicPixelShader.hlsl" };
+
+		CModel& Model = CAssetLoader::GetInst().MakeModel("Triangle", MeshData, MaterialData);
 
 		std::vector<Graphics::TInputElementDesc> InputElementDescs =
 		{
@@ -70,9 +72,8 @@ public:
 		};
 		auto VSIA = CAssetLoader::GetInst().MakeVSAndInputLayout(L"resources/shader/BasicVertexShader.hlsl", InputElementDescs);
 
-		auto& PS = CAssetLoader::GetInst().MakePixelShader(L"resources/shader/BasicPixelShader.hlsl");
-
-		RenderComponent = new CRenderComponent(std::make_unique<CBasicRenderStateObject>(Mesh, *VSIA.first, *VSIA.second, PS));
+		RenderComponent = std::make_unique<CRenderComponent>(new CBasicRenderStateObject(&Model.GetMesh(), &Model.GetMaterial()
+			, std::move(VSIA.first), std::move(VSIA.second)));
 		std::cout << "CO\n";
 	}
 	void Update(float InDeltaTime) override

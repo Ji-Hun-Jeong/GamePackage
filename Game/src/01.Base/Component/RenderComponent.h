@@ -6,17 +6,17 @@ class CRenderComponent : public CComponent
 {
 	GenerateComponent()
 public:
-	CRenderComponent(std::unique_ptr<CRenderStateObject> InRenderStateObject)
-		: RenderStateObject(std::move(InRenderStateObject))
+	CRenderComponent(CRenderStateObject* InRenderStateObject)
+		: RenderStateObject(InRenderStateObject)
 	{}
 	~CRenderComponent() = default;
 
 public:
-	void SetRenderStateObject(std::unique_ptr<CRenderStateObject> InRenderStateObject) { RenderStateObject = std::move(InRenderStateObject); }
-	CRenderStateObject* GetRenderStateObject() const { return RenderStateObject.get(); }
+	void SetRenderStateObject(CRenderStateObject* InRenderStateObject) { RenderStateObject = InRenderStateObject; }
+	CRenderStateObject* GetRenderStateObject() const { return RenderStateObject; }
 
 private:
-	std::unique_ptr<CRenderStateObject> RenderStateObject;
+	CRenderStateObject* RenderStateObject;
 
 };
 

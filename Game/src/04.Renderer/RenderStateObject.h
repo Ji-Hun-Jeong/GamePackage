@@ -1,8 +1,8 @@
 #pragma once
 #include <Renderer/Rendering/Mesh.h>
+#include <Renderer/Rendering/Material.h>
 #include <Renderer/RHI/VertexShader.h>
 #include <Renderer/RHI/InputLayout.h>
-#include <Renderer/RHI/PixelShader.h>
 
 namespace Graphics
 {
@@ -13,8 +13,9 @@ class CRenderStateObject
 {
 	friend class CRenderer;
 public:
-	CRenderStateObject(Graphics::CMesh& InMesh)
+	CRenderStateObject(Graphics::CMesh* InMesh, Graphics::CMaterial* InMaterial)
 		: Mesh(InMesh)
+		, Material(InMaterial)
 		, bDestroy(false)
 	{}
 	virtual ~CRenderStateObject() = default;
@@ -28,7 +29,8 @@ public:
 	}
 
 protected:
-	Graphics::CMesh& Mesh;
+	Graphics::CMesh* Mesh;
+	Graphics::CMaterial* Material;
 	bool bDestroy;
 
 };
@@ -36,12 +38,11 @@ protected:
 class CBasicRenderStateObject : public CRenderStateObject
 {
 public:
-	CBasicRenderStateObject(Graphics::CMesh& InMesh, Graphics::CVertexShader& InVertexShader
-		, Graphics::CInputLayout& InInputLayout, Graphics::CPixelShader& InPixelShader)
-		: CRenderStateObject(InMesh)
-		, VertexShader(InVertexShader)
-		, InputLayout(InInputLayout)
-		, PixelShader(InPixelShader)
+	CBasicRenderStateObject(Graphics::CMesh* InMesh, Graphics::CMaterial* InMaterial
+		, std::unique_ptr<Graphics::CVertexShader> InVertexShader, std::unique_ptr<Graphics::CInputLayout> InInputLayout)
+		: CRenderStateObject(InMesh, InMaterial)
+		, VertexShader(std::move(InVertexShader))
+		, InputLayout(std::move(InInputLayout))
 	{}
 	~CBasicRenderStateObject() = default;
 
@@ -49,9 +50,8 @@ public:
 	void BindRenderState(Graphics::CRenderContext& InContext) const override;
 
 private:
-	Graphics::CVertexShader& VertexShader;
-	Graphics::CInputLayout& InputLayout;
-	Graphics::CPixelShader& PixelShader;
+	std::unique_ptr<Graphics::CVertexShader> VertexShader;
+	std::unique_ptr<Graphics::CInputLayout> InputLayout;
 
 };
 

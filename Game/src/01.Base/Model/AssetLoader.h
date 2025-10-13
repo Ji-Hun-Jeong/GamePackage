@@ -11,39 +11,40 @@ public:
 	{
 		Device = InDevice;
 	}
-	Graphics::CMesh& MakeMesh(const std::string& InMeshName, const Graphics::TMeshData& InMeshData)
+	void Finalize()
 	{
-		VB = Device->CreateBuffer(InMeshData.VertexBufferDesc, &InMeshData.VertexBufferInitData);
-		IB = Device->CreateBuffer(InMeshData.IndexBufferDesc, &InMeshData.IndexBufferInitData);
-
-		Graphics::CMesh* Mesh = new Graphics::CMesh(*VB.get(), *IB.get(), InMeshData.IndexFormat, InMeshData.IndexCount, InMeshData.Stride
-			, InMeshData.Offset);
-
-		return *Mesh;
+		Models.clear();
 	}
-	std::pair<Graphics::CVertexShader*, Graphics::CInputLayout*> MakeVSAndInputLayout(const std::wstring& InVertexShaderPath
+	CModel& MakeModel(const std::string& InModelName, const Graphics::TMeshData& InMeshData, const Graphics::TMaterialData& InMaterialData)
+	{
+		auto Iter = Models.find(InModelName);
+		if (Iter != Models.end())
+			return *Iter->second.get();
+
+		auto VertexBuffer = Device->CreateBuffer(InMeshData.VertexBufferDesc, &InMeshData.VertexBufferInitData);
+		auto IndexBuffer = Device->CreateBuffer(InMeshData.IndexBufferDesc, &InMeshData.IndexBufferInitData);
+
+		auto PixelShader = Device->CreatePixelShader(InMaterialData.PixelShaderPath);
+
+		auto Mesh = std::make_unique<Graphics::CMesh>(std::move(VertexBuffer), std::move(IndexBuffer), InMeshData.IndexFormat, InMeshData.IndexCount, InMeshData.Stride
+			, InMeshData.Offset);
+		auto Material = std::make_unique<Graphics::CMaterial>(std::move(PixelShader));
+
+		CModel* Model = new CModel(std::move(Mesh), std::move(Material));
+		Models.emplace(InModelName, Model);
+		return *Model;
+	}
+
+	std::pair<std::unique_ptr<Graphics::CVertexShader>, std::unique_ptr<Graphics::CInputLayout>> MakeVSAndInputLayout(const std::wstring& InVertexShaderPath
 		, const std::vector<Graphics::TInputElementDesc>& InInputElementDescs)
 	{
-		auto VSAndInputLayout = Device->CreateVertexShaderAndInputLayout(InVertexShaderPath, InInputElementDescs);
-		VS = std::move(VSAndInputLayout.first);
-		IA = std::move(VSAndInputLayout.second);
-		return { VS.get(), IA.get() };
-	}
-	Graphics::CPixelShader& MakePixelShader(const std::wstring& InPixelShaderPath)
-	{
-		PS = Device->CreatePixelShader(InPixelShaderPath);
-		return *PS.get();
+		return Device->CreateVertexShaderAndInputLayout(InVertexShaderPath, InInputElementDescs);
 	}
 
 private:
 	Graphics::CRenderDevice* Device;
 
-	// 얘네가 안사라졌는데 Storage가 먼저 사라짐 싱글턴이라
-	std::unique_ptr<Graphics::CBuffer> VB;
-	std::unique_ptr<Graphics::CBuffer> IB;
-	std::unique_ptr<Graphics::CVertexShader> VS;
-	std::unique_ptr<Graphics::CInputLayout> IA;
-	std::unique_ptr<Graphics::CPixelShader> PS;
+	std::map<std::string, std::unique_ptr<CModel>> Models;
 
 };
 

@@ -19,10 +19,10 @@ namespace Graphics
 	class CMesh
 	{
 	public:
-		CMesh(CBuffer& InVertexBuffer, CBuffer& InIndexBuffer, EGIFormat InIndexFormat, uint32_t InIndexCount
+		CMesh(std::unique_ptr<CBuffer> InVertexBuffer, std::unique_ptr<CBuffer> InIndexBuffer, EGIFormat InIndexFormat, uint32_t InIndexCount
 			, uint32_t InStride, uint32_t InOffset)
-			: VertexBuffer(InVertexBuffer)
-			, IndexBuffer(InIndexBuffer)
+			: VertexBuffer(std::move(InVertexBuffer))
+			, IndexBuffer(std::move(InIndexBuffer))
 			, IndexFormat(InIndexFormat)
 			, IndexCount(InIndexCount)
 			, Stride(InStride)
@@ -35,8 +35,8 @@ namespace Graphics
 		uint32_t GetIndexCount() const { return IndexCount; }
 
 	private:
-		CBuffer& VertexBuffer;
-		CBuffer& IndexBuffer;
+		std::unique_ptr<CBuffer> VertexBuffer;
+		std::unique_ptr<CBuffer> IndexBuffer;
 		EGIFormat IndexFormat;
 		uint32_t IndexCount;
 		uint32_t Stride;

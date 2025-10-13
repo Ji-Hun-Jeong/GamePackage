@@ -51,10 +51,10 @@ public:
 	UINT GetInstanceId() const { return InstanceId; }
 
 public:
-	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+	CRenderComponent* GetRenderComponent() const { return RenderComponent.get(); }
 
 protected:
-	CRenderComponent* RenderComponent;
+	std::unique_ptr<CRenderComponent> RenderComponent;
 
 protected:
 	CObject()
