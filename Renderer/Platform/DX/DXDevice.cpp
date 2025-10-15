@@ -15,7 +15,7 @@ namespace Graphics::DX
 
 	CDXDevice::~CDXDevice()
 	{
-		
+
 	}
 
 	std::unique_ptr<CPixelShader> CDXDevice::CreatePixelShader(const std::wstring& InShaderPath)
@@ -138,11 +138,21 @@ namespace Graphics::DX
 			memcpy(&BufferData, InBufferInitalizeData, sizeof(TBufferInitalizeData));
 
 		ComPtr<ID3D11Buffer> Buffer;
-		HRESULT hr = Device->CreateBuffer(&D3DBufferDesc, &BufferData, Buffer.GetAddressOf());
-		if (FAILED(hr)) assert(0);
+		if (InBufferInitalizeData)
+		{
+			// default + initdata
+			HRESULT hr = Device->CreateBuffer(&D3DBufferDesc, &BufferData, Buffer.GetAddressOf());
+			if (FAILED(hr)) assert(0);
+		}
+		else
+		{
+			// dynamic + map
+			HRESULT hr = Device->CreateBuffer(&D3DBufferDesc, nullptr, Buffer.GetAddressOf());
+			if (FAILED(hr)) assert(0);
+		}
 
 		size_t BufferHandle = DXResourceStorage.InsertResource(Buffer);
-		return std::make_unique<CBuffer>(BufferHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), InBufferDesc);
+		return std::make_unique<CBuffer>(BufferHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), InBufferDesc, InBufferInitalizeData);
 	}
 
 	std::unique_ptr<CTexture2D> CDXDevice::CreateTexture2D(const TTexture2DDesc& InTexture2DDesc, const TBufferInitalizeData* InBufferInitalizeData)

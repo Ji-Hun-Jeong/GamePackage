@@ -25,12 +25,24 @@ namespace Graphics::DX
 		void IASetVertexBuffer(const CBuffer& InVertexBuffer, const uint32_t* InStride, const uint32_t* InOffset) override;
 		void IASetIndexBuffer(const CBuffer& InIndexBuffer, EGIFormat InFormat, uint32_t InOffset) override;
 		void VSSetShader(const CVertexShader& InVertexShader) override;
+		void VSSetConstantBuffers(uint32_t InStartSlot, uint32_t InNumBuffers, const CBuffer* InBuffers) override;
 		void RSSetViewPort(const TViewPort& InViewPort) override;
 		void RSSetState(const CRasterizerState& InRasterizerState) override;
 		void PSSetShader(const CPixelShader& InPixelShader) override;
 		void DrawIndexed(uint32_t InIndexCount) override
 		{
 			Context->DrawIndexed(InIndexCount, 0, 0);
+		}
+		void CopyBuffer(CBuffer& InBuffer, const TBufferMapResource& InBufferMapResource) override
+		{
+			const TBufferDesc& BufferDesc = InBuffer.GetBufferDesc();
+
+			ID3D11Resource* Resource = DXResourceStorage.GetResource<ID3D11Resource>(InBuffer.GetResourceHandle());
+			D3D11_MAPPED_SUBRESOURCE MappedSubResource;
+			ZeroMemory(&MappedSubResource, sizeof(MappedSubResource));
+			Context->Map(Resource, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedSubResource);
+			memcpy(MappedSubResource.pData, InBufferMapResource.MapDataPoint, InBufferMapResource.DataSize);
+			Context->Unmap(Resource, 0);
 		}
 
 	private:

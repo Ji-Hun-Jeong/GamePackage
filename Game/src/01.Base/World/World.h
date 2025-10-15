@@ -19,9 +19,6 @@ public:
 
 			Actor->BeginPlay();
 
-			for (auto& ObjectEnterWorldEvent : ObjectEnterWorldEvents)
-				ObjectEnterWorldEvent->EnterWorld(*this, *Actor);
-
 			WorldActors.push_back(std::move(Actor));
 		}
 
@@ -31,18 +28,13 @@ public:
 		if (bFlagDestroyedWorldObject == false)
 			return;
 
-		auto removeIter = std::remove_if(WorldActors.begin(), WorldActors.end(),
-			[&](const std::unique_ptr<CActor>& InActor) {
-				if (InActor->bDestroy)
-				{
-					NumberGenerator.ReleaseNumber(InActor->GetInstanceId());
-					for (auto& ObjectExitWorldEvent : ObjectExitWorldEvents)
-						ObjectExitWorldEvent->ExitWorld(*this, *InActor.get());
-				}
+		auto RemoveStartIter = std::remove_if(WorldActors.begin(), WorldActors.end(),
+			[](const std::unique_ptr<CActor>& InActor)->bool
+			{
 				return InActor->bDestroy;
 			});
 
-		WorldActors.erase(removeIter, WorldActors.end());
+		WorldActors.erase(RemoveStartIter, WorldActors.end());
 
 		bFlagDestroyedWorldObject = false;
 	}
@@ -54,8 +46,12 @@ public:
 		Object->InstanceId = NumberGenerator.GenerateNumber();
 		Object->World = this;
 
-		for (auto& NewObjectEvent : NewObjectEvents)
-			NewObjectEvent->CreatedInWorld(*this, *Object);
+		auto Iter = NewObjectEvents.find(T::GetStaticType());
+		if (Iter != NewObjectEvents.end())
+		{
+			for (auto& NewObjectEvent : Iter->second)
+				NewObjectEvent->CreatedInWorld(*this, *Object);
+		}
 
 		return std::unique_ptr<T>(Object);
 	}
@@ -64,28 +60,29 @@ public:
 	T* SpawnActor(CActor* InOwner = nullptr)
 	{
 		std::unique_ptr<T> Actor = NewObject<T>();
+		T* RawActor = Actor.get();
 
 		if (InOwner)
 			InOwner->AttachChild(Actor.get());
 
 		NextAddedWorldActors.push(std::move(Actor));
 
-		return Actor.get();
+		return RawActor;
 	}
 
 	const std::vector<std::unique_ptr<CActor>>& GetWorldActors() const { return WorldActors; }
 	void MarkDestroyed() { bFlagDestroyedWorldObject = true; }
-	void AddObjectEnterWorldEvent(std::unique_ptr<IObjectEnterWorld> InObjectEnterWorldEvent)
+	void AddNewObjectEvent(ObjectType InObjectType, std::unique_ptr<INewObjectEvent> InNewObjectEvent)
 	{
-		ObjectEnterWorldEvents.push_back(std::move(InObjectEnterWorldEvent));
-	}
-	void AddObjectExitWorldEvent(std::unique_ptr<IObjectExitWorld> InObjectExitWorldEvent)
-	{
-		ObjectExitWorldEvents.push_back(std::move(InObjectExitWorldEvent));
-	}
-	void AddNewObjectEvent(std::unique_ptr<INewObjectEvent> InNewObjectEvent)
-	{
-		NewObjectEvents.push_back(std::move(InNewObjectEvent));
+		auto Iter = NewObjectEvents.find(InObjectType);
+		if (Iter == NewObjectEvents.end())
+		{
+			std::vector<std::unique_ptr<INewObjectEvent>> Vec;
+			Vec.push_back(std::move(InNewObjectEvent));
+			NewObjectEvents.insert({ InObjectType, std::move(Vec) });
+		}
+		else
+			Iter->second.push_back(std::move(InNewObjectEvent));
 	}
 
 private:
@@ -94,8 +91,6 @@ private:
 	bool bFlagDestroyedWorldObject;
 
 	CNumberGenerator NumberGenerator;
-
-	std::vector<std::unique_ptr<IObjectEnterWorld>> ObjectEnterWorldEvents;
-	std::vector<std::unique_ptr<IObjectExitWorld>> ObjectExitWorldEvents;
-	std::vector<std::unique_ptr<INewObjectEvent>> NewObjectEvents;
+	
+	std::map<ObjectType, std::vector<std::unique_ptr<INewObjectEvent>>> NewObjectEvents;
 };

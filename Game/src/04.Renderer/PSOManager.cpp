@@ -5,13 +5,14 @@
 
 void CPSO::BindToPipeline(Graphics::CRenderContext& InContext)
 {
-	InContext.RSSetState(*RasterizerState);
-	InContext.VSSetShader(*VertexShader);
 	InContext.IASetInputLayout(*InputLayout);
+	InContext.IASetPrimitiveTopology(PrimitiveTopology);
+	InContext.VSSetShader(*VertexShader);
+	InContext.RSSetState(*RasterizerState);
 	InContext.PSSetShader(*PixelShader);
 }
 
-void CPSOManager::InitalizePSO(Graphics::CRenderDevice& InDevice)
+CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 {
 	std::vector<Graphics::TInputElementDesc> InputElementDescs =
 	{
@@ -30,6 +31,8 @@ void CPSOManager::InitalizePSO(Graphics::CRenderDevice& InDevice)
 
 	auto PS = InDevice.CreatePixelShader(L"resources/shader/BasicPixelShader.hlsl");
 
-	CPSO* BasicPSO = new CPSO(std::move(VSIA.first), std::move(VSIA.second), std::move(RasterizerState), std::move(PS));
-	EmplacePSO("BasicPSO", BasicPSO);
+	CPSO* BasicPSO = new CPSO(std::move(VSIA.first), std::move(VSIA.second), Graphics::ETopology::PrimitiveTopologyTRIANGLELIST
+		, std::move(RasterizerState), std::move(PS));
+
+	PSOs[size_t(EPSOType::ColorBasic)] = std::unique_ptr<CPSO>(BasicPSO);
 }

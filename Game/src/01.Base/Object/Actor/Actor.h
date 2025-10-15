@@ -1,13 +1,16 @@
 #pragma once
 #include "../Object.h"
+#include "../Component/Transform.h"
 #include "../Component/RenderComponent.h"
 
 class CActor : public CObject
 {
 	DONTCOPY(CActor)
 public:
-	CActor() 
+	CActor()
 		: Owner(nullptr)
+		, Transform(nullptr)
+		, RenderComponent(nullptr)
 	{}
 	virtual ~CActor() {}
 
@@ -34,12 +37,13 @@ private:
 	}
 public:
 	CActor* GetOwner() { return Owner; }
+	CTransform* GetTransform() const { return Transform.get(); }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent.get(); }
 
 protected:
+	std::unique_ptr<CTransform> Transform;
 	std::unique_ptr<CRenderComponent> RenderComponent;
 
-private:
 	virtual void Update(float InDeltaTime)
 	{
 		for (auto& Child : Childs)

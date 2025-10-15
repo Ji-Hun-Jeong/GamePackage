@@ -3,6 +3,7 @@
 
 namespace Graphics
 {
+	// 텍스쳐, PixelShaderConstantBuffer, SamplerState <- 이건 PSO..?
 	struct TMaterialData
 	{
 		

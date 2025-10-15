@@ -1,17 +1,18 @@
-struct VSInput
+#include "Common.hlsli"
+
+#define Matrix matrix
+cbuffer ConstBuffer : register(b0)
 {
-    float3 Position : POSITION;
-    float3 Color : COLOR;
+    matrix Model;
 };
-struct PSInput
-{
-    float4 Position : SV_Position;
-    float3 Color : COLOR;
-};
+
 PSInput main(VSInput InInput)
 {
     PSInput Output;
-    Output.Position = float4(InInput.Position, 1.0f);
+    float4 Position = float4(InInput.Position, 1.0f);
+    Position = mul(Position, Model);
+    
+    Output.Position = Position;
     Output.Color = InInput.Color;
     return Output;
 }

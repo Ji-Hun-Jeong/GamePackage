@@ -53,7 +53,6 @@ public:
 		MeshData.IndexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
 
 		MeshData.IndexBufferInitData.CopyStartPoint = Indices.data();
-		MeshData.PrimitiveTopology = Graphics::ETopology::PrimitiveTopologyTRIANGLELIST;
 		MeshData.IndexFormat = Graphics::EGIFormat::GI_FORMAT_R32_UINT;
 		MeshData.IndexCount = uint32_t(Indices.size());
 		MeshData.Stride = sizeof(Vertex);
@@ -61,13 +60,33 @@ public:
 
 		Graphics::TMaterialData MaterialData;
 
-		CModel* Model = CAssetLoader::GetInst().MakeModel("Triangle", MeshData, MaterialData);
-
-		CPSO* BasicPSO = CPSOManager::GetInst().GetPSO("BasicPSO");
 		RenderComponent = GetWorld()->NewObject<CRenderComponent>();
-		CRenderStateObject* RenderStateObject = new CRenderStateObject(&Model->GetMesh(), &Model->GetMaterial(), BasicPSO);
-		RenderComponent->SetRenderStateObject(RenderStateObject);
+		RenderComponent->SetMesh(MeshData);
+		RenderComponent->SetMaterial(MaterialData);
+		RenderComponent->SetPSO(EPSOType::ColorBasic);
+
+		Transform = GetWorld()->NewObject<CTransform>();
+		Transform->SetSpeed(0.001f);
+
+		Graphics::TBufferDesc VertexConstBufferDesc;
+		VertexConstBufferDesc.ByteWidth = sizeof(Transform->GetModelMatrix());
+		VertexConstBufferDesc.Usage = Graphics::EUsage::UsageDynamic;
+		VertexConstBufferDesc.BindFlags = Graphics::EBindFlags::BindConstantBuffer;
+		VertexConstBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessWrite;
+
+		Graphics::TBufferMapResource VertexConstBufferMapResource;
+		VertexConstBufferMapResource.MapDataPoint = &Transform->GetModelMatrix();
+		VertexConstBufferMapResource.DataSize = sizeof(Transform->GetModelMatrix());
+
+		RenderComponent->AddVertexConstBuffer(VertexConstBufferDesc, VertexConstBufferMapResource);
 		std::cout << "CO\n";
+	}
+	void Update(float InDeltaTime) override
+	{
+		CActor::Update(InDeltaTime);
+		Transform->Move(Vector3(1.0f, 0.0f, 0.0f));
+		Transform->CalculateModelMatrix();
+		RenderComponent->UpdateVertexConstBuffer(0);
 	}
 };
 

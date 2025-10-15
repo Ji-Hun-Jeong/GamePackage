@@ -1,7 +1,5 @@
 #pragma once
 #include <Core/public/Application.h>
-#include <Renderer/Platform/DX/DXInfra.h>
-#include <Renderer/Rendering/MeshManager.h>
 
 #include "01.Base/World/World.h"
 #include "04.Renderer/Renderer.h"
@@ -32,14 +30,7 @@ public:
 private:
 	CWorld World;
 
-	Graphics::DX::CDXInfra GraphicInfra;
-	Graphics::CRenderDevice& Device;
-	Graphics::CRenderContext& Context;
-	Graphics::CRenderSwapChain& SwapChain;
-
 	CRenderer Renderer;
-
-	Graphics::CMeshManager MeshManager;
 };
 
 

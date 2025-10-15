@@ -42,6 +42,11 @@ namespace Graphics
 		uint32_t SysMemSlicePitch = 0;
 	};
 
+	struct TBufferMapResource
+	{
+		const void* MapDataPoint = nullptr;
+		size_t DataSize = 0;
+	};
 	// Usage가 D3D11_USAGE_IMMUTABLE인 경우에는 pInitialData가 필수. nullptr 넣으면 에러
 	/*- DEFAULT: 일반적인 정점 버퍼, 인덱스 버퍼, 텍스처 등 GPU 중심 리소스
 	  - IMMUTABLE : 절대 바뀌지 않는 텍스처, 셰이더 상수 등
@@ -66,14 +71,16 @@ namespace Graphics
 	{
 	public:
 		CBuffer(size_t InResourceHandle, std::function<void(size_t)> InEventReleaseResource
-			, const TBufferDesc& InBufferDesc)
+			, const TBufferDesc& InBufferDesc, const TBufferInitalizeData* InBufferInitalizeData)
 			: CRHI(InResourceHandle, InEventReleaseResource)
 			, BufferDesc(InBufferDesc)
+			, BufferInitalizeData(InBufferInitalizeData)
 		{}
 		~CBuffer() = default;
 
 	public:
 		const TBufferDesc& GetBufferDesc() const { return BufferDesc; }
+		const TBufferInitalizeData* GetBufferInitalizeData() const { return BufferInitalizeData; }
 		uint32_t GetRHIType() override
 		{
 			return StaticType();
@@ -86,6 +93,7 @@ namespace Graphics
 
 	private:
 		TBufferDesc BufferDesc;
+		const TBufferInitalizeData* BufferInitalizeData;
 
 	};
 

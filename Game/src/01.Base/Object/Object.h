@@ -1,11 +1,12 @@
 #pragma once
-#include "../Model/AssetLoader.h"
 
 class IObjectDestroy
 {
 	friend class CObject;
 	virtual void OnDestroy(class CObject& InObject) = 0;
 };
+
+using ObjectType = size_t;
 
 class CObject
 {
@@ -40,7 +41,7 @@ protected:
 public:
 	virtual void BeginPlay()
 	{
-		
+
 	}
 	virtual void EndPlay()
 	{
@@ -74,19 +75,21 @@ private:
 	std::vector<std::unique_ptr<IObjectDestroy>> ObjectDestroyEvents;
 
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public:
-	virtual size_t GetType() = 0;
-	static size_t SetType() { return sObjectType++; }
+	virtual ObjectType GetType() = 0;
+protected:
+	static ObjectType SetType() { return sObjectType++; }
 private:
-	static size_t sObjectType;
+	static ObjectType sObjectType;
 
 };
 
 #define GenerateObject() \
 public:\
-	static size_t GetStaticType()\
+	static ObjectType GetStaticType()\
 	{\
-		static size_t ObjectType = SetType();\
-		return ObjectType;\
+		static ObjectType Type = SetType();\
+		return Type;\
 	}\
-	size_t GetType() override {return GetStaticType();}
+	ObjectType GetType() override {return GetStaticType();}

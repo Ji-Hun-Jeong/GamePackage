@@ -1,37 +1,51 @@
 #pragma once
 #include <Renderer/Rendering/Mesh.h>
 #include <Renderer/Rendering/Material.h>
+#include <Renderer/RHI/Buffer.h>
 #include "PSOManager.h"
 
 class CRenderStateObject
 {
 	friend class CRenderer;
-public:
-	CRenderStateObject(Graphics::CMesh* InMesh, Graphics::CMaterial* InMaterial, CPSO* InPSO)
-		: Mesh(InMesh)
-		, Material(InMaterial)
-		, PSO(InPSO)
+	CRenderStateObject()
+		: Mesh(nullptr)
+		, Material(nullptr)
+		, PSO(nullptr)
 		, bDestroy(false)
 	{}
+public:
 	~CRenderStateObject() = default;
 
 public:
-	void BindRenderState(Graphics::CRenderContext& InContext) const
+	void SetMesh(Graphics::CMesh* InMesh) { Mesh = InMesh; }
+	void SetMaterial(Graphics::CMaterial* InMaterial) { Material = InMaterial; }
+	void SetPSO(CPSO* InPSO) { PSO = InPSO; }
+
+	void AddVertexConstBuffer(Graphics::CBuffer* InVertexConstBuffer, const Graphics::TBufferMapResource& InVertexBufferMapResource)
 	{
-		PSO->BindToPipeline(InContext);
-		Material->BindToPipeline(InContext);
-		Mesh->BindToPipeline(InContext);
+		assert(InVertexConstBuffer);
+		VertexConstBuffers.push_back(InVertexConstBuffer);
+		VertexBufferMapResources.push_back(InVertexBufferMapResource);
+		size_t Index = VertexConstBuffers.size() - 1;
+		UpdateVertexConstBuffer(uint32_t(Index));
 	}
+	void UpdateVertexConstBuffer(uint32_t Index)
+	{
+		UpdateBufferIndexs.push(uint32_t(Index));
+	}
+
+	void BindRenderState(Graphics::CRenderContext& InContext);
 	void Destroy() { bDestroy = true; }
-	bool operator > (CRenderStateObject& InOther) const
-	{
-		return &Mesh > &InOther.Mesh;
-	}
 
 protected:
 	Graphics::CMesh* Mesh;
 	Graphics::CMaterial* Material;
 	CPSO* PSO;
+
+	std::vector<Graphics::CBuffer*> VertexConstBuffers;
+	std::vector<Graphics::TBufferMapResource> VertexBufferMapResources;
+	std::queue<uint32_t> UpdateBufferIndexs;
+
 	bool bDestroy;
 
 };

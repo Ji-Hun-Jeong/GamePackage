@@ -1,8 +1,4 @@
-struct PSInput
-{
-    float4 Position : SV_Position;
-    float3 Color : COLOR;
-};
+#include "Common.hlsli"
 
 float4 main(PSInput InInput) : SV_TARGET
 {

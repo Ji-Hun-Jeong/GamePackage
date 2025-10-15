@@ -43,6 +43,15 @@ namespace Graphics::DX
 		ID3D11VertexShader* RawVertexShader = DXResourceStorage.GetResource<ID3D11VertexShader>(InVertexShader.GetResourceHandle());
 		Context->VSSetShader(RawVertexShader, nullptr, 0);
 	}
+	void CDXContext::VSSetConstantBuffers(uint32_t InStartSlot, uint32_t InNumBuffers, const CBuffer* InBuffers)
+	{
+		std::vector<ID3D11Buffer*> Buffers(InNumBuffers, nullptr);
+		for (size_t i = 0; i < InNumBuffers; ++i)
+		{
+			Buffers[i] = DXResourceStorage.GetResource<ID3D11Buffer>(InBuffers[i].GetResourceHandle());
+		}
+		Context->VSSetConstantBuffers(InStartSlot, InNumBuffers, Buffers.data());
+	}
 	void CDXContext::RSSetViewPort(const TViewPort& InViewPort)
 	{
 		D3D11_VIEWPORT RawViewPort;

@@ -8,21 +8,21 @@ namespace Graphics
 	class CRHI
 	{
 	public:
-		CRHI(size_t InResourceHandle, std::function<void(size_t)> InEventReleaseResource)
-			: ResourceHandle(InResourceHandle)
+		CRHI(size_t InRHIHandle, std::function<void(size_t)> InEventReleaseResource)
+			: RHIHandle(InRHIHandle)
 			, EventReleaseResource(InEventReleaseResource)
 		{}
 		virtual ~CRHI() = 0
 		{
-			EventReleaseResource(ResourceHandle);
+			EventReleaseResource(RHIHandle);
 		}
 
 	public:
-		size_t GetResourceHandle() const { return ResourceHandle; }
+		size_t GetResourceHandle() const { return RHIHandle; }
 		virtual uint32_t GetRHIType() = 0;
 
 	private:
-		size_t ResourceHandle;
+		size_t RHIHandle;
 		std::function<void(size_t)> EventReleaseResource;
 
 	protected:

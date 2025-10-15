@@ -5,26 +5,25 @@
 class CGetRenderStateObject : public INewObjectEvent
 {
 public:
-	CGetRenderStateObject(CRenderer& InRenderer)
+	CGetRenderStateObject(CRenderer& InRenderer, CRenderResourceLoader& InRenderResourceLoader)
 		: Renderer(InRenderer)
+		, RenderResourceLoader(InRenderResourceLoader)
 	{}
 private:
 	// INewObjectEvent을(를) 통해 상속됨
 	void CreatedInWorld(CWorld& InWorld, CObject& InNewObject) override
 	{
-		if (CRenderComponent::GetStaticType() != InNewObject.GetType())
-			return;
-
 		CRenderComponent* RenderComponent = static_cast<CRenderComponent*>(&InNewObject);
-		RenderComponent->SetRenderStateObjectEvent = [this](CRenderStateObject* InRenderStateObject)
-			{
-				Renderer.AddRenderStateObject(std::unique_ptr<CRenderStateObject>(InRenderStateObject));
-			};
-	}
-	CRenderer& Renderer;
+		CRenderStateObject* RenderStateObject = Renderer.NewRenderStateObject();
 
+		RenderComponent->SetRenderStateObject(RenderStateObject);
+		RenderComponent->SetRenderResourceLoader(&RenderResourceLoader);
+	}
+
+	CRenderer& Renderer;
+	CRenderResourceLoader& RenderResourceLoader;
 };
 void CRenderer::InitalizeFromWorld(CWorld& InWorld)
 {
-	InWorld.AddNewObjectEvent(std::make_unique<CGetRenderStateObject>(*this));
+	InWorld.AddNewObjectEvent(CRenderComponent::GetStaticType(), std::make_unique<CGetRenderStateObject>(*this, RenderResourceLoader));
 }

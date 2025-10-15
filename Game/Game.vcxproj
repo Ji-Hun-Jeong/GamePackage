@@ -182,8 +182,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\01.Base\Model\Model.cpp" />
-    <ClCompile Include="src\01.Base\Model\AssetLoader.cpp" />
+    <ClCompile Include="src\04.Renderer\RenderResourceLoader.cpp" />
     <ClCompile Include="src\01.Base\Object\Component\RenderComponent.cpp" />
     <ClCompile Include="src\01.Base\Object\Component\Component.cpp" />
     <ClCompile Include="src\01.Base\World\WorldEvent.cpp" />
@@ -204,10 +203,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\01.Base\World\World.cpp" />
+    <ClCompile Include="src\01.Base\Object\Component\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\01.Base\Model\Model.h" />
-    <ClInclude Include="src\01.Base\Model\AssetLoader.h" />
+    <ClInclude Include="src\04.Renderer\RenderResourceLoader.h" />
     <ClInclude Include="src\01.Base\Object\Component\RenderComponent.h" />
     <ClInclude Include="src\01.Base\Object\Component\Component.h" />
     <ClInclude Include="src\01.Base\World\WorldEvent.h" />
@@ -223,6 +222,7 @@
     <ClInclude Include="src\00.App\Game.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\01.Base\World\World.h" />
+    <ClInclude Include="src\01.Base\Object\Component\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">
@@ -245,6 +245,9 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shader\Common.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
