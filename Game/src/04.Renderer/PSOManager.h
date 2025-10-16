@@ -15,29 +15,28 @@ namespace Graphics
 class CPSO
 {
 public:
-	CPSO(std::unique_ptr<Graphics::CVertexShader> InVertexShader, std::unique_ptr<Graphics::CInputLayout> InInputLayout
-		, Graphics::ETopology InPrimitiveTopology
-		, std::unique_ptr<Graphics::CRasterizerState> InRasterizerState, std::unique_ptr<Graphics::CPixelShader> InPixelShader)
-		: VertexShader(std::move(InVertexShader))
-		, InputLayout(std::move(InInputLayout))
-		, PrimitiveTopology(InPrimitiveTopology)
-		, RasterizerState(std::move(InRasterizerState))
-		, PixelShader(std::move(InPixelShader))
+	CPSO(Graphics::ETopology InPrimitiveTopology, Graphics::CInputLayout* InInputLayout
+		, Graphics::CVertexShader* InVertexShader, Graphics::CRasterizerState* InRasterizerState, Graphics::CPixelShader* InPixelShader)
+		: PrimitiveTopology(InPrimitiveTopology)
+		, InputLayout(InInputLayout)
+		, VertexShader(InVertexShader)
+		, RasterizerState(InRasterizerState)
+		, PixelShader(InPixelShader)
 	{}
 	void BindToPipeline(Graphics::CRenderContext& InContext);
 
 private:
-	std::unique_ptr<Graphics::CVertexShader> VertexShader;
-	std::unique_ptr<Graphics::CInputLayout> InputLayout;
 	Graphics::ETopology PrimitiveTopology;
-	std::unique_ptr<Graphics::CRasterizerState> RasterizerState;
-	std::unique_ptr<Graphics::CPixelShader> PixelShader;
+	Graphics::CInputLayout* InputLayout;
+	Graphics::CVertexShader* VertexShader;
+	Graphics::CRasterizerState* RasterizerState;
+	Graphics::CPixelShader* PixelShader;
 
 };
 
 enum class EPSOType
 {
-	ColorBasic,
+	Basic,
 	End,
 };
 
@@ -54,9 +53,13 @@ public:
 	}
 
 private:
+	std::unique_ptr<Graphics::CInputLayout> BasicInputLayout;
+	std::unique_ptr<Graphics::CVertexShader> BasicVertexShader;
+	std::unique_ptr<Graphics::CRasterizerState> BasicRasterizerState;
+	std::unique_ptr<Graphics::CPixelShader> BasicPixelShader;
+
 	std::array<std::unique_ptr<CPSO>, size_t(EPSOType::End)> PSOs;
 
-	
 };
 
 

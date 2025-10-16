@@ -6,22 +6,22 @@
 class CRenderer
 {
 public:
-	CRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra)
-		: GraphicInfra(std::move(InGraphicInfra))
+	CRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, const uint32_t& InScreenWidth, const uint32_t& InScreenHeight)
+		: ScreenWidth(InScreenWidth)
+		, ScreenHeight(InScreenHeight)
+		, GraphicInfra(std::move(InGraphicInfra))
 		, Device(GraphicInfra->GetDevice())
 		, Context(GraphicInfra->GetContext())
 		, SwapChain(GraphicInfra->GetSwapChain())
-		, RenderTargetView(nullptr)
+		, RenderTargetView(Device.CreateRenderTargetView(*SwapChain.GetWindowTextureBuffer()))
 		, PSOManager(Device)
-		, RenderResourceLoader(Device, PSOManager)
+		, RenderResourceLoader(Device, PSOManager, ScreenWidth, ScreenHeight)
 	{
-		RenderTargetView = Device.CreateRenderTargetView(*SwapChain.GetWindowTextureBuffer());
-
 		Graphics::TViewPort ViewPort;
 		ViewPort.TopLeftX = 0;
 		ViewPort.TopLeftY = 0;
-		ViewPort.Width = static_cast<float>(1280);
-		ViewPort.Height = static_cast<float>(960);
+		ViewPort.Width = static_cast<float>(InScreenWidth);
+		ViewPort.Height = static_cast<float>(InScreenHeight);
 		ViewPort.MinDepth = 0.0f;
 		ViewPort.MaxDepth = 1.0f;
 
@@ -63,6 +63,9 @@ public:
 	}
 
 private:
+	const uint32_t& ScreenWidth;
+	const uint32_t& ScreenHeight;
+
 	std::unique_ptr<Graphics::IGraphicInfra> GraphicInfra;
 	Graphics::CRenderDevice& Device;
 	Graphics::CRenderContext& Context;
@@ -74,6 +77,7 @@ private:
 	std::unique_ptr<Graphics::CRenderTargetView> RenderTargetView;
 
 	std::vector<std::unique_ptr<CRenderStateObject>> RenderStateObjects;
+
 
 
 };

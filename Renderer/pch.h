@@ -5,6 +5,7 @@
 #pragma comment(lib, "DirectXTK.lib")
 
 #include <directxtk/SimpleMath.h>
+#include <directxtk/WICTextureLoader.h>
 #include <vector>
 #include <map>
 #include <string>

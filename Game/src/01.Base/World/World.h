@@ -29,6 +29,9 @@ public:
 		for (auto& WorldActor : WorldActors)
 			WorldActor->CaptureSnapShot();
 
+	}
+	void Arrange()
+	{
 		if (bFlagDestroyedWorldObject == false)
 			return;
 

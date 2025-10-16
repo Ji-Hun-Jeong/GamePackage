@@ -66,6 +66,9 @@
     <ClCompile Include="src\04.Renderer\RenderResourceLoader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\03.Utils\GeometryGenerator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -119,10 +122,15 @@
     <ClInclude Include="src\04.Renderer\RenderResourceLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\03.Utils\GeometryGenerator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicVertexShader.hlsl" />
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl" />
+    <FxCompile Include="resources\shader\ImagePixelShader.hlsl" />
+    <FxCompile Include="resources\shader\ImageVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shader\Common.hlsli" />

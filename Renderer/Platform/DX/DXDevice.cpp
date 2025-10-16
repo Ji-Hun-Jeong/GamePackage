@@ -167,7 +167,7 @@ namespace Graphics::DX
 
 		size_t Texture2DHandle = DXResourceStorage.InsertResource(Texture2D);
 
-		return std::make_unique<CTexture2D>(Texture2DHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
+		return std::make_unique<CTexture2D>(Texture2DHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), InTexture2DDesc);
 	}
 
 	std::unique_ptr<CRenderTargetView> CDXDevice::CreateRenderTargetView(const CTexture2D& InTexture2D)
@@ -178,7 +178,7 @@ namespace Graphics::DX
 
 		size_t RenderTargetViewHandle = DXResourceStorage.InsertResource(RenderTargetView);
 
-		return std::make_unique<CRenderTargetView>(RenderTargetViewHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
+		return std::make_unique<CRenderTargetView>(RenderTargetViewHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), InTexture2D);
 	}
 
 	std::unique_ptr<CRasterizerState> CDXDevice::CreateRasterizerState(const TRasterizerDesc& InRasterizerDesc)
@@ -204,5 +204,24 @@ namespace Graphics::DX
 		size_t DepthStencilViewHandle = DXResourceStorage.InsertResource(DepthStencilView);
 
 		return std::make_unique<CDepthStencilView>(DepthStencilViewHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
+	}
+	std::unique_ptr<CShaderResourceView> CDXDevice::CreateImage(const std::wstring& InImagePath)
+	{
+		ComPtr<ID3D11Texture2D> Texture2D;
+		ComPtr<ID3D11ShaderResourceView> ShaderResourceView;
+		HRESULT HR = DirectX::CreateWICTextureFromFile(Device.Get(), InImagePath.c_str(), (ID3D11Resource**)Texture2D.GetAddressOf(), ShaderResourceView.GetAddressOf());
+		if (FAILED(HR)) assert(0);
+
+		size_t TextureHandle = DXResourceStorage.InsertResource(Texture2D);
+		size_t SRVHandle = DXResourceStorage.InsertResource(ShaderResourceView);
+
+		D3D11_TEXTURE2D_DESC RawTextureDesc;
+		Texture2D->GetDesc(&RawTextureDesc);
+		
+		TTexture2DDesc Texture2DDesc;
+		memcpy(&Texture2DDesc, &RawTextureDesc, sizeof(Texture2DDesc));
+
+		auto Texture = std::make_unique<CTexture2D>(TextureHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), Texture2DDesc);
+		return std::make_unique<CShaderResourceView>(SRVHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), std::move(Texture));
 	}
 }

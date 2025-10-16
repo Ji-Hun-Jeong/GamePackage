@@ -5,8 +5,8 @@
 
 void CPSO::BindToPipeline(Graphics::CRenderContext& InContext)
 {
-	InContext.IASetInputLayout(*InputLayout);
 	InContext.IASetPrimitiveTopology(PrimitiveTopology);
+	InContext.IASetInputLayout(*InputLayout);
 	InContext.VSSetShader(*VertexShader);
 	InContext.RSSetState(*RasterizerState);
 	InContext.PSSetShader(*PixelShader);
@@ -17,9 +17,11 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 	std::vector<Graphics::TInputElementDesc> InputElementDescs =
 	{
 		{Graphics::ESementicName::Position, Graphics::EFormat::Vector3, 0, Graphics::EInputClass::VertexData},
-		{Graphics::ESementicName::Color, Graphics::EFormat::Vector3, 12, Graphics::EInputClass::VertexData}
+		{Graphics::ESementicName::UV, Graphics::EFormat::Vector2, 12, Graphics::EInputClass::VertexData}
 	};
-	auto VSIA = InDevice.CreateVertexShaderAndInputLayout(L"resources/shader/BasicVertexShader.hlsl", InputElementDescs);
+	auto VSIA = InDevice.CreateVertexShaderAndInputLayout(L"resources/shader/ImageVertexShader.hlsl", InputElementDescs);
+	BasicVertexShader = std::move(VSIA.first);
+	BasicInputLayout = std::move(VSIA.second);
 
 	Graphics::TRasterizerDesc RasterizerDesc;
 	RasterizerDesc.FillMode = Graphics::EFillMode::FillSolid;
@@ -27,12 +29,12 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 	RasterizerDesc.FrontCounterClockwise = false;
 	RasterizerDesc.DepthClipEnable = true;
 	RasterizerDesc.MultisampleEnable = true;
-	auto RasterizerState = InDevice.CreateRasterizerState(RasterizerDesc);
+	BasicRasterizerState = InDevice.CreateRasterizerState(RasterizerDesc);
 
-	auto PS = InDevice.CreatePixelShader(L"resources/shader/BasicPixelShader.hlsl");
+	BasicPixelShader = InDevice.CreatePixelShader(L"resources/shader/ImagePixelShader.hlsl");
 
-	CPSO* BasicPSO = new CPSO(std::move(VSIA.first), std::move(VSIA.second), Graphics::ETopology::PrimitiveTopologyTRIANGLELIST
-		, std::move(RasterizerState), std::move(PS));
+	CPSO* ImagePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
+		, BasicRasterizerState.get(), BasicPixelShader.get());
 
-	PSOs[size_t(EPSOType::ColorBasic)] = std::unique_ptr<CPSO>(BasicPSO);
+	PSOs[size_t(EPSOType::Basic)] = std::unique_ptr<CPSO>(ImagePSO);
 }

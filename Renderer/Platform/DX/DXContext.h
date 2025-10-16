@@ -29,6 +29,7 @@ namespace Graphics::DX
 		void RSSetViewPort(const TViewPort& InViewPort) override;
 		void RSSetState(const CRasterizerState& InRasterizerState) override;
 		void PSSetShader(const CPixelShader& InPixelShader) override;
+		void PSSetShaderResources(uint32_t InStartSlot, uint32_t InNumViews, const std::vector<std::unique_ptr<CShaderResourceView>>& InShaderResourceViews) override;
 		void DrawIndexed(uint32_t InIndexCount) override
 		{
 			Context->DrawIndexed(InIndexCount, 0, 0);

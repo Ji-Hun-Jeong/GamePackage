@@ -198,6 +198,7 @@
     <ClInclude Include="RHI\VertexShader.h" />
     <ClInclude Include="RHI\Texture2D.h" />
     <ClInclude Include="RHI\ViewPort.h" />
+    <ClInclude Include="RHI\ShaderResourceView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\NumberGenerator.cpp" />
@@ -231,6 +232,7 @@
     <ClCompile Include="RHI\VertexShader.cpp" />
     <ClCompile Include="RHI\Texture2D.cpp" />
     <ClCompile Include="RHI\ViewPort.cpp" />
+    <ClCompile Include="RHI\ShaderResourceView.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

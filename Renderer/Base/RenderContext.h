@@ -8,6 +8,7 @@
 #include "RHI/RasterizerState.h"
 #include "RHI/DepthStencilView.h"
 #include "RHI/ViewPort.h"
+#include "RHI/ShaderResourceView.h"
 
 namespace Graphics
 {
@@ -29,6 +30,7 @@ namespace Graphics
 		virtual void RSSetViewPort(const TViewPort& InViewPort) = 0;
 		virtual void RSSetState(const CRasterizerState& InRasterizerState) = 0;
 		virtual void PSSetShader(const CPixelShader& InPixelShader) = 0;
+		virtual void PSSetShaderResources(uint32_t InStartSlot, uint32_t InNumViews, const std::vector<std::unique_ptr<CShaderResourceView>>& InShaderResourceViews) = 0;
 		virtual void DrawIndexed(uint32_t InIndexCount) = 0;
 		virtual void CopyBuffer(CBuffer& InBuffer, const void* InMapDataPoint, size_t InDataSize) = 0;
 

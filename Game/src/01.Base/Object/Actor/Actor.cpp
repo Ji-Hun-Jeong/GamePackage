@@ -2,7 +2,7 @@
 #include "Actor.h"
 #include "../../World/World.h"
 
-void CActor::AddRenderComponent()
+void CActor::SetRenderComponent()
 {
 	RenderComponent = GetWorld()->NewObject<CRenderComponent>();
 
@@ -18,7 +18,6 @@ void CActor::AddRenderComponent()
 void CActor::Initalize()
 {
 	CObject::Initalize();
-
 
 	Transform = GetWorld()->NewObject<CTransform>();
 

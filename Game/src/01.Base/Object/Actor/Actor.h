@@ -43,7 +43,7 @@ public:
 protected:
 	std::unique_ptr<CTransform> Transform;
 	std::unique_ptr<CRenderComponent> RenderComponent;
-	void AddRenderComponent();
+	void SetRenderComponent();
 	virtual void Initalize() override;
 	virtual void BeginPlay() override
 	{

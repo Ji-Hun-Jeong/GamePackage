@@ -3,12 +3,12 @@
 #define Matrix matrix
 cbuffer ConstBuffer : register(b0)
 {
-    matrix Model;
+    Matrix Model;
 };
 
-PSInput main(VSInput InInput)
+ColorPixelShaderInput main(ColorVertexShaderInput InInput)
 {
-    PSInput Output;
+    ColorPixelShaderInput Output;
     float4 Position = float4(InInput.Position, 1.0f);
     Position = mul(Position, Model);
     

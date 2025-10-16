@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "World.h"
 
-class CO : public CActor
+class CIO : public CActor
 {
 	GenerateObject()
 public:
@@ -12,14 +12,15 @@ public:
 		struct Vertex
 		{
 			Vector3 Position;
-			Vector3 Color;
+			Vector2 Uv;
 		};
 
 		std::vector<Vertex> Vertices =
 		{
-			{Vector3(-1.0f, -1.0f, 0.0f), Vector3(1.0f, 0.0f, 0.0f)},
-			{Vector3(0.0f, 1.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f)},
-			{Vector3(1.0f, -1.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f)}
+			{Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f, 1.0f)},
+			{Vector3(-1.0f, 1.0f, 0.0f), Vector2(0.0f, 0.0f)},
+			{Vector3(1.0f, 1.0f, 0.0f), Vector2(1.0f, 0.0f)},
+			{Vector3(1.0f, -1.0f, 0.0f), Vector2(1.0f, 1.0f)}
 		};
 
 		Graphics::TMeshData MeshData;
@@ -32,7 +33,7 @@ public:
 
 		std::vector<uint32_t> Indices =
 		{
-			0, 1, 2
+			0, 1, 2, 0, 2, 3
 		};
 		MeshData.IndexBufferDesc.BindFlags = Graphics::EBindFlags::BindIndexBuffer;
 		MeshData.IndexBufferDesc.ByteWidth = uint32_t(sizeof(uint32_t) * Indices.size());
@@ -44,26 +45,26 @@ public:
 		MeshData.IndexCount = uint32_t(Indices.size());
 		MeshData.Stride = sizeof(Vertex);
 		MeshData.Offset = 0;
-		MeshData.Key = 0;
+		MeshData.Key = 1;
 
 		Graphics::TMaterialData MaterialData;
-		AddRenderComponent();
+		MaterialData.ImagePath = L"resources/image/Player/Alert/0.png";
+		MaterialData.Key = 0;
+		SetRenderComponent();
+
 		RenderComponent->SetMesh(MeshData);
 		RenderComponent->SetMaterial(MaterialData);
-		RenderComponent->SetPSO(EPSOType::ColorBasic);
+		RenderComponent->SetPSO(EPSOType::Basic);
 
+		Transform->SetScale(Vector3(0.3f));
 		Transform->SetSpeed(0.001f);
-
-		std::cout << "CO\n";
-
 	}
 
 	void Update(float InDeltaTime) override
 	{
 		CActor::Update(InDeltaTime);
-		Transform->Move(Vector3(1.0f, 0.0f, 0.0f));
+		Transform->Move(Vector3(-1.0f, 0.0f, 0.0f));
 	}
-
 };
 
 CWorld::CWorld()
@@ -79,5 +80,5 @@ CWorld::~CWorld()
 
 void CWorld::Start()
 {
-	CO* co = SpawnActor<CO>();
+	CIO* co = SpawnActor<CIO>();
 }

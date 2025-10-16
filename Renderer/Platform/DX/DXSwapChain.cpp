@@ -14,10 +14,16 @@ namespace Graphics::DX
 		HRESULT hr = SwapChain->GetBuffer(0, IID_PPV_ARGS(WindowTextureBuffer.GetAddressOf()));
 		if (FAILED(hr))	assert(0);
 
+		D3D11_TEXTURE2D_DESC WindowTextureDesc;
+		WindowTextureBuffer->GetDesc(&WindowTextureDesc);
+
+		TTexture2DDesc Texture2DDesc;
+		memcpy(&Texture2DDesc, &WindowTextureDesc, sizeof(Texture2DDesc));
+
 		size_t WindowBufferHandle = DXResourceStorage.InsertResource(WindowTextureBuffer);
 		WindowTexture = std::make_unique<CTexture2D>(WindowBufferHandle, [this](size_t InRHIHandle)->void
 			{
 				DXResourceStorage.VacateResource(InRHIHandle);
-			});
+			}, Texture2DDesc);
 	}
 }

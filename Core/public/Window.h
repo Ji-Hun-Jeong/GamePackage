@@ -32,6 +32,8 @@ namespace Core
 			return MouseMoveEvent;
 		}
 		HWND GetWindowHandle() { return WindowHandle; }
+		UINT GetScreenWidth() const { return ScreenWidth; }
+		UINT GetScreenHeight() const { return ScreenHeight; }
 
 	private:
 		HWND WindowHandle;

@@ -11,17 +11,20 @@ public:
 		: RenderStateObject(nullptr)
 		, RenderResourceLoader(nullptr)
 	{}
-	~CRenderComponent() = default;
+	~CRenderComponent()
+	{
+		RenderStateObject->Destroy();
+	}
 
 public:
 	void SetMesh(const Graphics::TMeshData& InMeshData)
 	{
-		Graphics::CMesh* Mesh = RenderResourceLoader->MakeMesh(InMeshData);
+		Graphics::CMesh* Mesh = RenderResourceLoader->LoadMesh(InMeshData);
 		RenderStateObject->SetMesh(Mesh);
 	}
 	void SetMaterial(const Graphics::TMaterialData& InMaterialData)
 	{
-		Graphics::CMaterial* Material = RenderResourceLoader->MakeMaterial(InMaterialData);
+		Graphics::CMaterial* Material = RenderResourceLoader->LoadMaterial(InMaterialData);
 		RenderStateObject->SetMaterial(Material);
 	}
 	void SetPSO(EPSOType InPSOType)
@@ -31,7 +34,7 @@ public:
 	}
 	void AddVertexConstBuffer(const Graphics::TBufferDesc& InBufferDesc)
 	{
-		std::unique_ptr<Graphics::CBuffer> VertexConstBuffer = RenderResourceLoader->MakeConstBuffer(InBufferDesc, nullptr);
+		std::unique_ptr<Graphics::CBuffer> VertexConstBuffer = RenderResourceLoader->CreateConstBuffer(InBufferDesc, nullptr);
 		auto VertexConstBufferMapInstance = RenderStateObject->AddVertexConstBuffer(std::move(VertexConstBuffer));
 		VertexConstBufferMapInstances.push_back(std::move(VertexConstBufferMapInstance));
 	}

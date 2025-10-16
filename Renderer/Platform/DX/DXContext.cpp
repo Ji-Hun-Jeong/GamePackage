@@ -68,4 +68,14 @@ namespace Graphics::DX
 		ID3D11PixelShader* RawPixelShader = DXResourceStorage.GetResource<ID3D11PixelShader>(InPixelShader.GetResourceHandle());
 		Context->PSSetShader(RawPixelShader, nullptr, 0);
 	}
+	void CDXContext::PSSetShaderResources(uint32_t InStartSlot, uint32_t InNumViews, const std::vector<std::unique_ptr<CShaderResourceView>>& InShaderResourceViews)
+	{
+		std::vector<ID3D11ShaderResourceView*> ShaderResourceViews(InNumViews, nullptr);
+		for (size_t i = 0; i < InNumViews; ++i)
+		{
+			ShaderResourceViews[i] = DXResourceStorage.GetResource<ID3D11ShaderResourceView>(InShaderResourceViews[i]->GetResourceHandle());
+		}
+
+		Context->PSSetShaderResources(InStartSlot, InNumViews, ShaderResourceViews.data());
+	}
 }
