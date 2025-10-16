@@ -39,6 +39,7 @@ protected:
 	}
 
 public:
+	virtual void Initalize() {}
 	virtual void BeginPlay()
 	{
 

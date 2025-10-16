@@ -28,9 +28,10 @@ public:
 	void ShutDown() override;
 
 private:
+	CRenderer Renderer;
+
 	CWorld World;
 
-	CRenderer Renderer;
 };
 
 

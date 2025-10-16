@@ -21,13 +21,10 @@ public:
 		if (Speed == 0.0f) 
 			std::cout << "Speed Is Zero\n";
 		Position += InDirection * Speed;
-		bVariationFlag = true;
+		SetVariation(true);
 	}
 	void CalculateModelMatrix()
 	{
-		if (bVariationFlag == false)
-			return;
-
 		ModelMatrix = Matrix::CreateScale(Scale)
 			* Matrix::CreateRotationX(Rotation.x)
 			* Matrix::CreateRotationY(Rotation.y)
@@ -35,10 +32,10 @@ public:
 			* Matrix::CreateTranslation(Position);
 
 		ModelMatrix = ModelMatrix.Transpose();
-
-		bVariationFlag = false;
 	}
 	const Matrix& GetModelMatrix() const { return ModelMatrix; }
+	void SetVariation(bool bVariation) { bVariationFlag = bVariation; }
+	bool OnVariation() const { return bVariationFlag; }
 
 private:
 	Matrix ModelMatrix;

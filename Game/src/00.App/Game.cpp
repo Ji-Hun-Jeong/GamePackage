@@ -4,10 +4,11 @@
 
 CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	: Core::CApplication(InScreenWidth, InScreenHeight)
-	, World()
 	, Renderer(std::make_unique<Graphics::DX::CDXInfra>(Window.GetWindowHandle()))
+	, World()
 {
 	Renderer.InitalizeFromWorld(World);
+	World.Start();
 }
 
 CGame::~CGame()

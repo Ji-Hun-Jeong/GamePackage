@@ -43,11 +43,27 @@ public:
 protected:
 	std::unique_ptr<CTransform> Transform;
 	std::unique_ptr<CRenderComponent> RenderComponent;
+	void AddRenderComponent();
+	virtual void Initalize() override;
+	virtual void BeginPlay() override
+	{
+		CObject::BeginPlay();
 
+	}
 	virtual void Update(float InDeltaTime)
 	{
 		for (auto& Child : Childs)
 			Child->Update(InDeltaTime);
+	}
+	virtual void CaptureSnapShot()
+	{
+		if (Transform->OnVariation())
+		{
+			Transform->CalculateModelMatrix();
+			Transform->SetVariation(false);
+			if (RenderComponent)
+				RenderComponent->UpdateVertexConstBuffer(0, &Transform->GetModelMatrix(), sizeof(Transform->GetModelMatrix()));
+		}
 	}
 
 	void Destroy() override

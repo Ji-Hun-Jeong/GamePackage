@@ -25,12 +25,12 @@ namespace Graphics
 		virtual void IASetVertexBuffer(const CBuffer& InVertexBuffer, const uint32_t* InStride, const uint32_t* InOffset) = 0;
 		virtual void IASetIndexBuffer(const CBuffer& InIndexBuffer, EGIFormat InFormat, uint32_t InOffset) = 0;
 		virtual void VSSetShader(const CVertexShader& InVertexShader) = 0;
-		virtual void VSSetConstantBuffers(uint32_t InStartSlot, uint32_t InNumBuffers, const CBuffer* InBuffers) = 0;
+		virtual void VSSetConstantBuffers(uint32_t InStartSlot, uint32_t InNumBuffers, const std::vector<std::unique_ptr<CBuffer>>& InBuffers) = 0;
 		virtual void RSSetViewPort(const TViewPort& InViewPort) = 0;
 		virtual void RSSetState(const CRasterizerState& InRasterizerState) = 0;
 		virtual void PSSetShader(const CPixelShader& InPixelShader) = 0;
 		virtual void DrawIndexed(uint32_t InIndexCount) = 0;
-		virtual void CopyBuffer(CBuffer& InBuffer, const TBufferMapResource& InBufferMapResource) = 0;
+		virtual void CopyBuffer(CBuffer& InBuffer, const void* InMapDataPoint, size_t InDataSize) = 0;
 
 	private:
 

@@ -4,6 +4,28 @@
 #include <Renderer/RHI/Buffer.h>
 #include "PSOManager.h"
 
+class CBufferMapInstance
+{
+	friend class CRenderStateObject;
+	CBufferMapInstance(size_t InMappingIndex)
+		: MappingIndex(InMappingIndex)
+		, MapDataPoint(nullptr)
+		, DataSize(0)
+	{}
+public:
+	~CBufferMapInstance() = default;
+
+public:
+	size_t GetMappingIndex() const { return MappingIndex; }
+
+private:
+	size_t MappingIndex;
+
+	const void* MapDataPoint;
+	size_t DataSize;
+
+};
+
 class CRenderStateObject
 {
 	friend class CRenderer;
@@ -21,17 +43,23 @@ public:
 	void SetMaterial(Graphics::CMaterial* InMaterial) { Material = InMaterial; }
 	void SetPSO(CPSO* InPSO) { PSO = InPSO; }
 
-	void AddVertexConstBuffer(Graphics::CBuffer* InVertexConstBuffer, const Graphics::TBufferMapResource& InVertexBufferMapResource)
+	std::unique_ptr<CBufferMapInstance> AddVertexConstBuffer(std::unique_ptr<Graphics::CBuffer> InVertexConstBuffer, const void* InMapDataPoint = nullptr, size_t InDataSize = 0)
 	{
 		assert(InVertexConstBuffer);
-		VertexConstBuffers.push_back(InVertexConstBuffer);
-		VertexBufferMapResources.push_back(InVertexBufferMapResource);
+		VertexConstBuffers.push_back(std::move(InVertexConstBuffer));
 		size_t Index = VertexConstBuffers.size() - 1;
-		UpdateVertexConstBuffer(uint32_t(Index));
+
+		CBufferMapInstance* BufferMapInstance = new CBufferMapInstance(Index);
+		if (InMapDataPoint)
+			UpdateVertexConstBuffer(BufferMapInstance, InMapDataPoint, InDataSize);
+
+		return std::unique_ptr<CBufferMapInstance>(BufferMapInstance);
 	}
-	void UpdateVertexConstBuffer(uint32_t Index)
+	void UpdateVertexConstBuffer(CBufferMapInstance* InBufferMapInstance, const void* InMapDataPoint, size_t InDataSize)
 	{
-		UpdateBufferIndexs.push(uint32_t(Index));
+		InBufferMapInstance->MapDataPoint = InMapDataPoint;
+		InBufferMapInstance->DataSize = InDataSize;
+		BufferMapInstances.push(InBufferMapInstance);
 	}
 
 	void BindRenderState(Graphics::CRenderContext& InContext);
@@ -42,9 +70,8 @@ protected:
 	Graphics::CMaterial* Material;
 	CPSO* PSO;
 
-	std::vector<Graphics::CBuffer*> VertexConstBuffers;
-	std::vector<Graphics::TBufferMapResource> VertexBufferMapResources;
-	std::queue<uint32_t> UpdateBufferIndexs;
+	std::vector<std::unique_ptr<Graphics::CBuffer>> VertexConstBuffers;
+	std::queue<const CBufferMapInstance*> BufferMapInstances;
 
 	bool bDestroy;
 

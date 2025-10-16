@@ -10,6 +10,7 @@ public:
 	~CWorld();
 
 public:
+	void Start();
 	void Update()
 	{
 		while (NextAddedWorldActors.empty() == false)
@@ -24,6 +25,9 @@ public:
 
 		for (auto& WorldActor : WorldActors)
 			WorldActor->Update(0.5f);
+
+		for (auto& WorldActor : WorldActors)
+			WorldActor->CaptureSnapShot();
 
 		if (bFlagDestroyedWorldObject == false)
 			return;
@@ -45,6 +49,7 @@ public:
 		T* Object = new T;
 		Object->InstanceId = NumberGenerator.GenerateNumber();
 		Object->World = this;
+		Object->Initalize();
 
 		auto Iter = NewObjectEvents.find(T::GetStaticType());
 		if (Iter != NewObjectEvents.end())
@@ -93,4 +98,5 @@ private:
 	CNumberGenerator NumberGenerator;
 	
 	std::map<ObjectType, std::vector<std::unique_ptr<INewObjectEvent>>> NewObjectEvents;
+
 };

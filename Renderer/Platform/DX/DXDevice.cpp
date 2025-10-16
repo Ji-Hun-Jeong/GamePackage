@@ -130,16 +130,14 @@ namespace Graphics::DX
 		ZeroMemory(&D3DBufferDesc, sizeof(D3DBufferDesc));
 		memcpy(&D3DBufferDesc, &InBufferDesc, sizeof(TBufferDesc));
 
-		// 딱 데이터를 한번만 전달할 때 사용
-		// map을 사용할 때는 필요없음
-		D3D11_SUBRESOURCE_DATA BufferData = { 0 };
-		ZeroMemory(&BufferData, sizeof(BufferData));
-		if (InBufferInitalizeData)
-			memcpy(&BufferData, InBufferInitalizeData, sizeof(TBufferInitalizeData));
-
 		ComPtr<ID3D11Buffer> Buffer;
 		if (InBufferInitalizeData)
 		{
+			// 딱 데이터를 한번만 전달할 때 사용
+			// map을 사용할 때는 필요없음
+			D3D11_SUBRESOURCE_DATA BufferData = { 0 };
+			ZeroMemory(&BufferData, sizeof(BufferData));
+			memcpy(&BufferData, InBufferInitalizeData, sizeof(TBufferInitalizeData));
 			// default + initdata
 			HRESULT hr = Device->CreateBuffer(&D3DBufferDesc, &BufferData, Buffer.GetAddressOf());
 			if (FAILED(hr)) assert(0);

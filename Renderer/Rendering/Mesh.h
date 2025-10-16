@@ -4,6 +4,7 @@
 
 namespace Graphics
 {
+	using MeshKey = uint32_t;
 	struct TMeshData
 	{
 		TBufferDesc VertexBufferDesc;
@@ -15,7 +16,11 @@ namespace Graphics
 		uint32_t IndexCount = 0;
 		uint32_t Stride = 0;
 		uint32_t Offset = 0;
+
+		MeshKey Key = 0;
 	};
+
+
 
 	class CMesh
 	{

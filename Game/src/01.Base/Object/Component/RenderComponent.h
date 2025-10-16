@@ -14,8 +14,8 @@ public:
 	~CRenderComponent() = default;
 
 public:
-	void SetMesh(const Graphics::TMeshData& InMeshData) 
-	{ 
+	void SetMesh(const Graphics::TMeshData& InMeshData)
+	{
 		Graphics::CMesh* Mesh = RenderResourceLoader->MakeMesh(InMeshData);
 		RenderStateObject->SetMesh(Mesh);
 	}
@@ -29,14 +29,16 @@ public:
 		CPSO* PSO = RenderResourceLoader->GetPSO(InPSOType);
 		RenderStateObject->SetPSO(PSO);
 	}
-	void AddVertexConstBuffer(const Graphics::TBufferDesc& InBufferDesc, const Graphics::TBufferMapResource & InBufferMapResource)
+	void AddVertexConstBuffer(const Graphics::TBufferDesc& InBufferDesc)
 	{
-		Graphics::CBuffer* VertexConstBuffer = RenderResourceLoader->MakeConstBuffer(InBufferDesc, nullptr);
-		RenderStateObject->AddVertexConstBuffer(VertexConstBuffer, InBufferMapResource);
+		std::unique_ptr<Graphics::CBuffer> VertexConstBuffer = RenderResourceLoader->MakeConstBuffer(InBufferDesc, nullptr);
+		auto VertexConstBufferMapInstance = RenderStateObject->AddVertexConstBuffer(std::move(VertexConstBuffer));
+		VertexConstBufferMapInstances.push_back(std::move(VertexConstBufferMapInstance));
 	}
-	void UpdateVertexConstBuffer(uint32_t Index)
+	void UpdateVertexConstBuffer(size_t InIndex, const void* InMapDataPoint, size_t InDataSize)
 	{
-		RenderStateObject->UpdateVertexConstBuffer(Index);
+		// assert(InBufferMapInstance);
+		RenderStateObject->UpdateVertexConstBuffer(VertexConstBufferMapInstances[InIndex].get(), InMapDataPoint, InDataSize);
 	}
 
 public:
@@ -55,5 +57,6 @@ private:
 	CRenderStateObject* RenderStateObject;
 	CRenderResourceLoader* RenderResourceLoader;
 
+	std::vector<std::unique_ptr<CBufferMapInstance>> VertexConstBufferMapInstances;
 };
 

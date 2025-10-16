@@ -42,11 +42,6 @@ namespace Graphics
 		uint32_t SysMemSlicePitch = 0;
 	};
 
-	struct TBufferMapResource
-	{
-		const void* MapDataPoint = nullptr;
-		size_t DataSize = 0;
-	};
 	// Usage가 D3D11_USAGE_IMMUTABLE인 경우에는 pInitialData가 필수. nullptr 넣으면 에러
 	/*- DEFAULT: 일반적인 정점 버퍼, 인덱스 버퍼, 텍스처 등 GPU 중심 리소스
 	  - IMMUTABLE : 절대 바뀌지 않는 텍스처, 셰이더 상수 등
@@ -96,5 +91,4 @@ namespace Graphics
 		const TBufferInitalizeData* BufferInitalizeData;
 
 	};
-
 }

@@ -6,14 +6,14 @@ void CRenderStateObject::BindRenderState(Graphics::CRenderContext& InContext)
 {
 	if (Mesh && Material && PSO)
 	{
-		while (UpdateBufferIndexs.empty() == false)
+		while (BufferMapInstances.empty() == false)
 		{
-			uint32_t Index = UpdateBufferIndexs.front();
-			UpdateBufferIndexs.pop();
-			InContext.CopyBuffer(*VertexConstBuffers[Index], VertexBufferMapResources[Index]);
+			const CBufferMapInstance* BufferMapInstance = BufferMapInstances.front();
+			BufferMapInstances.pop();
+			InContext.CopyBuffer(*VertexConstBuffers[BufferMapInstance->MappingIndex], BufferMapInstance->MapDataPoint, BufferMapInstance->DataSize);
 		};
 		if (VertexConstBuffers.size())
-			InContext.VSSetConstantBuffers(0, uint32_t(VertexConstBuffers.size()), VertexConstBuffers.front());
+			InContext.VSSetConstantBuffers(0, uint32_t(VertexConstBuffers.size()), VertexConstBuffers);
 		PSO->BindToPipeline(InContext);
 		Material->BindToPipeline(InContext);
 		Mesh->BindToPipeline(InContext);
