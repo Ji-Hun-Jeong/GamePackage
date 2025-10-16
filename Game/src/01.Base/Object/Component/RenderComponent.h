@@ -17,15 +17,15 @@ public:
 	}
 
 public:
-	void SetMesh(const Graphics::TMeshData& InMeshData)
+	void SetMesh(Graphics::MeshKey InMeshKey)
 	{
-		Graphics::CMesh* Mesh = RenderResourceLoader->LoadMesh(InMeshData);
+		Graphics::CMesh* Mesh = RenderResourceLoader->GetMeshOrNull(InMeshKey);
 		RenderStateObject->SetMesh(Mesh);
 	}
-	void SetMaterial(const Graphics::TMaterialData& InMaterialData)
+	void SetImage(const std::wstring& InPath)
 	{
-		Graphics::CMaterial* Material = RenderResourceLoader->LoadMaterial(InMaterialData);
-		RenderStateObject->SetMaterial(Material);
+		CImage* Image = RenderResourceLoader->LoadImageFromFile(InPath);
+		RenderStateObject->SetImage(Image);
 	}
 	void SetPSO(EPSOType InPSOType)
 	{
@@ -61,5 +61,6 @@ private:
 	CRenderResourceLoader* RenderResourceLoader;
 
 	std::vector<std::unique_ptr<CBufferMapInstance>> VertexConstBufferMapInstances;
+
 };
 

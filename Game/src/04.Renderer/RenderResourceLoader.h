@@ -1,15 +1,9 @@
 #pragma once
 #include <Renderer/Base/RenderDevice.h>
 #include <Renderer/Rendering/Mesh.h>
-#include <Renderer/Rendering/Material.h>
 #include "PSOManager.h"
 #include "03.Utils/GeometryGenerator.h"
-
-struct TModel
-{
-	Graphics::TMeshData MeshData;
-	Graphics::TMaterialData MaterialData;
-};
+#include "Image.h"
 
 class CRenderResourceLoader
 {
@@ -23,11 +17,11 @@ public:
 	~CRenderResourceLoader() = default;
 
 public:
-	Graphics::CMesh* LoadMesh(const Graphics::TMeshData& InMeshData)
+	void LoadMesh(const Graphics::TMeshData& InMeshData)
 	{
 		auto Iter = Meshes.find(InMeshData.Key);
 		if (Iter != Meshes.end())
-			return Iter->second.get();
+			return;
 
 		assert(InMeshData.VertexBufferInitData.CopyStartPoint);
 		assert(InMeshData.IndexBufferInitData.CopyStartPoint);
@@ -39,24 +33,46 @@ public:
 			, InMeshData.IndexFormat, InMeshData.IndexCount, InMeshData.Stride, InMeshData.Offset);
 
 		Meshes.emplace(InMeshData.Key, Mesh);
-		return Mesh;
 	}
 
-	Graphics::CMaterial* LoadMaterial(const Graphics::TMaterialData& InMaterialData)
+	Graphics::CMesh* GetMeshOrNull(Graphics::MeshKey InMeshKey)
 	{
-		auto Iter = Materials.find(InMaterialData.Key);
-		if (Iter != Materials.end())
+		auto Iter = Meshes.find(InMeshKey);
+
+		if (Iter == Meshes.end())
+			return nullptr;
+
+		return Iter->second.get();
+	}
+
+	CImage* LoadImageFromFile(const std::wstring& InPath)
+	{
+		auto Iter = Images.find(InPath);
+		if (Iter != Images.end())
 			return Iter->second.get();
 
-		Graphics::CMaterial* Material = new Graphics::CMaterial;
-		if (InMaterialData.ImagePath.empty() == false)
-		{
-			auto SRV = Device.CreateImage(InMaterialData.ImagePath);
-			Material->AddShaderResourceView(std::move(SRV));
-		}
+		auto ShaderResourceView = Device.CreateImage(InPath);
+		const Graphics::TTexture2DDesc& ImageDesc = ShaderResourceView->GetTexture2D().GetTexture2DDesc();
+		const float ImageWidth = static_cast<float>(ImageDesc.Width);
+		const float ImageHeight = static_cast<float>(ImageDesc.Height);
 
-		Materials.emplace(InMaterialData.Key, Material);
-		return Material;
+		Matrix MeshResizeMatrix = Matrix::CreateScale(Vector3(ImageWidth / ScreenWidth, ImageHeight / ScreenHeight, 1.0f));
+		MeshResizeMatrix = MeshResizeMatrix.Transpose();
+
+		Graphics::TBufferDesc VertexConstBufferDesc;
+		VertexConstBufferDesc.ByteWidth = sizeof(MeshResizeMatrix);
+		VertexConstBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
+		VertexConstBufferDesc.BindFlags = Graphics::EBindFlags::BindConstantBuffer;
+		VertexConstBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
+
+		Graphics::TBufferInitalizeData BufferInitalizeData;
+		BufferInitalizeData.CopyStartPoint = &MeshResizeMatrix;
+		auto MeshResizeConstBuffer = Device.CreateBuffer(VertexConstBufferDesc, &BufferInitalizeData);
+
+		CImage* RawImage = new CImage(std::move(ShaderResourceView), std::move(MeshResizeConstBuffer));
+		Images.emplace(InPath, RawImage);
+
+		return RawImage;
 	}
 
 	CPSO* GetPSO(EPSOType InPSOType) const { return PSOManager.GetPSO(InPSOType); }
@@ -66,45 +82,12 @@ public:
 		return Device.CreateBuffer(InConstBufferDesc, InBufferInitalizeData);
 	}
 
-	TModel LoadModelFromFile(const std::wstring& InPath) const
-	{
-		auto ShaderResourceView = Device.CreateImage(InPath);
-		const Graphics::TTexture2DDesc& ImageDesc = ShaderResourceView->GetTexture2D().GetTexture2DDesc();
-		const uint32_t ImageWidth = ImageDesc.Width;
-		const uint32_t ImageHeight = ImageDesc.Height;
-
-		TGeometryData GeometryData = CGeometryGenerator::GenerateSquare(float(ScreenWidth), float(ScreenHeight), float(ImageWidth), float(ImageHeight));
-
-		Graphics::TMeshData MeshData;
-		MeshData.VertexBufferDesc.BindFlags = Graphics::EBindFlags::BindVertexBuffer;
-		MeshData.VertexBufferDesc.ByteWidth = uint32_t(sizeof(TVertex) * GeometryData.Vertices.size());
-		MeshData.VertexBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
-		MeshData.VertexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
-		MeshData.VertexBufferInitData.CopyStartPoint = GeometryData.Vertices.data();
-
-		MeshData.IndexBufferDesc.BindFlags = Graphics::EBindFlags::BindIndexBuffer;
-		MeshData.IndexBufferDesc.ByteWidth = uint32_t(sizeof(uint32_t) * GeometryData.Indices.size());
-		MeshData.IndexBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
-		MeshData.IndexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
-		MeshData.IndexBufferInitData.CopyStartPoint = GeometryData.Indices.data();
-
-		MeshData.IndexFormat = Graphics::EGIFormat::GI_FORMAT_R32_UINT;
-		MeshData.IndexCount = uint32_t(GeometryData.Indices.size());
-		MeshData.Stride = sizeof(TVertex);
-		MeshData.Offset = 0;
-		MeshData.Key = 1;
-
-		Graphics::TMaterialData MaterialData;
-		MaterialData.ImagePath = InPath;
-		MaterialData.Key = 0;
-	}
-
 private:
 	Graphics::CRenderDevice& Device;
 	CPSOManager& PSOManager;
 
 	std::map<Graphics::MeshKey, std::unique_ptr<Graphics::CMesh>> Meshes;
-	std::map<Graphics::MaterialKey, std::unique_ptr<Graphics::CMaterial>> Materials;
+	std::map<std::wstring, std::unique_ptr<CImage>> Images;
 
 	uint32_t ScreenWidth;
 	uint32_t ScreenHeight;

@@ -1,6 +1,8 @@
 #include "Common.hlsli"
+Texture2D Image : register(t0);
+SamplerState Sampler : register(s0);
 
-float4 main(ColorPixelShaderInput InInput) : SV_TARGET
+float4 main(PixelShaderInput InInput) : SV_TARGET
 {
-    return float4(InInput.Color, 1.0f);
+    return Image.SampleLevel(Sampler, InInput.UV, 0);
 }

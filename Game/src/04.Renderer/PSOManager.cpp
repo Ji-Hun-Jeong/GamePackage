@@ -19,7 +19,7 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 		{Graphics::ESementicName::Position, Graphics::EFormat::Vector3, 0, Graphics::EInputClass::VertexData},
 		{Graphics::ESementicName::UV, Graphics::EFormat::Vector2, 12, Graphics::EInputClass::VertexData}
 	};
-	auto VSIA = InDevice.CreateVertexShaderAndInputLayout(L"resources/shader/ImageVertexShader.hlsl", InputElementDescs);
+	auto VSIA = InDevice.CreateVertexShaderAndInputLayout(L"resources/shader/BasicVertexShader.hlsl", InputElementDescs);
 	BasicVertexShader = std::move(VSIA.first);
 	BasicInputLayout = std::move(VSIA.second);
 
@@ -31,7 +31,7 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 	RasterizerDesc.MultisampleEnable = true;
 	BasicRasterizerState = InDevice.CreateRasterizerState(RasterizerDesc);
 
-	BasicPixelShader = InDevice.CreatePixelShader(L"resources/shader/ImagePixelShader.hlsl");
+	BasicPixelShader = InDevice.CreatePixelShader(L"resources/shader/BasicPixelShader.hlsl");
 
 	CPSO* ImagePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
 		, BasicRasterizerState.get(), BasicPixelShader.get());

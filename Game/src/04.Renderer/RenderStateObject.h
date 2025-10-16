@@ -1,7 +1,7 @@
 #pragma once
 #include <Renderer/Rendering/Mesh.h>
-#include <Renderer/Rendering/Material.h>
 #include <Renderer/RHI/Buffer.h>
+#include "Image.h"
 #include "PSOManager.h"
 
 class CBufferMapInstance
@@ -28,20 +28,37 @@ private:
 
 class CRenderStateObject
 {
-	friend class CRenderer;
+	friend class CSpriteRenderer;
 	CRenderStateObject()
 		: Mesh(nullptr)
-		, Material(nullptr)
+		, Image(nullptr)
 		, PSO(nullptr)
 		, bDestroy(false)
+		, StartSlot(1)
 	{}
 public:
 	~CRenderStateObject() = default;
 
 public:
-	void SetMesh(Graphics::CMesh* InMesh) { Mesh = InMesh; }
-	void SetMaterial(Graphics::CMaterial* InMaterial) { Material = InMaterial; }
-	void SetPSO(CPSO* InPSO) { PSO = InPSO; }
+	void SetMesh(Graphics::CMesh* InMesh) 
+	{ 
+		assert(InMesh);
+		Mesh = InMesh;
+	}
+	void SetImage(CImage* InImage)
+	{ 
+		assert(InImage);
+		Image = InImage; 
+	}
+	void SetPSO(CPSO* InPSO) 
+	{
+		assert(InPSO);
+		PSO = InPSO; 
+	}
+	void SetStartSlot(uint32_t InStartSlot)
+	{
+		StartSlot = InStartSlot;
+	}
 
 	std::unique_ptr<CBufferMapInstance> AddVertexConstBuffer(std::unique_ptr<Graphics::CBuffer> InVertexConstBuffer, const void* InMapDataPoint = nullptr, size_t InDataSize = 0)
 	{
@@ -55,6 +72,7 @@ public:
 
 		return std::unique_ptr<CBufferMapInstance>(BufferMapInstance);
 	}
+
 	void UpdateVertexConstBuffer(CBufferMapInstance* InBufferMapInstance, const void* InMapDataPoint, size_t InDataSize)
 	{
 		InBufferMapInstance->MapDataPoint = InMapDataPoint;
@@ -67,7 +85,7 @@ public:
 
 protected:
 	Graphics::CMesh* Mesh;
-	Graphics::CMaterial* Material;
+	CImage* Image;
 	CPSO* PSO;
 
 	std::vector<std::unique_ptr<Graphics::CBuffer>> VertexConstBuffers;
@@ -75,4 +93,5 @@ protected:
 
 	bool bDestroy;
 
+	uint32_t StartSlot;
 };

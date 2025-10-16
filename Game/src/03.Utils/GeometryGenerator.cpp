@@ -1,17 +1,14 @@
 #include "pch.h"
 #include "GeometryGenerator.h"
 
-TGeometryData CGeometryGenerator::GenerateSquare(const float InScreenWidth, const float InScreenHeight, const float InWidth, const float InHeight)
+TGeometryData CGeometryGenerator::GenerateSquare()
 {
-	const float X = (InWidth / InScreenWidth);
-	const float Y = (InHeight / InScreenHeight);
-
 	std::vector<TVertex> Vertices =
 	{
-		{Vector3(-X, -Y, 0.0f), Vector2(0.0f, 1.0f)},
-		{Vector3(-X, Y, 0.0f), Vector2(0.0f, 0.0f)},
-		{Vector3(X, Y, 0.0f), Vector2(1.0f, 0.0f)},
-		{Vector3(X, -Y, 0.0f), Vector2(1.0f, 1.0f)}
+		{Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f, 1.0f)},
+		{Vector3(-1.0f, 1.0f, 0.0f), Vector2(0.0f, 0.0f)},
+		{Vector3(1.0f, 1.0f, 0.0f), Vector2(1.0f, 0.0f)},
+		{Vector3(1.0f, -1.0f, 0.0f), Vector2(1.0f, 1.0f)}
 	};
 
 	std::vector<uint32_t> Indices =

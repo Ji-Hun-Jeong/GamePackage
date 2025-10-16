@@ -14,6 +14,6 @@ struct TGeometryData
 class CGeometryGenerator
 {
 public:
-	static TGeometryData GenerateSquare(const float InScreenWidth, const float InScreenHeight, const float InWidth, const float InHeight);
+	static TGeometryData GenerateSquare();
 };
 

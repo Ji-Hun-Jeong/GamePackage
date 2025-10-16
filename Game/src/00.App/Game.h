@@ -2,7 +2,7 @@
 #include <Core/public/Application.h>
 
 #include "01.Base/World/World.h"
-#include "04.Renderer/Renderer.h"
+#include "04.Renderer/SpriteRenderer.h"
 
 /*
 리소스를 개발단계에서 사용한다음 빌드폴더에도 넣는 방법
@@ -28,7 +28,7 @@ public:
 	void ShutDown() override;
 
 private:
-	CRenderer Renderer;
+	CSpriteRenderer SpriteRenderer;
 
 	CWorld World;
 

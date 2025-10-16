@@ -52,6 +52,13 @@ namespace Graphics::DX
 		}
 		Context->VSSetConstantBuffers(InStartSlot, InNumBuffers, Buffers.data());
 	}
+
+	void CDXContext::VSSetConstantBuffer(uint32_t InStartSlot, const CBuffer& InBuffer)
+	{
+		ID3D11Buffer* Buffer = DXResourceStorage.GetResource<ID3D11Buffer>(InBuffer.GetResourceHandle());
+		Context->VSSetConstantBuffers(InStartSlot, 1, &Buffer);
+	}
+
 	void CDXContext::RSSetViewPort(const TViewPort& InViewPort)
 	{
 		D3D11_VIEWPORT RawViewPort;
@@ -77,5 +84,10 @@ namespace Graphics::DX
 		}
 
 		Context->PSSetShaderResources(InStartSlot, InNumViews, ShaderResourceViews.data());
+	}
+	void CDXContext::PSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView& InShaderResourceView)
+	{
+		ID3D11ShaderResourceView* ShaderResourceView = DXResourceStorage.GetResource<ID3D11ShaderResourceView>(InShaderResourceView.GetResourceHandle());
+		Context->PSSetShaderResources(InStartSlot, 1, &ShaderResourceView);
 	}
 }

@@ -3,32 +3,11 @@
 #include "RenderResourceLoader.h"
 #include "RenderStateObject.h"
 
-class CRenderer
+class CSpriteRenderer
 {
 public:
-	CRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, const uint32_t& InScreenWidth, const uint32_t& InScreenHeight)
-		: ScreenWidth(InScreenWidth)
-		, ScreenHeight(InScreenHeight)
-		, GraphicInfra(std::move(InGraphicInfra))
-		, Device(GraphicInfra->GetDevice())
-		, Context(GraphicInfra->GetContext())
-		, SwapChain(GraphicInfra->GetSwapChain())
-		, RenderTargetView(Device.CreateRenderTargetView(*SwapChain.GetWindowTextureBuffer()))
-		, PSOManager(Device)
-		, RenderResourceLoader(Device, PSOManager, ScreenWidth, ScreenHeight)
-	{
-		Graphics::TViewPort ViewPort;
-		ViewPort.TopLeftX = 0;
-		ViewPort.TopLeftY = 0;
-		ViewPort.Width = static_cast<float>(InScreenWidth);
-		ViewPort.Height = static_cast<float>(InScreenHeight);
-		ViewPort.MinDepth = 0.0f;
-		ViewPort.MaxDepth = 1.0f;
-
-		Context.OMSetRenderTarget(1, *RenderTargetView.get(), nullptr);
-		Context.RSSetViewPort(ViewPort);
-	}
-	~CRenderer() = default;
+	CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, const uint32_t& InScreenWidth, const uint32_t& InScreenHeight);
+	~CSpriteRenderer() = default;
 
 public:
 	void InitalizeFromWorld(class CWorld& InWorld);

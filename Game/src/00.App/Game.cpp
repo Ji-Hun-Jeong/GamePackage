@@ -4,10 +4,10 @@
 
 CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	: Core::CApplication(InScreenWidth, InScreenHeight)
-	, Renderer(std::make_unique<Graphics::DX::CDXInfra>(Window.GetWindowHandle()), Window.GetScreenWidth(), Window.GetScreenHeight())
+	, SpriteRenderer(std::make_unique<Graphics::DX::CDXInfra>(Window.GetWindowHandle()), Window.GetScreenWidth(), Window.GetScreenHeight())
 	, World()
 {
-	Renderer.InitalizeFromWorld(World);
+	SpriteRenderer.InitalizeFromWorld(World);
 	World.Start();
 }
 
@@ -19,7 +19,7 @@ bool CGame::Process()
 {
 	World.Update();
 	World.Arrange();
-	Renderer.Render();
+	SpriteRenderer.Render();
 	return true;
 }
 

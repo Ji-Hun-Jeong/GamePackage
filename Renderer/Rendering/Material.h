@@ -10,7 +10,7 @@ namespace Graphics
 	struct TMaterialData
 	{
 		std::wstring ImagePath;
-		MaterialKey Key;
+		MaterialKey Key = 0;
 	};
 
 	class CMaterial
