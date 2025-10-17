@@ -54,12 +54,14 @@ public:
 		Object->World = this;
 		Object->Initalize();
 
-		auto Iter = NewObjectEvents.find(T::GetStaticType());
-		if (Iter != NewObjectEvents.end())
+		auto Iter = NewObjectTypeEvents.find(T::GetStaticType());
+		if (Iter != NewObjectTypeEvents.end())
 		{
-			for (auto& NewObjectEvent : Iter->second)
-				NewObjectEvent->CreatedInWorld(*this, *Object);
+			for (auto& NewObjectTypeEvent : Iter->second)
+				NewObjectTypeEvent->CreatedInWorld(*this, *Object);
 		}
+		for (auto& NewObjectEvent : NewObjectEvents)
+			NewObjectEvent->CreatedInWorld(*this, *Object);
 
 		return std::unique_ptr<T>(Object);
 	}
@@ -80,17 +82,21 @@ public:
 
 	const std::vector<std::unique_ptr<CActor>>& GetWorldActors() const { return WorldActors; }
 	void MarkDestroyed() { bFlagDestroyedWorldObject = true; }
-	void AddNewObjectEvent(ObjectType InObjectType, std::unique_ptr<INewObjectEvent> InNewObjectEvent)
+	void AddNewObjectTypeEvent(ObjectType InObjectType, std::unique_ptr<INewObjectEvent> InNewObjectEvent)
 	{
-		auto Iter = NewObjectEvents.find(InObjectType);
-		if (Iter == NewObjectEvents.end())
+		auto Iter = NewObjectTypeEvents.find(InObjectType);
+		if (Iter == NewObjectTypeEvents.end())
 		{
 			std::vector<std::unique_ptr<INewObjectEvent>> Vec;
 			Vec.push_back(std::move(InNewObjectEvent));
-			NewObjectEvents.insert({ InObjectType, std::move(Vec) });
+			NewObjectTypeEvents.insert({ InObjectType, std::move(Vec) });
 		}
 		else
 			Iter->second.push_back(std::move(InNewObjectEvent));
+	}
+	void AddNewObjectEvent(std::unique_ptr<INewObjectEvent> InNewObjectEvent)
+	{
+		NewObjectEvents.push_back(std::move(InNewObjectEvent));
 	}
 
 private:
@@ -100,6 +106,7 @@ private:
 
 	CNumberGenerator NumberGenerator;
 	
-	std::map<ObjectType, std::vector<std::unique_ptr<INewObjectEvent>>> NewObjectEvents;
+	std::map<ObjectType, std::vector<std::unique_ptr<INewObjectEvent>>> NewObjectTypeEvents;
+	std::vector<std::unique_ptr<INewObjectEvent>> NewObjectEvents;
 
 };

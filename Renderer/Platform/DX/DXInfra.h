@@ -9,7 +9,7 @@ namespace Graphics::DX
 	class CDXInfra : public IGraphicInfra
 	{
 	public:
-		CDXInfra(HWND InWindowHandle);
+		CDXInfra(HWND InWindowHandle, uint32_t InScreenWidth, uint32_t InScreenHeight);
 		~CDXInfra() = default;
 
 	public:
@@ -17,8 +17,13 @@ namespace Graphics::DX
 		CRenderContext& GetContext() override { return *Context.get(); }
 		CRenderSwapChain& GetSwapChain() override { return *SwapChain.get(); }
 
+		uint32_t GetScreenWidth() const { return ScreenWidth; }
+		uint32_t GetScreenHeight() const { return ScreenHeight; }
+
 	private:
 		CDXResourceStorage DXResourceStorage;
+		uint32_t ScreenWidth;
+		uint32_t ScreenHeight;
 
 		std::unique_ptr<CDXDevice> Device;
 		std::unique_ptr<CDXContext> Context;

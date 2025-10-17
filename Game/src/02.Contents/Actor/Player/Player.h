@@ -3,16 +3,31 @@
 
 class CPlayer : public CCharacter
 {
-	GenerateObject()
+	GENERATE_OBJECT()
 	DONTCOPY(CPlayer)
 public:
-	CPlayer() = default;
-	~CPlayer() = default;
+	CPlayer()
+		: LeftMoveActionValue(nullptr)
+		, RightMoveActionValue(nullptr)
+		, UpMoveActionValue(nullptr)
+		, DownMoveActionValue(nullptr)
+		, DeleteActionValue(nullptr)
+	{}
+	~CPlayer();
 
 public:
 	void Initalize() override;
 	void Update(float InDeltaTime) override;
-private:
+	void Destroy() override;
+	void SetInputAction(class CInputActionManager& InInputActionManager);
 
+private:
+	class CInputActionValue* LeftMoveActionValue;
+	class CInputActionValue* RightMoveActionValue;
+	class CInputActionValue* UpMoveActionValue;
+	class CInputActionValue* DownMoveActionValue;
+
+	class CInputActionValue* DeleteActionValue;
+	
 };
 

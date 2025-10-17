@@ -1,5 +1,6 @@
 #pragma once
 
+
 class IObjectDestroy
 {
 	friend class CObject;
@@ -51,6 +52,8 @@ public:
 	}
 	virtual void Destroy();
 
+	virtual void SetInputAction(class CInputActionManager& InInputActionManager) {}
+
 public:
 	// ObjectDestroy
 	// 표시해놓고 순회할때 지우는걸로 Render같은 때에
@@ -86,7 +89,7 @@ private:
 
 };
 
-#define GenerateObject() \
+#define GENERATE_OBJECT() \
 public:\
 	static ObjectType GetStaticType()\
 	{\

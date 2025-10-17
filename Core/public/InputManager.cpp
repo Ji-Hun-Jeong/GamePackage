@@ -13,7 +13,6 @@ namespace Core
 	};
 	bool bPressed[(UINT)EKeyType::End] = { 0 };
 
-
 	class CSetMousePosition : public IMouseMove
 	{
 	public:
@@ -40,6 +39,22 @@ namespace Core
 
 	void CInputManager::Update()
 	{
+		while (DeRegistEvents.empty() == false)
+		{
+			auto Pair = DeRegistEvents.front();
+			DeRegistEvents.pop();
+
+			auto& RefKeyEvents = KeyEvents[Pair.first];
+			for (size_t i = 0; i < RefKeyEvents.size(); ++i)
+			{
+				if (RefKeyEvents[i].get() == Pair.second)
+				{
+					RefKeyEvents[i] = std::move(RefKeyEvents.back());
+					RefKeyEvents.pop_back();
+					break;
+				}
+			}
+		}
 		for (UINT i = 0; i < (UINT)EKeyType::End; ++i)
 		{
 			if (GetAsyncKeyState(KeyMapping[i]) & 0x8000)

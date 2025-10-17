@@ -4,7 +4,7 @@
 
 class CC : public CCharacter
 {
-	GenerateObject()
+	GENERATE_OBJECT()
 		DONTCOPY(CC)
 public:
 	CC() = default;
@@ -15,7 +15,7 @@ public:
 	{
 		CCharacter::Initalize();
 
-		GetRenderComponent()->SetImage(L"resources/image/Player/Alert/0.png");
+		GetRenderComponent()->SetImage(L"resources/image/Map/MushmomStage/MushmomBackground.png");
 		GetTransform()->SetSpeed(0.001f);
 	}
 
@@ -23,10 +23,11 @@ public:
 	{
 		CCharacter::Update(InDeltaTime);
 
-		GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f));
+		// GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f));
 	}
 
 };
+
 CWorld::CWorld()
 	: bFlagDestroyedWorldObject(false)
 {
@@ -40,6 +41,6 @@ CWorld::~CWorld()
 
 void CWorld::Start()
 {
+	SpawnActor<CC>();
 	SpawnActor<CPlayer>();
-	//SpawnActor<CC>();
 }

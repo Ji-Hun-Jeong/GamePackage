@@ -5,6 +5,7 @@
 
 class CActor : public CObject
 {
+	GENERATE_OBJECT()
 	DONTCOPY(CActor)
 public:
 	CActor()

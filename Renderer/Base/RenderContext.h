@@ -10,6 +10,7 @@
 #include "RHI/ViewPort.h"
 #include "RHI/ShaderResourceView.h"
 #include "RHI/SamplerState.h"
+#include "RHI/BlendState.h"
 
 namespace Graphics
 {
@@ -37,6 +38,7 @@ namespace Graphics
 		virtual void DrawIndexed(uint32_t InIndexCount) = 0;
 		virtual void CopyBuffer(CBuffer& InBuffer, const void* InMapDataPoint, size_t InDataSize) = 0;
 		virtual void PSSetSamplers(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers) = 0;
+		virtual void OMSetBlendState(const CBlendState& InBlendState, const float* InBlendFactor, uint32_t InSampleMask) = 0;
 
 	private:
 

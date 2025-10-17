@@ -97,4 +97,9 @@ namespace Graphics::DX
 			SamplerStates[i] = DXResourceStorage.GetResource<ID3D11SamplerState>(InSamplers[i].GetResourceHandle());
 		Context->PSSetSamplers(InStartSlot, InNumSamplers, SamplerStates.data());
 	}
+	void CDXContext::OMSetBlendState(const CBlendState& InBlendState, const float* InBlendFactor, uint32_t InSampleMask)
+	{
+		ID3D11BlendState* BlendState = DXResourceStorage.GetResource<ID3D11BlendState>(InBlendState.GetResourceHandle());
+		Context->OMSetBlendState(BlendState, InBlendFactor, InSampleMask);
+	}
 }

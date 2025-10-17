@@ -17,9 +17,9 @@ void CRenderStateObject::BindRenderState(Graphics::CRenderContext& InContext)
 			};
 			InContext.VSSetConstantBuffers(StartSlot, uint32_t(VertexConstBuffers.size()), VertexConstBuffers);
 		}
-
 		PSO->BindToPipeline(InContext);
 		Image->BindToPipeline(InContext);
 		Mesh->BindToPipeline(InContext);
+
 	}
 }

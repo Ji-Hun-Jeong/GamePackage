@@ -5,6 +5,9 @@
 
 void CPSO::BindToPipeline(Graphics::CRenderContext& InContext)
 {
+	const float Factor = 1.0f;
+	const float BlendFactor[4] = { Factor, Factor, Factor, 1.0f };
+	InContext.OMSetBlendState(*BlendState, BlendFactor, 0xffffffff);
 	InContext.IASetPrimitiveTopology(PrimitiveTopology);
 	InContext.IASetInputLayout(*InputLayout);
 	InContext.VSSetShader(*VertexShader);
@@ -45,8 +48,22 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 	
 	LinearSamplerState = InDevice.CreateSamplerState(SamplerDesc);
 
+	Graphics::TBlendDesc BlendStateDesc;
+	BlendStateDesc.RenderTarget[0].BlendEnable = true;
+	BlendStateDesc.RenderTarget[0].SrcBlend = Graphics::EBlend::BLEND_SRC_ALPHA;
+	BlendStateDesc.RenderTarget[0].DestBlend = Graphics::EBlend::BLEND_INV_SRC_ALPHA;
+	BlendStateDesc.RenderTarget[0].BlendOp = Graphics::EBlendOP::BLEND_OP_ADD;
+
+	BlendStateDesc.RenderTarget[0].SrcBlendAlpha = Graphics::EBlend::BLEND_SRC_ALPHA;
+	BlendStateDesc.RenderTarget[0].DestBlendAlpha = Graphics::EBlend::BLEND_INV_SRC_ALPHA;
+	BlendStateDesc.RenderTarget[0].BlendOpAlpha = Graphics::EBlendOP::BLEND_OP_ADD;
+
+	// 필요하면 RGBA 각각에 대해서도 조절 가능
+	BlendStateDesc.RenderTarget[0].RenderTargetWriteMask = Graphics::EColorWhiteEnable::COLOR_WRITE_ENABLE_ALL;
+	BasicBlendState = InDevice.CreateBlendState(BlendStateDesc);
+
 	CPSO* ImagePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
-		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get());
+		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
 
 	PSOs[size_t(EPSOType::Basic)] = std::unique_ptr<CPSO>(ImagePSO);
 }

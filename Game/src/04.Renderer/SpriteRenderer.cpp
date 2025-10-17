@@ -71,5 +71,5 @@ CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGrap
 }
 void CSpriteRenderer::InitalizeFromWorld(CWorld& InWorld)
 {
-	InWorld.AddNewObjectEvent(CRenderComponent::GetStaticType(), std::make_unique<CInitalizeRenderComponent>(*this, RenderResourceLoader));
+	InWorld.AddNewObjectTypeEvent(CRenderComponent::GetStaticType(), std::make_unique<CInitalizeRenderComponent>(*this, RenderResourceLoader));
 }

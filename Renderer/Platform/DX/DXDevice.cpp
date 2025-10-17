@@ -217,7 +217,7 @@ namespace Graphics::DX
 
 		D3D11_TEXTURE2D_DESC RawTextureDesc;
 		Texture2D->GetDesc(&RawTextureDesc);
-		
+
 		TTexture2DDesc Texture2DDesc;
 		memcpy(&Texture2DDesc, &RawTextureDesc, sizeof(Texture2DDesc));
 
@@ -235,5 +235,17 @@ namespace Graphics::DX
 		size_t SamplerHandle = DXResourceStorage.InsertResource(D3DSamplerState);
 
 		return std::make_unique<CSamplerState>(SamplerHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
+	}
+	std::unique_ptr<CBlendState> CDXDevice::CreateBlendState(const TBlendDesc& InBlendDesc)
+	{
+		D3D11_BLEND_DESC D3DBlendDesc;
+		memcpy(&D3DBlendDesc, &InBlendDesc, sizeof(InBlendDesc));
+
+		ComPtr<ID3D11BlendState> D3DBlendState;
+		HRESULT HR = Device->CreateBlendState(&D3DBlendDesc, D3DBlendState.GetAddressOf());
+		if (FAILED(HR)) assert(0);
+
+		size_t BlendStateHandle = DXResourceStorage.InsertResource(D3DBlendState);
+		return std::make_unique<CBlendState>(BlendStateHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
 	}
 }

@@ -3,6 +3,7 @@
 
 #include "01.Base/World/World.h"
 #include "04.Renderer/SpriteRenderer.h"
+#include "05.Input/InputActionManager.h"
 
 /*
 리소스를 개발단계에서 사용한다음 빌드폴더에도 넣는 방법
@@ -18,7 +19,6 @@
 */
 class CGame : public Core::CApplication
 {
-	DONTCOPY(CGame)
 public:
 	CGame(UINT InScreenWidth, UINT InScreenHeight);
 	~CGame();
@@ -29,6 +29,9 @@ public:
 
 private:
 	CSpriteRenderer SpriteRenderer;
+
+	Core::CInputManager InputManager;
+	CInputActionManager InputActionManager;
 
 	CWorld World;
 

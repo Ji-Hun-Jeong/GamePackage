@@ -3,7 +3,7 @@
 
 class CTransform : public CObject
 {
-    GenerateObject()
+    GENERATE_OBJECT()
 public:
     CTransform()
         : Position(Vector3(0.0f))

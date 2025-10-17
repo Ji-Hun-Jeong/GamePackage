@@ -21,6 +21,7 @@ namespace Graphics
 		virtual std::unique_ptr<CDepthStencilView> CreateDepthStencilView(const CTexture2D& InTexture2D) = 0;
 		virtual std::unique_ptr<CShaderResourceView> CreateImage(const std::wstring& InImagePath) = 0;
 		virtual std::unique_ptr<CSamplerState> CreateSamplerState(const TSamplerDesc& InSamplerDesc) = 0;
+		virtual std::unique_ptr<CBlendState> CreateBlendState(const TBlendDesc& InBlendDesc) = 0;
 
 	};
 }

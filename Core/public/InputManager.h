@@ -1,4 +1,5 @@
 #pragma once
+#include <queue>
 
 enum class EButtonState : uint16_t
 {
@@ -76,6 +77,16 @@ namespace Core
 			MouseEvents[Key].push_back(std::move(InMouseEvent));
 		}
 
+		void DeRegistKeyEvent(EKeyType InKeyType, EButtonState InButtonState, IKeyEvent* InKeyEvent)
+		{
+			UInputBlendValue InputBlendValue;
+			InputBlendValue.BlendKey.KeyType = InKeyType;
+			InputBlendValue.BlendKey.ButtonState = InButtonState;
+
+			UINT Key = InputBlendValue.RealKey;
+			DeRegistEvents.emplace(Key, InKeyEvent);
+		}
+
 		const TMousePosition& GetMousePosition() const { return MousePosition; }
 
 	private:
@@ -86,6 +97,8 @@ namespace Core
 		
 		std::unordered_map<UINT, std::vector<std::unique_ptr<IKeyEvent>>> KeyEvents;
 		std::unordered_map<UINT, std::vector<std::unique_ptr<IMouseEvent>>> MouseEvents;
+
+		std::queue<std::pair<UINT, IKeyEvent*>> DeRegistEvents;
 
 		TMousePosition MousePosition;
 

@@ -56,11 +56,7 @@ public:
 		const float ImageWidth = static_cast<float>(ImageDesc.Width);
 		const float ImageHeight = static_cast<float>(ImageDesc.Height);
 
-		Matrix MeshResizeMatrix = Matrix::CreateScale(Vector3(ImageWidth / ScreenWidth, ImageHeight / ScreenHeight, 1.0f))
-			* Matrix::CreateRotationX(0.0f)
-			* Matrix::CreateRotationY(0.0f)
-			* Matrix::CreateRotationZ(0.0f)
-			* Matrix::CreateTranslation(Vector3(0.0f));
+		Matrix MeshResizeMatrix = Matrix::CreateScale(Vector3(ImageWidth / ScreenWidth, ImageHeight / ScreenHeight, 1.0f));
 		MeshResizeMatrix = MeshResizeMatrix.Transpose();
 
 		Graphics::TBufferDesc VertexConstBufferDesc;

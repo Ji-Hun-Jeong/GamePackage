@@ -3,14 +3,11 @@
 
 namespace Graphics::DX
 {
-	CDXInfra::CDXInfra(HWND InWindowHandle)
+	CDXInfra::CDXInfra(HWND InWindowHandle, uint32_t InScreenWidth, uint32_t InScreenHeight)
 		: DXResourceStorage(10000)
+		, ScreenWidth(InScreenWidth)
+		, ScreenHeight(InScreenHeight)
 	{
-		RECT r = { 0 };
-		::GetWindowRect(InWindowHandle, &r);
-		UINT ScreenWidth = r.right - r.left;
-		UINT ScreenHeight = r.bottom - r.top;
-
 		D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE;
 		UINT createDeviceFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)
@@ -23,7 +20,7 @@ namespace Graphics::DX
 		ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 		swapChainDesc.BufferDesc.Width = ScreenWidth;
 		swapChainDesc.BufferDesc.Height = ScreenHeight;
-		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		swapChainDesc.BufferCount = 2;
 		swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
@@ -47,7 +44,7 @@ namespace Graphics::DX
 		if (FAILED(hr)) assert(0);
 
 		UINT NumOfMultiSamplingLevel;
-		hr = RawDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4,
+		hr = RawDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R16G16B16A16_FLOAT, 4,
 			&NumOfMultiSamplingLevel);
 		if (FAILED(hr)) assert(0);
 
