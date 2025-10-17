@@ -20,6 +20,7 @@ bool CGame::Process()
 	World.Update();
 	World.Arrange();
 	SpriteRenderer.Render();
+
 	return true;
 }
 

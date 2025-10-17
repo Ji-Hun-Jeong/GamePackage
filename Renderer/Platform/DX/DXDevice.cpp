@@ -224,4 +224,16 @@ namespace Graphics::DX
 		auto Texture = std::make_unique<CTexture2D>(TextureHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), Texture2DDesc);
 		return std::make_unique<CShaderResourceView>(SRVHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), std::move(Texture));
 	}
+	std::unique_ptr<CSamplerState> CDXDevice::CreateSamplerState(const TSamplerDesc& InSamplerDesc)
+	{
+		D3D11_SAMPLER_DESC D3DSamplerDesc;
+		memcpy(&D3DSamplerDesc, &InSamplerDesc, sizeof(InSamplerDesc));
+
+		ComPtr<ID3D11SamplerState> D3DSamplerState;
+		HRESULT HR = Device->CreateSamplerState(&D3DSamplerDesc, D3DSamplerState.GetAddressOf());
+		if (FAILED(HR)) assert(0);
+		size_t SamplerHandle = DXResourceStorage.InsertResource(D3DSamplerState);
+
+		return std::make_unique<CSamplerState>(SamplerHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
+	}
 }

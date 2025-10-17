@@ -20,8 +20,9 @@ public:
 	}
 	void Render()
 	{
-		static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		static float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Context.ClearRenderTarget(*RenderTargetView, ClearColor);
+
 		// 만약에 순서가 문제가 되면 그때가서 DestroyEvent 넣기
 		for (size_t i = 0; i < RenderStateObjects.size();)
 		{

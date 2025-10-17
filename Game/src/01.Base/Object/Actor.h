@@ -1,7 +1,7 @@
 #pragma once
-#include "../Object.h"
-#include "../Component/Transform.h"
-#include "../Component/RenderComponent.h"
+#include "Object.h"
+#include "Component/Transform.h"
+#include "Component/RenderComponent.h"
 
 class CActor : public CObject
 {
@@ -40,9 +40,11 @@ public:
 	CTransform* GetTransform() const { return Transform.get(); }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent.get(); }
 
-protected:
+private:
 	std::unique_ptr<CTransform> Transform;
 	std::unique_ptr<CRenderComponent> RenderComponent;
+
+protected:
 	void SetRenderComponent();
 	virtual void Initalize() override;
 	virtual void BeginPlay() override

@@ -90,4 +90,11 @@ namespace Graphics::DX
 		ID3D11ShaderResourceView* ShaderResourceView = DXResourceStorage.GetResource<ID3D11ShaderResourceView>(InShaderResourceView.GetResourceHandle());
 		Context->PSSetShaderResources(InStartSlot, 1, &ShaderResourceView);
 	}
+	void CDXContext::PSSetSamplers(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers)
+	{
+		std::vector<ID3D11SamplerState*> SamplerStates(InNumSamplers, nullptr);
+		for (size_t i = 0; i < InNumSamplers; ++i)
+			SamplerStates[i] = DXResourceStorage.GetResource<ID3D11SamplerState>(InSamplers[i].GetResourceHandle());
+		Context->PSSetSamplers(InStartSlot, InNumSamplers, SamplerStates.data());
+	}
 }

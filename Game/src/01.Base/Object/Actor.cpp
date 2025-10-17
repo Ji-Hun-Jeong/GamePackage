@@ -1,6 +1,14 @@
 #include "pch.h"
 #include "Actor.h"
-#include "../../World/World.h"
+#include "../World/World.h"
+
+void CActor::Initalize()
+{
+	CObject::Initalize();
+
+	Transform = GetWorld()->NewObject<CTransform>();
+
+}
 
 void CActor::SetRenderComponent()
 {
@@ -13,12 +21,4 @@ void CActor::SetRenderComponent()
 	VertexConstBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessWrite;
 
 	RenderComponent->AddVertexConstBuffer(VertexConstBufferDesc);
-}
-
-void CActor::Initalize()
-{
-	CObject::Initalize();
-
-	Transform = GetWorld()->NewObject<CTransform>();
-
 }

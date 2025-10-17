@@ -1,6 +1,6 @@
 #pragma once
 #include "WorldEvent.h"
-#include "01.Base/Object/Actor/Actor.h"
+#include "01.Base/Object/Actor.h"
 #include "03.Utils/NumberGenerator/NumberGenerator.h"
 
 class CWorld

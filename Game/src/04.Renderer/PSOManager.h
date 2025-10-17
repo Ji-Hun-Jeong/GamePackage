@@ -1,10 +1,11 @@
 #pragma once
 #include <array>
-#include "RHI/VertexShader.h"
-#include "RHI/InputLayout.h"
-#include "RHI/RasterizerState.h"
-#include "RHI/PixelShader.h"
-#include "RHI/Buffer.h"
+#include <Renderer/RHI/VertexShader.h>
+#include <Renderer/RHI/InputLayout.h>
+#include <Renderer/RHI/RasterizerState.h>
+#include <Renderer/RHI/PixelShader.h>
+#include <Renderer/RHI/Buffer.h>
+#include <Renderer/RHI/SamplerState.h>
 
 namespace Graphics
 {
@@ -16,12 +17,14 @@ class CPSO
 {
 public:
 	CPSO(Graphics::ETopology InPrimitiveTopology, Graphics::CInputLayout* InInputLayout
-		, Graphics::CVertexShader* InVertexShader, Graphics::CRasterizerState* InRasterizerState, Graphics::CPixelShader* InPixelShader)
+		, Graphics::CVertexShader* InVertexShader, Graphics::CRasterizerState* InRasterizerState
+		, Graphics::CPixelShader* InPixelShader, Graphics::CSamplerState* InSamplerState)
 		: PrimitiveTopology(InPrimitiveTopology)
 		, InputLayout(InInputLayout)
 		, VertexShader(InVertexShader)
 		, RasterizerState(InRasterizerState)
 		, PixelShader(InPixelShader)
+		, SamplerState(InSamplerState)
 	{}
 	void BindToPipeline(Graphics::CRenderContext& InContext);
 
@@ -31,6 +34,7 @@ private:
 	Graphics::CVertexShader* VertexShader;
 	Graphics::CRasterizerState* RasterizerState;
 	Graphics::CPixelShader* PixelShader;
+	Graphics::CSamplerState* SamplerState;
 
 };
 
@@ -57,6 +61,7 @@ private:
 	std::unique_ptr<Graphics::CVertexShader> BasicVertexShader;
 	std::unique_ptr<Graphics::CRasterizerState> BasicRasterizerState;
 	std::unique_ptr<Graphics::CPixelShader> BasicPixelShader;
+	std::unique_ptr<Graphics::CSamplerState> LinearSamplerState;
 
 	std::array<std::unique_ptr<CPSO>, size_t(EPSOType::End)> PSOs;
 

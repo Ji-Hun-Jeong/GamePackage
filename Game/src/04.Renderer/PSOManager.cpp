@@ -10,6 +10,7 @@ void CPSO::BindToPipeline(Graphics::CRenderContext& InContext)
 	InContext.VSSetShader(*VertexShader);
 	InContext.RSSetState(*RasterizerState);
 	InContext.PSSetShader(*PixelShader);
+	InContext.PSSetSamplers(0, 1, SamplerState);
 }
 
 CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
@@ -33,8 +34,19 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 
 	BasicPixelShader = InDevice.CreatePixelShader(L"resources/shader/BasicPixelShader.hlsl");
 
+	Graphics::TSamplerDesc SamplerDesc;
+	SamplerDesc.Filter = Graphics::EFilter::FILTER_MIN_MAG_MIP_POINT;
+	SamplerDesc.AddressU = Graphics::ETextureAddressMode::TEXTURE_ADDRESS_CLAMP;
+	SamplerDesc.AddressV = Graphics::ETextureAddressMode::TEXTURE_ADDRESS_CLAMP;
+	SamplerDesc.AddressW = Graphics::ETextureAddressMode::TEXTURE_ADDRESS_CLAMP;
+	SamplerDesc.ComparisonFunc = Graphics::EComparisonFunc::COMPARISON_NEVER;
+	SamplerDesc.MinLOD = 0;
+	SamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	
+	LinearSamplerState = InDevice.CreateSamplerState(SamplerDesc);
+
 	CPSO* ImagePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
-		, BasicRasterizerState.get(), BasicPixelShader.get());
+		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get());
 
 	PSOs[size_t(EPSOType::Basic)] = std::unique_ptr<CPSO>(ImagePSO);
 }

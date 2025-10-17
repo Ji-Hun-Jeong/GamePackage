@@ -40,7 +40,6 @@ public:
 	}
 	void UpdateVertexConstBuffer(size_t InIndex, const void* InMapDataPoint, size_t InDataSize)
 	{
-		// assert(InBufferMapInstance);
 		RenderStateObject->UpdateVertexConstBuffer(VertexConstBufferMapInstances[InIndex].get(), InMapDataPoint, InDataSize);
 	}
 
