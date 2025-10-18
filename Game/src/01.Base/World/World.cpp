@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "World.h"
 #include "../Object/Camera.h"
+#include "01.Base/Object/Character.h"
 #include "02.Contents/Actor/Player/Player.h"
 
 class CC : public CCharacter
 {
 	GENERATE_OBJECT()
-		DONTCOPY(CC)
+	DONTCOPY(CC)
 public:
 	CC() = default;
 	~CC() = default;
@@ -30,12 +31,12 @@ public:
 CWorld::CWorld()
 	: bFlagDestroyedWorldObject(false)
 {
-	
+
 }
 
 CWorld::~CWorld()
 {
-	
+
 }
 
 void CWorld::Start()

@@ -1,6 +1,5 @@
 #pragma once
 
-
 class IObjectDestroy
 {
 	friend class CObject;
@@ -40,7 +39,6 @@ protected:
 	}
 
 public:
-	virtual void Initalize() {}
 	virtual void BeginPlay()
 	{
 

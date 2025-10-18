@@ -24,14 +24,16 @@ public:
 		}
 
 		for (auto& WorldActor : WorldActors)
-			WorldActor->Update(0.5f);
+			WorldActor->Update(1.0f / 60.0f);
 
 		for (auto& WorldActor : WorldActors)
-			WorldActor->CaptureSnapShot();
-
+			WorldActor->FinalUpdate();
 	}
 	void Arrange()
 	{
+		for (auto& WorldActor : WorldActors)
+			WorldActor->CaptureSnapShot();
+
 		if (bFlagDestroyedWorldObject == false)
 			return;
 
@@ -52,7 +54,6 @@ public:
 		T* Object = new T;
 		Object->InstanceId = NumberGenerator.GenerateNumber();
 		Object->World = this;
-		Object->Initalize();
 
 		auto Iter = NewObjectTypeEvents.find(T::GetStaticType());
 		if (Iter != NewObjectTypeEvents.end())
@@ -76,6 +77,8 @@ public:
 			InOwner->AttachChild(Actor.get());
 
 		NextAddedWorldActors.push(std::move(Actor));
+
+		RawActor->Initalize();
 
 		return RawActor;
 	}

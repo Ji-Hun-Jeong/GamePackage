@@ -182,6 +182,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\01.Base\Object\Component\Animation\Animation.cpp" />
+    <ClCompile Include="src\01.Base\Object\Component\Animation\AnimationTransition.cpp" />
+    <ClCompile Include="src\01.Base\Object\Component\Animation\Animator.cpp" />
     <ClCompile Include="src\01.Base\Object\Camera.cpp" />
     <ClCompile Include="src\04.Renderer\SpriteRendererProvide.cpp" />
     <ClCompile Include="src\05.Input\InputActionManager.cpp" />
@@ -212,6 +215,9 @@
     <ClCompile Include="src\01.Base\Object\Component\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\01.Base\Object\Component\Animation\Animation.h" />
+    <ClInclude Include="src\01.Base\Object\Component\Animation\AnimationTransition.h" />
+    <ClInclude Include="src\01.Base\Object\Component\Animation\Animator.h" />
     <ClInclude Include="src\01.Base\Object\Camera.h" />
     <ClInclude Include="src\05.Input\InputActionManager.h" />
     <ClInclude Include="src\01.Base\Object\Character.h" />

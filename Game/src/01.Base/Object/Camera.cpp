@@ -27,6 +27,7 @@ void CCamera::CaptureSnapShot()
 		return;
 
 	GetTransform()->CalculateModelMatrix();
+	GetTransform()->SetVariation(false);
 
 	CameraConst.ViewProj = GetTransform()->GetModelMatrix().Invert();
 

@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "Component/Transform.h"
 #include "Component/RenderComponent.h"
+#include "Component/Animation/Animator.h"
 
 class CActor : public CObject
 {
@@ -40,14 +41,19 @@ public:
 	CActor* GetOwner() { return Owner; }
 	CTransform* GetTransform() const { return Transform.get(); }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent.get(); }
+	CAnimator* GetAnimator() const { return Animator.get(); }
 
 private:
 	std::unique_ptr<CTransform> Transform;
 	std::unique_ptr<CRenderComponent> RenderComponent;
+	std::unique_ptr<CAnimator> Animator;
+
+public:
+	void SetRenderComponent();
+	void SetAnimator();
 
 protected:
-	void SetRenderComponent();
-	virtual void Initalize() override;
+	virtual void Initalize();
 	virtual void BeginPlay() override
 	{
 		CObject::BeginPlay();
@@ -55,8 +61,32 @@ protected:
 	}
 	virtual void Update(float InDeltaTime)
 	{
-		for (auto& Child : Childs)
-			Child->Update(InDeltaTime);
+		if (Animator)
+		{
+			bool bChangeAnimation = Animator->TryChangeCurrentAnimation();
+
+			CAnimation* CurrentAnimation = Animator->GetCurrentAnimation();
+			if (bChangeAnimation)
+				CurrentAnimation->RequestFrame(0);
+
+			bool bChangeFrame = CurrentAnimation->TryChangeFrame();
+			if (bChangeFrame)
+			{
+				const TFrame& ChangedFrame = CurrentAnimation->GetCurrentFrame();
+				printf("%ws\n", ChangedFrame.ImagePath.c_str());
+				if (ChangedFrame.ImagePath.empty() == false)
+					RenderComponent->SetImage(ChangedFrame.ImagePath);
+			}
+
+			CurrentAnimation->UpdateAnimationState(InDeltaTime);
+		}
+	}
+	virtual void FinalUpdate()
+	{
+		if (Owner)
+			Transform->SetFinalPosition(Transform->GetPosition() + Owner->GetTransform()->GetFinalPosition());
+		else
+			Transform->SetFinalPosition(Transform->GetPosition());
 	}
 	virtual void CaptureSnapShot()
 	{
@@ -67,17 +97,19 @@ protected:
 			if (RenderComponent)
 				RenderComponent->UpdateVertexConstBuffer(0, &Transform->GetModelMatrix(), sizeof(Transform->GetModelMatrix()));
 		}
+		for (auto& Child : Childs)
+			Child->GetTransform()->SetVariation(true);
 	}
 
+public:
 	void Destroy() override
 	{
 		CObject::Destroy();
 
-		for (auto& Child : Childs)
-			Child->Destroy();
-
 		if (Owner)
 			Owner->DetachChild(this);
+		for (auto& Child : Childs)
+			Child->Destroy();
 	}
 
 };

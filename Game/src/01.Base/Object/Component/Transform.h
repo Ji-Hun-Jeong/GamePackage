@@ -6,7 +6,8 @@ class CTransform : public CObject
     GENERATE_OBJECT()
 public:
     CTransform()
-        : Position(Vector3(0.0f))
+        : FinalPosition(Vector3(0.0f))
+        , Position(Vector3(0.0f))
         , Rotation(Vector3(0.0f))
         , Scale(Vector3(1.0f))
         , Speed(0.0f)
@@ -18,6 +19,7 @@ public:
     // =================================================================
     // Getters
     // =================================================================
+    const Vector3& GetFinalPosition() const { return FinalPosition; }
     const Vector3& GetPosition() const { return Position; }
     const Vector3& GetRotation() const { return Rotation; }
     const Vector3& GetScale() const { return Scale; }
@@ -26,6 +28,10 @@ public:
     // =================================================================
     // Setters
     // =================================================================
+    void SetFinalPosition(const Vector3& InFinalPosition)
+    {
+        FinalPosition = InFinalPosition;
+    }
     void SetPosition(const Vector3& InPosition)
     {
         Position = InPosition;
@@ -59,7 +65,7 @@ public:
             * Matrix::CreateRotationX(Rotation.x)
             * Matrix::CreateRotationY(Rotation.y)
             * Matrix::CreateRotationZ(Rotation.z)
-            * Matrix::CreateTranslation(Position);
+            * Matrix::CreateTranslation(FinalPosition);
 
         ModelMatrix = ModelMatrix.Transpose();
     }
@@ -69,6 +75,7 @@ public:
 
 private:
     Matrix ModelMatrix;
+    Vector3 FinalPosition;
     Vector3 Position;
     Vector3 Rotation;
     Vector3 Scale;

@@ -27,6 +27,10 @@ public:
 		CImage* Image = RenderResourceLoader->LoadImageFromFile(InPath);
 		RenderStateObject->SetImage(Image);
 	}
+	void SetImage(CImage* InImage)
+	{
+		RenderStateObject->SetImage(InImage);
+	}
 	void SetPSO(EPSOType InPSOType)
 	{
 		CPSO* PSO = RenderResourceLoader->GetPSO(InPSOType);

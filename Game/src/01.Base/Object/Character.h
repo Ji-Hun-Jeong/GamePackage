@@ -3,10 +3,11 @@
 
 class CCharacter : public CActor
 {
+	GENERATE_OBJECT()
 	DONTCOPY(CCharacter)
 public:
 	CCharacter() = default;
-	virtual ~CCharacter() = 0 {}
+	virtual ~CCharacter() {}
 public:
 	virtual void Initalize() override
 	{

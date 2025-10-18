@@ -1,32 +1,70 @@
 #include "pch.h"
 #include "Player.h"
 #include "05.Input/InputActionManager.h"
+#include "01.Base/World/World.h"
 
 CPlayer::~CPlayer()
 {
-
+	
 }
 
 void CPlayer::Initalize()
 {
-	CCharacter::Initalize();
+	CActor::Initalize();
 
-	GetRenderComponent()->SetImage(L"resources/image/Player/Attack/0.png");
+	Body = GetWorld()->SpawnActor<CCharacter>(this);
+	Body->SetAnimator();
+	CAnimation* Animation = new CAnimation(true);
+	TFrame Frame;
+	Frame.ImagePath = L"resources/image/Character/stand/Body0.png";
+	Animation->AddFrame(Frame);
+	Frame.ImagePath = L"resources/image/Character/stand/Body1.png";
+	Animation->AddFrame(Frame);
+	Frame.ImagePath = L"resources/image/Character/stand/Body2.png";
+	Animation->AddFrame(Frame);
+	Frame.ImagePath = L"resources/image/Character/stand/Body1.png";
+	Animation->AddFrame(Frame);
+	Animation->UnifyFrameDuration(1.0f);
+
+	Body->GetAnimator()->AddAnimation("Basic", std::unique_ptr<CAnimation>(Animation));
+	Body->GetAnimator()->SetCurrentAnimation("Basic");
+
+	Head = GetWorld()->SpawnActor<CCharacter>(this);
+	Head->GetRenderComponent()->SetImage(L"resources/image/Character/Head_Front.png");
+	Head->GetTransform()->SetPosition(Vector3(0.005f, 0.065f, 0.0f));
+
+	Arm = GetWorld()->SpawnActor<CCharacter>(this);
+	Arm->GetRenderComponent()->SetImage(L"resources/image/Character/stand/Arm0.png");
+	Arm->GetTransform()->SetPosition(Vector3(0.02f, 0.0f, 0.0f));
+
+	//Hand = GetWorld()->SpawnActor<CCharacter>(this);
+	//Hand->GetRenderComponent()->SetImage(L"resources/image/Character/stand/Body0.png");
+
 	GetTransform()->SetSpeed(0.002f);
 }
 
 void CPlayer::Update(float InDeltaTime)
 {
-	CCharacter::Update(InDeltaTime);
+	CActor::Update(InDeltaTime);
 }
 
 void CPlayer::Destroy()
 {
-	CCharacter::Destroy();
+	CActor::Destroy();
+
 	LeftMoveActionValue->Destroy();
 	RightMoveActionValue->Destroy();
 	UpMoveActionValue->Destroy();
 	DownMoveActionValue->Destroy();
+
+	if (Head)
+		Head->Destroy();
+	if (Body)
+		Body->Destroy();
+	if (Arm)
+		Arm->Destroy();
+	if (Hand)
+		Hand->Destroy();
 }
 
 void CPlayer::SetInputAction(CInputActionManager& InInputActionManager)
