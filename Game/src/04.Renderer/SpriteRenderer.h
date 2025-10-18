@@ -18,6 +18,8 @@ public:
 	void InitalizeFromWindow(Core::CWindow& InWindow);
 	void SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight);
 	void SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight);
+	uint32_t GetScreenWidth() const { return ScreenWidth; }
+	uint32_t GetScreenHeight() const { return ScreenHeight; }
 	CRenderStateObject* NewRenderStateObject()
 	{
 		CRenderStateObject* RenderStateObject = new CRenderStateObject;

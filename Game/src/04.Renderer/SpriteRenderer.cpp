@@ -1,31 +1,6 @@
 #include "pch.h"
 #include "SpriteRenderer.h"
 
-#include <Core/public/Window.h>
-#include "01.Base/World/World.h"
-
-class CInitalizeRenderComponent : public INewObjectEvent
-{
-public:
-	CInitalizeRenderComponent(CSpriteRenderer& InRenderer, CRenderResourceLoader& InRenderResourceLoader)
-		: Renderer(InRenderer)
-		, RenderResourceLoader(InRenderResourceLoader)
-	{}
-private:
-	void CreatedInWorld(CWorld& InWorld, CObject& InNewObject) override
-	{
-		CRenderComponent* RenderComponent = static_cast<CRenderComponent*>(&InNewObject);
-		CRenderStateObject* RenderStateObject = Renderer.NewRenderStateObject();
-
-		RenderComponent->SetRenderStateObject(RenderStateObject);
-		RenderComponent->SetRenderResourceLoader(&RenderResourceLoader);
-		RenderComponent->SetMesh(0);
-		RenderComponent->SetPSO(EPSOType::Basic);
-	}
-
-	CSpriteRenderer& Renderer;
-	CRenderResourceLoader& RenderResourceLoader;
-};
 CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight)
 	: ScreenWidth(InScreenWidth)
 	, ScreenHeight(InScreenHeight)
@@ -92,33 +67,4 @@ void CSpriteRenderer::SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeigh
 	ViewPort.MaxDepth = 1.0f;
 
 	Context.RSSetViewPort(ViewPort);
-}
-
-void CSpriteRenderer::InitalizeFromWorld(CWorld& InWorld)
-{
-	InWorld.AddNewObjectTypeEvent(CRenderComponent::GetStaticType(), std::make_unique<CInitalizeRenderComponent>(*this, RenderResourceLoader));
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-class CRefreshScreen : public Core::IWindowResize
-{
-public:
-	CRefreshScreen(CSpriteRenderer& InSprireRenderer)
-		: SpriteRenderer(InSprireRenderer)
-	{}
-	void WindowResize(UINT InNewScreenWidth, UINT InNewScreenHeight) override
-	{
-		SpriteRenderer.SetWindowSize(InNewScreenWidth, InNewScreenHeight);
-	}
-private:
-	CSpriteRenderer& SpriteRenderer;
-};
-
-void CSpriteRenderer::InitalizeFromWindow(Core::CWindow& InWindow)
-{
-	InWindow.RegistWindowResizeEvent(std::make_unique<CRefreshScreen>(*this));
 }

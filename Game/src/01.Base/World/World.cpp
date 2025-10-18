@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "World.h"
+#include "../Object/Camera.h"
 #include "02.Contents/Actor/Player/Player.h"
 
 class CC : public CCharacter
@@ -41,4 +42,5 @@ void CWorld::Start()
 {
 	SpawnActor<CC>();
 	SpawnActor<CPlayer>();
+	SpawnActor<CCamera>();
 }

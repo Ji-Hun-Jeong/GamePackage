@@ -14,11 +14,5 @@ void CActor::SetRenderComponent()
 {
 	RenderComponent = GetWorld()->NewObject<CRenderComponent>();
 
-	Graphics::TBufferDesc VertexConstBufferDesc;
-	VertexConstBufferDesc.ByteWidth = sizeof(Transform->GetModelMatrix());
-	VertexConstBufferDesc.Usage = Graphics::EUsage::UsageDynamic;
-	VertexConstBufferDesc.BindFlags = Graphics::EBindFlags::BindConstantBuffer;
-	VertexConstBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessWrite;
-
-	RenderComponent->AddVertexConstBuffer(VertexConstBufferDesc);
+	RenderComponent->AddVertexConstBuffer(sizeof(Transform->GetModelMatrix()));
 }

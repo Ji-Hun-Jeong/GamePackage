@@ -32,9 +32,15 @@ public:
 		CPSO* PSO = RenderResourceLoader->GetPSO(InPSOType);
 		RenderStateObject->SetPSO(PSO);
 	}
-	void AddVertexConstBuffer(const Graphics::TBufferDesc& InBufferDesc)
+	void AddVertexConstBuffer(uint32_t InByteWidth)
 	{
-		std::unique_ptr<Graphics::CBuffer> VertexConstBuffer = RenderResourceLoader->CreateConstBuffer(InBufferDesc, nullptr);
+		Graphics::TBufferDesc ConstBufferDesc;
+		ConstBufferDesc.ByteWidth = InByteWidth;
+		ConstBufferDesc.Usage = Graphics::EUsage::UsageDynamic;
+		ConstBufferDesc.BindFlags = Graphics::EBindFlags::BindConstantBuffer;
+		ConstBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessWrite;
+
+		std::unique_ptr<Graphics::CBuffer> VertexConstBuffer = RenderResourceLoader->CreateConstBuffer(ConstBufferDesc, nullptr);
 		auto VertexConstBufferMapInstance = RenderStateObject->AddVertexConstBuffer(std::move(VertexConstBuffer));
 		VertexConstBufferMapInstances.push_back(std::move(VertexConstBufferMapInstance));
 	}

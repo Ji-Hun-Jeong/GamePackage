@@ -78,6 +78,12 @@
     <ClCompile Include="src\05.Input\InputActionManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\01.Base\Object\Camera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\04.Renderer\SpriteRendererProvide.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -141,6 +147,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\05.Input\InputActionManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Object\Camera.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
