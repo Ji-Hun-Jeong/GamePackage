@@ -5,8 +5,6 @@ namespace Graphics::DX
 {
 	CDXInfra::CDXInfra(HWND InWindowHandle, uint32_t InScreenWidth, uint32_t InScreenHeight)
 		: DXResourceStorage(10000)
-		, ScreenWidth(InScreenWidth)
-		, ScreenHeight(InScreenHeight)
 	{
 		D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE;
 		UINT createDeviceFlags = 0;
@@ -18,8 +16,8 @@ namespace Graphics::DX
 
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;
 		ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
-		swapChainDesc.BufferDesc.Width = ScreenWidth;
-		swapChainDesc.BufferDesc.Height = ScreenHeight;
+		swapChainDesc.BufferDesc.Width = InScreenWidth;
+		swapChainDesc.BufferDesc.Height = InScreenHeight;
 		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		swapChainDesc.BufferCount = 2;
 		swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;

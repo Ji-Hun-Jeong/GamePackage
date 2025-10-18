@@ -11,7 +11,6 @@ public:
 		, RightMoveActionValue(nullptr)
 		, UpMoveActionValue(nullptr)
 		, DownMoveActionValue(nullptr)
-		, DeleteActionValue(nullptr)
 	{}
 	~CPlayer();
 
@@ -26,8 +25,6 @@ private:
 	class CInputActionValue* RightMoveActionValue;
 	class CInputActionValue* UpMoveActionValue;
 	class CInputActionValue* DownMoveActionValue;
-
-	class CInputActionValue* DeleteActionValue;
 	
 };
 

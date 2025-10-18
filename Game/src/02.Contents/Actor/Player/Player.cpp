@@ -27,7 +27,6 @@ void CPlayer::Destroy()
 	RightMoveActionValue->Destroy();
 	UpMoveActionValue->Destroy();
 	DownMoveActionValue->Destroy();
-	DeleteActionValue->Destroy();
 }
 
 void CPlayer::SetInputAction(CInputActionManager& InInputActionManager)
@@ -47,9 +46,5 @@ void CPlayer::SetInputAction(CInputActionManager& InInputActionManager)
 	DownMoveActionValue = InInputActionManager.AddInputActionValue(EKeyType::Down, EButtonState::Hold, [this]()->void
 		{
 			GetTransform()->Move(Vector3(0.0f, -1.0f, 0.0f));
-		});
-	DeleteActionValue = InInputActionManager.AddInputActionValue(EKeyType::Esc, EButtonState::Hold, [this]()->void
-		{
-			Destroy();
 		});
 }

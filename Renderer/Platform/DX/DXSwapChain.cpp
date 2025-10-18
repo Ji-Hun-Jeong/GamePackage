@@ -10,6 +10,10 @@ namespace Graphics::DX
 		, DXResourceStorage(InDXResourceStorage)
 		, WindowTexture(nullptr)
 	{
+		GenerateWindowTextureBuffer();
+	}
+	void CDXSwapChain::GenerateWindowTextureBuffer()
+	{
 		ComPtr<ID3D11Texture2D> WindowTextureBuffer;
 		HRESULT hr = SwapChain->GetBuffer(0, IID_PPV_ARGS(WindowTextureBuffer.GetAddressOf()));
 		if (FAILED(hr))	assert(0);
@@ -25,5 +29,10 @@ namespace Graphics::DX
 			{
 				DXResourceStorage.VacateResource(InRHIHandle);
 			}, Texture2DDesc);
+	}
+	void CDXSwapChain::ResizeBuffers(uint32_t InBufferCount, uint32_t InScreenWidth, uint32_t InScreenHeight, EGIFormat InFormat)
+	{
+		WindowTexture.reset();
+		SwapChain->ResizeBuffers(InBufferCount, InScreenWidth, InScreenHeight, DXGI_FORMAT(InFormat), 0);
 	}
 }

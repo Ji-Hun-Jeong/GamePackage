@@ -21,7 +21,7 @@ namespace Graphics
 		virtual ~CRenderContext() = 0 {}
 
 	public:
-		virtual void OMSetRenderTarget(uint32_t InNumViews, const CRenderTargetView& InRenderTargetView, const CDepthStencilView* InDepthStencilView) = 0;
+		virtual void OMSetRenderTargets(uint32_t InNumViews, const CRenderTargetView* InRenderTargetView, const CDepthStencilView* InDepthStencilView) = 0;
 		virtual void ClearRenderTarget(const CRenderTargetView& InRenderTargetView, const float* InClearColor) = 0;
 		virtual void IASetInputLayout(const CInputLayout& InInputLayout) = 0;
 		virtual void IASetPrimitiveTopology(ETopology InTopology) = 0;

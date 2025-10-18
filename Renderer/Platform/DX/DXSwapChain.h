@@ -17,6 +17,8 @@ namespace Graphics::DX
 		}
 
 	public:
+		void GenerateWindowTextureBuffer() override;
+		void ResizeBuffers(uint32_t InBufferCount, uint32_t InScreenWidth, uint32_t InScreenHeight, EGIFormat InFormat) override;
 		const CTexture2D* GetWindowTextureBuffer() const override
 		{
 			return WindowTexture.get();

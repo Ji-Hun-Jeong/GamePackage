@@ -3,14 +3,21 @@
 #include "RenderResourceLoader.h"
 #include "RenderStateObject.h"
 
+namespace Core
+{
+	class CWindow;
+}
 class CSpriteRenderer
 {
 public:
-	CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, const uint32_t& InScreenWidth, const uint32_t& InScreenHeight);
+	CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight);
 	~CSpriteRenderer() = default;
 
 public:
 	void InitalizeFromWorld(class CWorld& InWorld);
+	void InitalizeFromWindow(Core::CWindow& InWindow);
+	void SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight);
+	void SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight);
 	CRenderStateObject* NewRenderStateObject()
 	{
 		CRenderStateObject* RenderStateObject = new CRenderStateObject;
@@ -43,8 +50,8 @@ public:
 	}
 
 private:
-	const uint32_t& ScreenWidth;
-	const uint32_t& ScreenHeight;
+	uint32_t ScreenWidth;
+	uint32_t ScreenHeight;
 
 	std::unique_ptr<Graphics::IGraphicInfra> GraphicInfra;
 	Graphics::CRenderDevice& Device;

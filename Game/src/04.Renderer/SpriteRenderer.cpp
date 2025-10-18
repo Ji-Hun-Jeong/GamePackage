@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "SpriteRenderer.h"
+
+#include <Core/public/Window.h>
 #include "01.Base/World/World.h"
 
 class CInitalizeRenderComponent : public INewObjectEvent
@@ -24,7 +26,7 @@ private:
 	CSpriteRenderer& Renderer;
 	CRenderResourceLoader& RenderResourceLoader;
 };
-CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, const uint32_t& InScreenWidth, const uint32_t& InScreenHeight)
+CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight)
 	: ScreenWidth(InScreenWidth)
 	, ScreenHeight(InScreenHeight)
 	, GraphicInfra(std::move(InGraphicInfra))
@@ -35,13 +37,8 @@ CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGrap
 	, PSOManager(Device)
 	, RenderResourceLoader(Device, PSOManager, ScreenWidth, ScreenHeight)
 {
-	Graphics::TViewPort ViewPort;
-	ViewPort.TopLeftX = 0;
-	ViewPort.TopLeftY = 0;
-	ViewPort.Width = static_cast<float>(ScreenWidth);
-	ViewPort.Height = static_cast<float>(ScreenHeight);
-	ViewPort.MinDepth = 0.0f;
-	ViewPort.MaxDepth = 1.0f;
+	SetViewPort(ScreenWidth, ScreenHeight);
+	Context.OMSetRenderTargets(1, RenderTargetView.get(), nullptr);
 
 	TGeometryData GeometryData = CGeometryGenerator::GenerateSquare();
 
@@ -65,11 +62,63 @@ CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGrap
 	MeshData.Key = 0;
 
 	RenderResourceLoader.LoadMesh(MeshData);
+}
 
-	Context.OMSetRenderTarget(1, *RenderTargetView.get(), nullptr);
+void CSpriteRenderer::SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight)
+{
+	ScreenWidth = InScreenWidth;
+	ScreenHeight = InScreenHeight;
+	SetViewPort(ScreenWidth, ScreenHeight);
+
+	Context.OMSetRenderTargets(0, nullptr, nullptr);
+	RenderTargetView.reset();
+
+	SwapChain.ResizeBuffers(0, ScreenWidth, ScreenHeight, Graphics::EGIFormat::GI_FORMAT_UNKNOWN);
+	SwapChain.GenerateWindowTextureBuffer();
+
+	RenderTargetView = Device.CreateRenderTargetView(*SwapChain.GetWindowTextureBuffer());
+
+	Context.OMSetRenderTargets(1, RenderTargetView.get(), nullptr);
+}
+
+void CSpriteRenderer::SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight)
+{
+	Graphics::TViewPort ViewPort;
+	ViewPort.TopLeftX = 0;
+	ViewPort.TopLeftY = 0;
+	ViewPort.Width = static_cast<float>(InScreenWidth);
+	ViewPort.Height = static_cast<float>(InScreenHeight);
+	ViewPort.MinDepth = 0.0f;
+	ViewPort.MaxDepth = 1.0f;
+
 	Context.RSSetViewPort(ViewPort);
 }
+
 void CSpriteRenderer::InitalizeFromWorld(CWorld& InWorld)
 {
 	InWorld.AddNewObjectTypeEvent(CRenderComponent::GetStaticType(), std::make_unique<CInitalizeRenderComponent>(*this, RenderResourceLoader));
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class CRefreshScreen : public Core::IWindowResize
+{
+public:
+	CRefreshScreen(CSpriteRenderer& InSprireRenderer)
+		: SpriteRenderer(InSprireRenderer)
+	{}
+	void WindowResize(UINT InNewScreenWidth, UINT InNewScreenHeight) override
+	{
+		SpriteRenderer.SetWindowSize(InNewScreenWidth, InNewScreenHeight);
+	}
+private:
+	CSpriteRenderer& SpriteRenderer;
+};
+
+void CSpriteRenderer::InitalizeFromWindow(Core::CWindow& InWindow)
+{
+	InWindow.RegistWindowResizeEvent(std::make_unique<CRefreshScreen>(*this));
 }

@@ -22,8 +22,6 @@ public:
 	void Update(float InDeltaTime)
 	{
 		CCharacter::Update(InDeltaTime);
-
-		// GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f));
 	}
 
 };

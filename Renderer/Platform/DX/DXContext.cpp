@@ -3,13 +3,16 @@
 
 namespace Graphics::DX
 {
-	void CDXContext::OMSetRenderTarget(uint32_t InNumViews, const CRenderTargetView& InRenderTargetView, const CDepthStencilView* InDepthStencilView)
+	void CDXContext::OMSetRenderTargets(uint32_t InNumViews, const CRenderTargetView* InRenderTargetView, const CDepthStencilView* InDepthStencilView)
 	{
-		ID3D11RenderTargetView* RawRenderTargetView = DXResourceStorage.GetResource<ID3D11RenderTargetView>(InRenderTargetView.GetResourceHandle());
+		std::vector<ID3D11RenderTargetView*> RawRenderTargetViews(InNumViews, nullptr);
+		for (size_t i = 0; i < RawRenderTargetViews.size(); ++i)
+			RawRenderTargetViews[i] = DXResourceStorage.GetResource<ID3D11RenderTargetView>(InRenderTargetView->GetResourceHandle());
+
 		ID3D11DepthStencilView* RawDepthStencilView = nullptr;
 		if (InDepthStencilView)
 			RawDepthStencilView = DXResourceStorage.GetResource<ID3D11DepthStencilView>(InDepthStencilView->GetResourceHandle());
-		Context->OMSetRenderTargets(InNumViews, &RawRenderTargetView, RawDepthStencilView);
+		Context->OMSetRenderTargets(InNumViews, RawRenderTargetViews.data(), RawDepthStencilView);
 	}
 	void CDXContext::ClearRenderTarget(const CRenderTargetView& InRenderTargetView, const float* InClearColor)
 	{

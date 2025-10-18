@@ -10,8 +10,10 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	, InputActionManager(InputManager)
 	, World()
 {
+	//SpriteRenderer.InitalizeFromWindow(Window);
 	SpriteRenderer.InitalizeFromWorld(World);
 	InputActionManager.InitalizeFromWorld(World);
+
 	World.Start();
 }
 

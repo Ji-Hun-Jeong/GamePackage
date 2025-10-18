@@ -18,7 +18,7 @@ namespace Graphics::DX
 		~CDXContext() = default;
 
 	public:
-		void OMSetRenderTarget(uint32_t InNumViews, const CRenderTargetView& InRenderTargetView, const CDepthStencilView* InDepthStencilView) override;
+		void OMSetRenderTargets(uint32_t InNumViews, const CRenderTargetView* InRenderTargetView, const CDepthStencilView* InDepthStencilView) override;
 		void ClearRenderTarget(const CRenderTargetView& InRenderTargetView, const float* InClearColor) override;
 		void IASetInputLayout(const CInputLayout& InInputLayout) override;
 		void IASetPrimitiveTopology(ETopology InTopology) override;
