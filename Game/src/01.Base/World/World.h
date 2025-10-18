@@ -1,6 +1,7 @@
 #pragma once
 #include "WorldEvent.h"
 #include "01.Base/Object/Actor.h"
+#include "01.Base/Object/Scene.h"
 #include "03.Utils/NumberGenerator/NumberGenerator.h"
 
 class CWorld
@@ -94,6 +95,19 @@ public:
 		RawActor->Initalize();
 
 		return RawActor;
+	}
+
+	template <typename T_SCENE>
+	void LoadScene()
+	{
+		while (NextAddedWorldActors.empty() == false)
+		{
+			std::unique_ptr<CActor> Actor = std::move(NextAddedWorldActors.front());
+			NextAddedWorldActors.pop();
+		}
+		for (auto& WorldActor : WorldActors)
+			WorldActor->Destroy();
+		SpawnActor<T_SCENE>();
 	}
 
 	const std::vector<std::unique_ptr<CActor>>& GetWorldActors() const { return WorldActors; }

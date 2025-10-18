@@ -93,6 +93,15 @@
     <ClCompile Include="src\01.Base\Object\Component\Animation\AnimationTransition.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\01.Base\Object\Scene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Scene\TestScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Scene\Scene2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -168,6 +177,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Object\Component\Animation\AnimationTransition.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Object\Scene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Scene\TestScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Scene\Scene2.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

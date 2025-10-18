@@ -41,8 +41,6 @@ void CPlayer::Initalize()
 	//Hand->GetRenderComponent()->SetImage(L"resources/image/Character/stand/Body0.png");
 
 	GetTransform()->SetSpeed(0.002f);
-
-	printf("%d\n", GetType());
 }
 
 void CPlayer::Update(float InDeltaTime)

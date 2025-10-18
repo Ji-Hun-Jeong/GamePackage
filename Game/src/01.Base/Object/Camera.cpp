@@ -4,11 +4,7 @@
 
 CCamera::~CCamera()
 {
-	CActor::Destroy();
-	LeftMoveActionValue->Destroy();
-	RightMoveActionValue->Destroy();
-	UpMoveActionValue->Destroy();
-	DownMoveActionValue->Destroy();
+
 }
 
 void CCamera::Initalize()
@@ -52,4 +48,13 @@ void CCamera::SetInputAction(CInputActionManager& InInputActionManager)
 		{
 			GetTransform()->Move(Vector3(0.0f, -1.0f, 0.0f));
 		});
+}
+
+void CCamera::Destroy()
+{
+	CActor::Destroy();
+	LeftMoveActionValue->Destroy();
+	RightMoveActionValue->Destroy();
+	UpMoveActionValue->Destroy();
+	DownMoveActionValue->Destroy();
 }

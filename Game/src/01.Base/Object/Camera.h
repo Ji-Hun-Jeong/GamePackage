@@ -32,6 +32,7 @@ public:
 		CameraConst.ScreenWidth = InScreenWidth;
 		CameraConst.ScreenHeight = InScreenHeight;
 	}
+	void Destroy() override;
 
 private:
 	TCameraConst CameraConst;

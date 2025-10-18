@@ -122,7 +122,7 @@ protected:
 	}
 
 public:
-	void Destroy() override
+	virtual void Destroy() override
 	{
 		CObject::Destroy();
 
