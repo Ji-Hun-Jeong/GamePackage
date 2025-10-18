@@ -34,7 +34,6 @@ private:
 	CInputActionManager InputActionManager;
 
 	CWorld World;
-
 };
 
 

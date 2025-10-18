@@ -1,5 +1,7 @@
 #pragma once
+#include <nlohmann/json.hpp>
 #include "04.Renderer/Image.h"
+using CSerializer = nlohmann::json;
 
 struct TFrame
 {
@@ -23,6 +25,20 @@ public:
 	~CAnimation() = default;
 
 public:
+	void SaveFrameData(CSerializer& InSerializer) const
+	{
+		CSerializer FrameArray = CSerializer::array();
+		for (size_t i = 0; i < Frames.size(); ++i)
+		{
+			auto& Frame = Frames[i];
+			CSerializer FrameData;
+			FrameData["order"] = uint32_t(i);
+			FrameData["offset"] = { {"x", Frame.Offset.x}, {"y", Frame.Offset.y} ,{"z", Frame.Offset.z}};
+			FrameData["image_path"] = Frame.ImagePath;
+			FrameArray.push_back(FrameData);
+		}
+		InSerializer.push_back(FrameArray);
+	}
 	void AddFrame(const TFrame& InFrame)
 	{
 		Frames.push_back(InFrame);

@@ -28,10 +28,11 @@ bool CGame::Process()
 	World.Arrange();
 	SpriteRenderer.Render();
 
+	
+
 	return true;
 }
 
 void CGame::ShutDown()
 {
-	
 }

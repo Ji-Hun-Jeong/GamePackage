@@ -17,15 +17,26 @@ public:
 	}
 
 public:
+	void Serialize(CSerializer& InSerializer) const override
+	{
+		CComponent::Serialize(InSerializer);
+		if (ImagePath.empty() == false)
+		{
+			CSerializer Data;
+			Data["image_path"] = ImagePath.c_str();
+			InSerializer["render_component"] = Data;
+		}
+	}
 	void SetMesh(Graphics::MeshKey InMeshKey)
 	{
 		Graphics::CMesh* Mesh = RenderResourceLoader->GetMeshOrNull(InMeshKey);
 		RenderStateObject->SetMesh(Mesh);
 	}
-	void SetImage(const std::wstring& InPath)
+	void SetImage(const std::wstring& InImagePath)
 	{
-		CImage* Image = RenderResourceLoader->LoadImageFromFile(InPath);
+		CImage* Image = RenderResourceLoader->LoadImageFromFile(InImagePath);
 		RenderStateObject->SetImage(Image);
+		ImagePath = InImagePath;
 	}
 	void SetImage(CImage* InImage)
 	{
@@ -66,6 +77,7 @@ public:
 	}
 
 private:
+	std::wstring ImagePath;
 	CRenderStateObject* RenderStateObject;
 	CRenderResourceLoader* RenderResourceLoader;
 

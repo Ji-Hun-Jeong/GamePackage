@@ -1,9 +1,20 @@
 #pragma once
+#include <nlohmann/json.hpp>
+using CSerializer = nlohmann::json;
 
 class IObjectDestroy
 {
 	friend class CObject;
 	virtual void OnDestroy(class CObject& InObject) = 0;
+};
+
+class CObjectCreator
+{
+	SINGLE(CObjectCreator)
+public:
+
+private:
+
 };
 
 using ObjectType = size_t;
@@ -52,6 +63,8 @@ public:
 
 	virtual void SetInputAction(class CInputActionManager& InInputActionManager) {}
 
+	virtual void Serialize(CSerializer& InSerializer) const {}
+
 public:
 	// ObjectDestroy
 	// 표시해놓고 순회할때 지우는걸로 Render같은 때에
@@ -94,4 +107,4 @@ public:\
 		static ObjectType Type = SetType();\
 		return Type;\
 	}\
-	ObjectType GetType() override {return GetStaticType();}
+	ObjectType GetType() override {return GetStaticType();};

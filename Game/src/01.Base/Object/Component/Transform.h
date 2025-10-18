@@ -1,7 +1,7 @@
 #pragma once
-#include "../Object.h"
+#include "Component.h"
 
-class CTransform : public CObject
+class CTransform : public CComponent
 {
     GENERATE_OBJECT()
 public:
@@ -16,6 +16,16 @@ public:
     ~CTransform() = default;
 
 public:
+    void Serialize(CSerializer& InSerializer) const override
+    {
+        CComponent::Serialize(InSerializer);
+        CSerializer Data;
+        Data["position"] = { {"x", Position.x}, {"y", Position.y} ,{"z", Position.z} };
+        Data["rotation"] = { {"x", Rotation.x}, {"y", Rotation.y} ,{"z", Rotation.z} };
+        Data["scale"] = { {"x", Scale.x}, {"y", Scale.y} ,{"z", Scale.z} };
+        Data["speed"] = Speed;
+        InSerializer["transform"] = Data;
+    }
     // =================================================================
     // Getters
     // =================================================================

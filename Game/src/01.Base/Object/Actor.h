@@ -73,7 +73,7 @@ protected:
 			if (bChangeFrame)
 			{
 				const TFrame& ChangedFrame = CurrentAnimation->GetCurrentFrame();
-				printf("%ws\n", ChangedFrame.ImagePath.c_str());
+
 				if (ChangedFrame.ImagePath.empty() == false)
 					RenderComponent->SetImage(ChangedFrame.ImagePath);
 			}
@@ -99,6 +99,26 @@ protected:
 		}
 		for (auto& Child : Childs)
 			Child->GetTransform()->SetVariation(true);
+	}
+	virtual void Serialize(CSerializer& InSerializer) const override
+	{
+		CObject::Serialize(InSerializer);
+		CSerializer ComponentArray = CSerializer::array();
+		auto Save = [this, &ComponentArray](CComponent* InComponent)->void
+			{
+				CSerializer ComponentData;
+				InComponent->Serialize(ComponentData);
+				ComponentArray.push_back(ComponentData);
+			};
+		if (Transform)
+			Save(Transform.get());
+		if (RenderComponent)
+			Save(RenderComponent.get());
+		if (Animator)
+			Save(Animator.get());
+		InSerializer["component"] = ComponentArray;
+		for (auto& Child : Childs)
+			Child->Serialize(InSerializer);
 	}
 
 public:

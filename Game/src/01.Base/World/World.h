@@ -48,6 +48,19 @@ public:
 		bFlagDestroyedWorldObject = false;
 	}
 
+	void Seralize(const std::string& InSavePath)
+	{
+		CSerializer ActorArrayData = CSerializer::array();
+		CSerializer ActorData;
+		for (auto& WorldActor : WorldActors)
+		{
+			WorldActor->Serialize(ActorData);
+			ActorArrayData.push_back(ActorData);
+		}
+		Serializer["objects"] = ActorArrayData;
+		std::cout << Serializer.dump(4);
+	}
+
 	template <typename T>
 	std::unique_ptr<T> NewObject()
 	{
@@ -111,5 +124,7 @@ private:
 	
 	std::map<ObjectType, std::vector<std::unique_ptr<INewObjectEvent>>> NewObjectTypeEvents;
 	std::vector<std::unique_ptr<INewObjectEvent>> NewObjectEvents;
+
+	CSerializer Serializer;
 
 };
