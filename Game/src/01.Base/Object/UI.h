@@ -19,21 +19,25 @@ public:
 		GetRenderComponent()->SetImage(InBasicImagePath);
 		GetInteractionComponent()->SetMouseExitEvent([this, InBasicImagePath]()->void
 			{
-				GetRenderComponent()->SetImage(InBasicImagePath);
+				if (GetRenderComponent())
+					GetRenderComponent()->SetImage(InBasicImagePath);
 			});
 		GetInteractionComponent()->SetMouseEnterEvent([this, InMouseOnImagePath]()->void
 			{
-				GetRenderComponent()->SetImage(InMouseOnImagePath);
+				if (GetRenderComponent())
+					GetRenderComponent()->SetImage(InMouseOnImagePath);
 			});
 		GetInteractionComponent()->SetMouseClickEvent([this, InMouseClickImagePath]()->void
 			{
-				if (InMouseClickImagePath.empty() == false)
-					GetRenderComponent()->SetImage(InMouseClickImagePath);
+				if (GetRenderComponent())
+					if (InMouseClickImagePath.empty() == false)
+						GetRenderComponent()->SetImage(InMouseClickImagePath);
 			});
 		GetInteractionComponent()->SetMouseReleaseEvent([this, InMouseReleaseImagePath, InMouseReleaseEvent]()->void
 			{
-				if (InMouseReleaseImagePath.empty() == false)
-					GetRenderComponent()->SetImage(InMouseReleaseImagePath);
+				if (GetRenderComponent())
+					if (InMouseReleaseImagePath.empty() == false)
+						GetRenderComponent()->SetImage(InMouseReleaseImagePath);
 				if (InMouseReleaseEvent)
 					InMouseReleaseEvent();
 			});

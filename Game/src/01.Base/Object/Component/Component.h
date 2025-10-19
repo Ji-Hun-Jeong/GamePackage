@@ -3,9 +3,22 @@
 
 class CComponent : public CObject
 {
+	friend class CActor;
 public:
-	CComponent() = default;
-	virtual ~CComponent() = 0 {}
+	CComponent()
+		: OwnerActor(nullptr)
+		, bDestroy(false)
+	{}
+	virtual ~CComponent();
+
+public:
+	void SetOwner(class CActor* InOwnerActor) { assert(InOwnerActor); OwnerActor = InOwnerActor; }
+	class CActor* GetOwner() const { return OwnerActor; }
+	void Destroy() override;
+
+private:
+	class CActor* OwnerActor;
+	bool bDestroy;
 
 };
 

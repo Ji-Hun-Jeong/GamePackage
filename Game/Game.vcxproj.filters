@@ -30,9 +30,6 @@
     <ClCompile Include="src\03.Utils\NumberGenerator\NumberGenerator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\ObjectPtr.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\01.Base\World\World.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -135,9 +132,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\03.Utils\NumberGenerator\NumberGenerator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\01.Base\Object\ObjectPtr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\World\World.h">

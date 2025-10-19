@@ -24,7 +24,7 @@ public:
 	void SetSatisfy(bool bInSatisfy) { bSatisfy = bInSatisfy; }
 	void Destroy() { bDestroy = true; }
 
-	std::function<void()> GetInputAction() const { return InputAction; }
+	const std::function<void()>& GetInputAction() const { return InputAction; }
 	void SetInputAction(std::function<void()> InInputAction) { InputAction = InInputAction; }
 
 private:
@@ -84,8 +84,9 @@ public:
 				if (InputActionValue->IsSatisfy() == false)
 					continue;
 
-				std::function<void()> InputAction = InputActionValue->GetInputAction();
-				InputAction();
+				const std::function<void()>& InputAction = InputActionValue->GetInputAction();
+				if (InputAction)
+					InputAction();
 				InputActionValue->SetSatisfy(false);
 			}
 		}

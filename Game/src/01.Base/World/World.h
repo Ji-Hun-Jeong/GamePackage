@@ -15,16 +15,22 @@ public:
 
 	void Arrange()
 	{
+		for (auto& WorldActor : WorldActors)
+			WorldActor->Arrange();
+
 		if (bFlagDestroyedWorldObject == false)
 			return;
 
-		auto RemoveStartIter = std::remove_if(WorldActors.begin(), WorldActors.end(),
-			[](const std::unique_ptr<CActor>& InActor)->bool
-			{
-				return InActor->bDestroy;
-			});
+		for (auto& WorldActor : WorldActors)
+		{
+			if (WorldActor->bDestroy && WorldActor->Owner)
+				WorldActor->Owner->Detach(WorldActor.get());
+		}
 
-		WorldActors.erase(RemoveStartIter, WorldActors.end());
+		// 3. 한 번에 제거 (O(n))
+		auto NewEnd = std::remove_if(WorldActors.begin(), WorldActors.end(),
+			[](const auto& Actor) { return Actor->bDestroy; });
+		WorldActors.erase(NewEnd, WorldActors.end());
 
 		bFlagDestroyedWorldObject = false;
 	}
@@ -40,10 +46,11 @@ public:
 
 			WorldActors.push_back(std::move(Actor));
 		}
-		while (WorldFirstCommands.empty() == false)
+		
+		while (WorldSynchronizeEvents.empty() == false)
 		{
-			WorldFirstCommands.front()();
-			WorldFirstCommands.pop();
+			WorldSynchronizeEvents.front()();
+			WorldSynchronizeEvents.pop();
 		}
 	}
 
@@ -75,12 +82,17 @@ public:
 		std::cout << Serializer.dump(4);
 	}
 
+	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
+
 	template <typename T>
-	std::unique_ptr<T> NewObject()
+	T* NewObject(CActor* InOwner)
 	{
 		T* Object = new T;
 		Object->InstanceId = NumberGenerator.GenerateNumber();
 		Object->World = this;
+
+		if (InOwner)
+			InOwner->Attach(Object);
 
 		auto Iter = NewObjectTypeEvents.find(T::GetStaticType());
 		if (Iter != NewObjectTypeEvents.end())
@@ -91,33 +103,30 @@ public:
 		for (auto& NewObjectEvent : NewObjectEvents)
 			NewObjectEvent->CreatedInWorld(*this, *Object);
 
-		return std::unique_ptr<T>(Object);
+		return Object;
 	}
 
 	template <typename T>
 	T* SpawnActor(CActor* InOwner = nullptr)
 	{
-		std::unique_ptr<T> Actor = NewObject<T>();
-		T* RawActor = Actor.get();
+		T* Actor = NewObject<T>(InOwner);
 
-		if (InOwner)
-			InOwner->AttachChild(Actor.get());
+		NextAddedWorldActors.emplace(Actor);
 
-		NextAddedWorldActors.push(std::move(Actor));
+		Actor->Initalize();
 
-		RawActor->Initalize();
-
-		return RawActor;
+		return Actor;
 	}
 
 	template <typename T_SCENE>
 	void LoadScene()
 	{
-		WorldFirstCommands.push([this]()->void
+		WorldSynchronizeEvents.push([this]()->void
 			{
 				LoadSceneImmediate<T_SCENE>();
 			});
 	}
+
 private:
 	template <typename T_SCENE>
 	void LoadSceneImmediate()
@@ -161,5 +170,5 @@ private:
 
 	CSerializer Serializer;
 
-	std::queue<std::function<void()>> WorldFirstCommands;
+	std::queue<std::function<void()>> WorldSynchronizeEvents;
 };

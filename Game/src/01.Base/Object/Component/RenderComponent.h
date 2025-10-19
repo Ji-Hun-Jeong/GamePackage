@@ -17,9 +17,9 @@ public:
 	}
 
 public:
-	void Destroy() override
+	void EndPlay() override
 	{
-		CComponent::Destroy();
+		CComponent::EndPlay();
 		RenderStateObject->Destroy();
 	}
 	void Serialize(CSerializer& InSerializer) const override

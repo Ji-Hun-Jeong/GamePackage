@@ -8,26 +8,43 @@
 class CActor : public CObject
 {
 	GENERATE_OBJECT()
-		DONTCOPY(CActor)
+	DONTCOPY(CActor)
 public:
 	CActor()
 		: Owner(nullptr)
+		, bDestroy(false)
 		, Transform(nullptr)
 		, RenderComponent(nullptr)
 	{}
-	virtual ~CActor() {}
+	virtual ~CActor()
+	{
+
+
+	}
 
 private:
 	friend class CWorld;
 	CActor* Owner;
+	bool bDestroy;
 
 	std::vector<CActor*> Childs;
-	void AttachChild(CActor* InChild)
+	CActor* Attach(CActor* InChild)
 	{
+		assert(InChild);
 		InChild->Owner = this;
 		Childs.push_back(InChild);
+		return InChild;
 	}
-	void DetachChild(CActor* InChild)
+	CComponent* Attach(CComponent* InComponent)
+	{
+		assert(InComponent);
+		InComponent->SetOwner(this);
+		Components.emplace_back(InComponent);
+		return InComponent;
+	}
+
+public:
+	void Detach(CActor* InChild)
 	{
 		for (auto Iter = Childs.begin(); Iter != Childs.end(); ++Iter)
 		{
@@ -38,12 +55,13 @@ private:
 			}
 		}
 	}
+
 public:
 	CActor* GetOwner() { return Owner; }
-	CTransform* GetTransform() const { return Transform.get(); }
-	CRenderComponent* GetRenderComponent() const { return RenderComponent.get(); }
-	CAnimator* GetAnimator() const { return Animator.get(); }
-	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent.get(); }
+	CTransform* GetTransform() const { return Transform; }
+	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+	CAnimator* GetAnimator() const { return Animator; }
+	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent; }
 	template <typename T>
 	T* GetComponent()
 	{
@@ -53,17 +71,13 @@ public:
 				return Component;
 		}
 	}
-	void AddComponent(CComponent* InComponent)
-	{
-		Components.push_back(InComponent);
-	}
 
 private:
-	std::unique_ptr<CTransform> Transform;
-	std::unique_ptr<CRenderComponent> RenderComponent;
-	std::unique_ptr<CAnimator> Animator;
-	std::unique_ptr<CInteractionComponent> InteractionComponent;
-	std::vector<CComponent*> Components;
+	CTransform* Transform;
+	CRenderComponent* RenderComponent;
+	CAnimator* Animator;
+	CInteractionComponent* InteractionComponent;
+	std::vector<std::unique_ptr<CComponent>> Components;
 
 public:
 	void SetRenderComponent();
@@ -77,8 +91,20 @@ protected:
 		CObject::BeginPlay();
 
 	}
+	void Arrange()
+	{
+		for (auto Iter = Components.begin(); Iter != Components.end();)
+		{
+			auto& Component = (*Iter);
+			if (Component->bDestroy)
+				Iter = Components.erase(Iter);
+			else
+				++Iter;
+		}
+	}
 	virtual void Update(float InDeltaTime)
 	{
+		// 컴포넌트가 Destroy인지 매번 검사해서 Destroy면 참조 빼기
 		if (Animator)
 		{
 			bool bChangeAnimation = Animator->TryChangeCurrentAnimation();
@@ -123,9 +149,11 @@ protected:
 			}
 		}
 		for (auto& Child : Childs)
+		{
 			Child->GetTransform()->SetVariation(true);
+		}
 	}
-	virtual void Serialize(CSerializer& InSerializer) const override
+	/*virtual void Serialize(CSerializer& InSerializer) const override
 	{
 		CObject::Serialize(InSerializer);
 		CSerializer ComponentArray = CSerializer::array();
@@ -144,29 +172,10 @@ protected:
 		InSerializer["component"] = ComponentArray;
 		for (auto& Child : Childs)
 			Child->Serialize(InSerializer);
-	}
+	}*/
 
 public:
-	virtual void Destroy() override
-	{
-		CObject::Destroy();
-
-		if (Owner)
-			Owner->DetachChild(this);
-		for (auto& Child : Childs)
-			Child->Destroy();
-
-		if (Transform)
-			Transform->Destroy();
-		if (RenderComponent)
-			RenderComponent->Destroy();
-		if (Animator)
-			Animator->Destroy();
-		if (InteractionComponent)
-			InteractionComponent->Destroy();
-		for (auto& Component : Components)
-			Component->Destroy();
-	}
+	virtual void Destroy() override;
 
 };
 

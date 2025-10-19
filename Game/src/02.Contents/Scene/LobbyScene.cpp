@@ -15,8 +15,9 @@ void CLobbyScene::Initalize()
 	CUI* UI = GetWorld()->SpawnActor<CUI>(this);
 	UI->InitalizeBasicButtonUI(L"resources/image/UI/Title/SceneToolUI_Normal.png", L"resources/image/UI/Title/SceneToolUI_Hover.png"
 		, L"resources/image/UI/Title/SceneToolUI_Clicked.png", L"resources/image/UI/Title/SceneToolUI_Normal.png"
-		, [this]()->void
+		, [this, UI]()->void
 		{
-			GetWorld()->LoadScene<CScene2>();
+			if (UI->GetRenderComponent())
+				UI->GetRenderComponent()->Destroy();
 		});
 }

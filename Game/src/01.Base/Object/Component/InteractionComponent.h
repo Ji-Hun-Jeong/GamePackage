@@ -16,9 +16,9 @@ public:
 	}
 
 public:
-	void Destroy() override
+	void EndPlay() override
 	{
-		CComponent::Destroy();
+		CComponent::EndPlay();
 		MouseInteracter->Destroy();
 	}
 	void SetRectTransform(float InPositionX, float InPositionY, float InScaleX, float InScaleY)
