@@ -2,12 +2,13 @@
 #include "Object.h"
 #include "Component/Transform.h"
 #include "Component/RenderComponent.h"
+#include "Component/InteractionComponent.h"
 #include "Component/Animation/Animator.h"
 
 class CActor : public CObject
 {
 	GENERATE_OBJECT()
-	DONTCOPY(CActor)
+		DONTCOPY(CActor)
 public:
 	CActor()
 		: Owner(nullptr)
@@ -42,14 +43,31 @@ public:
 	CTransform* GetTransform() const { return Transform.get(); }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent.get(); }
 	CAnimator* GetAnimator() const { return Animator.get(); }
+	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent.get(); }
+	template <typename T>
+	T* GetComponent()
+	{
+		for (auto& Component : Components)
+		{
+			if (Component->GetType() == T::GetStaticType())
+				return Component;
+		}
+	}
+	void AddComponent(CComponent* InComponent)
+	{
+		Components.push_back(InComponent);
+	}
 
 private:
 	std::unique_ptr<CTransform> Transform;
 	std::unique_ptr<CRenderComponent> RenderComponent;
 	std::unique_ptr<CAnimator> Animator;
+	std::unique_ptr<CInteractionComponent> InteractionComponent;
+	std::vector<CComponent*> Components;
 
 public:
 	void SetRenderComponent();
+	void SetInteractionComponent();
 	void SetAnimator();
 
 protected:
@@ -94,8 +112,15 @@ protected:
 		{
 			Transform->CalculateModelMatrix();
 			Transform->SetVariation(false);
+
 			if (RenderComponent)
 				RenderComponent->UpdateVertexConstBuffer(0, &Transform->GetModelMatrix(), sizeof(Transform->GetModelMatrix()));
+
+			if (InteractionComponent)
+			{
+				InteractionComponent->SetRectTransform(Transform->GetFinalPosition().x, Transform->GetFinalPosition().y
+					, Transform->GetFinalScale().x * 2.0f, Transform->GetFinalScale().y * 2.0f);
+			}
 		}
 		for (auto& Child : Childs)
 			Child->GetTransform()->SetVariation(true);
@@ -130,6 +155,17 @@ public:
 			Owner->DetachChild(this);
 		for (auto& Child : Childs)
 			Child->Destroy();
+
+		if (Transform)
+			Transform->Destroy();
+		if (RenderComponent)
+			RenderComponent->Destroy();
+		if (Animator)
+			Animator->Destroy();
+		if (InteractionComponent)
+			InteractionComponent->Destroy();
+		for (auto& Component : Components)
+			Component->Destroy();
 	}
 
 };

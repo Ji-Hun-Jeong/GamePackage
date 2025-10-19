@@ -10,20 +10,21 @@ namespace Graphics
 class CImage
 {
 public:
-	CImage(std::unique_ptr<Graphics::CShaderResourceView> InShaderResourceView, std::unique_ptr<Graphics::CBuffer> InMeshResizeConstBuffer
-	, uint32_t InStartSlot = 0)
+	CImage(std::unique_ptr<Graphics::CShaderResourceView> InShaderResourceView, const Vector3& InImageScale
+		, uint32_t InStartSlot = 0)
 		: ShaderResourceView(std::move(InShaderResourceView))
-		, MeshResizeConstBuffer(std::move(InMeshResizeConstBuffer))
+		, ImageScale(InImageScale)
 		, StartSlot(InStartSlot)
 	{}
 	~CImage() {}
 
 public:
 	void BindToPipeline(Graphics::CRenderContext& InContext);
+	const Vector3& GetImageScale() const { return ImageScale; }
 
 private:
 	std::unique_ptr<Graphics::CShaderResourceView> ShaderResourceView;
-	std::unique_ptr<Graphics::CBuffer> MeshResizeConstBuffer;
+	Vector3 ImageScale;
 
 	uint32_t StartSlot;
 };

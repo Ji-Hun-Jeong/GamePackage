@@ -34,7 +34,7 @@ class CRenderStateObject
 		, Image(nullptr)
 		, PSO(nullptr)
 		, bDestroy(false)
-		, StartSlot(1)
+		, StartSlot(0)
 	{}
 public:
 	~CRenderStateObject() = default;

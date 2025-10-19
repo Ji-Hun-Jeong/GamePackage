@@ -1,13 +1,13 @@
 #pragma once
 #include "01.Base/Object/Scene.h"
 
-class CTestScene : public CScene
+class CLobbyScene : public CScene
 {
 	GENERATE_OBJECT()
-	DONTCOPY(CTestScene)
+	DONTCOPY(CLobbyScene)
 public:
-	CTestScene() = default;
-	~CTestScene() = default;
+	CLobbyScene() = default;
+	~CLobbyScene() = default;
 
 public:
 	void Initalize() override;

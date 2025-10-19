@@ -16,6 +16,6 @@ namespace Core
 	class IMouseMove
 	{
 		friend LRESULT CALLBACK::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual void MouseMove(int InX, int InY) = 0;
+		virtual void MouseMove(int InX, int InY, uint32_t InScreenWidth, uint32_t InScreenHeight) = 0;
 	};
 }

@@ -56,20 +56,7 @@ public:
 		const float ImageWidth = static_cast<float>(ImageDesc.Width);
 		const float ImageHeight = static_cast<float>(ImageDesc.Height);
 
-		Matrix MeshResizeMatrix = Matrix::CreateScale(Vector3(ImageWidth / ScreenWidth, ImageHeight / ScreenHeight, 1.0f));
-		MeshResizeMatrix = MeshResizeMatrix.Transpose();
-
-		Graphics::TBufferDesc VertexConstBufferDesc;
-		VertexConstBufferDesc.ByteWidth = sizeof(MeshResizeMatrix);
-		VertexConstBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
-		VertexConstBufferDesc.BindFlags = Graphics::EBindFlags::BindConstantBuffer;
-		VertexConstBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
-
-		Graphics::TBufferInitalizeData BufferInitalizeData;
-		BufferInitalizeData.CopyStartPoint = &MeshResizeMatrix;
-		auto MeshResizeConstBuffer = Device.CreateBuffer(VertexConstBufferDesc, &BufferInitalizeData);
-
-		CImage* RawImage = new CImage(std::move(ShaderResourceView), std::move(MeshResizeConstBuffer));
+		CImage* RawImage = new CImage(std::move(ShaderResourceView), Vector3(ImageWidth / ScreenWidth, ImageHeight / ScreenHeight, 0.0f));
 		Images.emplace(InPath, RawImage);
 
 		return RawImage;

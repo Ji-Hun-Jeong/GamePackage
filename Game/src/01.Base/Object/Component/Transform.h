@@ -10,6 +10,7 @@ public:
         , Position(Vector3(0.0f))
         , Rotation(Vector3(0.0f))
         , Scale(Vector3(1.0f))
+        , OffsetScale(Vector3(1.0f))
         , Speed(0.0f)
         , bVariationFlag(true)
     {}
@@ -33,6 +34,8 @@ public:
     const Vector3& GetPosition() const { return Position; }
     const Vector3& GetRotation() const { return Rotation; }
     const Vector3& GetScale() const { return Scale; }
+    const Vector3& GetOffsetScale() const { return OffsetScale; }
+    const Vector3& GetFinalScale() const { return FinalScale; }
     float GetSpeed() const { return Speed; }
 
     // =================================================================
@@ -57,6 +60,11 @@ public:
         Scale = InScale;
         SetVariation(true);
     }
+    void SetOffsetScale(const Vector3& InOffsetScale)
+    {
+        OffsetScale = InOffsetScale;
+        SetVariation(true);
+    }
     void SetSpeed(float InSpeed) { Speed = InSpeed; }
 
     // =================================================================
@@ -71,7 +79,8 @@ public:
     }
     void CalculateModelMatrix()
     {
-        ModelMatrix = Matrix::CreateScale(Scale)
+        FinalScale = Scale * OffsetScale;
+        ModelMatrix = Matrix::CreateScale(FinalScale)
             * Matrix::CreateRotationX(Rotation.x)
             * Matrix::CreateRotationY(Rotation.y)
             * Matrix::CreateRotationZ(Rotation.z)
@@ -79,6 +88,7 @@ public:
 
         ModelMatrix = ModelMatrix.Transpose();
     }
+    
     const Matrix& GetModelMatrix() const { return ModelMatrix; }
     void SetVariation(bool bVariation) { bVariationFlag = bVariation; }
     bool OnVariation() const { return bVariationFlag; }
@@ -89,6 +99,8 @@ private:
     Vector3 Position;
     Vector3 Rotation;
     Vector3 Scale;
+    Vector3 OffsetScale;
+    Vector3 FinalScale;
 
     float Speed;
 

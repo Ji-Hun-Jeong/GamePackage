@@ -20,10 +20,12 @@ namespace Core
 			: InputManager(InInputManager)
 		{}
 	public:
-		void MouseMove(int InX, int InY) override
+		void MouseMove(int InX, int InY, uint32_t InScreenWidth, uint32_t InScreenHeight) override
 		{
-			InputManager.MousePosition.MouseX = InX;
-			InputManager.MousePosition.MouseY = InY;
+			InputManager.MouseScreenPosition.MouseX = InX;
+			InputManager.MouseScreenPosition.MouseY = InY;
+			InputManager.MouseNDCPosition.MouseX = float(InX) * 2.0f / float(InScreenWidth) - 1.0f;
+			InputManager.MouseNDCPosition.MouseY = float(-InY) * 2.0f / float(InScreenHeight) + 1.0f;
 		}
 
 	private:
@@ -32,7 +34,7 @@ namespace Core
 	};
 
 	CInputManager::CInputManager(CWindow& InWindow)
-		: MousePosition{}
+		: MouseScreenPosition{}
 	{
 		InWindow.RegistMouseMoveEvent(std::make_unique<CSetMousePosition>(*this));
 	}
@@ -93,7 +95,7 @@ namespace Core
 				continue;
 
 			for (auto& MouseEvent : Pair.second)
-				MouseEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState, MousePosition);
+				MouseEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState, MouseScreenPosition);
 		}
 	}
 }

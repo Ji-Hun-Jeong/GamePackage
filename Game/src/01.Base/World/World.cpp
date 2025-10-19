@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "World.h"
-#include "02.Contents/Scene/TestScene.h"
+#include "02.Contents/Scene/LobbyScene.h"
 #include "02.Contents/Scene/Scene2.h"
 
 CWorld::CWorld()
@@ -16,5 +16,5 @@ CWorld::~CWorld()
 
 void CWorld::Start()
 {
-	LoadScene<CTestScene>();
+	LoadScene<CLobbyScene>();
 }

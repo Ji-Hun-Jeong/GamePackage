@@ -96,10 +96,28 @@
     <ClCompile Include="src\01.Base\Object\Scene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Scene\TestScene.cpp">
+    <ClCompile Include="src\02.Contents\Scene\LobbyScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Scene\Scene2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\01.Base\Object\UI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\06.Interaction\MouseManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\06.Interaction\MouseInteracter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\00.App\Binding.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\01.Base\Object\Component\InteractionComponent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\BackGround.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,10 +200,25 @@
     <ClInclude Include="src\01.Base\Object\Scene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Scene\TestScene.h">
+    <ClInclude Include="src\02.Contents\Scene\LobbyScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Scene\Scene2.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Object\UI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\06.Interaction\MouseManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\06.Interaction\MouseInteracter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Object\Component\InteractionComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\BackGround.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

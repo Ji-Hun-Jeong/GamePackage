@@ -13,10 +13,15 @@ public:
 	{}
 	~CRenderComponent()
 	{
-		RenderStateObject->Destroy();
+		
 	}
 
 public:
+	void Destroy() override
+	{
+		CComponent::Destroy();
+		RenderStateObject->Destroy();
+	}
 	void Serialize(CSerializer& InSerializer) const override
 	{
 		CComponent::Serialize(InSerializer);
@@ -37,10 +42,14 @@ public:
 		CImage* Image = RenderResourceLoader->LoadImageFromFile(InImagePath);
 		RenderStateObject->SetImage(Image);
 		ImagePath = InImagePath;
+		ImageScale = Image->GetImageScale();
+		ImageChangeEvent(ImageScale);
 	}
 	void SetImage(CImage* InImage)
 	{
 		RenderStateObject->SetImage(InImage);
+		ImageScale = InImage->GetImageScale();
+		ImageChangeEvent(ImageScale);
 	}
 	void SetPSO(EPSOType InPSOType)
 	{
@@ -63,6 +72,7 @@ public:
 	{
 		RenderStateObject->UpdateVertexConstBuffer(VertexConstBufferMapInstances[InIndex].get(), InMapDataPoint, InDataSize);
 	}
+	const Vector3& GetImageScale() const { return ImageScale; }
 
 public:
 	void SetRenderStateObject(CRenderStateObject* InRenderStateObject)
@@ -75,13 +85,15 @@ public:
 		assert(InRenderResourceLoader);
 		RenderResourceLoader = InRenderResourceLoader;
 	}
+	void SetImageChangeEvent(std::function<void(const Vector3&)> InImageChangeEvent) { ImageChangeEvent = InImageChangeEvent; }
 
 private:
+	Vector3 ImageScale;
 	std::wstring ImagePath;
 	CRenderStateObject* RenderStateObject;
 	CRenderResourceLoader* RenderResourceLoader;
 
 	std::vector<std::unique_ptr<CBufferMapInstance>> VertexConstBufferMapInstances;
-
+	std::function<void(const Vector3&)> ImageChangeEvent;
 };
 

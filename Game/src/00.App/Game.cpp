@@ -8,11 +8,15 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 		, Window.GetScreenWidth(), Window.GetScreenHeight())
 	, InputManager(Window)
 	, InputActionManager(InputManager)
+	, MouseManager()
 	, World()
 {
 	//SpriteRenderer.InitalizeFromWindow(Window);
 	SpriteRenderer.InitalizeFromWorld(World);
 	InputActionManager.InitalizeFromWorld(World);
+	MouseManager.InitalizeFromWorld(World);
+
+	Binding();
 
 	World.Start();
 }
@@ -23,11 +27,18 @@ CGame::~CGame()
 
 bool CGame::Process()
 {
-	InputActionManager.PerformAction();
-	World.Update();
 	World.Arrange();
-	SpriteRenderer.Render();
 
+	World.Ready();
+	World.Update();
+
+	InputActionManager.PerformAction();
+	MouseManager.SetNDCMousePosition(InputManager.GetMouseNDCPosition().MouseX, InputManager.GetMouseNDCPosition().MouseY);
+	MouseManager.FindCurrentInteracter();
+
+	World.CaptureSnapShot();
+
+	SpriteRenderer.Render();
 	return true;
 }
 

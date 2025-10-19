@@ -54,7 +54,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int PosY = GET_Y_LPARAM(lParam);
 
 			for (auto& MouseMoveEvent : Window->MouseMoveEvents)
-				MouseMoveEvent->MouseMove(PosX, PosY);
+				MouseMoveEvent->MouseMove(PosX, PosY, Window->ScreenWidth, Window->ScreenHeight);
 		}
 		return 0;
 

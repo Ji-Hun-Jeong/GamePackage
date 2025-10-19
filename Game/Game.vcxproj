@@ -186,6 +186,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\Actor\BackGround.cpp" />
+    <ClCompile Include="src\01.Base\Object\Component\InteractionComponent.cpp" />
+    <ClCompile Include="src\00.App\Binding.cpp" />
+    <ClCompile Include="src\06.Interaction\MouseInteracter.cpp" />
+    <ClCompile Include="src\06.Interaction\MouseManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Scene2.cpp" />
     <ClCompile Include="src\01.Base\Object\Scene.cpp" />
     <ClCompile Include="src\01.Base\Object\Component\Animation\Animation.cpp" />
@@ -219,9 +224,14 @@
     </ClCompile>
     <ClCompile Include="src\01.Base\World\World.cpp" />
     <ClCompile Include="src\01.Base\Object\Component\Transform.cpp" />
-    <ClCompile Include="src\02.Contents\Scene\TestScene.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\LobbyScene.cpp" />
+    <ClCompile Include="src\01.Base\Object\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\Actor\BackGround.h" />
+    <ClInclude Include="src\01.Base\Object\Component\InteractionComponent.h" />
+    <ClInclude Include="src\06.Interaction\MouseInteracter.h" />
+    <ClInclude Include="src\06.Interaction\MouseManager.h" />
     <ClInclude Include="src\02.Contents\Scene\Scene2.h" />
     <ClInclude Include="src\01.Base\Object\Scene.h" />
     <ClInclude Include="src\01.Base\Object\Component\Animation\Animation.h" />
@@ -249,7 +259,8 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\01.Base\World\World.h" />
     <ClInclude Include="src\01.Base\Object\Component\Transform.h" />
-    <ClInclude Include="src\02.Contents\Scene\TestScene.h" />
+    <ClInclude Include="src\02.Contents\Scene\LobbyScene.h" />
+    <ClInclude Include="src\01.Base\Object\UI.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

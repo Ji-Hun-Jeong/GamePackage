@@ -12,29 +12,9 @@ public:
 
 public:
 	void Start();
-	void Update()
-	{
-		while (NextAddedWorldActors.empty() == false)
-		{
-			std::unique_ptr<CActor> Actor = std::move(NextAddedWorldActors.front());
-			NextAddedWorldActors.pop();
 
-			Actor->BeginPlay();
-
-			WorldActors.push_back(std::move(Actor));
-		}
-
-		for (auto& WorldActor : WorldActors)
-			WorldActor->Update(1.0f / 60.0f);
-
-		for (auto& WorldActor : WorldActors)
-			WorldActor->FinalUpdate();
-	}
 	void Arrange()
 	{
-		for (auto& WorldActor : WorldActors)
-			WorldActor->CaptureSnapShot();
-
 		if (bFlagDestroyedWorldObject == false)
 			return;
 
@@ -47,6 +27,39 @@ public:
 		WorldActors.erase(RemoveStartIter, WorldActors.end());
 
 		bFlagDestroyedWorldObject = false;
+	}
+
+	void Ready()
+	{
+		while (NextAddedWorldActors.empty() == false)
+		{
+			std::unique_ptr<CActor> Actor = std::move(NextAddedWorldActors.front());
+			NextAddedWorldActors.pop();
+
+			Actor->BeginPlay();
+
+			WorldActors.push_back(std::move(Actor));
+		}
+		while (WorldFirstCommands.empty() == false)
+		{
+			WorldFirstCommands.front()();
+			WorldFirstCommands.pop();
+		}
+	}
+
+	void Update()
+	{
+		for (auto& WorldActor : WorldActors)
+			WorldActor->Update(1.0f / 60.0f);
+
+		for (auto& WorldActor : WorldActors)
+			WorldActor->FinalUpdate();
+	}
+
+	void CaptureSnapShot()
+	{
+		for (auto& WorldActor : WorldActors)
+			WorldActor->CaptureSnapShot();
 	}
 
 	void Seralize(const std::string& InSavePath)
@@ -100,16 +113,23 @@ public:
 	template <typename T_SCENE>
 	void LoadScene()
 	{
+		WorldFirstCommands.push([this]()->void
+			{
+				LoadSceneImmediate<T_SCENE>();
+			});
+	}
+private:
+	template <typename T_SCENE>
+	void LoadSceneImmediate()
+	{
 		while (NextAddedWorldActors.empty() == false)
-		{
-			std::unique_ptr<CActor> Actor = std::move(NextAddedWorldActors.front());
 			NextAddedWorldActors.pop();
-		}
+
 		for (auto& WorldActor : WorldActors)
 			WorldActor->Destroy();
 		SpawnActor<T_SCENE>();
 	}
-
+public:
 	const std::vector<std::unique_ptr<CActor>>& GetWorldActors() const { return WorldActors; }
 	void MarkDestroyed() { bFlagDestroyedWorldObject = true; }
 	void AddNewObjectTypeEvent(ObjectType InObjectType, std::unique_ptr<INewObjectEvent> InNewObjectEvent)
@@ -141,4 +161,5 @@ private:
 
 	CSerializer Serializer;
 
+	std::queue<std::function<void()>> WorldFirstCommands;
 };

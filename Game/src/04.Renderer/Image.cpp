@@ -5,5 +5,4 @@
 void CImage::BindToPipeline(Graphics::CRenderContext& InContext)
 {
 	InContext.PSSetShaderResource(StartSlot, *ShaderResourceView.get());
-	InContext.VSSetConstantBuffer(StartSlot, *MeshResizeConstBuffer.get());
 }
