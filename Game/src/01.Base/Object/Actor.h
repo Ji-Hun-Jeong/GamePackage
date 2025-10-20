@@ -154,7 +154,7 @@ protected:
 			if (InteractionComponent)
 			{
 				InteractionComponent->SetRectTransform(Transform->GetFinalPosition().x, Transform->GetFinalPosition().y
-					, Transform->GetScale().x * 2.0f, Transform->GetScale().y * 2.0f);
+					, Transform->GetScale().x, Transform->GetScale().y);
 			}
 		}
 		for (auto& Child : Childs)

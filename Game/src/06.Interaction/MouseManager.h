@@ -5,11 +5,12 @@ class CMouseManager
 {
 public:
 	CMouseManager()
-		: NDCMouseX(0.0f)
-		, NDCMouseY(0.0f)
+		: MouseX(0.0f)
+		, MouseY(0.0f)
 		, CurrentInteracter(nullptr)
 		, bMouseClicked(false)
 		, bMouseReleased(false)
+		, Camera(nullptr)
 	{}
 	~CMouseManager() = default;
 
@@ -24,7 +25,7 @@ public:
 	}
 	void SetMouseClick(bool bInMouseClicked) { bMouseClicked = bInMouseClicked; }
 	void SetMouseRelease(bool bInMouseReleased) { bMouseReleased = bInMouseReleased; }
-	void SetNDCMousePosition(float InNDCMouseX, float InNDCMouseY) { NDCMouseX = InNDCMouseX; NDCMouseY = InNDCMouseY; }
+	void SetMousePosition(float InNDCMouseX, float InNDCMouseY) { MouseX = InNDCMouseX; MouseY = InNDCMouseY; }
 	void FindCurrentInteracter()
 	{
 		CMouseInteracter* NewInteracter = nullptr;
@@ -73,7 +74,7 @@ public:
 			bMouseReleased = false;
 		}
 	}
-
+	void SetCamera(class CCamera* InCamera) { Camera = InCamera; }
 private:
 	CMouseInteracter* TryFindOnInteracter(CMouseInteracter& InMouseInteracter)
 	{
@@ -90,40 +91,19 @@ private:
 		}
 		return NewInteracter;
 	}
-	bool IsMouseOn(const CMouseInteracter& InMouseInteracter)
-	{
-		if (InMouseInteracter.Size.x == 0.0f && InMouseInteracter.Size.y == 0.0f)
-		{
-			std::cout << "MouseInteracterSize Is Zero\n";
-			return false;
-		}
-
-		// 사각형의 중심 위치와 크기
-		float centerX = InMouseInteracter.Position.x;
-		float centerY = InMouseInteracter.Position.y;
-		float halfWidth = InMouseInteracter.Size.x * 0.5f;
-		float halfHeight = InMouseInteracter.Size.y * 0.5f;
-
-		// 사각형의 경계
-		float left = centerX - halfWidth;
-		float right = centerX + halfWidth;
-		float top = centerY + halfHeight;
-		float bottom = centerY - halfHeight;
-
-		// 마우스가 사각형 안에 있는지 확인
-		return (NDCMouseX >= left && NDCMouseX <= right &&
-			NDCMouseY >= bottom && NDCMouseY <= top);
-	}
-
+	bool IsMouseOn(const CMouseInteracter& InMouseInteracter);
+	
 private:
-	float NDCMouseX;
-	float NDCMouseY;
+	float MouseX;
+	float MouseY;
 
 	std::vector<std::unique_ptr<CMouseInteracter>> MouseInteracters;
 	CMouseInteracter* CurrentInteracter;
 
 	bool bMouseClicked;
 	bool bMouseReleased;
+
+	class CCamera* Camera;
 
 };
 

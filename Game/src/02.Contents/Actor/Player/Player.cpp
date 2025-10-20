@@ -31,16 +31,14 @@ void CPlayer::Initalize()
 
 	Head = GetWorld()->SpawnActor<CCharacter>(this);
 	Head->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/Head_Front.png");
-	Head->GetTransform()->SetPosition(Vector3(0.005f, 0.065f, 0.0f));
+	Head->GetTransform()->SetPosition(Vector3(5.0f, 6.5f, 0.0f));
 
 	Arm = GetWorld()->SpawnActor<CCharacter>(this);
 	Arm->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/stand/Arm0.png");
-	Arm->GetTransform()->SetPosition(Vector3(0.02f, 0.0f, 0.0f));
+	Arm->GetTransform()->SetPosition(Vector3(2.0f, 0.0f, 0.0f));
 
-	//Hand = GetWorld()->SpawnActor<CCharacter>(this);
-	//Hand->GetRenderComponent()->SetImage(L"resources/image/Character/stand/Body0.png");
 
-	GetTransform()->SetSpeed(0.002f);
+	GetTransform()->SetSpeed(2.0f);
 }
 
 void CPlayer::Update(float InDeltaTime)

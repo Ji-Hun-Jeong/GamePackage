@@ -191,7 +191,7 @@
     <ClCompile Include="src\00.App\Binding.cpp" />
     <ClCompile Include="src\06.Interaction\MouseInteracter.cpp" />
     <ClCompile Include="src\06.Interaction\MouseManager.cpp" />
-    <ClCompile Include="src\02.Contents\Scene\Scene2.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\EditUIScene.cpp" />
     <ClCompile Include="src\01.Base\Object\Scene.cpp" />
     <ClCompile Include="src\01.Base\Object\Component\Animation\Animation.cpp" />
     <ClCompile Include="src\01.Base\Object\Component\Animation\AnimationTransition.cpp" />
@@ -231,7 +231,7 @@
     <ClInclude Include="src\01.Base\Object\Component\InteractionComponent.h" />
     <ClInclude Include="src\06.Interaction\MouseInteracter.h" />
     <ClInclude Include="src\06.Interaction\MouseManager.h" />
-    <ClInclude Include="src\02.Contents\Scene\Scene2.h" />
+    <ClInclude Include="src\02.Contents\Scene\EditUIScene.h" />
     <ClInclude Include="src\01.Base\Object\Scene.h" />
     <ClInclude Include="src\01.Base\Object\Component\Animation\Animation.h" />
     <ClInclude Include="src\01.Base\Object\Component\Animation\AnimationTransition.h" />

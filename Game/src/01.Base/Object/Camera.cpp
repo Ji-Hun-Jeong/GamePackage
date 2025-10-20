@@ -14,7 +14,7 @@ void CCamera::Initalize()
 
 	GetRenderComponent()->AddVertexConstBuffer(sizeof(CameraConst));
 
-	GetTransform()->SetSpeed(0.005f);
+	GetTransform()->SetSpeed(3.5f);
 }
 
 void CCamera::BeginPlay()

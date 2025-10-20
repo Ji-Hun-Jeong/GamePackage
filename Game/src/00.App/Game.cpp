@@ -33,7 +33,10 @@ bool CGame::Process()
 	World.Update();
 
 	InputActionManager.PerformAction();
-	MouseManager.SetNDCMousePosition(InputManager.GetMouseNDCPosition().MouseX, InputManager.GetMouseNDCPosition().MouseY);
+	float MouseX = InputManager.GetMouseScreenPosition().MouseX - Window.GetScreenWidth() / 2.0f;
+	float MouseY = -InputManager.GetMouseScreenPosition().MouseY + Window.GetScreenHeight() / 2.0f;
+
+	MouseManager.SetMousePosition(MouseX, MouseY);
 	MouseManager.FindCurrentInteracter();
 
 	World.CaptureSnapShot();

@@ -1,12 +1,12 @@
 #pragma once
 #include "01.Base/Object/Scene.h"
 
-class CScene2 : public CScene
+class CEditUIScene : public CScene
 {
 	GENERATE_OBJECT()
-	DONTCOPY(CScene2)
+	DONTCOPY(CEditUIScene)
 public:
-	CScene2() = default;
+	CEditUIScene() = default;
 public:
 	void Initalize() override;
 };

@@ -17,15 +17,10 @@ enum class EKeyType : uint16_t
 	End,
 };
 
-struct TMouseScreenPosition
+struct TMousePosition
 {
 	int MouseX;
 	int MouseY;
-};
-struct TMouseNDCPosition
-{
-	float MouseX;
-	float MouseY;
 };
 
 namespace Core
@@ -49,7 +44,7 @@ namespace Core
 	class IMouseEvent
 	{
 		friend class CInputManager;
-		virtual void OnActivate(EKeyType InKeyType, EButtonState InButtonState, const TMouseScreenPosition& InMousePosition) = 0;
+		virtual void OnActivate(EKeyType InKeyType, EButtonState InButtonState, const TMousePosition& InMousePosition) = 0;
 	};
 
 	class CInputManager
@@ -92,8 +87,8 @@ namespace Core
 			DeRegistEvents.emplace(Key, InKeyEvent);
 		}
 
-		const TMouseScreenPosition& GetMouseScreenPosition() const { return MouseScreenPosition; }
-		const TMouseNDCPosition& GetMouseNDCPosition() const { return MouseNDCPosition; }
+		const TMousePosition& GetMouseScreenPosition() const { return MouseScreenPosition; }
+		const TMousePosition& GetMouseNDCPosition() const { return MouseNDCPosition; }
 
 	private:
 		bool CorrectKeyState(EKeyType InKeyType, EButtonState InButtonState) { return KeyStates[(UINT)InKeyType] == InButtonState; }
@@ -106,7 +101,7 @@ namespace Core
 
 		std::queue<std::pair<UINT, IKeyEvent*>> DeRegistEvents;
 
-		TMouseScreenPosition MouseScreenPosition;
-		TMouseNDCPosition MouseNDCPosition;
+		TMousePosition MouseScreenPosition;
+		TMousePosition MouseNDCPosition;
 	};
 }

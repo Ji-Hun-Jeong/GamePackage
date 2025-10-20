@@ -9,7 +9,7 @@ public:
 	{}
 	
 private:
-	void OnActivate(EKeyType InKeyType, EButtonState InButtonState, const TMouseScreenPosition& InMousePosition) override
+	void OnActivate(EKeyType InKeyType, EButtonState InButtonState, const TMousePosition& InMousePosition) override
 	{
 		if (InButtonState == EButtonState::Tap)
 			MouseManager.SetMouseClick(true);

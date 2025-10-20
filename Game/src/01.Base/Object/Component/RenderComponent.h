@@ -4,61 +4,6 @@
 #include "04.Renderer/RenderStateObject.h"
 #include "04.Renderer/SpriteRenderer.h"
 
-struct TImageInfo
-{
-	std::wstring ImagePath;
-	Vector2 BasicImageSize;
-	Vector2 NDCImageSize;
-};
-
-//class CRenderTransform
-//{
-//public:
-//	CRenderTransform()
-//		: Scale(1.0f)
-//		, bChanged(true)
-//	{}
-//	~CRenderTransform() = default;
-//
-//public:
-//	void SetPosition(const Vector3& InPosition)
-//	{
-//		Position = InPosition;
-//		bChanged = true;
-//	}
-//	void SetScale(const Vector3& InScale)
-//	{
-//		Scale = InScale;
-//		bChanged = true;
-//	}
-//
-//	const Vector3& GetPosition() const { return Position; }
-//	const Vector3& GetRotation() const { return Rotation; }
-//	const Vector3& GetScale() const { return Scale; }
-//
-//	bool IsChanged() const { return bChanged; }
-//
-//	void CalculateModelMatrix()
-//	{
-//		ModelMatrix = Matrix::CreateScale(Scale)
-//			* Matrix::CreateRotationX(Rotation.x)
-//			* Matrix::CreateRotationY(Rotation.y)
-//			* Matrix::CreateRotationZ(Rotation.z)
-//			* Matrix::CreateTranslation(Position);
-//	}
-//	const Matrix& GetModelMatrix() const { return ModelMatrix; }
-//
-//private:
-//	Vector3 Position;
-//	Vector3 Rotation;
-//	Vector3 Scale;
-//
-//	Matrix ModelMatrix;
-//
-//	bool bChanged;
-//
-//};
-
 class CRenderComponent : public CComponent
 {
 	GENERATE_OBJECT()
@@ -141,7 +86,7 @@ public:
 
 	Matrix GetModelMatrix(const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale)
 	{
-		Vector3 Position = Vector3(InPosition.x / Renderer->GetScreenWidth(), InPosition.y / Renderer->GetScreenHeight(), InPosition.z);
+		Vector3 Position = Vector3(InPosition.x * 2.0f / Renderer->GetScreenWidth(), InPosition.y * 2.0f / Renderer->GetScreenHeight(), InPosition.z);
 		const Vector3& Rotation = InRotation;
 		Vector3 Scale = Vector3(InScale.x / Renderer->GetScreenWidth(), InScale.y / Renderer->GetScreenHeight(), InScale.z);
 

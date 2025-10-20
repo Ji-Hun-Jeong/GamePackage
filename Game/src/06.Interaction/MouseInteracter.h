@@ -16,10 +16,6 @@ public:
 	void Destroy()
 	{
 		bDestroy = true;
-		/*MouseEnterEvent = nullptr;
-		MouseExitEvent = nullptr;
-		MouseClickEvent = nullptr;
-		MouseReleaseEvent = nullptr;*/
 	}
 	void SetPosition(const Vector2& InPosition) { Position = InPosition; }
 	void SetSize(const Vector2& InSize) { Size = InSize; }
