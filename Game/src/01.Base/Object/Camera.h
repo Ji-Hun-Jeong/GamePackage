@@ -4,9 +4,9 @@
 struct TCameraConst
 {
 	Matrix ViewProj;
-	uint32_t ScreenWidth;
-	uint32_t ScreenHeight;
-	uint32_t Dummy[2];
+	uint32_t ScreenWidth = 0;
+	uint32_t ScreenHeight = 0;
+	uint32_t Dummy[2] = { 0 };
 };
 static_assert(sizeof(TCameraConst) % 16 == 0);
 
@@ -25,6 +25,7 @@ public:
 
 public:
 	void Initalize() override;
+	void BeginPlay() override;
 	void CaptureSnapShot() override;
 	void SetInputAction(class CInputActionManager& InInputActionManager) override;
 	void SetScreenSize(uint32_t InScreenWidth, uint32_t InScreenHeight)

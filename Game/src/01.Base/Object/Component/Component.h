@@ -15,6 +15,7 @@ public:
 	void SetOwner(class CActor* InOwnerActor) { assert(InOwnerActor); OwnerActor = InOwnerActor; }
 	class CActor* GetOwner() const { return OwnerActor; }
 	void Destroy() override;
+	bool IsDestroy() const { return bDestroy; }
 
 private:
 	class CActor* OwnerActor;

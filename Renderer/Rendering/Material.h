@@ -25,7 +25,6 @@ namespace Graphics
 		{
 			ShaderResourceViews.push_back(std::move(InShaderResourceView));
 		}
-		void BindToPipeline(class CRenderContext& InContext);
 
 	private:
 		std::vector<std::unique_ptr<CShaderResourceView>> ShaderResourceViews;

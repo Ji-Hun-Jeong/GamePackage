@@ -7,25 +7,24 @@ namespace Graphics
 	class CRenderContext;
 }
 
+
 class CImage
 {
 public:
-	CImage(std::unique_ptr<Graphics::CShaderResourceView> InShaderResourceView, const Vector3& InImageScale
+	CImage(std::unique_ptr<Graphics::CShaderResourceView> InShaderResourceView, std::unique_ptr<Graphics::CTexture2D> InTexture2D
 		, uint32_t InStartSlot = 0)
 		: ShaderResourceView(std::move(InShaderResourceView))
-		, ImageScale(InImageScale)
-		, StartSlot(InStartSlot)
+		, Texture2D(std::move(InTexture2D))
 	{}
 	~CImage() {}
 
 public:
-	void BindToPipeline(Graphics::CRenderContext& InContext);
-	const Vector3& GetImageScale() const { return ImageScale; }
+	const Graphics::CShaderResourceView& GetSRV() const { return *ShaderResourceView.get(); }
+	const Graphics::CTexture2D& GetTexture2D() const { return *Texture2D.get(); }
 
 private:
 	std::unique_ptr<Graphics::CShaderResourceView> ShaderResourceView;
-	Vector3 ImageScale;
+	std::unique_ptr<Graphics::CTexture2D> Texture2D;
 
-	uint32_t StartSlot;
 };
 

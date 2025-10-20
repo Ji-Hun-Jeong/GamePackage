@@ -67,6 +67,7 @@ public:
 	{
 		for (auto& WorldActor : WorldActors)
 			WorldActor->CaptureSnapShot();
+		int a = 1;
 	}
 
 	void Seralize(const std::string& InSavePath)

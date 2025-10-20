@@ -27,11 +27,12 @@ void CActor::SetRenderComponent()
 {
 	RenderComponent = GetWorld()->NewObject<CRenderComponent>(this);
 
-	RenderComponent->SetImageChangeEvent([&](const Vector3& InImageScale)->void
+	RenderComponent->AddImageChangeEvent([this](const Vector2& InImageSize)->void
 		{
-			Transform->SetOffsetScale(InImageScale);
+			Transform->SetScale(Vector3(InImageSize.x, InImageSize.y, Transform->GetScale().z));
 		});
-	RenderComponent->AddVertexConstBuffer(sizeof(Transform->GetModelMatrix()));
+
+	RenderComponent->AddVertexConstBuffer(sizeof(Matrix));
 }
 
 void CActor::SetInteractionComponent()

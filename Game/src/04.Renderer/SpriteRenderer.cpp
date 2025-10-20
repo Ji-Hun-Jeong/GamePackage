@@ -10,7 +10,7 @@ CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGrap
 	, SwapChain(GraphicInfra->GetSwapChain())
 	, RenderTargetView(Device.CreateRenderTargetView(*SwapChain.GetWindowTextureBuffer()))
 	, PSOManager(Device)
-	, RenderResourceLoader(Device, PSOManager, ScreenWidth, ScreenHeight)
+	, RenderResourceLoader(Device, PSOManager)
 {
 	SetViewPort(ScreenWidth, ScreenHeight);
 	Context.OMSetRenderTargets(1, RenderTargetView.get(), nullptr);

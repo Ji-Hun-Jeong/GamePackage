@@ -4,22 +4,29 @@
 
 void CRenderStateObject::BindRenderState(Graphics::CRenderContext& InContext)
 {
-	// ConstBuffer Update And Setting
-	if (VertexConstBuffers.size())
+	while (BufferMapInstances.empty() == false)
 	{
-		while (BufferMapInstances.empty() == false)
-		{
-			const CBufferMapInstance* BufferMapInstance = BufferMapInstances.front();
-			BufferMapInstances.pop();
-			InContext.CopyBuffer(*VertexConstBuffers[BufferMapInstance->MappingIndex], BufferMapInstance->MapDataPoint, BufferMapInstance->DataSize);
-		};
-		InContext.VSSetConstantBuffers(StartSlot, uint32_t(VertexConstBuffers.size()), VertexConstBuffers);
-	}
+		const CBufferMapInstance* BufferMapInstance = BufferMapInstances.front();
+		BufferMapInstances.pop();
+		InContext.CopyBuffer(*VertexConstBuffers[BufferMapInstance->MappingIndex], BufferMapInstance->MapDataPoint, BufferMapInstance->DataSize);
+	};
 
-	if (Mesh && Image && PSO)
+	if (VertexConstBuffers.size())
+		InContext.VSSetConstantBuffers(VertexConstBufferStartSlot, uint32_t(VertexConstBuffers.size()), VertexConstBuffers);
+
+	if (Mesh && PSO)
 	{
 		PSO->BindToPipeline(InContext);
-		Image->BindToPipeline(InContext);
-		Mesh->BindToPipeline(InContext);
+
+		InContext.IASetVertexBuffer(Mesh->GetVertexBuffer(), &Mesh->GetStride(), &Mesh->GetOffset());
+		InContext.IASetIndexBuffer(Mesh->GetIndexBuffer(), Mesh->GetIndexFormat(), 0);
+
+		for (size_t i = 0; i < PixelShaderResources.size(); ++i)
+		{
+			if (PixelShaderResources[i])
+				InContext.PSSetShaderResource(PixelShaderResourceStartSlot + uint32_t(i), PixelShaderResources[i]->GetSRV());
+		}
+
+		InContext.DrawIndexed(Mesh->GetIndexCount());
 	}
 }

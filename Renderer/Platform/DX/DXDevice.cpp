@@ -205,7 +205,7 @@ namespace Graphics::DX
 
 		return std::make_unique<CDepthStencilView>(DepthStencilViewHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
 	}
-	std::unique_ptr<CShaderResourceView> CDXDevice::CreateImage(const std::wstring& InImagePath)
+	std::pair<std::unique_ptr<CShaderResourceView>, std::unique_ptr<CTexture2D>> CDXDevice::CreateImage(const std::wstring& InImagePath)
 	{
 		ComPtr<ID3D11Texture2D> Texture2D;
 		ComPtr<ID3D11ShaderResourceView> ShaderResourceView;
@@ -221,8 +221,8 @@ namespace Graphics::DX
 		TTexture2DDesc Texture2DDesc;
 		memcpy(&Texture2DDesc, &RawTextureDesc, sizeof(Texture2DDesc));
 
-		auto Texture = std::make_unique<CTexture2D>(TextureHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), Texture2DDesc);
-		return std::make_unique<CShaderResourceView>(SRVHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), std::move(Texture));
+		return { std::make_unique<CShaderResourceView>(SRVHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1))
+		, std::make_unique<CTexture2D>(TextureHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1), Texture2DDesc) };
 	}
 	std::unique_ptr<CSamplerState> CDXDevice::CreateSamplerState(const TSamplerDesc& InSamplerDesc)
 	{

@@ -31,33 +31,44 @@ class CRenderStateObject
 	friend class CSpriteRenderer;
 	CRenderStateObject()
 		: Mesh(nullptr)
-		, Image(nullptr)
 		, PSO(nullptr)
 		, bDestroy(false)
-		, StartSlot(0)
+		, VertexShaderResources{}
+		, PixelShaderResources{}
+		, PixelShaderResourceStartSlot(0)
+		, VertexConstBufferStartSlot(0)
 	{}
 public:
 	~CRenderStateObject() = default;
 
 public:
-	void SetMesh(Graphics::CMesh* InMesh) 
-	{ 
+	void SetMesh(Graphics::CMesh* InMesh)
+	{
 		assert(InMesh);
 		Mesh = InMesh;
 	}
-	void SetImage(CImage* InImage)
-	{ 
+	void SetPixelShaderResource(uint8_t InPixelShaderResourceSlot, CImage* InImage)
+	{
 		assert(InImage);
-		Image = InImage; 
+		assert(InPixelShaderResourceSlot < 12);
+		PixelShaderResources[InPixelShaderResourceSlot] = InImage;
 	}
-	void SetPSO(CPSO* InPSO) 
+	void SetVertexShaderResource(uint8_t InVertexShaderResourceSlot, CImage* InImage)
+	{
+		// 구현해야함
+		assert(0);
+		assert(InImage);
+		VertexShaderResources[InVertexShaderResourceSlot] = InImage;
+	}
+	void SetPSO(CPSO* InPSO)
 	{
 		assert(InPSO);
-		PSO = InPSO; 
+		PSO = InPSO;
 	}
-	void SetStartSlot(uint32_t InStartSlot)
+	void SetPixelShaderResourceStartSlot(uint32_t InPixelShaderResourceStartSlot) { PixelShaderResourceStartSlot = InPixelShaderResourceStartSlot; }
+	void SetVertexConstBufferStartSlot(uint32_t InVertexConstBufferStartSlot)
 	{
-		StartSlot = InStartSlot;
+		VertexConstBufferStartSlot = InVertexConstBufferStartSlot;
 	}
 
 	std::unique_ptr<CBufferMapInstance> AddVertexConstBuffer(std::unique_ptr<Graphics::CBuffer> InVertexConstBuffer, const void* InMapDataPoint = nullptr, size_t InDataSize = 0)
@@ -85,13 +96,17 @@ public:
 
 protected:
 	Graphics::CMesh* Mesh;
-	CImage* Image;
 	CPSO* PSO;
+
+	std::array<CImage*, 12> VertexShaderResources;
+	std::array<CImage*, 12> PixelShaderResources;
 
 	std::vector<std::unique_ptr<Graphics::CBuffer>> VertexConstBuffers;
 	std::queue<const CBufferMapInstance*> BufferMapInstances;
 
 	bool bDestroy;
 
-	uint32_t StartSlot;
+	uint32_t PixelShaderResourceStartSlot;
+	uint32_t VertexConstBufferStartSlot;
+
 };

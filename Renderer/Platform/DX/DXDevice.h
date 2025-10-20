@@ -28,7 +28,7 @@ namespace Graphics::DX
 		std::unique_ptr<CRenderTargetView> CreateRenderTargetView(const CTexture2D& InTexture2D) override;
 		std::unique_ptr<CRasterizerState> CreateRasterizerState(const TRasterizerDesc& InRasterizerDesc) override;
 		std::unique_ptr<CDepthStencilView> CreateDepthStencilView(const CTexture2D& InTexture2D) override;
-		std::unique_ptr<CShaderResourceView> CreateImage(const std::wstring& InImagePath) override;
+		std::pair<std::unique_ptr<CShaderResourceView>, std::unique_ptr<CTexture2D>> CreateImage(const std::wstring& InImagePath) override;
 		std::unique_ptr<CSamplerState> CreateSamplerState(const TSamplerDesc& InSamplerDesc) override;
 		std::unique_ptr<CBlendState> CreateBlendState(const TBlendDesc& InBlendDesc) override;
 

@@ -30,11 +30,11 @@ void CPlayer::Initalize()
 	Body->GetAnimator()->SetCurrentAnimation("Basic");
 
 	Head = GetWorld()->SpawnActor<CCharacter>(this);
-	Head->GetRenderComponent()->SetImage(L"resources/image/Character/Head_Front.png");
+	Head->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/Head_Front.png");
 	Head->GetTransform()->SetPosition(Vector3(0.005f, 0.065f, 0.0f));
 
 	Arm = GetWorld()->SpawnActor<CCharacter>(this);
-	Arm->GetRenderComponent()->SetImage(L"resources/image/Character/stand/Arm0.png");
+	Arm->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/stand/Arm0.png");
 	Arm->GetTransform()->SetPosition(Vector3(0.02f, 0.0f, 0.0f));
 
 	//Hand = GetWorld()->SpawnActor<CCharacter>(this);

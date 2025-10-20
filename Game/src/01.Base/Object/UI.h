@@ -16,28 +16,28 @@ public:
 	, const std::wstring& InMouseClickImagePath = L"", const std::wstring& InMouseReleaseImagePath = L""
 		, std::function<void()> InMouseReleaseEvent = nullptr)
 	{
-		GetRenderComponent()->SetImage(InBasicImagePath);
+		GetRenderComponent()->SetDiffuseImage(InBasicImagePath);
 		GetInteractionComponent()->SetMouseExitEvent([this, InBasicImagePath]()->void
 			{
 				if (GetRenderComponent())
-					GetRenderComponent()->SetImage(InBasicImagePath);
+					GetRenderComponent()->SetDiffuseImage(InBasicImagePath);
 			});
 		GetInteractionComponent()->SetMouseEnterEvent([this, InMouseOnImagePath]()->void
 			{
 				if (GetRenderComponent())
-					GetRenderComponent()->SetImage(InMouseOnImagePath);
+					GetRenderComponent()->SetDiffuseImage(InMouseOnImagePath);
 			});
 		GetInteractionComponent()->SetMouseClickEvent([this, InMouseClickImagePath]()->void
 			{
 				if (GetRenderComponent())
 					if (InMouseClickImagePath.empty() == false)
-						GetRenderComponent()->SetImage(InMouseClickImagePath);
+						GetRenderComponent()->SetDiffuseImage(InMouseClickImagePath);
 			});
 		GetInteractionComponent()->SetMouseReleaseEvent([this, InMouseReleaseImagePath, InMouseReleaseEvent]()->void
 			{
 				if (GetRenderComponent())
 					if (InMouseReleaseImagePath.empty() == false)
-						GetRenderComponent()->SetImage(InMouseReleaseImagePath);
+						GetRenderComponent()->SetDiffuseImage(InMouseReleaseImagePath);
 				if (InMouseReleaseEvent)
 					InMouseReleaseEvent();
 			});

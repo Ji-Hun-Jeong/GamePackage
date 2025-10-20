@@ -17,15 +17,21 @@ void CCamera::Initalize()
 	GetTransform()->SetSpeed(0.005f);
 }
 
+void CCamera::BeginPlay()
+{
+	CActor::BeginPlay();
+	GetTransform()->SetScale(Vector3(float(CameraConst.ScreenWidth), float(CameraConst.ScreenHeight), 1.0f));
+}
+
 void CCamera::CaptureSnapShot()
 {
 	if (GetTransform()->OnVariation() == false)
 		return;
 
-	GetTransform()->CalculateModelMatrix();
 	GetTransform()->SetVariation(false);
 
-	CameraConst.ViewProj = GetTransform()->GetModelMatrix().Invert();
+	CameraConst.ViewProj = GetRenderComponent()->GetModelMatrix(
+		GetTransform()->GetFinalPosition(), GetTransform()->GetRotation(), GetTransform()->GetScale()).Invert();
 
 	GetRenderComponent()->UpdateVertexConstBuffer(1, &CameraConst, sizeof(CameraConst));
 }

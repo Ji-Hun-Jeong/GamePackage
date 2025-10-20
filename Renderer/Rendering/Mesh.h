@@ -39,7 +39,12 @@ namespace Graphics
 		}
 
 	public:
-		void BindToPipeline(class CRenderContext& InContext);
+		const CBuffer& GetVertexBuffer() const { return *VertexBuffer.get(); }
+		const CBuffer& GetIndexBuffer() const { return *IndexBuffer.get(); }
+		EGIFormat GetIndexFormat() const { return IndexFormat; }
+		uint32_t GetIndexCount() const { return IndexCount; }
+		const uint32_t& GetStride() const { return Stride; }
+		const uint32_t& GetOffset() const { return Offset; }
 
 	private:
 		std::unique_ptr<CBuffer> VertexBuffer;

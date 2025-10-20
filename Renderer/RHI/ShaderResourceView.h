@@ -7,10 +7,8 @@ namespace Graphics
 	class CShaderResourceView : public CRHI
 	{
 	public:
-		CShaderResourceView(size_t InResourceHandle, std::function<void(size_t)> InEventReleaseResource
-			, std::unique_ptr<CTexture2D> InTexture2D)
+		CShaderResourceView(size_t InResourceHandle, std::function<void(size_t)> InEventReleaseResource)
 			: CRHI(InResourceHandle, InEventReleaseResource)
-			, Texture2D(std::move(InTexture2D))
 		{}
 		~CShaderResourceView() {}
 
@@ -24,10 +22,9 @@ namespace Graphics
 			static uint32_t RHIType = sRHIType++;
 			return RHIType;
 		}
-		const CTexture2D& GetTexture2D() const { return *Texture2D.get(); }
 
 	private:
-		std::unique_ptr<CTexture2D> Texture2D;
+
 
 	};
 }

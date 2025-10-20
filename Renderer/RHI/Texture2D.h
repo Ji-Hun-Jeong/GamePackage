@@ -23,7 +23,10 @@ namespace Graphics
 		CTexture2D(size_t InResourceHandle, std::function<void(size_t)> InEventReleaseResource, const TTexture2DDesc& InTexture2DDesc)
 			: CRHI(InResourceHandle, InEventReleaseResource)
 			, Texture2DDesc(InTexture2DDesc)
-		{}
+			, TextureSize(0.0f)
+		{
+			TextureSize = Vector2(float(Texture2DDesc.Width), float(Texture2DDesc.Height));
+		}
 		~CTexture2D() = default;
 
 	public:
@@ -37,9 +40,10 @@ namespace Graphics
 			return RHIType;
 		}
 		const TTexture2DDesc& GetTexture2DDesc() const { return Texture2DDesc; }
-
+		const Vector2& GetTextureSize() const { return TextureSize; }
 	private:
 		TTexture2DDesc Texture2DDesc;
+		Vector2 TextureSize;
 
 	};
 }

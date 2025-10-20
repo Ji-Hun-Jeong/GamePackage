@@ -2,6 +2,62 @@
 #include "Component.h"
 #include "04.Renderer/RenderResourceLoader.h"
 #include "04.Renderer/RenderStateObject.h"
+#include "04.Renderer/SpriteRenderer.h"
+
+struct TImageInfo
+{
+	std::wstring ImagePath;
+	Vector2 BasicImageSize;
+	Vector2 NDCImageSize;
+};
+
+//class CRenderTransform
+//{
+//public:
+//	CRenderTransform()
+//		: Scale(1.0f)
+//		, bChanged(true)
+//	{}
+//	~CRenderTransform() = default;
+//
+//public:
+//	void SetPosition(const Vector3& InPosition)
+//	{
+//		Position = InPosition;
+//		bChanged = true;
+//	}
+//	void SetScale(const Vector3& InScale)
+//	{
+//		Scale = InScale;
+//		bChanged = true;
+//	}
+//
+//	const Vector3& GetPosition() const { return Position; }
+//	const Vector3& GetRotation() const { return Rotation; }
+//	const Vector3& GetScale() const { return Scale; }
+//
+//	bool IsChanged() const { return bChanged; }
+//
+//	void CalculateModelMatrix()
+//	{
+//		ModelMatrix = Matrix::CreateScale(Scale)
+//			* Matrix::CreateRotationX(Rotation.x)
+//			* Matrix::CreateRotationY(Rotation.y)
+//			* Matrix::CreateRotationZ(Rotation.z)
+//			* Matrix::CreateTranslation(Position);
+//	}
+//	const Matrix& GetModelMatrix() const { return ModelMatrix; }
+//
+//private:
+//	Vector3 Position;
+//	Vector3 Rotation;
+//	Vector3 Scale;
+//
+//	Matrix ModelMatrix;
+//
+//	bool bChanged;
+//
+//};
 
 class CRenderComponent : public CComponent
 {
@@ -10,10 +66,12 @@ public:
 	CRenderComponent()
 		: RenderStateObject(nullptr)
 		, RenderResourceLoader(nullptr)
+		, Renderer(nullptr)
+		, CurrentSettingImage(nullptr)
 	{}
 	~CRenderComponent()
 	{
-		
+
 	}
 
 public:
@@ -25,31 +83,38 @@ public:
 	void Serialize(CSerializer& InSerializer) const override
 	{
 		CComponent::Serialize(InSerializer);
-		if (ImagePath.empty() == false)
-		{
-			CSerializer Data;
-			Data["image_path"] = ImagePath.c_str();
-			InSerializer["render_component"] = Data;
-		}
+		//if (ImagePath.empty() == false)
+		//{
+		//	CSerializer Data;
+		//	Data["image_path"] = ImagePath.c_str();
+		//	InSerializer["render_component"] = Data;
+		//}
 	}
 	void SetMesh(Graphics::MeshKey InMeshKey)
 	{
 		Graphics::CMesh* Mesh = RenderResourceLoader->GetMeshOrNull(InMeshKey);
 		RenderStateObject->SetMesh(Mesh);
 	}
-	void SetImage(const std::wstring& InImagePath)
+	void SetDiffuseImage(const std::wstring& InImagePath)
 	{
-		CImage* Image = RenderResourceLoader->LoadImageFromFile(InImagePath);
-		RenderStateObject->SetImage(Image);
-		ImagePath = InImagePath;
-		ImageScale = Image->GetImageScale();
-		ImageChangeEvent(ImageScale);
-	}
-	void SetImage(CImage* InImage)
-	{
-		RenderStateObject->SetImage(InImage);
-		ImageScale = InImage->GetImageScale();
-		ImageChangeEvent(ImageScale);
+		CImage* Image = nullptr;
+		auto Iter = CacheImages.find(InImagePath);
+		if (Iter != CacheImages.end())
+			Image = Iter->second;
+		else
+		{
+			Image = RenderResourceLoader->LoadImageFromFile(InImagePath);
+			CacheImages.emplace(InImagePath, Image);
+		}
+
+		RenderStateObject->SetPixelShaderResource(0, Image);
+
+		CurrentSettingImage = Image;
+		assert(CurrentSettingImage);
+
+		const Vector2& ImageSize = CurrentSettingImage->GetTexture2D().GetTextureSize();
+		for (auto& ImageChangeEvent : ImageChangeEvents)
+			ImageChangeEvent(ImageSize);
 	}
 	void SetPSO(EPSOType InPSOType)
 	{
@@ -72,7 +137,24 @@ public:
 	{
 		RenderStateObject->UpdateVertexConstBuffer(VertexConstBufferMapInstances[InIndex].get(), InMapDataPoint, InDataSize);
 	}
-	const Vector3& GetImageScale() const { return ImageScale; }
+	const Vector2& GetCurrentImageScale() const { return CurrentSettingImage->GetTexture2D().GetTextureSize(); }
+
+	Matrix GetModelMatrix(const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale)
+	{
+		Vector3 Position = Vector3(InPosition.x / Renderer->GetScreenWidth(), InPosition.y / Renderer->GetScreenHeight(), InPosition.z);
+		const Vector3& Rotation = InRotation;
+		Vector3 Scale = Vector3(InScale.x / Renderer->GetScreenWidth(), InScale.y / Renderer->GetScreenHeight(), InScale.z);
+
+		return (Matrix::CreateScale(Scale)
+			* Matrix::CreateRotationX(Rotation.x)
+			* Matrix::CreateRotationY(Rotation.y)
+			* Matrix::CreateRotationZ(Rotation.z)
+			* Matrix::CreateTranslation(Position)).Transpose();
+	}
+	void AddImageChangeEvent(std::function<void(const Vector2&)> InImageChangeEvent)
+	{
+		ImageChangeEvents.push_back(InImageChangeEvent);
+	}
 
 public:
 	void SetRenderStateObject(CRenderStateObject* InRenderStateObject)
@@ -85,15 +167,19 @@ public:
 		assert(InRenderResourceLoader);
 		RenderResourceLoader = InRenderResourceLoader;
 	}
-	void SetImageChangeEvent(std::function<void(const Vector3&)> InImageChangeEvent) { ImageChangeEvent = InImageChangeEvent; }
+	void SetRenderer(const CSpriteRenderer* InRenderer) { Renderer = InRenderer; }
 
 private:
-	Vector3 ImageScale;
-	std::wstring ImagePath;
+	const CSpriteRenderer* Renderer;
 	CRenderStateObject* RenderStateObject;
 	CRenderResourceLoader* RenderResourceLoader;
 
 	std::vector<std::unique_ptr<CBufferMapInstance>> VertexConstBufferMapInstances;
-	std::function<void(const Vector3&)> ImageChangeEvent;
+
+	std::vector<std::function<void(const Vector2&)>> ImageChangeEvents;
+
+	std::map<std::wstring, CImage*> CacheImages;
+	CImage* CurrentSettingImage;
+
 };
 

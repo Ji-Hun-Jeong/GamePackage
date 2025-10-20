@@ -8,11 +8,9 @@
 class CRenderResourceLoader
 {
 public:
-	CRenderResourceLoader(Graphics::CRenderDevice& InDevice, CPSOManager& InPSOManager, uint32_t InScreenWidth, uint32_t InScreenHeight)
+	CRenderResourceLoader(Graphics::CRenderDevice& InDevice, CPSOManager& InPSOManager)
 		: Device(InDevice)
 		, PSOManager(InPSOManager)
-		, ScreenWidth(InScreenWidth)
-		, ScreenHeight(InScreenHeight)
 	{}
 	~CRenderResourceLoader() = default;
 
@@ -51,12 +49,9 @@ public:
 		if (Iter != Images.end())
 			return Iter->second.get();
 
-		auto ShaderResourceView = Device.CreateImage(InPath);
-		const Graphics::TTexture2DDesc& ImageDesc = ShaderResourceView->GetTexture2D().GetTexture2DDesc();
-		const float ImageWidth = static_cast<float>(ImageDesc.Width);
-		const float ImageHeight = static_cast<float>(ImageDesc.Height);
+		auto SRV_Texture2D = Device.CreateImage(InPath);
 
-		CImage* RawImage = new CImage(std::move(ShaderResourceView), Vector3(ImageWidth / ScreenWidth, ImageHeight / ScreenHeight, 0.0f));
+		CImage* RawImage = new CImage(std::move(SRV_Texture2D.first), std::move(SRV_Texture2D.second));
 		Images.emplace(InPath, RawImage);
 
 		return RawImage;
@@ -75,9 +70,6 @@ private:
 
 	std::map<Graphics::MeshKey, std::unique_ptr<Graphics::CMesh>> Meshes;
 	std::map<std::wstring, std::unique_ptr<CImage>> Images;
-
-	uint32_t ScreenWidth;
-	uint32_t ScreenHeight;
 
 };
 

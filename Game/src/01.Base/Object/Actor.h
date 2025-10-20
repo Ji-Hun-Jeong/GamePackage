@@ -15,6 +15,8 @@ public:
 		, bDestroy(false)
 		, Transform(nullptr)
 		, RenderComponent(nullptr)
+		, Animator(nullptr)
+		, InteractionComponent(nullptr)
 	{}
 	virtual ~CActor()
 	{
@@ -30,14 +32,12 @@ private:
 	std::vector<CActor*> Childs;
 	CActor* Attach(CActor* InChild)
 	{
-		assert(InChild);
 		InChild->Owner = this;
 		Childs.push_back(InChild);
 		return InChild;
 	}
 	CComponent* Attach(CComponent* InComponent)
 	{
-		assert(InComponent);
 		InComponent->SetOwner(this);
 		Components.emplace_back(InComponent);
 		return InComponent;
@@ -93,6 +93,14 @@ protected:
 	}
 	void Arrange()
 	{
+		if (Transform->IsDestroy())
+			Transform = nullptr;
+		if (RenderComponent && RenderComponent->IsDestroy())
+			RenderComponent = nullptr;
+		if (Animator && Animator->IsDestroy())
+			Animator = nullptr;
+		if (InteractionComponent && InteractionComponent->IsDestroy())
+			InteractionComponent = nullptr;
 		for (auto Iter = Components.begin(); Iter != Components.end();)
 		{
 			auto& Component = (*Iter);
@@ -104,7 +112,6 @@ protected:
 	}
 	virtual void Update(float InDeltaTime)
 	{
-		// 컴포넌트가 Destroy인지 매번 검사해서 Destroy면 참조 빼기
 		if (Animator)
 		{
 			bool bChangeAnimation = Animator->TryChangeCurrentAnimation();
@@ -119,7 +126,7 @@ protected:
 				const TFrame& ChangedFrame = CurrentAnimation->GetCurrentFrame();
 
 				if (ChangedFrame.ImagePath.empty() == false)
-					RenderComponent->SetImage(ChangedFrame.ImagePath);
+					RenderComponent->SetDiffuseImage(ChangedFrame.ImagePath);
 			}
 
 			CurrentAnimation->UpdateAnimationState(InDeltaTime);
@@ -136,16 +143,18 @@ protected:
 	{
 		if (Transform->OnVariation())
 		{
-			Transform->CalculateModelMatrix();
 			Transform->SetVariation(false);
 
 			if (RenderComponent)
-				RenderComponent->UpdateVertexConstBuffer(0, &Transform->GetModelMatrix(), sizeof(Transform->GetModelMatrix()));
+			{
+				ModelMatrix = RenderComponent->GetModelMatrix(Transform->GetFinalPosition(), Transform->GetRotation(), Transform->GetScale());
+				RenderComponent->UpdateVertexConstBuffer(0, &ModelMatrix, sizeof(ModelMatrix));
+			}
 
 			if (InteractionComponent)
 			{
 				InteractionComponent->SetRectTransform(Transform->GetFinalPosition().x, Transform->GetFinalPosition().y
-					, Transform->GetFinalScale().x * 2.0f, Transform->GetFinalScale().y * 2.0f);
+					, Transform->GetScale().x * 2.0f, Transform->GetScale().y * 2.0f);
 			}
 		}
 		for (auto& Child : Childs)
@@ -153,6 +162,7 @@ protected:
 			Child->GetTransform()->SetVariation(true);
 		}
 	}
+	Matrix ModelMatrix;
 	/*virtual void Serialize(CSerializer& InSerializer) const override
 	{
 		CObject::Serialize(InSerializer);

@@ -13,7 +13,7 @@ public:
 	void InitalizeBackGround(const std::wstring& InBackGroundImagePath)
 	{
 		SetRenderComponent();
-		GetRenderComponent()->SetImage(InBackGroundImagePath);
+		GetRenderComponent()->SetDiffuseImage(InBackGroundImagePath);
 	}
 
 private:

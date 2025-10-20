@@ -19,6 +19,7 @@ private:
 
 		RenderComponent.SetRenderStateObject(RenderStateObject);
 		RenderComponent.SetRenderResourceLoader(&RenderResourceLoader);
+		RenderComponent.SetRenderer(&Renderer);
 		RenderComponent.SetMesh(0);
 		RenderComponent.SetPSO(EPSOType::Basic);
 	}
