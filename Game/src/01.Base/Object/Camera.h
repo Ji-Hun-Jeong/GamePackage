@@ -26,6 +26,7 @@ public:
 public:
 	void Initalize() override;
 	void BeginPlay() override;
+	void FinalUpdate() override;
 	void CaptureSnapShot() override;
 	void SetInputAction(class CInputActionManager& InInputActionManager) override;
 	void SetScreenSize(uint32_t InScreenWidth, uint32_t InScreenHeight)
@@ -33,6 +34,7 @@ public:
 		CameraConst.ScreenWidth = InScreenWidth;
 		CameraConst.ScreenHeight = InScreenHeight;
 	}
+	void SetTransformEvent(std::function<void(const Vector2&)> TransformEvent) { TransformEvents.push_back(TransformEvent); }
 	void Destroy() override;
 
 private:
@@ -42,6 +44,8 @@ private:
 	class CInputActionValue* RightMoveActionValue;
 	class CInputActionValue* UpMoveActionValue;
 	class CInputActionValue* DownMoveActionValue;
+
+	std::vector<std::function<void(const Vector2&)>> TransformEvents;
 
 };
 

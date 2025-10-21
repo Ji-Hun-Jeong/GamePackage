@@ -31,6 +31,18 @@ namespace Core
 			MouseMoveEvents.push_back(std::move(InMouseMoveEvent));
 			return MouseMoveEvent;
 		}
+		void DeRegistMouseMoveEvent(IMouseMove* InMouseMoveEvent)
+		{
+			std::cout << InMouseMoveEvent << '\n';
+			for (auto Iter = MouseMoveEvents.begin(); Iter != MouseMoveEvents.end(); ++Iter)
+			{
+				if (Iter->get() == InMouseMoveEvent)
+				{
+					MouseMoveEvents.erase(Iter);
+					break;
+				}
+			}
+		}
 		HWND GetWindowHandle() { return WindowHandle; }
 		UINT GetScreenWidth() const { return ScreenWidth; }
 		UINT GetScreenHeight() const { return ScreenHeight; }

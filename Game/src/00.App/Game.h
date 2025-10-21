@@ -32,7 +32,6 @@ public:
 private:
 	CSpriteRenderer SpriteRenderer;
 
-	Core::CInputManager InputManager;
 	CInputActionManager InputActionManager;
 
 	CMouseManager MouseManager;

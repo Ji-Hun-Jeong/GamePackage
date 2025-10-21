@@ -16,7 +16,12 @@ public:
 	void Arrange()
 	{
 		for (auto& WorldActor : WorldActors)
-			WorldActor->Arrange();
+		{
+			if (WorldActor->bDestroy)
+				WorldActor->EndPlay();
+		}
+		for (auto& WorldActor : WorldActors)
+			WorldActor->ComponentArrange();
 
 		if (bFlagDestroyedWorldObject == false)
 			return;
@@ -172,4 +177,5 @@ private:
 	CSerializer Serializer;
 
 	std::queue<std::function<void()>> WorldSynchronizeEvents;
+
 };

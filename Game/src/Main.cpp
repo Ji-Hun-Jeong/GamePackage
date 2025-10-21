@@ -11,7 +11,7 @@ int main(int InArgc, char** InArgv)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	new int;
 
-	CGame Game(1280, 960);
+	CGame Game(1370, 960);
 	Core::CCore Core(Game);
 
 	return Core.Run();

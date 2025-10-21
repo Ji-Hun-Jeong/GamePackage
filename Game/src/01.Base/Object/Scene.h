@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "01.Base/Object/Camera.h"
 
 class CScene : public CActor
 {
@@ -10,8 +11,9 @@ public:
 public:
 	void Initalize() override;
 
+	CCamera* GetMainCamera() const { return MainCamera; }
 private:
-
+	CCamera* MainCamera;
 
 };
 

@@ -6,7 +6,6 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	: Core::CApplication(InScreenWidth, InScreenHeight)
 	, SpriteRenderer(std::make_unique<Graphics::DX::CDXInfra>(Window.GetWindowHandle(), Window.GetScreenWidth(), Window.GetScreenHeight())
 		, Window.GetScreenWidth(), Window.GetScreenHeight())
-	, InputManager(Window)
 	, InputActionManager(InputManager)
 	, MouseManager()
 	, World()
@@ -15,6 +14,8 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	SpriteRenderer.InitalizeFromWorld(World);
 	InputActionManager.InitalizeFromWorld(World);
 	MouseManager.InitalizeFromWorld(World);
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+	if (FAILED(hr)) assert(0);
 
 	Binding();
 
@@ -23,6 +24,7 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 
 CGame::~CGame()
 {
+	CoUninitialize();
 }
 
 bool CGame::Process()
@@ -33,10 +35,7 @@ bool CGame::Process()
 	World.Update();
 
 	InputActionManager.PerformAction();
-	float MouseX = InputManager.GetMouseScreenPosition().MouseX - Window.GetScreenWidth() / 2.0f;
-	float MouseY = -InputManager.GetMouseScreenPosition().MouseY + Window.GetScreenHeight() / 2.0f;
 
-	MouseManager.SetMousePosition(MouseX, MouseY);
 	MouseManager.FindCurrentInteracter();
 
 	World.CaptureSnapShot();

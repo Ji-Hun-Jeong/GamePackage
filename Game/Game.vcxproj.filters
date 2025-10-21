@@ -114,7 +114,16 @@
     <ClCompile Include="src\01.Base\Object\Component\InteractionComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\BackGround.cpp">
+    <ClCompile Include="src\02.Contents\Actor\Base\BackGround.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\Base\MousePointer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\07.Coordinate\Coordinater.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\Base\WindowIOManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -212,7 +221,16 @@
     <ClInclude Include="src\01.Base\Object\Component\InteractionComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\BackGround.h">
+    <ClInclude Include="src\02.Contents\Actor\Base\BackGround.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\Base\MousePointer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\07.Coordinate\Coordinater.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\Base\WindowIOManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -24,8 +24,6 @@ namespace Core
 		{
 			InputManager.MouseScreenPosition.MouseX = InX;
 			InputManager.MouseScreenPosition.MouseY = InY;
-			InputManager.MouseNDCPosition.MouseX = float(InX) * 2.0f / float(InScreenWidth) - 1.0f;
-			InputManager.MouseNDCPosition.MouseY = float(-InY) * 2.0f / float(InScreenHeight) + 1.0f;
 		}
 
 	private:

@@ -24,6 +24,7 @@ public:
 
 	}
 
+	const std::vector<CActor*>& GetChild() const { return Childs; }
 private:
 	friend class CWorld;
 	CActor* Owner;
@@ -42,7 +43,6 @@ private:
 		Components.emplace_back(InComponent);
 		return InComponent;
 	}
-
 public:
 	void Detach(CActor* InChild)
 	{
@@ -91,7 +91,13 @@ protected:
 		CObject::BeginPlay();
 
 	}
-	void Arrange()
+	virtual void EndPlay() override
+	{
+		CObject::EndPlay();
+		for (auto& Component : Components)
+			Component->EndPlay();
+	}
+	void ComponentArrange()
 	{
 		if (Transform->IsDestroy())
 			Transform = nullptr;
@@ -138,6 +144,7 @@ protected:
 			Transform->SetFinalPosition(Transform->GetPosition() + Owner->GetTransform()->GetFinalPosition());
 		else
 			Transform->SetFinalPosition(Transform->GetPosition());
+
 	}
 	virtual void CaptureSnapShot()
 	{
@@ -147,8 +154,8 @@ protected:
 
 			if (RenderComponent)
 			{
-				ModelMatrix = RenderComponent->GetModelMatrix(Transform->GetFinalPosition(), Transform->GetRotation(), Transform->GetScale());
-				RenderComponent->UpdateVertexConstBuffer(0, &ModelMatrix, sizeof(ModelMatrix));
+				VertexConstBuffer.ModelMatrix = RenderComponent->GetModelMatrix(Transform->GetFinalPosition(), Transform->GetRotation(), Transform->GetScale());
+				RenderComponent->UpdateVertexConstBuffer(0, &VertexConstBuffer, sizeof(VertexConstBuffer));
 			}
 
 			if (InteractionComponent)
@@ -156,13 +163,17 @@ protected:
 				InteractionComponent->SetRectTransform(Transform->GetFinalPosition().x, Transform->GetFinalPosition().y
 					, Transform->GetScale().x, Transform->GetScale().y);
 			}
-		}
-		for (auto& Child : Childs)
-		{
-			Child->GetTransform()->SetVariation(true);
+			for (auto& Child : Childs)
+				Child->GetTransform()->SetVariation(true);	
 		}
 	}
-	Matrix ModelMatrix;
+	struct TVertexConstBuffer
+	{
+		Matrix ModelMatrix;
+	} VertexConstBuffer;
+	static_assert(sizeof(TVertexConstBuffer) % 16 == 0);
+
+public:
 	/*virtual void Serialize(CSerializer& InSerializer) const override
 	{
 		CObject::Serialize(InSerializer);

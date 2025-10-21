@@ -32,20 +32,14 @@ public:
 		static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		Context.ClearRenderTarget(*RenderTargetView, ClearColor);
 
-		// 만약에 순서가 문제가 되면 그때가서 DestroyEvent 넣기
-		for (size_t i = 0; i < RenderStateObjects.size();)
+		// 3. 한 번에 제거 (O(n))
+		auto NewEnd = std::remove_if(RenderStateObjects.begin(), RenderStateObjects.end(),
+			[](const auto& InRenderStateObject) { return InRenderStateObject->bDestroy; });
+		RenderStateObjects.erase(NewEnd, RenderStateObjects.end());
+
+		for (auto& RenderStateObject : RenderStateObjects)
 		{
-			auto& RenderStateObject = RenderStateObjects[i];
-			if (RenderStateObject->bDestroy)
-			{
-				RenderStateObjects[i] = std::move(RenderStateObjects.back());
-				RenderStateObjects.pop_back();
-			}
-			else
-			{
-				RenderStateObject->BindRenderState(Context);
-				++i;
-			}
+			RenderStateObject->BindRenderState(Context);
 		}
 
 		SwapChain.Present();

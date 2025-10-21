@@ -88,7 +88,7 @@ namespace Core
 		}
 
 		const TMousePosition& GetMouseScreenPosition() const { return MouseScreenPosition; }
-		const TMousePosition& GetMouseNDCPosition() const { return MouseNDCPosition; }
+
 
 	private:
 		bool CorrectKeyState(EKeyType InKeyType, EButtonState InButtonState) { return KeyStates[(UINT)InKeyType] == InButtonState; }
@@ -102,6 +102,6 @@ namespace Core
 		std::queue<std::pair<UINT, IKeyEvent*>> DeRegistEvents;
 
 		TMousePosition MouseScreenPosition;
-		TMousePosition MouseNDCPosition;
+
 	};
 }

@@ -186,7 +186,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\02.Contents\Actor\BackGround.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\Base\WindowIOManager.cpp" />
+    <ClCompile Include="src\07.Coordinate\Coordinater.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\Base\MousePointer.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\Base\BackGround.cpp" />
     <ClCompile Include="src\01.Base\Object\Component\InteractionComponent.cpp" />
     <ClCompile Include="src\00.App\Binding.cpp" />
     <ClCompile Include="src\06.Interaction\MouseInteracter.cpp" />
@@ -227,7 +230,10 @@
     <ClCompile Include="src\01.Base\Object\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\02.Contents\Actor\BackGround.h" />
+    <ClInclude Include="src\02.Contents\Actor\Base\WindowIOManager.h" />
+    <ClInclude Include="src\07.Coordinate\Coordinater.h" />
+    <ClInclude Include="src\02.Contents\Actor\Base\MousePointer.h" />
+    <ClInclude Include="src\02.Contents\Actor\Base\BackGround.h" />
     <ClInclude Include="src\01.Base\Object\Component\InteractionComponent.h" />
     <ClInclude Include="src\06.Interaction\MouseInteracter.h" />
     <ClInclude Include="src\06.Interaction\MouseManager.h" />

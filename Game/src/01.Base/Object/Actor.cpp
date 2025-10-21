@@ -14,8 +14,6 @@ void CActor::Destroy()
 			GetWorld()->MarkDestroyed();
 
 			bDestroy = true;
-
-			EndPlay();
 		});
 	for (auto& Child : Childs)
 		Child->Destroy();

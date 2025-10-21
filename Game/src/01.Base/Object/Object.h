@@ -38,6 +38,8 @@ public:
 	}
 	virtual void EndPlay()
 	{
+		for (auto& DestroyEvent : DestroyEvents)
+			DestroyEvent(*this);
 	}
 	
 	virtual void Destroy() = 0;
@@ -46,6 +48,10 @@ public:
 
 	virtual void Serialize(CSerializer& InSerializer) const {}
 
+public:
+	void AddDestroyEvent(std::function<void(CObject&)> DestroyEvent) { DestroyEvents.push_back(DestroyEvent); }
+private:
+	std::vector<std::function<void(CObject&)>> DestroyEvents;
 
 public:
 	virtual ObjectType GetType() = 0;

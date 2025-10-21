@@ -23,6 +23,14 @@ void CCamera::BeginPlay()
 	GetTransform()->SetScale(Vector3(float(CameraConst.ScreenWidth), float(CameraConst.ScreenHeight), 1.0f));
 }
 
+void CCamera::FinalUpdate()
+{
+	CActor::FinalUpdate();
+	Vector2 RectTransform = Vector2(GetTransform()->GetFinalPosition().x, GetTransform()->GetFinalPosition().y);
+	for (auto& TransformEvent : TransformEvents)
+		TransformEvent(RectTransform);
+}
+
 void CCamera::CaptureSnapShot()
 {
 	if (GetTransform()->OnVariation() == false)
@@ -34,10 +42,14 @@ void CCamera::CaptureSnapShot()
 		GetTransform()->GetFinalPosition(), GetTransform()->GetRotation(), GetTransform()->GetScale()).Invert();
 
 	GetRenderComponent()->UpdateVertexConstBuffer(1, &CameraConst, sizeof(CameraConst));
+
+	for (auto& Child : GetChild())
+		Child->GetTransform()->SetVariation(true);
 }
 
 void CCamera::SetInputAction(CInputActionManager& InInputActionManager)
 {
+	// 만약에 나중에 동적으로 키도 바꾸고 싶으면 그냥 InputActionValue자체에서 키를 바꿀 수 있게(그러면 가지고 있다가 거기다가 다시 세팅가능)
 	LeftMoveActionValue = InInputActionManager.AddInputActionValue(EKeyType::A, EButtonState::Hold, [this]()->void
 		{
 			GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f));
