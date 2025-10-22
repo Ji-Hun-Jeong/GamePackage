@@ -20,6 +20,8 @@ public:
 	{
 		CComponent::EndPlay();
 		MouseInteracter->Destroy();
+		for (auto& ChildInteractionComponent : ChildInteractionComponents)
+			ChildInteractionComponent->Destroy();
 	}
 	void SetRectTransform(float InPositionX, float InPositionY, float InScaleX, float InScaleY)
 	{
@@ -31,9 +33,14 @@ public:
 	void SetMouseExitEvent(std::function<void()> InMouseExitEvent) { MouseInteracter->SetMouseExitEvent(InMouseExitEvent); }
 	void SetMouseClickEvent(std::function<void()> InMouseClickEvent) { MouseInteracter->SetMouseClickEvent(InMouseClickEvent); }
 	void SetMouseReleaseEvent(std::function<void()> InMouseReleaseEvent) { MouseInteracter->SetMouseReleaseEvent(InMouseReleaseEvent); }
+	void AddChildInteractionComponent(CInteractionComponent* InChildInteractionComponent)
+	{
+		MouseInteracter->AttachChildInteracter(InChildInteractionComponent->MouseInteracter);
+		ChildInteractionComponents.push_back(InChildInteractionComponent);
+	}
 
 private:
 	CMouseInteracter* MouseInteracter;
-
+	std::vector<CInteractionComponent*> ChildInteractionComponents;
 };
 

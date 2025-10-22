@@ -97,6 +97,8 @@ public:
 		Object->InstanceId = NumberGenerator.GenerateNumber();
 		Object->World = this;
 
+		Object->Initalize();
+
 		if (InOwner)
 			InOwner->Attach(Object);
 
@@ -119,8 +121,6 @@ public:
 
 		NextAddedWorldActors.emplace(Actor);
 
-		Actor->Initalize();
-
 		return Actor;
 	}
 
@@ -131,6 +131,11 @@ public:
 			{
 				LoadSceneImmediate<T_SCENE>();
 			});
+	}
+
+	void DontDestroyOnLoad(CActor* InActor)
+	{
+
 	}
 
 private:
@@ -144,6 +149,7 @@ private:
 			WorldActor->Destroy();
 		SpawnActor<T_SCENE>();
 	}
+
 public:
 	const std::vector<std::unique_ptr<CActor>>& GetWorldActors() const { return WorldActors; }
 	void MarkDestroyed() { bFlagDestroyedWorldObject = true; }

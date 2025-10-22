@@ -66,5 +66,5 @@ void CSpriteRenderer::SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeigh
 	ViewPort.MinDepth = 0.0f;
 	ViewPort.MaxDepth = 1.0f;
 
-	Context.RSSetViewPort(ViewPort);
+	Context.RSSetViewPort(&ViewPort);
 }

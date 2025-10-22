@@ -23,6 +23,18 @@ public:
 	void SetMouseExitEvent(std::function<void()> InMouseExitEvent) { MouseExitEvent = InMouseExitEvent; }
 	void SetMouseClickEvent(std::function<void()> InMouseClickEvent) { MouseClickEvent = InMouseClickEvent; }
 	void SetMouseReleaseEvent(std::function<void()> InMouseReleaseEvent) { MouseReleaseEvent = InMouseReleaseEvent; }
+	void AttachChildInteracter(CMouseInteracter* InChildInteracter) { ChildInteracters.push_back(InChildInteracter); }
+	void DetachChildInteracter(CMouseInteracter* InChildInteracter)
+	{
+		for (auto Iter = ChildInteracters.begin(); Iter != ChildInteracters.end(); ++Iter)
+		{
+			if ((*Iter) == InChildInteracter)
+			{
+				ChildInteracters.erase(Iter);
+				break;
+			}
+		}
+	}
 
 private:
 	void ActivateMouseEnterEvent()

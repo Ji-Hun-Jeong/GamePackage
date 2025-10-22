@@ -16,5 +16,5 @@ CWorld::~CWorld()
 
 void CWorld::Start()
 {
-	LoadScene<CEditUIScene>();
+	LoadScene<CLobbyScene>();
 }

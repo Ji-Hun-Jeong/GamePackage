@@ -12,7 +12,7 @@ public:
 	~CWindowIOManager() = default;
 
 public:
-	bool OpenFileDialog()
+	bool TryOpenFileDialog()
 	{
 		OpenFilePath = L"";
 
@@ -36,17 +36,20 @@ public:
 		// 6. 선택된 파일의 경로 가져오기
 		ComPtr<IShellItem> pItem;
 		hr = pFileOpen->GetResult(&pItem);
-		if (pItem.Get() == nullptr) false;
-
-		PWSTR pszFilePath = nullptr;
-		hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-
 		if (SUCCEEDED(hr))
 		{
-			OpenFilePath = pszFilePath;
-			CoTaskMemFree(pszFilePath);
+			PWSTR pszFilePath = nullptr;
+			hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+			if (SUCCEEDED(hr))
+			{
+				OpenFilePath = pszFilePath;
+				CoTaskMemFree(pszFilePath);
+			}
+			return true;
 		}
-		return true;
+		return false;
+		
 	}
 	const std::wstring& GetOpenFilePath() const { return OpenFilePath; }
 

@@ -85,7 +85,7 @@ public:
 	void SetAnimator();
 
 protected:
-	virtual void Initalize();
+	virtual void Initalize() override;
 	virtual void BeginPlay() override
 	{
 		CObject::BeginPlay();

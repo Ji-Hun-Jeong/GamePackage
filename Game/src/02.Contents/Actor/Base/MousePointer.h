@@ -10,7 +10,14 @@ public:
 	~CMousePointer() = default;
 
 public:
+	void Initalize() override
+	{
+		CActor::Initalize();
+		SetRenderComponent();
+	}
 	void SetMousePosition(CMousePosition* InMousePosition) { MousePosition = InMousePosition; }
+	const CMousePosition* GetMousePosition() const { return MousePosition; }
+
 	void FinalUpdate() override
 	{
 		CActor::FinalUpdate();

@@ -25,16 +25,16 @@ private:
 			MouseManager.MousePosition = std::make_unique<CMousePosition>();
 
 			MousePointer->SetMousePosition(MouseManager.MousePosition.get());
-			MousePointer->AddDestroyEvent([this](CObject& InObject)->void
+			MousePointer->AddDestroyEvent([this, MousePointer](CObject& InObject)->void
 				{
-					ResetMousePosition();
+					ResetMousePosition(*MousePointer);
 				});
-
 		}
 	}
-	void ResetMousePosition()
+	void ResetMousePosition(CMousePointer& InMousePointer)
 	{
-		MouseManager.MousePosition = nullptr;
+		if (InMousePointer.GetMousePosition() == MouseManager.MousePosition.get())
+			MouseManager.MousePosition = nullptr;
 	}
 	CMouseManager& MouseManager;
 };

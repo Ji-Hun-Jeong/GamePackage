@@ -3,19 +3,6 @@
 #include "Base/RenderDevice.h"
 #include "Base/RenderContext.h"
 
-void CPSO::BindToPipeline(Graphics::CRenderContext& InContext)
-{
-	const float Factor = 1.0f;
-	const float BlendFactor[4] = { Factor, Factor, Factor, 1.0f };
-	InContext.OMSetBlendState(*BlendState, BlendFactor, 0xffffffff);
-	InContext.IASetPrimitiveTopology(PrimitiveTopology);
-	InContext.IASetInputLayout(*InputLayout);
-	InContext.VSSetShader(*VertexShader);
-	InContext.RSSetState(*RasterizerState);
-	InContext.PSSetShader(*PixelShader);
-	InContext.PSSetSamplers(0, 1, SamplerState);
-}
-
 CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 {
 	std::vector<Graphics::TInputElementDesc> InputElementDescs =

@@ -19,30 +19,32 @@ namespace Graphics::DX
 
 	public:
 		void OMSetRenderTargets(uint32_t InNumViews, const CRenderTargetView* InRenderTargetView, const CDepthStencilView* InDepthStencilView) override;
-		void ClearRenderTarget(const CRenderTargetView& InRenderTargetView, const float* InClearColor) override;
-		void IASetInputLayout(const CInputLayout& InInputLayout) override;
+		void ClearRenderTarget(const CRenderTargetView* InRenderTargetView, const float* InClearColor) override;
+		void IASetInputLayout(const CInputLayout* InInputLayout) override;
 		void IASetPrimitiveTopology(ETopology InTopology) override;
-		void IASetVertexBuffer(const CBuffer& InVertexBuffer, const uint32_t* InStride, const uint32_t* InOffset) override;
-		void IASetIndexBuffer(const CBuffer& InIndexBuffer, EGIFormat InFormat, uint32_t InOffset) override;
-		void VSSetShader(const CVertexShader& InVertexShader) override;
+		void IASetVertexBuffer(const CBuffer* InVertexBuffer, const uint32_t* InStride, const uint32_t* InOffset) override;
+		void IASetIndexBuffer(const CBuffer* InIndexBuffer, EGIFormat InFormat, uint32_t InOffset) override;
+		void VSSetShader(const CVertexShader* InVertexShader) override;
 		void VSSetConstantBuffers(uint32_t InStartSlot, uint32_t InNumBuffers, const std::vector<std::unique_ptr<CBuffer>>& InBuffers) override;
-		void VSSetConstantBuffer(uint32_t InStartSlot, const CBuffer& InBuffer) override;
-		void RSSetViewPort(const TViewPort& InViewPort) override;
-		void RSSetState(const CRasterizerState& InRasterizerState) override;
-		void PSSetShader(const CPixelShader& InPixelShader) override;
+		void VSSetConstantBuffer(uint32_t InStartSlot, const CBuffer* InBuffer) override;
+		void RSSetViewPort(const TViewPort* InViewPort) override;
+		void RSSetState(const CRasterizerState* InRasterizerState) override;
+		void PSSetShader(const CPixelShader* InPixelShader) override;
 		void PSSetShaderResources(uint32_t InStartSlot, uint32_t InNumViews, const std::vector<std::unique_ptr<CShaderResourceView>>& InShaderResourceViews) override;
-		void PSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView& InShaderResourceView) override;
+		void PSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView* InShaderResourceView) override;
 		void PSSetSamplers(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers) override;
-		void OMSetBlendState(const CBlendState& InBlendState, const float* InBlendFactor, uint32_t InSampleMask) override;
+		void OMSetBlendState(const CBlendState* InBlendState, const float* InBlendFactor, uint32_t InSampleMask) override;
 		void DrawIndexed(uint32_t InIndexCount) override
 		{
 			Context->DrawIndexed(InIndexCount, 0, 0);
 		}
-		void CopyBuffer(CBuffer& InBuffer, const void* InMapDataPoint, size_t InDataSize) override
+		void CopyBuffer(CBuffer* InBuffer, const void* InMapDataPoint, size_t InDataSize) override
 		{
-			const TBufferDesc& BufferDesc = InBuffer.GetBufferDesc();
+			if (InBuffer == nullptr)
+				return;
+			const TBufferDesc& BufferDesc = InBuffer->GetBufferDesc();
 
-			ID3D11Resource* Resource = DXResourceStorage.GetResource<ID3D11Resource>(InBuffer.GetResourceHandle());
+			ID3D11Resource* Resource = DXResourceStorage.GetResource<ID3D11Resource>(InBuffer->GetResourceHandle());
 			D3D11_MAPPED_SUBRESOURCE MappedSubResource;
 			ZeroMemory(&MappedSubResource, sizeof(MappedSubResource));
 			Context->Map(Resource, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedSubResource);

@@ -11,16 +11,15 @@ void CCamera::Initalize()
 {
 	CActor::Initalize();
 	SetRenderComponent();
-
-	GetRenderComponent()->AddVertexConstBuffer(sizeof(CameraConst));
-
-	GetTransform()->SetSpeed(3.5f);
 }
 
 void CCamera::BeginPlay()
 {
 	CActor::BeginPlay();
+	GetTransform()->SetSpeed(3.5f);
 	GetTransform()->SetScale(Vector3(float(CameraConst.ScreenWidth), float(CameraConst.ScreenHeight), 1.0f));
+	GetRenderComponent()->SetMesh(-1);
+	GetRenderComponent()->AddVertexConstBuffer(sizeof(CameraConst));
 }
 
 void CCamera::FinalUpdate()

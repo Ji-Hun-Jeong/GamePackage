@@ -16,6 +16,7 @@ namespace Graphics
 
 class CPSO
 {
+	friend class CRenderStateObject;
 public:
 	CPSO(Graphics::ETopology InPrimitiveTopology, Graphics::CInputLayout* InInputLayout
 		, Graphics::CVertexShader* InVertexShader, Graphics::CRasterizerState* InRasterizerState
@@ -29,7 +30,6 @@ public:
 		, SamplerState(InSamplerState)
 		, BlendState(InBlendState)
 	{}
-	void BindToPipeline(Graphics::CRenderContext& InContext);
 
 private:
 	Graphics::ETopology PrimitiveTopology;

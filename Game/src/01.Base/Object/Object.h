@@ -41,7 +41,7 @@ public:
 		for (auto& DestroyEvent : DestroyEvents)
 			DestroyEvent(*this);
 	}
-	
+	virtual void Initalize() = 0;
 	virtual void Destroy() = 0;
 
 	virtual void SetInputAction(class CInputActionManager& InInputActionManager) {}

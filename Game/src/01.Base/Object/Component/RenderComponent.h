@@ -51,11 +51,11 @@ public:
 			Image = RenderResourceLoader->LoadImageFromFile(InImagePath);
 			CacheImages.emplace(InImagePath, Image);
 		}
-
-		RenderStateObject->SetPixelShaderResource(0, Image);
-
+		CurrentSettingImagePath = InImagePath;
 		CurrentSettingImage = Image;
 		assert(CurrentSettingImage);
+
+		RenderStateObject->SetPixelShaderResource(0, CurrentSettingImage);
 
 		const Vector2& ImageSize = CurrentSettingImage->GetTexture2D().GetTextureSize();
 		for (auto& ImageChangeEvent : ImageChangeEvents)
@@ -65,6 +65,16 @@ public:
 	{
 		CPSO* PSO = RenderResourceLoader->GetPSO(InPSOType);
 		RenderStateObject->SetPSO(PSO);
+	}
+	void ResetImage()
+	{
+		CurrentSettingImagePath = L"";
+		CurrentSettingImage = nullptr;
+		RenderStateObject->SetPixelShaderResource(0, CurrentSettingImage);
+
+		Vector2 ImageSize(0.0f);
+		for (auto& ImageChangeEvent : ImageChangeEvents)
+			ImageChangeEvent(ImageSize);
 	}
 	void AddVertexConstBuffer(uint32_t InByteWidth)
 	{
@@ -100,6 +110,7 @@ public:
 	{
 		ImageChangeEvents.push_back(InImageChangeEvent);
 	}
+	const std::wstring& GetCurrentImagePath() const { return CurrentSettingImagePath; }
 
 public:
 	void SetRenderStateObject(CRenderStateObject* InRenderStateObject)
@@ -125,6 +136,7 @@ private:
 
 	std::map<std::wstring, CImage*> CacheImages;
 	CImage* CurrentSettingImage;
+	std::wstring CurrentSettingImagePath;
 
 };
 

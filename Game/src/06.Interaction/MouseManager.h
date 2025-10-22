@@ -99,14 +99,13 @@ private:
 		if (bMouseOn == false)
 			return nullptr;
 
-		CMouseInteracter* NewInteracter = &InMouseInteracter;
 		for (auto& ChildInteracter : InMouseInteracter.ChildInteracters)
 		{
-			NewInteracter = TryFindOnInteracter(*ChildInteracter);
+			CMouseInteracter* NewInteracter = TryFindOnInteracter(*ChildInteracter);
 			if (NewInteracter)
-				break;
+				return NewInteracter;
 		}
-		return NewInteracter;
+		return &InMouseInteracter;
 	}
 	bool IsMouseOn(const CMouseInteracter& InMouseInteracter)
 	{

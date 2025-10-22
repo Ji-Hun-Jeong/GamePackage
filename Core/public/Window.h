@@ -33,7 +33,6 @@ namespace Core
 		}
 		void DeRegistMouseMoveEvent(IMouseMove* InMouseMoveEvent)
 		{
-			std::cout << InMouseMoveEvent << '\n';
 			for (auto Iter = MouseMoveEvents.begin(); Iter != MouseMoveEvents.end(); ++Iter)
 			{
 				if (Iter->get() == InMouseMoveEvent)

@@ -37,6 +37,7 @@ class CRenderStateObject
 		, PixelShaderResources{}
 		, PixelShaderResourceStartSlot(0)
 		, VertexConstBufferStartSlot(0)
+		, bRender(true)
 	{}
 public:
 	~CRenderStateObject() = default;
@@ -44,12 +45,11 @@ public:
 public:
 	void SetMesh(Graphics::CMesh* InMesh)
 	{
-		assert(InMesh);
+		if (InMesh == nullptr)std::cout << "Mesh Is None\n";
 		Mesh = InMesh;
 	}
 	void SetPixelShaderResource(uint8_t InPixelShaderResourceSlot, CImage* InImage)
 	{
-		assert(InImage);
 		assert(InPixelShaderResourceSlot < 12);
 		PixelShaderResources[InPixelShaderResourceSlot] = InImage;
 	}
@@ -93,13 +93,14 @@ public:
 
 	void BindRenderState(Graphics::CRenderContext& InContext);
 	void Destroy() { bDestroy = true; }
+	void SetRender(bool bInRender) { bRender = bInRender; }
 
 protected:
 	Graphics::CMesh* Mesh;
 	CPSO* PSO;
 
-	std::array<CImage*, 12> VertexShaderResources;
-	std::array<CImage*, 12> PixelShaderResources;
+	std::array<CImage*, 6> VertexShaderResources;
+	std::array<CImage*, 6> PixelShaderResources;
 
 	std::vector<std::unique_ptr<Graphics::CBuffer>> VertexConstBuffers;
 	std::queue<const CBufferMapInstance*> BufferMapInstances;
@@ -109,4 +110,5 @@ protected:
 	uint32_t PixelShaderResourceStartSlot;
 	uint32_t VertexConstBufferStartSlot;
 
+	bool bRender;
 };
