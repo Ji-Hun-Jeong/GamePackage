@@ -229,6 +229,7 @@
     <ClCompile Include="src\01.Base\Object\UI.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolStates.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\02.Contents\Actor\Base\WindowIOManager.h" />
@@ -267,6 +268,7 @@
     <ClInclude Include="src\01.Base\Object\UI.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolStates.h" />
+    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

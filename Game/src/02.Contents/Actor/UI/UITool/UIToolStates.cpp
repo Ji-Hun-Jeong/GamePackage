@@ -1,43 +1,49 @@
 #include "pch.h"
 #include "UIToolStates.h"
 #include "01.Base/World/World.h"
-#include "01.Base/Object/UI.h"
-#include "02.Contents/Actor/Base/WindowIOManager.h"
 #include "02.Contents/Actor/Base/MousePointer.h"
-#include "UIToolPanel.h"
+#include "02.Contents/Actor/Base/WindowIOManager.h"
 
-CUI* CUIToolInputState::DoPlaceUI(const Vector3& InPosition, const std::wstring& InImagePath, CUIToolPanel& InUIToolPanel)
+void CUIToolInputState::InitalizeInputState(CUI& InLoadDialogUI, CWindowIOManager& InWindowIOManager, CMousePointer& InMousePointer)
 {
-	CUI* NewUI = GetWorld()->SpawnActor<CUI>(&InUIToolPanel);
-	NewUI->GetTransform()->SetPosition(InPosition);
-	if (InImagePath.empty() == false)
-		NewUI->GetRenderComponent()->SetDiffuseImage(InImagePath);
-	UIs.push(NewUI);
-
-	return NewUI;
+	LoadDialogUI = &InLoadDialogUI;
+	MousePointer = &InMousePointer;
+	WindowIOManager = &InWindowIOManager;
+	assert(LoadDialogUI);
+	assert(MousePointer);
+	assert(WindowIOManager);
 }
 
-void CUIToolInputState::UndoPlaceUI()
+void CUIToolInputState::MouseRelease(EKeyType InKeyType, const Vector2& InMousePosition)
 {
-	if (UIs.empty())
-		return;
-	UIs.top()->Destroy();
-	UIs.pop();
-}
-
-void CUIToolInputState::PlaceUIOnToolPanel(EKeyType InKeyType, const std::wstring& InUIImage, const Vector2& InMouseWorldPosition, CUIToolPanel& InUIToolPanel)
-{
+	const std::wstring& MouseImagePath = MousePointer->GetRenderComponent()->GetCurrentImagePath();
 	if (InKeyType == EKeyType::LButton)
 	{
-		if (InUIImage.empty())
+		if (MouseImagePath.empty())
 			return;
-
-		Vector3 Position = Vector3(InMouseWorldPosition.x, InMouseWorldPosition.y, 0.0f);
-		DoPlaceUI(Position, InUIImage, InUIToolPanel);
+		CUI* NewUI = GetUIToolPanel()->PlaceUIOnToolPanel(MouseImagePath, InMousePosition);
+		UIStack.push(NewUI);
 	}
 	if (InKeyType == EKeyType::RButton)
 	{
-		UndoPlaceUI();
-		// MousePointer->GetRenderComponent()->ResetImage();
+		if (UIStack.empty()) return;
+		CUI* LastUI = UIStack.top();
+		UIStack.pop();
+		LastUI->Destroy();
 	}
+}
+
+void CUIToolInputState::EnterState()
+{
+	LoadDialogUI->GetInteractionComponent()
+		->SetMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
+			{
+				MousePointer->SetMouseImageFromDialog(InKeyType, *WindowIOManager);
+			});
+}
+
+void CUIToolInputState::ExitState()
+{
+	MousePointer->GetRenderComponent()->ResetImage();
+	LoadDialogUI->GetInteractionComponent()->SetMouseReleaseEvent(nullptr);
 }

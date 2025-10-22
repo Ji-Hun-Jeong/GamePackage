@@ -6,7 +6,9 @@ class CMousePointer : public CActor
 {
 	GENERATE_OBJECT()
 public:
-	CMousePointer() = default;
+	CMousePointer()
+		: MousePosition(nullptr)
+	{}
 	~CMousePointer() = default;
 
 public:
@@ -24,6 +26,8 @@ public:
 		MousePosition->SetMousePosition(
 			Vector2(GetTransform()->GetFinalPosition().x, GetTransform()->GetFinalPosition().y));
 	}
+
+	void SetMouseImageFromDialog(EKeyType InKeyType, class CWindowIOManager& InWindowIOManager);
 
 private:
 	CMousePosition* MousePosition;

@@ -1,63 +1,38 @@
+#pragma once
 #include "pch.h"
-#include "UIToolStates.h"
 #include "01.Base/Object/UI.h"
 
 class CUIToolPanel : public CUI
 {
 	GENERATE_OBJECT()
 public:
-	CUIToolPanel() = default;
-	~CUIToolPanel() = default;
+	CUIToolPanel() {}
+	~CUIToolPanel() {}
 
 public:
-	void Destroy() override
-	{
-		CUI::Destroy();
-		for (auto& UIToolState : UIToolStates)
-			UIToolState->Destroy();
-	}
 	void Initalize() override
 	{
 		CUI::Initalize();
 		GetRenderComponent()->SetPSO(EPSOType::Mark);
-
-		GetInteractionComponent()->SetMouseEnterEvent([this](const Vector2& InMousePosition)->void 
-			{
-				if (CurrentState->MouseEnterEvent)
-					CurrentState->MouseEnterEvent(InMousePosition);
-			});
-		GetInteractionComponent()->SetMouseExitEvent([this](const Vector2& InMousePosition)->void 
-			{
-				if (CurrentState->MouseExitEvent)
-					CurrentState->MouseExitEvent(InMousePosition);
-			});
-		GetInteractionComponent()->SetMouseMoveEvent([this](const Vector2& InMousePosition)->void 
-			{
-				if (CurrentState->MouseMoveEvent)
-					CurrentState->MouseMoveEvent(InMousePosition);
-			});
-		GetInteractionComponent()->SetMouseClickEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				if (CurrentState->MouseClickEvent)
-					CurrentState->MouseClickEvent(InKeyType, InMousePosition);
-			});
-		GetInteractionComponent()->SetMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				if (CurrentState->MouseReleaseEvent)
-					CurrentState->MouseReleaseEvent(InKeyType, InMousePosition);
-			});
 	}
 
-
-	void AddUIToolState(CUIToolState* InUIToolState)
+public:
+	CUI* PlaceUIOnToolPanel(const std::wstring& InUIImagePath, const Vector2& InMouseWorldPosition);
+	[[nodiscard]] size_t AddCreateChildUIEvent(std::function<void(CUI&)> CreateChildUIEvent) 
+	{ 
+		assert(CreateChildUIEvent); 
+		CreateChildUIEvents.push_back(CreateChildUIEvent); 
+		return CreateChildUIEvents.size() - 1;
+	}
+	void RemoveCreateChildUIEvent(size_t InIndex)
 	{
-		UIToolStates.push_back(std::move(InUIToolState));
+		auto Iter = CreateChildUIEvents.begin();
+		for (size_t i = 0; i < InIndex; ++i)
+			++Iter;
+		CreateChildUIEvents.erase(Iter);
 	}
-
-	void SetCurrentState(CUIToolState* InState) { CurrentState = InState; }
 
 private:
-	std::vector<CUIToolState*> UIToolStates;
-	CUIToolState* CurrentState;
+	std::vector<std::function<void(CUI&)>> CreateChildUIEvents;
 
 };

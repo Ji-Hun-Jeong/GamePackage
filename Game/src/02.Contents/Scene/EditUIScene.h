@@ -11,7 +11,6 @@ public:
 
 public:
 	void Initalize() override;
-	void LoadImageFromDialog(EKeyType InKeyType, class CWindowIOManager& InWindowIOManager, class CMousePointer& InMousePointer);
 
 
 };

@@ -7,7 +7,7 @@
 #include "02.Contents/Actor/Base/BackGround.h"
 #include "02.Contents/Actor/Base/WindowIOManager.h"
 #include "02.Contents/Actor/Base/MousePointer.h"
-#include "02.Contents/Actor/UI/UITool/UIToolPanel.h"
+#include "02.Contents/Actor/UI/UITool/UIToolPanelManager.h"
 
 void CEditUIScene::Initalize()
 {
@@ -22,36 +22,28 @@ void CEditUIScene::Initalize()
 	CUI* LoadUI = GetWorld()->SpawnActor<CUI>(GetMainCamera());
 	LoadUI->GetTransform()->SetPosition(Vector3(500.0f, 300.0f, 0.0f));
 	LoadUI->InitalizeBasicButtonUI(L"resources/image/UI/Title/LoadImageUI_Normal.png", L"resources/image/UI/Title/LoadImageUI_Hover.png"
-		, L"resources/image/UI/Title/LoadImageUI_Clicked.png", L"resources/image/UI/Title/LoadImageUI_Normal.png"
-		, [this, WindowIOManager, MousePointer](EKeyType InKeyType, const Vector2& InMousePosition)->void
-		{
-			LoadImageFromDialog(InKeyType, *WindowIOManager, *MousePointer);
-		});
+		, L"resources/image/UI/Title/LoadImageUI_Clicked.png", L"resources/image/UI/Title/LoadImageUI_Normal.png");
 
 	CUIToolPanel* UIToolPanel = GetWorld()->SpawnActor<CUIToolPanel>(this);
 	UIToolPanel->GetTransform()->SetScale(Vector3(900, 600, 0));
 
-	CUIToolInputState* UIToolInputState = GetWorld()->SpawnActor<CUIToolInputState>(this);
-	UIToolInputState->MouseReleaseEvent = [this, MousePointer, UIToolInputState, UIToolPanel](EKeyType InKeyType, const Vector2& InMousePosition)->void
+	CUIToolPanelManager* UIToolPanelManager = GetWorld()->SpawnActor<CUIToolPanelManager>(this);
+	UIToolPanelManager->InitUIToolPanelManager(*UIToolPanel);
+
+	CUIToolInputState* InputState = GetWorld()->SpawnActor<CUIToolInputState>(this);
+	InputState->InitalizeInputState(*LoadUI, *WindowIOManager, *MousePointer);
+	CUIToolMoveState* MoveState = GetWorld()->SpawnActor<CUIToolMoveState>(this);
+	UIToolPanelManager->AddUIToolState(InputState);
+	UIToolPanelManager->AddUIToolState(MoveState);
+
+	UIToolPanelManager->SetCurrentUIToolState(InputState);
+
+	CUI* ChangeStateUI = GetWorld()->SpawnActor<CUI>(GetMainCamera());
+	ChangeStateUI->GetTransform()->SetPosition(Vector3(500.0f, 100.0f, 0.0f));
+	ChangeStateUI->InitalizeBasicButtonUI(L"resources/image/UI/Title/PanelMove_Normal.png", L"resources/image/UI/Title/PanelMove_Hover.png"
+		, L"resources/image/UI/Title/PanelMove_Clicked.png", L"resources/image/UI/Title/PanelMove_Normal.png"
+		, [UIToolPanelManager, MoveState](EKeyType InKeyType, const Vector2& InMousePosition)->void
 		{
-			UIToolInputState->PlaceUIOnToolPanel(InKeyType, MousePointer->GetRenderComponent()->GetCurrentImagePath()
-				, InMousePosition, *UIToolPanel);
-		};
-
-	UIToolPanel->AddUIToolState(UIToolInputState);
-	UIToolPanel->SetCurrentState(UIToolInputState);
+			UIToolPanelManager->SetCurrentUIToolState(MoveState);
+		});
 }
-
-void CEditUIScene::LoadImageFromDialog(EKeyType InKeyType, CWindowIOManager& InWindowIOManager, CMousePointer& InMousePointer)
-{
-	if (InKeyType != EKeyType::LButton)
-		return;
-	if (InWindowIOManager.TryOpenFileDialog())
-	{
-		const std::wstring& ImagePath = InWindowIOManager.GetOpenFilePath();
-		InMousePointer.GetRenderComponent()->SetDiffuseImage(ImagePath);
-	}
-	else
-		InMousePointer.GetRenderComponent()->ResetImage();
-}
-
