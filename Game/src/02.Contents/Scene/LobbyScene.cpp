@@ -16,9 +16,10 @@ void CLobbyScene::Initalize()
 	CUI* UI = GetWorld()->SpawnActor<CUI>(GetMainCamera());
 	UI->InitalizeBasicButtonUI(L"resources/image/UI/Title/SceneToolUI_Normal.png", L"resources/image/UI/Title/SceneToolUI_Hover.png"
 		, L"resources/image/UI/Title/SceneToolUI_Clicked.png", L"resources/image/UI/Title/SceneToolUI_Normal.png"
-		, [this]()->void
+		, [this](EKeyType InKeyType, const Vector2& InMousePosition)->void
 		{
-			GetWorld()->LoadScene<CEditUIScene>();
+			if (InKeyType == EKeyType::LButton)
+				GetWorld()->LoadScene<CEditUIScene>();
 		});
 	
 	CMousePointer* MousePointer = GetWorld()->SpawnActor<CMousePointer>(GetMainCamera());

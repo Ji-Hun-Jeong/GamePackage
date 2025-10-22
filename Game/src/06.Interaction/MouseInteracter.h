@@ -1,4 +1,5 @@
 #pragma once
+#include <Core/public/InputManager.h>
 
 class CMouseInteracter
 {
@@ -19,10 +20,11 @@ public:
 	}
 	void SetPosition(const Vector2& InPosition) { Position = InPosition; }
 	void SetSize(const Vector2& InSize) { Size = InSize; }
-	void SetMouseEnterEvent(std::function<void()> InMouseEnterEvent) { MouseEnterEvent = InMouseEnterEvent; }
-	void SetMouseExitEvent(std::function<void()> InMouseExitEvent) { MouseExitEvent = InMouseExitEvent; }
-	void SetMouseClickEvent(std::function<void()> InMouseClickEvent) { MouseClickEvent = InMouseClickEvent; }
-	void SetMouseReleaseEvent(std::function<void()> InMouseReleaseEvent) { MouseReleaseEvent = InMouseReleaseEvent; }
+	void SetMouseEnterEvent(std::function<void(const Vector2&)> InMouseEnterEvent) { MouseEnterEvent = InMouseEnterEvent; }
+	void SetMouseExitEvent(std::function<void(const Vector2&)> InMouseExitEvent) { MouseExitEvent = InMouseExitEvent; }
+	void SetMouseClickEvent(std::function<void(EKeyType InKeyType, const Vector2&)> InMouseClickEvent) { MouseClickEvent = InMouseClickEvent; }
+	void SetMouseReleaseEvent(std::function<void(EKeyType InKeyType, const Vector2&)> InMouseReleaseEvent) { MouseReleaseEvent = InMouseReleaseEvent; }
+	void SetMouseMoveEvent(std::function<void(const Vector2&)> InMouseMoveEvent) { MouseMoveEvent = InMouseMoveEvent; }
 	void AttachChildInteracter(CMouseInteracter* InChildInteracter) { ChildInteracters.push_back(InChildInteracter); }
 	void DetachChildInteracter(CMouseInteracter* InChildInteracter)
 	{
@@ -37,35 +39,41 @@ public:
 	}
 
 private:
-	void ActivateMouseEnterEvent()
+	void ActivateMouseEnterEvent(const Vector2& InMousePosition)
 	{
 		if (MouseEnterEvent)
-			MouseEnterEvent();
+			MouseEnterEvent(InMousePosition);
 	}
-	void ActivateMouseExitEvent()
+	void ActivateMouseExitEvent(const Vector2& InMousePosition)
 	{
 		if (MouseExitEvent)
-			MouseExitEvent();
+			MouseExitEvent(InMousePosition);
 	}
-	void ActivateMouseClickEvent()
+	void ActivateMouseClickEvent(EKeyType InKeyType, const Vector2& InMousePosition)
 	{
 		if (MouseClickEvent)
-			MouseClickEvent();
+			MouseClickEvent(InKeyType, InMousePosition);
 	}
-	void ActivateMouseReleaseEvent()
+	void ActivateMouseReleaseEvent(EKeyType InKeyType, const Vector2& InMousePosition)
 	{
 		if (MouseReleaseEvent)
-			MouseReleaseEvent();
+			MouseReleaseEvent(InKeyType, InMousePosition);
+	}
+	void ActivateMouseMoveEvent(const Vector2& InMousePosition)
+	{
+		if (MouseMoveEvent)
+			MouseMoveEvent(InMousePosition);
 	}
 
 private:
 	Vector2 Position;
 	Vector2 Size;
 
-	std::function<void()> MouseEnterEvent;
-	std::function<void()> MouseExitEvent;
-	std::function<void()> MouseClickEvent;
-	std::function<void()> MouseReleaseEvent;
+	std::function<void(const Vector2&)> MouseEnterEvent;
+	std::function<void(const Vector2&)> MouseExitEvent;
+	std::function<void(const Vector2&)> MouseMoveEvent;
+	std::function<void(EKeyType, const Vector2&)> MouseClickEvent;
+	std::function<void(EKeyType, const Vector2&)> MouseReleaseEvent;
 
 	std::vector<CMouseInteracter*> ChildInteracters;
 

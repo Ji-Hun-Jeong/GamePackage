@@ -29,7 +29,8 @@ void CActor::SetRenderComponent()
 		{
 			Transform->SetScale(Vector3(InImageSize.x, InImageSize.y, Transform->GetScale().z));
 		});
-
+	RenderComponent->SetMesh(0);
+	RenderComponent->SetPSO(EPSOType::Basic);
 	RenderComponent->AddVertexConstBuffer(sizeof(Matrix));
 }
 

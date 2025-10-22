@@ -186,9 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\02.Contents\Actor\UI\Panel.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\WindowIOManager.cpp" />
-    <ClCompile Include="src\07.Coordinate\Coordinater.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\MousePointer.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\BackGround.cpp" />
     <ClCompile Include="src\01.Base\Object\Component\InteractionComponent.cpp" />
@@ -229,11 +227,11 @@
     <ClCompile Include="src\01.Base\Object\Component\Transform.cpp" />
     <ClCompile Include="src\02.Contents\Scene\LobbyScene.cpp" />
     <ClCompile Include="src\01.Base\Object\UI.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolStates.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\02.Contents\Actor\UI\Panel.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\WindowIOManager.h" />
-    <ClInclude Include="src\07.Coordinate\Coordinater.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\MousePointer.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\BackGround.h" />
     <ClInclude Include="src\01.Base\Object\Component\InteractionComponent.h" />
@@ -267,6 +265,8 @@
     <ClInclude Include="src\01.Base\Object\Component\Transform.h" />
     <ClInclude Include="src\02.Contents\Scene\LobbyScene.h" />
     <ClInclude Include="src\01.Base\Object\UI.h" />
+    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.h" />
+    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolStates.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">
@@ -288,6 +288,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="resources\shader\EdgePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

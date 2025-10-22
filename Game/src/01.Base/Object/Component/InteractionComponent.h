@@ -29,10 +29,11 @@ public:
 		MouseInteracter->SetSize(Vector2(InScaleX, InScaleY));
 	}
 	void SetMouseInteracter(CMouseInteracter* InMouseInteracter) { assert(InMouseInteracter); MouseInteracter = InMouseInteracter; }
-	void SetMouseEnterEvent(std::function<void()> InMouseEnterEvent) { MouseInteracter->SetMouseEnterEvent(InMouseEnterEvent); }
-	void SetMouseExitEvent(std::function<void()> InMouseExitEvent) { MouseInteracter->SetMouseExitEvent(InMouseExitEvent); }
-	void SetMouseClickEvent(std::function<void()> InMouseClickEvent) { MouseInteracter->SetMouseClickEvent(InMouseClickEvent); }
-	void SetMouseReleaseEvent(std::function<void()> InMouseReleaseEvent) { MouseInteracter->SetMouseReleaseEvent(InMouseReleaseEvent); }
+	void SetMouseEnterEvent(std::function<void(const Vector2&)> InMouseEnterEvent) { MouseInteracter->SetMouseEnterEvent(InMouseEnterEvent); }
+	void SetMouseExitEvent(std::function<void(const Vector2&)> InMouseExitEvent) { MouseInteracter->SetMouseExitEvent(InMouseExitEvent); }
+	void SetMouseClickEvent(std::function<void(EKeyType, const Vector2&)> InMouseClickEvent) { MouseInteracter->SetMouseClickEvent(InMouseClickEvent); }
+	void SetMouseReleaseEvent(std::function<void(EKeyType, const Vector2&)> InMouseReleaseEvent) { MouseInteracter->SetMouseReleaseEvent(InMouseReleaseEvent); }
+	void SetMouseMoveEvent(std::function<void(const Vector2&)> InMouseMoveEvent) { MouseInteracter->SetMouseMoveEvent(InMouseMoveEvent); }
 	void AddChildInteractionComponent(CInteractionComponent* InChildInteractionComponent)
 	{
 		MouseInteracter->AttachChildInteracter(InChildInteractionComponent->MouseInteracter);

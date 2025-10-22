@@ -45,6 +45,7 @@ private:
 enum class EPSOType
 {
 	Basic,
+	Mark,
 	End,
 };
 
@@ -62,10 +63,16 @@ public:
 
 private:
 	std::unique_ptr<Graphics::CInputLayout> BasicInputLayout;
+
 	std::unique_ptr<Graphics::CVertexShader> BasicVertexShader;
+
 	std::unique_ptr<Graphics::CRasterizerState> BasicRasterizerState;
+
 	std::unique_ptr<Graphics::CPixelShader> BasicPixelShader;
+	std::unique_ptr<Graphics::CPixelShader> EdgePixelShader;
+
 	std::unique_ptr<Graphics::CSamplerState> LinearSamplerState;
+
 	std::unique_ptr<Graphics::CBlendState> BasicBlendState;
 
 	std::array<std::unique_ptr<CPSO>, size_t(EPSOType::End)> PSOs;

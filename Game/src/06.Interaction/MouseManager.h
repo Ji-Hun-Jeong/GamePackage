@@ -25,6 +25,7 @@ public:
 		, CurrentInteracter(nullptr)
 		, bMouseClicked(false)
 		, bMouseReleased(false)
+		, bMouseMove(false)
 	{}
 	~CMouseManager() = default;
 
@@ -37,14 +38,16 @@ public:
 
 		return NewMouseInteracter;
 	}
-	void SetMouseClick(bool bInMouseClicked) { bMouseClicked = bInMouseClicked; }
-	void SetMouseRelease(bool bInMouseReleased) { bMouseReleased = bInMouseReleased; }
+	void SetMouseClick(EKeyType InKeyType, bool bInMouseClicked) { KeyType = InKeyType; bMouseClicked = bInMouseClicked; }
+	void SetMouseRelease(EKeyType InKeyType, bool bInMouseReleased) { KeyType = InKeyType; bMouseReleased = bInMouseReleased; }
+	void SetMouseMove(bool bInMouseMove) { bMouseMove = bInMouseMove; }
 
 	void FindCurrentInteracter()
 	{
 		if (MousePosition == nullptr)
 			return;
 
+		const Vector2& FinalMousePosition = MousePosition->GetMousePosition();
 		CMouseInteracter* NewInteracter = nullptr;
 		for (auto Iter = MouseInteracters.begin(); Iter != MouseInteracters.end();)
 		{
@@ -53,7 +56,8 @@ public:
 			{
 				if (MouseInteracter == CurrentInteracter)
 				{
-					bMouseReleased ? MouseInteracter->ActivateMouseReleaseEvent() : MouseInteracter->ActivateMouseExitEvent();
+					bMouseReleased || bMouseClicked ? MouseInteracter->ActivateMouseReleaseEvent(KeyType, FinalMousePosition)
+						: MouseInteracter->ActivateMouseExitEvent(FinalMousePosition);
 					CurrentInteracter = nullptr;
 				}
 				Iter = MouseInteracters.erase(Iter);
@@ -70,10 +74,10 @@ public:
 		if (CurrentInteracter != NewInteracter)
 		{
 			if (CurrentInteracter)
-				CurrentInteracter->ActivateMouseExitEvent();
+				CurrentInteracter->ActivateMouseExitEvent(FinalMousePosition);
 
 			if (NewInteracter)
-				NewInteracter->ActivateMouseEnterEvent();
+				NewInteracter->ActivateMouseEnterEvent(FinalMousePosition);
 		}
 
 		CurrentInteracter = NewInteracter;
@@ -81,14 +85,20 @@ public:
 		if (bMouseClicked)
 		{
 			if (CurrentInteracter)
-				CurrentInteracter->ActivateMouseClickEvent();
+				CurrentInteracter->ActivateMouseClickEvent(KeyType, FinalMousePosition);
 			bMouseClicked = false;
 		}
 		if (bMouseReleased)
 		{
 			if (CurrentInteracter)
-				CurrentInteracter->ActivateMouseReleaseEvent();
+				CurrentInteracter->ActivateMouseReleaseEvent(KeyType, FinalMousePosition);
 			bMouseReleased = false;
+		}
+		if (bMouseMove)
+		{
+			if (CurrentInteracter)
+				CurrentInteracter->ActivateMouseMoveEvent(FinalMousePosition);
+			bMouseMove = false;
 		}
 	}
 
@@ -131,15 +141,17 @@ private:
 		return (MousePosition->GetMousePosition().x >= left && MousePosition->GetMousePosition().x <= right &&
 			MousePosition->GetMousePosition().y >= bottom && MousePosition->GetMousePosition().y <= top);
 	}
-	
+
 private:
 	std::unique_ptr<CMousePosition> MousePosition;
 
 	std::vector<std::unique_ptr<CMouseInteracter>> MouseInteracters;
 	CMouseInteracter* CurrentInteracter;
 
+	EKeyType KeyType;
 	bool bMouseClicked;
 	bool bMouseReleased;
+	bool bMouseMove;
 
 };
 

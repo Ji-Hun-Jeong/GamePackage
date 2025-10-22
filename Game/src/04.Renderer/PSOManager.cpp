@@ -23,6 +23,7 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 	BasicRasterizerState = InDevice.CreateRasterizerState(RasterizerDesc);
 
 	BasicPixelShader = InDevice.CreatePixelShader(L"resources/shader/BasicPixelShader.hlsl");
+	EdgePixelShader = InDevice.CreatePixelShader(L"resources/shader/EdgePixelShader.hlsl");
 
 	Graphics::TSamplerDesc SamplerDesc;
 	SamplerDesc.Filter = Graphics::EFilter::FILTER_MIN_MAG_MIP_POINT;
@@ -51,6 +52,9 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 
 	CPSO* ImagePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
 		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
-
 	PSOs[size_t(EPSOType::Basic)] = std::unique_ptr<CPSO>(ImagePSO);
+
+	CPSO* EdgePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
+		, BasicRasterizerState.get(), EdgePixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
+	PSOs[size_t(EPSOType::Mark)] = std::unique_ptr<CPSO>(EdgePSO);
 }

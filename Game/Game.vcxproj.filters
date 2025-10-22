@@ -120,13 +120,13 @@
     <ClCompile Include="src\02.Contents\Actor\Base\MousePointer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\07.Coordinate\Coordinater.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\Base\WindowIOManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\UI\Panel.cpp">
+    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolStates.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -230,19 +230,20 @@
     <ClInclude Include="src\02.Contents\Actor\Base\MousePointer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\07.Coordinate\Coordinater.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Base\WindowIOManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\UI\Panel.h">
+    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolStates.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicVertexShader.hlsl" />
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl" />
+    <FxCompile Include="resources\shader\EdgePixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shader\Common.hlsli" />
