@@ -17,25 +17,15 @@ private:
 		if (CInteractionComponent::GetStaticType() == InNewObject.GetType())
 		{
 			CInteractionComponent& InteractionComponent = static_cast<CInteractionComponent&>(InNewObject);
-			InteractionComponent.SetMouseInteracter(MouseManager.NewMouseInteracter());
+			InteractionComponent.SetMouseManager(&MouseManager);
 		}
-		if (CMousePointer::GetStaticType() == InNewObject.GetType())
+		if (CMousePositionComponent::GetStaticType() == InNewObject.GetType())
 		{
-			CMousePointer* MousePointer = static_cast<CMousePointer*>(&InNewObject);
-			MouseManager.MousePosition = std::make_unique<CMousePosition>();
-
-			MousePointer->SetMousePosition(MouseManager.MousePosition.get());
-			MousePointer->AddDestroyEvent([this, MousePointer](CObject& InObject)->void
-				{
-					ResetMousePosition(*MousePointer);
-				});
+			CMousePositionComponent* MousePositionComponent = static_cast<CMousePositionComponent*>(&InNewObject);
+			MousePositionComponent->SetMouseManager(MouseManager);
 		}
 	}
-	void ResetMousePosition(CMousePointer& InMousePointer)
-	{
-		if (InMousePointer.GetMousePosition() == MouseManager.MousePosition.get())
-			MouseManager.MousePosition = nullptr;
-	}
+
 	CMouseManager& MouseManager;
 };
 void CMouseManager::InitalizeFromWorld(CWorld& InWorld)

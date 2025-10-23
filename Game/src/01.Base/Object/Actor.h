@@ -35,8 +35,6 @@ private:
 	{
 		InChild->Owner = this;
 		Childs.push_back(InChild);
-		if (InChild->InteractionComponent && InteractionComponent)
-			InteractionComponent->AddChildInteractionComponent(InChild->InteractionComponent);
 		return InChild;
 	}
 	CComponent* Attach(CComponent* InComponent)

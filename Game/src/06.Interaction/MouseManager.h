@@ -1,11 +1,11 @@
 #pragma once
 #include "MouseInteracter.h"
 
-class CMousePosition
+class CMousePositionInstance
 {
 public:
-	CMousePosition() = default;
-	~CMousePosition() = default;
+	CMousePositionInstance() = default;
+	~CMousePositionInstance() = default;
 
 public:
 	void SetMousePosition(const Vector2& InMousePosition) { MousePosition = InMousePosition; }
@@ -21,33 +21,39 @@ class CMouseManager
 	friend class CSetMouseInteracter;
 public:
 	CMouseManager()
-		: MousePosition(nullptr)
+		: MousePositionInstance(nullptr)
 		, CurrentInteracter(nullptr)
 		, bMouseClicked(false)
 		, bMouseReleased(false)
 		, bMouseMove(false)
+		, KeyType(EKeyType::End)
 	{}
 	~CMouseManager() = default;
 
 public:
 	void InitalizeFromWorld(class CWorld& InWorld);
-	CMouseInteracter* NewMouseInteracter()
+	CMouseInteracter* NewMouseInteracter(CMouseInteracter* InOwnerMouseInteracter)
 	{
 		CMouseInteracter* NewMouseInteracter = new CMouseInteracter;
-		MouseInteracters.emplace_back(NewMouseInteracter);
-
+		NextFrameEvents.push([this, NewMouseInteracter, InOwnerMouseInteracter]()->void
+			{
+				if (InOwnerMouseInteracter)
+					InOwnerMouseInteracter->AttachChildInteracter(NewMouseInteracter);
+				NextAddedInteracters.emplace(NewMouseInteracter);
+			});
 		return NewMouseInteracter;
 	}
+	void SetMousePositionInstance(CMousePositionInstance* InMousePositionInstance) { MousePositionInstance = InMousePositionInstance; }
 	void SetMouseClick(EKeyType InKeyType, bool bInMouseClicked) { KeyType = InKeyType; bMouseClicked = bInMouseClicked; }
 	void SetMouseRelease(EKeyType InKeyType, bool bInMouseReleased) { KeyType = InKeyType; bMouseReleased = bInMouseReleased; }
 	void SetMouseMove(bool bInMouseMove) { bMouseMove = bInMouseMove; }
 
 	void FindCurrentInteracter()
 	{
-		if (MousePosition == nullptr)
+		if (MousePositionInstance == nullptr)
 			return;
 
-		const Vector2& FinalMousePosition = MousePosition->GetMousePosition();
+		const Vector2& FinalMousePosition = MousePositionInstance->GetMousePosition();
 		CMouseInteracter* NewInteracter = nullptr;
 		for (auto Iter = MouseInteracters.begin(); Iter != MouseInteracters.end();)
 		{
@@ -101,6 +107,19 @@ public:
 			bMouseMove = false;
 		}
 	}
+	void AddNextInteracter()
+	{
+		while (NextAddedInteracters.empty() == false)
+		{
+			MouseInteracters.push_back(std::move(NextAddedInteracters.front()));
+			NextAddedInteracters.pop();
+		}
+		while (NextFrameEvents.empty() == false)
+		{
+			NextFrameEvents.front()();
+			NextFrameEvents.pop();
+		}
+	}
 
 private:
 	CMouseInteracter* TryFindOnInteracter(CMouseInteracter& InMouseInteracter)
@@ -138,15 +157,17 @@ private:
 		float bottom = centerY - halfHeight;
 
 		// 마우스가 사각형 안에 있는지 확인
-		return (MousePosition->GetMousePosition().x >= left && MousePosition->GetMousePosition().x <= right &&
-			MousePosition->GetMousePosition().y >= bottom && MousePosition->GetMousePosition().y <= top);
+		return (MousePositionInstance->GetMousePosition().x >= left && MousePositionInstance->GetMousePosition().x <= right &&
+			MousePositionInstance->GetMousePosition().y >= bottom && MousePositionInstance->GetMousePosition().y <= top);
 	}
 
 private:
-	std::unique_ptr<CMousePosition> MousePosition;
+	CMousePositionInstance* MousePositionInstance;
 
 	std::vector<std::unique_ptr<CMouseInteracter>> MouseInteracters;
 	CMouseInteracter* CurrentInteracter;
+	std::queue<std::unique_ptr<CMouseInteracter>> NextAddedInteracters;
+	std::queue<std::function<void()>> NextFrameEvents;
 
 	EKeyType KeyType;
 	bool bMouseClicked;

@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "06.Interaction/MouseInteracter.h"
+#include "06.Interaction/MouseManager.h"
 
 class CInteractionComponent : public CComponent
 {
@@ -8,7 +8,8 @@ class CInteractionComponent : public CComponent
 	DONTCOPY(CInteractionComponent)
 public:
 	CInteractionComponent()
-		: MouseInteracter(nullptr)
+		: MouseManager(nullptr)
+		, MouseInteracter(nullptr)
 	{}
 	~CInteractionComponent()
 	{
@@ -28,7 +29,7 @@ public:
 		MouseInteracter->SetPosition(Vector2(InPositionX, InPositionY));
 		MouseInteracter->SetSize(Vector2(InScaleX, InScaleY));
 	}
-	void SetMouseInteracter(CMouseInteracter* InMouseInteracter) { assert(InMouseInteracter); MouseInteracter = InMouseInteracter; }
+	void SetMouseManager(CMouseManager* InMouseManager);
 	void SetMouseEnterEvent(std::function<void(const Vector2&)> InMouseEnterEvent) { MouseInteracter->SetMouseEnterEvent(InMouseEnterEvent); }
 	void SetMouseExitEvent(std::function<void(const Vector2&)> InMouseExitEvent) { MouseInteracter->SetMouseExitEvent(InMouseExitEvent); }
 	void SetMouseClickEvent(std::function<void(EKeyType, const Vector2&)> InMouseClickEvent) { MouseInteracter->SetMouseClickEvent(InMouseClickEvent); }
@@ -41,7 +42,9 @@ public:
 	}
 
 private:
+	CMouseManager* MouseManager;
 	CMouseInteracter* MouseInteracter;
 	std::vector<CInteractionComponent*> ChildInteractionComponents;
+
 };
 

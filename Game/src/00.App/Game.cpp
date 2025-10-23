@@ -30,17 +30,19 @@ CGame::~CGame()
 bool CGame::Process()
 {
 	World.Arrange();
-
 	World.Ready();
-	World.Update();
 
 	InputActionManager.PerformAction();
 
 	MouseManager.FindCurrentInteracter();
 
+	World.Update();
+
 	World.CaptureSnapShot();
 
 	SpriteRenderer.Render();
+	MouseManager.AddNextInteracter();
+	
 	return true;
 }
 

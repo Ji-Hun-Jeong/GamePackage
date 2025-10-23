@@ -46,4 +46,6 @@ void CEditUIScene::Initalize()
 		{
 			UIToolPanelManager->SetCurrentUIToolState(MoveState);
 		});
+
+	// Todo: Move포커싱을 위에 있는 Interaction이 가져가서 Move가 뚝뚝 끊기는 현상 수정
 }
