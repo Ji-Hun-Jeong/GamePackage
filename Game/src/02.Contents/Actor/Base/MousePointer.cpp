@@ -7,13 +7,9 @@ void CMousePointer::Initalize()
 {
 	CActor::Initalize();
 	SetRenderComponent();
-	MousePositionComponent = GetWorld()->NewObject<CMousePositionComponent>(this);
 }
-void CMousePointer::SetMouseImageFromDialog(EKeyType InKeyType, CWindowIOManager& InWindowIOManager)
+void CMousePointer::SetMouseImageFromDialog(CWindowIOManager& InWindowIOManager)
 {
-	if (InKeyType != EKeyType::LButton)
-		return;
-
 	if (InWindowIOManager.TryOpenFileDialog())
 	{
 		const std::wstring& ImagePath = InWindowIOManager.GetOpenFilePath();

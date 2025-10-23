@@ -77,14 +77,14 @@ public:
 	void SetCurrentFocusUI(CUI& InUI)
 	{
 		// Todo: 포커싱 상태가 아닐 때도 세팅해주는거 열받는데
-		InUI.GetInteractionComponent()->SetMouseClickEvent([this, &InUI](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		/*InUI.GetInteractionComponent()->SetMouseClickEvent([this, &InUI](EKeyType InKeyType, const Vector2& InMousePosition)->void
 			{
 				CurrentFocusUI = &InUI;
 			});
 		InUI.GetInteractionComponent()->SetMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
 			{
 				CurrentFocusUI = nullptr;
-			});
+			});*/
 	}
 	void MouseMove(const Vector2& InMousePosition) override
 	{

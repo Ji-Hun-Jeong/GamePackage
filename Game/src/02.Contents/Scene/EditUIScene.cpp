@@ -22,9 +22,14 @@ void CEditUIScene::Initalize()
 	CUI* LoadUI = GetWorld()->SpawnActor<CUI>(GetMainCamera());
 	LoadUI->GetTransform()->SetPosition(Vector3(500.0f, 300.0f, 0.0f));
 	LoadUI->InitalizeBasicButtonUI(L"resources/image/UI/Title/LoadImageUI_Normal.png", L"resources/image/UI/Title/LoadImageUI_Hover.png"
-		, L"resources/image/UI/Title/LoadImageUI_Clicked.png", L"resources/image/UI/Title/LoadImageUI_Normal.png");
+		, L"resources/image/UI/Title/LoadImageUI_Clicked.png", L"resources/image/UI/Title/LoadImageUI_Normal.png"
+		, [MousePointer, WindowIOManager](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		{
+			if (InKeyType == EKeyType::LButton)
+				MousePointer->SetMouseImageFromDialog(*WindowIOManager);
+		});
 
-	CUIToolPanel* UIToolPanel = GetWorld()->SpawnActor<CUIToolPanel>(this);
+	/*CUIToolPanel* UIToolPanel = GetWorld()->SpawnActor<CUIToolPanel>(this);
 	UIToolPanel->GetTransform()->SetScale(Vector3(900, 600, 0));
 
 	CUIToolPanelManager* UIToolPanelManager = GetWorld()->SpawnActor<CUIToolPanelManager>(this);
@@ -45,7 +50,7 @@ void CEditUIScene::Initalize()
 		, [UIToolPanelManager, MoveState](EKeyType InKeyType, const Vector2& InMousePosition)->void
 		{
 			UIToolPanelManager->SetCurrentUIToolState(MoveState);
-		});
+		});*/
 
 	// Todo: Move포커싱을 위에 있는 Interaction이 가져가서 Move가 뚝뚝 끊기는 현상 수정
 }

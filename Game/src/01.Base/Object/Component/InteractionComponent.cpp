@@ -7,9 +7,9 @@ void CInteractionComponent::SetMouseManager(CMouseManager* InMouseManager)
 	assert(InMouseManager);
 	MouseManager = InMouseManager;
 	CMouseInteracter* OwnerInteracter = nullptr;
-	CActor* Owner = GetOwner();
-	if (Owner && Owner->GetInteractionComponent())
-		OwnerInteracter = Owner->GetInteractionComponent()->MouseInteracter;
+	CActor* OwnerActor = GetOwnerActor()->GetOwner();
+	if (OwnerActor && OwnerActor->GetInteractionComponent())
+		OwnerInteracter = OwnerActor->GetInteractionComponent()->MouseInteracter;
 
 	MouseInteracter = MouseManager->NewMouseInteracter(OwnerInteracter);
 }

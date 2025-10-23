@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include "MouseInteracter.h"
 
 class CMousePositionInstance
@@ -22,7 +23,7 @@ class CMouseManager
 public:
 	CMouseManager()
 		: MousePositionInstance(nullptr)
-		, CurrentInteracter(nullptr)
+		, CurrenFocusInteracter(nullptr)
 		, bMouseClicked(false)
 		, bMouseReleased(false)
 		, bMouseMove(false)
@@ -39,79 +40,31 @@ public:
 			{
 				if (InOwnerMouseInteracter)
 					InOwnerMouseInteracter->AttachChildInteracter(NewMouseInteracter);
-				NextAddedInteracters.emplace(NewMouseInteracter);
+				NextAddedInteracters.push(NewMouseInteracter);
 			});
 		return NewMouseInteracter;
 	}
+
 	void SetMousePositionInstance(CMousePositionInstance* InMousePositionInstance) { MousePositionInstance = InMousePositionInstance; }
+
 	void SetMouseClick(EKeyType InKeyType, bool bInMouseClicked) { KeyType = InKeyType; bMouseClicked = bInMouseClicked; }
 	void SetMouseRelease(EKeyType InKeyType, bool bInMouseReleased) { KeyType = InKeyType; bMouseReleased = bInMouseReleased; }
 	void SetMouseMove(bool bInMouseMove) { bMouseMove = bInMouseMove; }
 
-	void FindCurrentInteracter()
-	{
-		if (MousePositionInstance == nullptr)
-			return;
+	bool IsMouseClicked() const { return bMouseClicked; }
+	bool IsMouseReleased() const { return bMouseReleased; }
+	bool IsMouseMove() const {return bMouseMove;}
+	const Vector2& GetMousePosition() const { return MousePosition; }
+	EKeyType GetKeyType() const { return KeyType; }
 
-		const Vector2& FinalMousePosition = MousePositionInstance->GetMousePosition();
-		CMouseInteracter* NewInteracter = nullptr;
-		for (auto Iter = MouseInteracters.begin(); Iter != MouseInteracters.end();)
-		{
-			auto MouseInteracter = Iter->get();
-			if (MouseInteracter->bDestroy)
-			{
-				if (MouseInteracter == CurrentInteracter)
-				{
-					bMouseReleased || bMouseClicked ? MouseInteracter->ActivateMouseReleaseEvent(KeyType, FinalMousePosition)
-						: MouseInteracter->ActivateMouseExitEvent(FinalMousePosition);
-					CurrentInteracter = nullptr;
-				}
-				Iter = MouseInteracters.erase(Iter);
-			}
-			else
-			{
-				NewInteracter = TryFindOnInteracter(*MouseInteracter);
-				if (NewInteracter)
-					break;
-				++Iter;
-			}
-		}
-
-		if (CurrentInteracter != NewInteracter)
-		{
-			if (CurrentInteracter)
-				CurrentInteracter->ActivateMouseExitEvent(FinalMousePosition);
-
-			if (NewInteracter)
-				NewInteracter->ActivateMouseEnterEvent(FinalMousePosition);
-		}
-
-		CurrentInteracter = NewInteracter;
-
-		if (bMouseClicked)
-		{
-			if (CurrentInteracter)
-				CurrentInteracter->ActivateMouseClickEvent(KeyType, FinalMousePosition);
-			bMouseClicked = false;
-		}
-		if (bMouseReleased)
-		{
-			if (CurrentInteracter)
-				CurrentInteracter->ActivateMouseReleaseEvent(KeyType, FinalMousePosition);
-			bMouseReleased = false;
-		}
-		if (bMouseMove)
-		{
-			if (CurrentInteracter)
-				CurrentInteracter->ActivateMouseMoveEvent(FinalMousePosition);
-			bMouseMove = false;
-		}
-	}
 	void AddNextInteracter()
 	{
+		bMouseClicked = false;
+		bMouseReleased = false;
+		bMouseMove = false;
 		while (NextAddedInteracters.empty() == false)
 		{
-			MouseInteracters.push_back(std::move(NextAddedInteracters.front()));
+			MouseInteracters.emplace_back(NextAddedInteracters.front());
 			NextAddedInteracters.pop();
 		}
 		while (NextFrameEvents.empty() == false)
@@ -121,21 +74,78 @@ public:
 		}
 	}
 
+	void FindCurrentInteracter()
+	{
+		if (MousePositionInstance == nullptr)
+			return;
+
+		for (auto& MouseInteracter : MouseInteracters)
+			MouseInteracter->ClearState();
+
+		MousePosition = MousePositionInstance->GetMousePosition();
+
+		CMouseInteracter* NewFocusInteracter = nullptr;
+		for (auto Iter = MouseInteracters.begin(); Iter != MouseInteracters.end();)
+		{
+			auto MouseInteracter = Iter->get();
+			if (MouseInteracter->bDestroy)
+			{
+				if (MouseInteracter == CurrenFocusInteracter)
+					CurrenFocusInteracter = nullptr;
+
+				Iter = MouseInteracters.erase(Iter);
+			}
+			else
+			{
+				NewFocusInteracter = TryFindFocusInteracter(*MouseInteracter);
+				if (NewFocusInteracter)
+					FocusInteracterCandidates.insert(NewFocusInteracter);
+
+				++Iter;
+			}
+		}
+
+		CMouseInteracter* FinalNewFocusInteracter = nullptr;
+		if (FocusInteracterCandidates.size())
+		{
+			FinalNewFocusInteracter = *FocusInteracterCandidates.begin();
+			FocusInteracterCandidates.clear();
+		}
+
+		if (CurrenFocusInteracter != FinalNewFocusInteracter)
+		{
+			if (CurrenFocusInteracter)
+				CurrenFocusInteracter->bMouseExit = true;
+
+			if (FinalNewFocusInteracter)
+				FinalNewFocusInteracter->bMouseEnter = true;
+		}
+
+		if (CurrenFocusInteracter)
+			CurrenFocusInteracter->bMouseFocus = true;
+
+		CurrenFocusInteracter = FinalNewFocusInteracter;
+	}
+
 private:
-	CMouseInteracter* TryFindOnInteracter(CMouseInteracter& InMouseInteracter)
+	CMouseInteracter* TryFindFocusInteracter(CMouseInteracter& InMouseInteracter)
 	{
 		bool bMouseOn = IsMouseOn(InMouseInteracter);
 		if (bMouseOn == false)
 			return nullptr;
 
+		InMouseInteracter.bMouseOn = true;
+
+		CMouseInteracter* NewFocusInteracter = &InMouseInteracter;
 		for (auto& ChildInteracter : InMouseInteracter.ChildInteracters)
 		{
-			CMouseInteracter* NewInteracter = TryFindOnInteracter(*ChildInteracter);
+			CMouseInteracter* NewInteracter = TryFindFocusInteracter(*ChildInteracter);
 			if (NewInteracter)
-				return NewInteracter;
+				NewFocusInteracter = NewInteracter;
 		}
-		return &InMouseInteracter;
+		return NewFocusInteracter;
 	}
+
 	bool IsMouseOn(const CMouseInteracter& InMouseInteracter)
 	{
 		if (InMouseInteracter.Size.x == 0.0f && InMouseInteracter.Size.y == 0.0f)
@@ -163,10 +173,13 @@ private:
 
 private:
 	CMousePositionInstance* MousePositionInstance;
+	Vector2 MousePosition;
 
 	std::vector<std::unique_ptr<CMouseInteracter>> MouseInteracters;
-	CMouseInteracter* CurrentInteracter;
-	std::queue<std::unique_ptr<CMouseInteracter>> NextAddedInteracters;
+	CMouseInteracter* CurrenFocusInteracter;
+	std::set<CMouseInteracter*> FocusInteracterCandidates;
+
+	std::queue<CMouseInteracter*> NextAddedInteracters;
 	std::queue<std::function<void()>> NextFrameEvents;
 
 	EKeyType KeyType;

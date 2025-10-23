@@ -118,6 +118,8 @@ protected:
 	}
 	virtual void Update(float InDeltaTime)
 	{
+		if (InteractionComponent)
+			InteractionComponent->PerformEvent();
 		if (Animator)
 		{
 			bool bChangeAnimation = Animator->TryChangeCurrentAnimation();

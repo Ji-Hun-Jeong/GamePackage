@@ -97,10 +97,10 @@ public:
 		Object->InstanceId = NumberGenerator.GenerateNumber();
 		Object->World = this;
 
-		Object->Initalize();
-
 		if (InOwner)
 			InOwner->Attach(Object);
+
+		Object->Initalize();
 
 		auto Iter = NewObjectTypeEvents.find(T::GetStaticType());
 		if (Iter != NewObjectTypeEvents.end())
@@ -131,11 +131,6 @@ public:
 			{
 				LoadSceneImmediate<T_SCENE>();
 			});
-	}
-
-	void DontDestroyOnLoad(CActor* InActor)
-	{
-
 	}
 
 private:

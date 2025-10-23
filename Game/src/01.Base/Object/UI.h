@@ -27,16 +27,14 @@ public:
 				if (GetRenderComponent())
 					GetRenderComponent()->SetDiffuseImage(InMouseOnImagePath);
 			});
-		GetInteractionComponent()->SetMouseClickEvent([this, InMouseClickImagePath](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		GetInteractionComponent()->SetMouseFocusClickEvent([this, InMouseClickImagePath](EKeyType InKeyType, const Vector2& InMousePosition)->void
 			{
-				if (GetRenderComponent())
-					if (InMouseClickImagePath.empty() == false)
+				if (GetRenderComponent() && InMouseClickImagePath.empty() == false)
 						GetRenderComponent()->SetDiffuseImage(InMouseClickImagePath);
 			});
-		GetInteractionComponent()->SetMouseReleaseEvent([this, InMouseReleaseImagePath, InMouseReleaseEvent](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		GetInteractionComponent()->SetMouseFocusReleaseEvent([this, InMouseReleaseImagePath, InMouseReleaseEvent](EKeyType InKeyType, const Vector2& InMousePosition)->void
 			{
-				if (GetRenderComponent())
-					if (InMouseReleaseImagePath.empty() == false)
+				if (GetRenderComponent() && InMouseReleaseImagePath.empty() == false)
 						GetRenderComponent()->SetDiffuseImage(InMouseReleaseImagePath);
 				if (InMouseReleaseEvent)
 					InMouseReleaseEvent(InKeyType, InMousePosition);

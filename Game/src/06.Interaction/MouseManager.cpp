@@ -19,10 +19,10 @@ private:
 			CInteractionComponent& InteractionComponent = static_cast<CInteractionComponent&>(InNewObject);
 			InteractionComponent.SetMouseManager(&MouseManager);
 		}
-		if (CMousePositionComponent::GetStaticType() == InNewObject.GetType())
+		if (CMousePointer::GetStaticType() == InNewObject.GetType())
 		{
-			CMousePositionComponent* MousePositionComponent = static_cast<CMousePositionComponent*>(&InNewObject);
-			MousePositionComponent->SetMouseManager(MouseManager);
+			CMousePointer* MousePointer = static_cast<CMousePointer*>(&InNewObject);
+			MousePointer->SetMouseManager(MouseManager);
 		}
 	}
 

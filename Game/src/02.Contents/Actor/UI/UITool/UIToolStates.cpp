@@ -35,15 +35,15 @@ void CUIToolInputState::MouseRelease(EKeyType InKeyType, const Vector2& InMouseP
 
 void CUIToolInputState::EnterState()
 {
-	LoadDialogUI->GetInteractionComponent()
+	/*LoadDialogUI->GetInteractionComponent()
 		->SetMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
 			{
 				MousePointer->SetMouseImageFromDialog(InKeyType, *WindowIOManager);
-			});
+			});*/
 }
 
 void CUIToolInputState::ExitState()
 {
 	MousePointer->GetRenderComponent()->ResetImage();
-	LoadDialogUI->GetInteractionComponent()->SetMouseReleaseEvent(nullptr);
+	//LoadDialogUI->GetInteractionComponent()->SetMouseReleaseEvent(nullptr);
 }

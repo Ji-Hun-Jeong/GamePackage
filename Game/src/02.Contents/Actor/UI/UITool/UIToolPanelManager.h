@@ -1,5 +1,6 @@
 #pragma once
 #include "01.Base/Object/Actor.h"
+#include "02.Contents/Actor/Base/MousePointer.h"
 #include "UIToolStates.h"
 #include "UIToolPanel.h"
 
@@ -11,37 +12,23 @@ public:
 	~CUIToolPanelManager() = default;
 
 public:
+	void Initalize() override;
 	void Destroy() override
 	{
 		CActor::Destroy();
 		for (auto& UIToolState : UIToolStates)
 			UIToolState->Destroy();
 	}
-	void InitUIToolPanelManager(CUIToolPanel& InUIToolPanel)
+	void Update(float InDeltaTime) override
+	{
+		CActor::Update(InDeltaTime);
+	}
+	void InitUIToolPanelManager(CUIToolPanel& InUIToolPanel, CMousePointer& InMousePointer)
 	{
 		UIToolPanel = &InUIToolPanel;
+		MousePointer = &InMousePointer; 
 		assert(UIToolPanel);
-
-		UIToolPanel->GetInteractionComponent()->SetMouseEnterEvent([this](const Vector2& InMousePosition)->void
-			{
-				CurrentUIToolState->MouseEnter(InMousePosition);
-			});
-		UIToolPanel->GetInteractionComponent()->SetMouseExitEvent([this](const Vector2& InMousePosition)->void
-			{
-				CurrentUIToolState->MouseExit(InMousePosition);
-			});
-		UIToolPanel->GetInteractionComponent()->SetMouseMoveEvent([this](const Vector2& InMousePosition)->void
-			{
-				CurrentUIToolState->MouseMove(InMousePosition);
-			});
-		UIToolPanel->GetInteractionComponent()->SetMouseClickEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				CurrentUIToolState->MouseClick(InKeyType, InMousePosition);
-			});
-		UIToolPanel->GetInteractionComponent()->SetMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				CurrentUIToolState->MouseRelease(InKeyType, InMousePosition);
-			});
+		assert(MousePointer);
 	}
 	void AddUIToolState(IUIToolState* InUIToolState)
 	{
@@ -63,6 +50,8 @@ private:
 
 	std::vector<IUIToolState*> UIToolStates;
 	IUIToolState* CurrentUIToolState;
+
+	CMousePointer* MousePointer;
 
 };
 
