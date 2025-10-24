@@ -13,9 +13,9 @@ private:
 	void OnActivate(EKeyType InKeyType, EButtonState InButtonState, const TMousePosition& InMousePosition) override
 	{
 		if (InButtonState == EButtonState::Tap)
-			MouseManager.SetMouseClick(InKeyType, true);
+			MouseManager.SetMouseClick(InKeyType);
 		if (InButtonState == EButtonState::Released)
-			MouseManager.SetMouseRelease(InKeyType, true);
+			MouseManager.SetMouseRelease(InKeyType);
 	}
 	CMouseManager& MouseManager;
 };

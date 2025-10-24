@@ -4,46 +4,60 @@
 #include "02.Contents/Actor/Base/MousePointer.h"
 #include "02.Contents/Actor/Base/WindowIOManager.h"
 
-void CUIToolInputState::InitalizeInputState(CUI& InLoadDialogUI, CWindowIOManager& InWindowIOManager, CMousePointer& InMousePointer)
+
+CUIToolInputState::CUIToolInputState(CUI& InLoadDialogUI, CWindowIOManager& InWindowIOManager, CMousePointer& InMousePointer)
+	: LoadDialogUI(InLoadDialogUI)
+	, WindowIOManager(InWindowIOManager)
+	, MousePointer(InMousePointer)
+{}
+
+
+void CUIToolInputState::EnterState(CUIToolPanel& InUIToolPanel)
 {
-	LoadDialogUI = &InLoadDialogUI;
-	MousePointer = &InMousePointer;
-	WindowIOManager = &InWindowIOManager;
-	assert(LoadDialogUI);
-	assert(MousePointer);
-	assert(WindowIOManager);
+	LoadDialogUI.GetInteractionComponent()
+		->SetInteracterFocusMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
+			{
+				if (InKeyType == EKeyType::LButton)
+					MousePointer.SetMouseImageFromDialog(WindowIOManager);
+			});
+	InUIToolPanel.SetCurrentFocusUIFoundEvent([this](CUIToolPanel& InUIToolPanel, CUI& InCurrentClickedUI, const Vector2& InMousePosition)->void
+		{
+			PlaceUIOnMouseReleased(InCurrentClickedUI, InUIToolPanel);
+		});
 }
 
-void CUIToolInputState::MouseRelease(EKeyType InKeyType, const Vector2& InMousePosition)
+void CUIToolInputState::ExitState(CUIToolPanel& InUIToolPanel)
 {
-	const std::wstring& MouseImagePath = MousePointer->GetRenderComponent()->GetCurrentImagePath();
-	if (InKeyType == EKeyType::LButton)
+	MousePointer.GetRenderComponent()->ResetImage();
+	LoadDialogUI.GetInteractionComponent()->SetInteracterFocusMouseReleaseEvent(nullptr);
+	InUIToolPanel.SetCurrentFocusUIFoundEvent(nullptr);
+}
+
+void CUIToolInputState::PlaceUIOnMouseReleased(CUI& InFocusUI, CUIToolPanel& InUIToolPanel)
+{
+	if (InFocusUI.GetInteractionComponent()->IsMouseReleased() == false)
+		return;
+	EKeyType MouseType = InUIToolPanel.GetInteractionComponent()->GetMouseType();
+
+	if (MouseType == EKeyType::LButton)
 	{
+		const std::wstring& MouseImagePath = MousePointer.GetRenderComponent()->GetCurrentImagePath();
 		if (MouseImagePath.empty())
 			return;
-		CUI* NewUI = GetUIToolPanel()->PlaceUIOnToolPanel(MouseImagePath, InMousePosition);
+
+		CUI* NewUI = InUIToolPanel.PlaceUIOnToolPanel(&InFocusUI, MousePointer.GetRenderComponent()->GetCurrentImagePath()
+			, MousePointer.GetMousePosition());
+		NewUI->GetRenderComponent()->SetDiffuseImage(MouseImagePath);
 		UIStack.push(NewUI);
 	}
-	if (InKeyType == EKeyType::RButton)
+	else if (MouseType == EKeyType::RButton)
 	{
-		if (UIStack.empty()) return;
-		CUI* LastUI = UIStack.top();
+		if (UIStack.empty())
+			return;
+		CUI* ErasedUI = UIStack.top();
 		UIStack.pop();
-		LastUI->Destroy();
+		InUIToolPanel.EraseUIOnToolPanel(ErasedUI);
 	}
-}
-
-void CUIToolInputState::EnterState()
-{
-	/*LoadDialogUI->GetInteractionComponent()
-		->SetMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				MousePointer->SetMouseImageFromDialog(InKeyType, *WindowIOManager);
-			});*/
-}
-
-void CUIToolInputState::ExitState()
-{
-	MousePointer->GetRenderComponent()->ResetImage();
-	//LoadDialogUI->GetInteractionComponent()->SetMouseReleaseEvent(nullptr);
+	else
+		assert(0);
 }

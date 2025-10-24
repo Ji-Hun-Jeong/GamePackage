@@ -15,6 +15,8 @@ public:
 	void Destroy()
 	{
 		bDestroy = true;
+		for (auto& ChildInteracter : ChildInteracters)
+			ChildInteracter->Destroy();
 	}
 	void SetPosition(const Vector2& InPosition) { Position = InPosition; }
 	void SetSize(const Vector2& InSize) { Size = InSize; }

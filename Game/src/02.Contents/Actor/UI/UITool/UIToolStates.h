@@ -3,56 +3,33 @@
 #include "01.Base/Object/UI.h"
 #include "UIToolPanel.h"
 
-class IUIToolState : public CActor
+class IUIToolState
 {
-	friend class CUIToolPanelManager;
 public:
-	IUIToolState() : UIToolPanel(nullptr) {}
+	IUIToolState(){}
 	virtual ~IUIToolState() = 0 {}
 
 public:
-	CUIToolPanel* GetUIToolPanel() const { return UIToolPanel; }
-
-	virtual void EnterState() {}
-	virtual void ExitState() {}
-	virtual void MouseEnter(const Vector2& InMousePosition) {}
-	virtual void MouseExit(const Vector2& InMousePosition) {}
-	virtual void MouseMove(const Vector2& InMousePosition) {}
-	virtual void MouseClick(EKeyType InKeyType, const Vector2& InMousePosition) {}
-	virtual void MouseRelease(EKeyType InKeyType, const Vector2& InMousePosition) {}
-
-protected:
-	virtual void SetUIToolPanel(CUIToolPanel* InUIToolPanel) 
-	{ 
-		UIToolPanel = InUIToolPanel; 
-	}
-
-private:
-	CUIToolPanel* UIToolPanel;
+	virtual void EnterState(CUIToolPanel& InUIToolPanel) = 0;
+	virtual void ExitState(CUIToolPanel& InUIToolPanel) = 0;
 
 };
 
 class CUIToolInputState : public IUIToolState
 {
-	GENERATE_OBJECT()
 public:
-	CUIToolInputState() 
-		: LoadDialogUI(nullptr)
-		, MousePointer(nullptr) 
-		, WindowIOManager(nullptr)
-	{}
+	CUIToolInputState(CUI& InLoadDialogUI, class CWindowIOManager& InWindowIOManager, class CMousePointer& InMousePointer);
 	~CUIToolInputState() = default;
 
 public:
-	void EnterState() override;
-	void ExitState() override;
-	void MouseRelease(EKeyType InKeyType, const Vector2& InMousePosition) override;
-	void InitalizeInputState(CUI& InLoadDialogUI, class CWindowIOManager& InWindowIOManager, class CMousePointer& InMousePointer);
+	void EnterState(CUIToolPanel& InUIToolPanel) override;
+	void ExitState(CUIToolPanel& InUIToolPanel) override;
+	void PlaceUIOnMouseReleased(CUI& InFocusUI, CUIToolPanel& InUIToolPanel);
 
 private:
-	CUI* LoadDialogUI;
-	class CWindowIOManager* WindowIOManager;
-	class CMousePointer* MousePointer;
+	CUI& LoadDialogUI;
+	class CWindowIOManager& WindowIOManager;
+	class CMousePointer& MousePointer;
 
 	std::stack<CUI*> UIStack;
 
@@ -60,45 +37,57 @@ private:
 
 class CUIToolMoveState : public IUIToolState
 {
-	GENERATE_OBJECT()
 public:
-	CUIToolMoveState() {}
+	CUIToolMoveState()
+		: CurrentMovedUI(nullptr)
+	{}
 	~CUIToolMoveState() {}
 
 public:
-	void SetUIToolPanel(CUIToolPanel* InUIToolPanel) override
+	void EnterState(CUIToolPanel& InUIToolPanel) override
 	{
-		IUIToolState::SetUIToolPanel(InUIToolPanel);
-		Index = InUIToolPanel->AddCreateChildUIEvent([this](CUI& InNewUI)->void
+		InUIToolPanel.SetCurrentFocusUIFoundEvent([this](CUIToolPanel& InUIToolPanel, CUI& InCurrentFocusUI, const Vector2& InMousePosition)->void
 			{
-				SetCurrentFocusUI(InNewUI);
+				DecideCurrentMovedUI(InUIToolPanel, InCurrentFocusUI, InMousePosition);
+			});
+		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseMoveEvent([this](const Vector2& InMousePosition)->void
+			{
+				MoveCurrentMovedUI(InMousePosition);
 			});
 	}
-	void SetCurrentFocusUI(CUI& InUI)
+	void ExitState(CUIToolPanel& InUIToolPanel) override
 	{
-		// Todo: 포커싱 상태가 아닐 때도 세팅해주는거 열받는데
-		/*InUI.GetInteractionComponent()->SetMouseClickEvent([this, &InUI](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				CurrentFocusUI = &InUI;
-			});
-		InUI.GetInteractionComponent()->SetMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				CurrentFocusUI = nullptr;
-			});*/
+		InUIToolPanel.SetCurrentFocusUIFoundEvent(nullptr);
+		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseClickEvent(nullptr);
+		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseHoldedEvent(nullptr);
 	}
-	void MouseMove(const Vector2& InMousePosition) override
-	{
-		static int a = 0;
-		//std::cout << "Move" << a++ << std::endl;
-		if (CurrentFocusUI == nullptr)
-			return;
 
-		Vector3 NewPosition = Vector3(InMousePosition.x, InMousePosition.y, CurrentFocusUI->GetTransform()->GetPosition().z);
-		CurrentFocusUI->GetTransform()->SetPosition(NewPosition);
+	void DecideCurrentMovedUI(CUIToolPanel& InUIToolPanel, CUI& InCurrentFocusUI, const Vector2& InMousePosition)
+	{
+		if (InUIToolPanel.GetInteractionComponent()->IsMouseClicked() && &InUIToolPanel != &InCurrentFocusUI)
+		{
+			CurrentMovedUI = &InCurrentFocusUI;
+			assert(CurrentMovedUI);
+			MouseFocusUIDiff = InMousePosition - Vector2(CurrentMovedUI->GetTransform()->GetFinalPosition().x
+				, CurrentMovedUI->GetTransform()->GetFinalPosition().y);
+		}
+		if (InUIToolPanel.GetInteractionComponent()->IsMouseReleased())
+		{
+			if (CurrentMovedUI)
+				CurrentMovedUI = nullptr;
+		}
+	}
+
+	void MoveCurrentMovedUI(const Vector2& InMousePosition)
+	{
+		if (CurrentMovedUI == nullptr)
+			return;
+		Vector3 NewPosition = Vector3(InMousePosition.x, InMousePosition.y, CurrentMovedUI->GetTransform()->GetPosition().z) - MouseFocusUIDiff;
+		CurrentMovedUI->GetTransform()->SetPosition(NewPosition - CurrentMovedUI->GetOwner()->GetTransform()->GetFinalPosition());
 	}
 
 private:
-	CUI* CurrentFocusUI = nullptr;
-	size_t Index = 0;
+	CUI* CurrentMovedUI = nullptr;
+	Vector2 MouseFocusUIDiff;
 
 };

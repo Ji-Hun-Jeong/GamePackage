@@ -25,6 +25,7 @@ public:
 		: MousePositionInstance(nullptr)
 		, CurrenFocusInteracter(nullptr)
 		, bMouseClicked(false)
+		, bMouseHolded(false)
 		, bMouseReleased(false)
 		, bMouseMove(false)
 		, KeyType(EKeyType::End)
@@ -38,20 +39,29 @@ public:
 		CMouseInteracter* NewMouseInteracter = new CMouseInteracter;
 		NextFrameEvents.push([this, NewMouseInteracter, InOwnerMouseInteracter]()->void
 			{
-				if (InOwnerMouseInteracter)
-					InOwnerMouseInteracter->AttachChildInteracter(NewMouseInteracter);
-				NextAddedInteracters.push(NewMouseInteracter);
+				NextAddedInteracters.emplace(NewMouseInteracter, InOwnerMouseInteracter);
 			});
 		return NewMouseInteracter;
 	}
 
 	void SetMousePositionInstance(CMousePositionInstance* InMousePositionInstance) { MousePositionInstance = InMousePositionInstance; }
 
-	void SetMouseClick(EKeyType InKeyType, bool bInMouseClicked) { KeyType = InKeyType; bMouseClicked = bInMouseClicked; }
-	void SetMouseRelease(EKeyType InKeyType, bool bInMouseReleased) { KeyType = InKeyType; bMouseReleased = bInMouseReleased; }
+	void SetMouseClick(EKeyType InKeyType) 
+	{ 
+		KeyType = InKeyType; 
+		bMouseHolded = true;
+		bMouseClicked = true; 
+	}
+	void SetMouseRelease(EKeyType InKeyType) 
+	{ 
+		KeyType = InKeyType; 
+		bMouseHolded = false;
+		bMouseReleased = true; 
+	}
 	void SetMouseMove(bool bInMouseMove) { bMouseMove = bInMouseMove; }
 
 	bool IsMouseClicked() const { return bMouseClicked; }
+	bool IsMouseHolded() const { return bMouseHolded; }
 	bool IsMouseReleased() const { return bMouseReleased; }
 	bool IsMouseMove() const {return bMouseMove;}
 	const Vector2& GetMousePosition() const { return MousePosition; }
@@ -64,8 +74,11 @@ public:
 		bMouseMove = false;
 		while (NextAddedInteracters.empty() == false)
 		{
-			MouseInteracters.emplace_back(NextAddedInteracters.front());
+			auto NewAndOwner = NextAddedInteracters.front();
 			NextAddedInteracters.pop();
+			if (NewAndOwner.second)
+				NewAndOwner.second->AttachChildInteracter(NewAndOwner.first);
+			MouseInteracters.emplace_back(NewAndOwner.first);
 		}
 		while (NextFrameEvents.empty() == false)
 		{
@@ -108,7 +121,7 @@ public:
 		CMouseInteracter* FinalNewFocusInteracter = nullptr;
 		if (FocusInteracterCandidates.size())
 		{
-			FinalNewFocusInteracter = *FocusInteracterCandidates.begin();
+			FinalNewFocusInteracter = *(--FocusInteracterCandidates.end());
 			FocusInteracterCandidates.clear();
 		}
 
@@ -179,11 +192,12 @@ private:
 	CMouseInteracter* CurrenFocusInteracter;
 	std::set<CMouseInteracter*> FocusInteracterCandidates;
 
-	std::queue<CMouseInteracter*> NextAddedInteracters;
+	std::queue<std::pair<CMouseInteracter*, CMouseInteracter*>> NextAddedInteracters;
 	std::queue<std::function<void()>> NextFrameEvents;
 
 	EKeyType KeyType;
 	bool bMouseClicked;
+	bool bMouseHolded;
 	bool bMouseReleased;
 	bool bMouseMove;
 

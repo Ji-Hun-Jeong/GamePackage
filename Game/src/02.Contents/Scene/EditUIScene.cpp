@@ -29,17 +29,16 @@ void CEditUIScene::Initalize()
 				MousePointer->SetMouseImageFromDialog(*WindowIOManager);
 		});
 
-	/*CUIToolPanel* UIToolPanel = GetWorld()->SpawnActor<CUIToolPanel>(this);
+	CUIToolPanel* UIToolPanel = GetWorld()->SpawnActor<CUIToolPanel>(this);
 	UIToolPanel->GetTransform()->SetScale(Vector3(900, 600, 0));
 
 	CUIToolPanelManager* UIToolPanelManager = GetWorld()->SpawnActor<CUIToolPanelManager>(this);
 	UIToolPanelManager->InitUIToolPanelManager(*UIToolPanel);
 
-	CUIToolInputState* InputState = GetWorld()->SpawnActor<CUIToolInputState>(this);
-	InputState->InitalizeInputState(*LoadUI, *WindowIOManager, *MousePointer);
-	CUIToolMoveState* MoveState = GetWorld()->SpawnActor<CUIToolMoveState>(this);
-	UIToolPanelManager->AddUIToolState(InputState);
-	UIToolPanelManager->AddUIToolState(MoveState);
+	CUIToolInputState* InputState = new CUIToolInputState(*LoadUI, *WindowIOManager, *MousePointer);
+	UIToolPanelManager->AddUIToolState(std::unique_ptr<CUIToolInputState>(InputState));
+	CUIToolMoveState* MoveState = new CUIToolMoveState;
+	UIToolPanelManager->AddUIToolState(std::unique_ptr<CUIToolMoveState>(MoveState));
 
 	UIToolPanelManager->SetCurrentUIToolState(InputState);
 
@@ -50,7 +49,7 @@ void CEditUIScene::Initalize()
 		, [UIToolPanelManager, MoveState](EKeyType InKeyType, const Vector2& InMousePosition)->void
 		{
 			UIToolPanelManager->SetCurrentUIToolState(MoveState);
-		});*/
+		});
 
 	// Todo: Move포커싱을 위에 있는 Interaction이 가져가서 Move가 뚝뚝 끊기는 현상 수정
 }

@@ -17,22 +17,22 @@ public:
 		, std::function<void(EKeyType, const Vector2&)> InMouseReleaseEvent = nullptr)
 	{
 		GetRenderComponent()->SetDiffuseImage(InBasicImagePath);
-		GetInteractionComponent()->SetMouseExitEvent([this, InBasicImagePath](const Vector2& InMousePosition)->void
+		GetInteractionComponent()->SetInteracterDeactivateEvent([this, InBasicImagePath](const Vector2& InMousePosition)->void
 			{
 				if (GetRenderComponent())
 					GetRenderComponent()->SetDiffuseImage(InBasicImagePath);
 			});
-		GetInteractionComponent()->SetMouseEnterEvent([this, InMouseOnImagePath](const Vector2& InMousePosition)->void
+		GetInteractionComponent()->SetInteracterActivateEvent([this, InMouseOnImagePath](const Vector2& InMousePosition)->void
 			{
 				if (GetRenderComponent())
 					GetRenderComponent()->SetDiffuseImage(InMouseOnImagePath);
 			});
-		GetInteractionComponent()->SetMouseFocusClickEvent([this, InMouseClickImagePath](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		GetInteractionComponent()->SetInteracterFocusMouseClickEvent([this, InMouseClickImagePath](EKeyType InKeyType, const Vector2& InMousePosition)->void
 			{
 				if (GetRenderComponent() && InMouseClickImagePath.empty() == false)
 						GetRenderComponent()->SetDiffuseImage(InMouseClickImagePath);
 			});
-		GetInteractionComponent()->SetMouseFocusReleaseEvent([this, InMouseReleaseImagePath, InMouseReleaseEvent](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		GetInteractionComponent()->SetInteracterFocusMouseReleaseEvent([this, InMouseReleaseImagePath, InMouseReleaseEvent](EKeyType InKeyType, const Vector2& InMousePosition)->void
 			{
 				if (GetRenderComponent() && InMouseReleaseImagePath.empty() == false)
 						GetRenderComponent()->SetDiffuseImage(InMouseReleaseImagePath);

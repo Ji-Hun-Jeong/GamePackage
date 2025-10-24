@@ -35,6 +35,8 @@ public:
 
 	void SetMouseImageFromDialog(class CWindowIOManager& InWindowIOManager);
 
+	Vector2 GetMousePosition() const { return MousePositionInstance->GetMousePosition(); }
+
 private:
 	CMouseManager* MouseManager;
 	std::unique_ptr<CMousePositionInstance> MousePositionInstance;

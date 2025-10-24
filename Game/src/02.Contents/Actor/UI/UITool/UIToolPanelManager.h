@@ -1,6 +1,5 @@
 #pragma once
 #include "01.Base/Object/Actor.h"
-#include "02.Contents/Actor/Base/MousePointer.h"
 #include "UIToolStates.h"
 #include "UIToolPanel.h"
 
@@ -16,42 +15,38 @@ public:
 	void Destroy() override
 	{
 		CActor::Destroy();
-		for (auto& UIToolState : UIToolStates)
-			UIToolState->Destroy();
+		if (CurrentUIToolState)
+			CurrentUIToolState->ExitState(*UIToolPanel);
+		UIToolStates.clear();
 	}
 	void Update(float InDeltaTime) override
 	{
 		CActor::Update(InDeltaTime);
 	}
-	void InitUIToolPanelManager(CUIToolPanel& InUIToolPanel, CMousePointer& InMousePointer)
+	void InitUIToolPanelManager(CUIToolPanel& InUIToolPanel)
 	{
 		UIToolPanel = &InUIToolPanel;
-		MousePointer = &InMousePointer; 
 		assert(UIToolPanel);
-		assert(MousePointer);
 	}
-	void AddUIToolState(IUIToolState* InUIToolState)
+	void AddUIToolState(std::unique_ptr<IUIToolState> InUIToolState)
 	{
 		assert(InUIToolState);
-		InUIToolState->SetUIToolPanel(UIToolPanel);
-		UIToolStates.push_back(InUIToolState);
+		UIToolStates.push_back(std::move(InUIToolState));
 	}
 	void SetCurrentUIToolState(IUIToolState* InUIToolState)
 	{
 		assert(InUIToolState);
 		if (CurrentUIToolState)
-			CurrentUIToolState->ExitState();
+			CurrentUIToolState->ExitState(*UIToolPanel);
 		CurrentUIToolState = InUIToolState;
-		CurrentUIToolState->EnterState();
+		CurrentUIToolState->EnterState(*UIToolPanel);
 	}
 
 private:
 	CUIToolPanel* UIToolPanel;
 
-	std::vector<IUIToolState*> UIToolStates;
+	std::vector<std::unique_ptr<IUIToolState>> UIToolStates;
 	IUIToolState* CurrentUIToolState;
-
-	CMousePointer* MousePointer;
 
 };
 
