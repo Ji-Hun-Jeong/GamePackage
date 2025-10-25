@@ -22,26 +22,27 @@ public:
 	{
 		CUI::Update(InDeltaTime);
 
-		CurrentFocusUI = nullptr;
+		CUI* NewFocusUI = nullptr;
 		for (auto& PlacedUI : PlacedUIs)
 		{
 			if (PlacedUI->GetInteractionComponent()->IsInteracterFocus())
 			{
-				CurrentFocusUI = PlacedUI;
+				NewFocusUI = PlacedUI;
 				break;
 			}
 		}
 
-		if (CurrentFocusUI)
+		if (CurrentFocusUI != NewFocusUI)
 		{
+			CurrentFocusUI = NewFocusUI;
 			const Vector2& MousePosition = GetInteractionComponent()->GetMousePosition();
 			if (CurrentFocusUIFoundEvent)
-				CurrentFocusUIFoundEvent(*this, *CurrentFocusUI, MousePosition);
+				CurrentFocusUIFoundEvent(*this, CurrentFocusUI, MousePosition);
 		}
 	}
-	void SetCurrentFocusUIFoundEvent(std::function<void(CUIToolPanel&, CUI&, const Vector2&)> InCurrentFocusUIFoundEvent)
+	void SetChangeFocusUIEvent(std::function<void(CUIToolPanel&, CUI*, const Vector2&)> InNewFocusUIFoundEvent)
 	{
-		CurrentFocusUIFoundEvent = InCurrentFocusUIFoundEvent;
+		CurrentFocusUIFoundEvent = InNewFocusUIFoundEvent;
 	}
 	CUI* PlaceUIOnToolPanel(CUI* InOwnerUI, const std::wstring& InUIImagePath, const Vector2& InMouseWorldPosition);
 	void EraseUIOnToolPanel(CUI* InErasedUI)
@@ -62,5 +63,5 @@ private:
 	std::vector<CUI*> PlacedUIs;
 	CUI* CurrentFocusUI;
 
-	std::function<void(CUIToolPanel&, CUI&, const Vector2&)> CurrentFocusUIFoundEvent;
+	std::function<void(CUIToolPanel&, CUI*, const Vector2&)> CurrentFocusUIFoundEvent;
 };

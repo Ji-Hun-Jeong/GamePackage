@@ -17,6 +17,8 @@ public:
 	class CActor* GetOwnerActor() const { return OwnerActor; }
 	void Destroy() override;
 	bool IsDestroy() const { return bDestroy; }
+	virtual void Serialize(CSerializer& InSerializer) const override {}
+	virtual void Deserialize(const CSerializer& InDeserializer) override {}
 
 private:
 	class CActor* OwnerActor;

@@ -4,8 +4,8 @@
 
 class CInteractionComponent : public CComponent
 {
+	DONTCOPY(CInteractionComponent)
 	GENERATE_OBJECT()
-		DONTCOPY(CInteractionComponent)
 public:
 	CInteractionComponent()
 		: MouseManager(nullptr)

@@ -46,10 +46,11 @@ void CEditUIScene::Initalize()
 	ChangeStateUI->GetTransform()->SetPosition(Vector3(500.0f, 100.0f, 0.0f));
 	ChangeStateUI->InitalizeBasicButtonUI(L"resources/image/UI/Title/PanelMove_Normal.png", L"resources/image/UI/Title/PanelMove_Hover.png"
 		, L"resources/image/UI/Title/PanelMove_Clicked.png", L"resources/image/UI/Title/PanelMove_Normal.png"
-		, [UIToolPanelManager, MoveState](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		, [this, UIToolPanel, UIToolPanelManager, MoveState](EKeyType InKeyType, const Vector2& InMousePosition)->void
 		{
-			UIToolPanelManager->SetCurrentUIToolState(MoveState);
+			// UIToolPanelManager->SetCurrentUIToolState(MoveState);
+			GetWorld()->Serialize(*UIToolPanel, "resources/data/ui/test1.json");
+			GetWorld()->Deserialize(*UIToolPanel, "resources/data/ui/test1.json");
 		});
-
-	// Todo: Move포커싱을 위에 있는 Interaction이 가져가서 Move가 뚝뚝 끊기는 현상 수정
 }
+

@@ -9,8 +9,13 @@ CUIToolInputState::CUIToolInputState(CUI& InLoadDialogUI, CWindowIOManager& InWi
 	: LoadDialogUI(InLoadDialogUI)
 	, WindowIOManager(InWindowIOManager)
 	, MousePointer(InMousePointer)
+	, CurrentFocusUI(nullptr)
 {}
 
+void CUIToolInputState::DecideOwnerUI(CUI* InFocusUI)
+{
+	CurrentFocusUI = InFocusUI;
+}
 
 void CUIToolInputState::EnterState(CUIToolPanel& InUIToolPanel)
 {
@@ -20,9 +25,14 @@ void CUIToolInputState::EnterState(CUIToolPanel& InUIToolPanel)
 				if (InKeyType == EKeyType::LButton)
 					MousePointer.SetMouseImageFromDialog(WindowIOManager);
 			});
-	InUIToolPanel.SetCurrentFocusUIFoundEvent([this](CUIToolPanel& InUIToolPanel, CUI& InCurrentClickedUI, const Vector2& InMousePosition)->void
+
+	InUIToolPanel.SetChangeFocusUIEvent([this](CUIToolPanel& InUIToolPanel, CUI* InCurrentFocusUI, const Vector2& InMousePosition)->void
 		{
-			PlaceUIOnMouseReleased(InCurrentClickedUI, InUIToolPanel);
+			DecideOwnerUI(InCurrentFocusUI);
+		});
+	InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent([this, &InUIToolPanel](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		{
+			PlaceUIOnMouseReleased(InUIToolPanel);
 		});
 }
 
@@ -30,13 +40,15 @@ void CUIToolInputState::ExitState(CUIToolPanel& InUIToolPanel)
 {
 	MousePointer.GetRenderComponent()->ResetImage();
 	LoadDialogUI.GetInteractionComponent()->SetInteracterFocusMouseReleaseEvent(nullptr);
-	InUIToolPanel.SetCurrentFocusUIFoundEvent(nullptr);
+	InUIToolPanel.SetChangeFocusUIEvent(nullptr);
+	InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent(nullptr);
 }
 
-void CUIToolInputState::PlaceUIOnMouseReleased(CUI& InFocusUI, CUIToolPanel& InUIToolPanel)
+void CUIToolInputState::PlaceUIOnMouseReleased(CUIToolPanel& InUIToolPanel)
 {
-	if (InFocusUI.GetInteractionComponent()->IsMouseReleased() == false)
+	if (CurrentFocusUI == nullptr)
 		return;
+
 	EKeyType MouseType = InUIToolPanel.GetInteractionComponent()->GetMouseType();
 
 	if (MouseType == EKeyType::LButton)
@@ -45,7 +57,7 @@ void CUIToolInputState::PlaceUIOnMouseReleased(CUI& InFocusUI, CUIToolPanel& InU
 		if (MouseImagePath.empty())
 			return;
 
-		CUI* NewUI = InUIToolPanel.PlaceUIOnToolPanel(&InFocusUI, MousePointer.GetRenderComponent()->GetCurrentImagePath()
+		CUI* NewUI = InUIToolPanel.PlaceUIOnToolPanel(CurrentFocusUI, MousePointer.GetRenderComponent()->GetCurrentImagePath()
 			, MousePointer.GetMousePosition());
 		NewUI->GetRenderComponent()->SetDiffuseImage(MouseImagePath);
 		UIStack.push(NewUI);

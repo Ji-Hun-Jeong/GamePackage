@@ -1,7 +1,6 @@
 #pragma once
 #include <nlohmann/json.hpp>
 using CSerializer = nlohmann::json;
-
 using ObjectType = size_t;
 
 class CObject
@@ -10,7 +9,6 @@ class CObject
 public:
 	virtual ~CObject() = 0
 	{
-
 	}
 
 private:
@@ -46,7 +44,8 @@ public:
 
 	virtual void SetInputAction(class CInputActionManager& InInputActionManager) {}
 
-	virtual void Serialize(CSerializer& InSerializer) const {}
+	virtual void Serialize(CSerializer& InSerializer) const = 0;
+	virtual void Deserialize(const CSerializer& InDeserializer) = 0;
 
 public:
 	void AddDestroyEvent(std::function<void(CObject&)> DestroyEvent) { DestroyEvents.push_back(DestroyEvent); }
@@ -70,3 +69,5 @@ public:\
 		return Type;\
 	}\
 	ObjectType GetType() override {return GetStaticType();};
+
+

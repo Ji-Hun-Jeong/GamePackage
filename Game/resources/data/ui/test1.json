@@ -1,0 +1,85 @@
+{
+    "Childs": [
+        {
+            "Childs": [],
+            "Components": [
+                {
+                    "Name": "CTransform",
+                    "Position": [
+                        -197.0,
+                        -54.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        140.0,
+                        35.0,
+                        1.0
+                    ],
+                    "Speed": 0.0
+                },
+                {
+                    "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\NoSkillMain.png",
+                    "Name": "CRenderComponent"
+                },
+                null
+            ]
+        },
+        {
+            "Childs": [],
+            "Components": [
+                {
+                    "Name": "CTransform",
+                    "Position": [
+                        92.0,
+                        78.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        140.0,
+                        35.0,
+                        1.0
+                    ],
+                    "Speed": 0.0
+                },
+                {
+                    "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\NoSkillMain.png",
+                    "Name": "CRenderComponent"
+                },
+                null
+            ]
+        }
+    ],
+    "Components": [
+        {
+            "Name": "CTransform",
+            "Position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "Scale": [
+                900.0,
+                600.0,
+                0.0
+            ],
+            "Speed": 0.0
+        },
+        null,
+        null
+    ]
+}

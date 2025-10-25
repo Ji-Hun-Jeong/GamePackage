@@ -32,9 +32,9 @@ public:
 		{
 			auto& Frame = Frames[i];
 			CSerializer FrameData;
-			FrameData["order"] = uint32_t(i);
-			FrameData["offset"] = { {"x", Frame.Offset.x}, {"y", Frame.Offset.y} ,{"z", Frame.Offset.z}};
-			FrameData["image_path"] = Frame.ImagePath;
+			FrameData["Order"] = uint32_t(i);
+			FrameData["Offset"] = { Frame.Offset.x , Frame.Offset.y , Frame.Offset.z};
+			FrameData["ImagePath"] = Frame.ImagePath;
 			FrameArray.push_back(FrameData);
 		}
 		InSerializer.push_back(FrameArray);

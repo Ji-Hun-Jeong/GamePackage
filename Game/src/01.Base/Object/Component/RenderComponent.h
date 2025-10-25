@@ -28,12 +28,13 @@ public:
 	void Serialize(CSerializer& InSerializer) const override
 	{
 		CComponent::Serialize(InSerializer);
-		//if (ImagePath.empty() == false)
-		//{
-		//	CSerializer Data;
-		//	Data["image_path"] = ImagePath.c_str();
-		//	InSerializer["render_component"] = Data;
-		//}
+		if (CurrentSettingImagePath.empty() == false)
+		{
+			CSerializer Data;
+			Data["Name"] = "CRenderComponent";
+			Data["ImagePath"] = CurrentSettingImagePath.c_str();
+			InSerializer = Data;
+		}
 	}
 	void SetMesh(Graphics::MeshKey InMeshKey)
 	{

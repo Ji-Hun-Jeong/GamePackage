@@ -20,11 +20,16 @@ public:
     {
         CComponent::Serialize(InSerializer);
         CSerializer Data;
-        Data["position"] = { {"x", Position.x}, {"y", Position.y} ,{"z", Position.z} };
-        Data["rotation"] = { {"x", Rotation.x}, {"y", Rotation.y} ,{"z", Rotation.z} };
-        Data["scale"] = { {"x", Scale.x}, {"y", Scale.y} ,{"z", Scale.z} };
-        Data["speed"] = Speed;
-        InSerializer["transform"] = Data;
+        Data["Name"] = "CTransform";
+        Data["Position"] = { Position.x, Position.y, Position.z };
+        Data["Rotation"] = { Rotation.x, Rotation.y, Rotation.z };
+        Data["Scale"] = { Scale.x, Scale.y, Scale.z };
+        Data["Speed"] = Speed;
+        InSerializer = Data;
+    }
+    void Deserialize(const CSerializer& InDeserializer) override
+    {
+
     }
     // =================================================================
     // Getters

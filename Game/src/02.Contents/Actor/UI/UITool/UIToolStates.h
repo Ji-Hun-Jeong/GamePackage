@@ -6,7 +6,7 @@
 class IUIToolState
 {
 public:
-	IUIToolState(){}
+	IUIToolState() {}
 	virtual ~IUIToolState() = 0 {}
 
 public:
@@ -24,7 +24,8 @@ public:
 public:
 	void EnterState(CUIToolPanel& InUIToolPanel) override;
 	void ExitState(CUIToolPanel& InUIToolPanel) override;
-	void PlaceUIOnMouseReleased(CUI& InFocusUI, CUIToolPanel& InUIToolPanel);
+	void PlaceUIOnMouseReleased(CUIToolPanel& InUIToolPanel);
+	void DecideOwnerUI(CUI* InFocusUI);
 
 private:
 	CUI& LoadDialogUI;
@@ -33,6 +34,7 @@ private:
 
 	std::stack<CUI*> UIStack;
 
+	CUI* CurrentFocusUI;
 };
 
 class CUIToolMoveState : public IUIToolState
@@ -46,9 +48,17 @@ public:
 public:
 	void EnterState(CUIToolPanel& InUIToolPanel) override
 	{
-		InUIToolPanel.SetCurrentFocusUIFoundEvent([this](CUIToolPanel& InUIToolPanel, CUI& InCurrentFocusUI, const Vector2& InMousePosition)->void
+		InUIToolPanel.SetChangeFocusUIEvent([this](CUIToolPanel& InUIToolPanel, CUI* InCurrentFocusUI, const Vector2& InMousePosition)->void
 			{
-				DecideCurrentMovedUI(InUIToolPanel, InCurrentFocusUI, InMousePosition);
+				GetCurrentFocusUI(InUIToolPanel, InCurrentFocusUI);
+			});
+		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseClickEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
+			{
+				GetCurrentMovedUIFromFocusUI(InMousePosition);
+			});
+		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
+			{
+				ReleaseMovedUI();
 			});
 		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseMoveEvent([this](const Vector2& InMousePosition)->void
 			{
@@ -57,25 +67,33 @@ public:
 	}
 	void ExitState(CUIToolPanel& InUIToolPanel) override
 	{
-		InUIToolPanel.SetCurrentFocusUIFoundEvent(nullptr);
+		InUIToolPanel.SetChangeFocusUIEvent(nullptr);
 		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseClickEvent(nullptr);
-		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseHoldedEvent(nullptr);
+		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent(nullptr);
+		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseMoveEvent(nullptr);
 	}
 
-	void DecideCurrentMovedUI(CUIToolPanel& InUIToolPanel, CUI& InCurrentFocusUI, const Vector2& InMousePosition)
+	void GetCurrentFocusUI(CUIToolPanel& InUIToolPanel, CUI* InCurrentFocusUI)
 	{
-		if (InUIToolPanel.GetInteractionComponent()->IsMouseClicked() && &InUIToolPanel != &InCurrentFocusUI)
+		if (&InUIToolPanel != InCurrentFocusUI)
 		{
-			CurrentMovedUI = &InCurrentFocusUI;
-			assert(CurrentMovedUI);
+			CurrentFocusUIOnUIToolPanel = InCurrentFocusUI;
+			std::cout << CurrentFocusUIOnUIToolPanel << std::endl;
+		}
+	}
+	void GetCurrentMovedUIFromFocusUI(const Vector2& InMousePosition)
+	{
+		if (CurrentFocusUIOnUIToolPanel)
+		{
+			CurrentMovedUI = CurrentFocusUIOnUIToolPanel;
 			MouseFocusUIDiff = InMousePosition - Vector2(CurrentMovedUI->GetTransform()->GetFinalPosition().x
 				, CurrentMovedUI->GetTransform()->GetFinalPosition().y);
 		}
-		if (InUIToolPanel.GetInteractionComponent()->IsMouseReleased())
-		{
-			if (CurrentMovedUI)
-				CurrentMovedUI = nullptr;
-		}
+	}
+	void ReleaseMovedUI()
+	{
+		if (CurrentMovedUI)
+			CurrentMovedUI = nullptr;
 	}
 
 	void MoveCurrentMovedUI(const Vector2& InMousePosition)
@@ -87,6 +105,7 @@ public:
 	}
 
 private:
+	CUI* CurrentFocusUIOnUIToolPanel = nullptr;
 	CUI* CurrentMovedUI = nullptr;
 	Vector2 MouseFocusUIDiff;
 

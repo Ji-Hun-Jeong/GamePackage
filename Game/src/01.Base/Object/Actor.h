@@ -20,8 +20,6 @@ public:
 	{}
 	virtual ~CActor()
 	{
-
-
 	}
 
 	const std::vector<CActor*>& GetChild() const { return Childs; }
@@ -166,7 +164,7 @@ protected:
 					, Transform->GetScale().x, Transform->GetScale().y);
 			}
 			for (auto& Child : Childs)
-				Child->GetTransform()->SetVariation(true);	
+				Child->GetTransform()->SetVariation(true);
 		}
 	}
 	struct TVertexConstBuffer
@@ -176,26 +174,59 @@ protected:
 	static_assert(sizeof(TVertexConstBuffer) % 16 == 0);
 
 public:
-	/*virtual void Serialize(CSerializer& InSerializer) const override
+	virtual void Serialize(CSerializer& InSerializer) const override
 	{
-		CObject::Serialize(InSerializer);
 		CSerializer ComponentArray = CSerializer::array();
-		auto Save = [this, &ComponentArray](CComponent* InComponent)->void
-			{
-				CSerializer ComponentData;
-				InComponent->Serialize(ComponentData);
-				ComponentArray.push_back(ComponentData);
-			};
-		if (Transform)
-			Save(Transform.get());
-		if (RenderComponent)
-			Save(RenderComponent.get());
-		if (Animator)
-			Save(Animator.get());
-		InSerializer["component"] = ComponentArray;
+		for (auto& Component : Components)
+		{
+			CSerializer ComponentData;
+			Component->Serialize(ComponentData);
+			ComponentArray.push_back(ComponentData);
+		}
+		InSerializer["Components"] = ComponentArray;
+
+		CSerializer ChildArray = CSerializer::array();
 		for (auto& Child : Childs)
-			Child->Serialize(InSerializer);
-	}*/
+		{
+			CSerializer ChildData;
+			Child->Serialize(ChildData);
+			ChildArray.push_back(ChildData);
+		}
+		InSerializer["Childs"] = ChildArray;
+	}
+	virtual void Deserialize(const CSerializer& InDeserializer) override
+	{
+		// "components" 키가 실제로 존재하는지 확인
+		if (InDeserializer.contains("components"))
+		{
+			// const auto&로 받아야 수정되지 않음을 보장해요.
+			const auto& ComponentArray = InDeserializer["components"]; // 또는 InDeserializer.at("components");
+
+			// 정말 배열인지 확인하는 것이 좋아요.
+			if (ComponentArray.is_array())
+			{
+				for (const auto& componentDataJson : ComponentArray)
+				{
+					//matchingComponent->Deserialize(componentDataJson);
+				}
+			}
+		}
+
+		// "childs"도 비슷하게 확인
+		if (InDeserializer.contains("childs")) {
+			const auto& ChildArray = InDeserializer["childs"];
+			if (ChildArray.is_array()) {
+				for (const auto& childDataJson : ChildArray) {
+					// childDataJson["Type"]을 보고 팩토리로 자식 액터 생성
+					// CActor* newChild = CObjectFactory::Get().Create(childDataJson["Type"]);
+					// if (newChild) {
+					//     newChild->Deserialize(childDataJson);
+					//     // Attach...
+					// }
+				}
+			}
+		}
+	}
 
 public:
 	virtual void Destroy() override;

@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 #include "WorldEvent.h"
 #include "01.Base/Object/Actor.h"
 #include "01.Base/Object/Scene.h"
@@ -75,17 +76,43 @@ public:
 		int a = 1;
 	}
 
-	void Seralize(const std::string& InSavePath)
+	void Serialize(const CActor& InSerializeActor, const std::string& InSavePath)
 	{
-		CSerializer ActorArrayData = CSerializer::array();
-		CSerializer ActorData;
-		for (auto& WorldActor : WorldActors)
+		std::ofstream OutputFileStream(InSavePath);
+		if (!OutputFileStream.is_open())
 		{
-			WorldActor->Serialize(ActorData);
-			ActorArrayData.push_back(ActorData);
+			std::cerr << "Error: Could not open file " << InSavePath << std::endl;
+			return;
 		}
-		Serializer["objects"] = ActorArrayData;
-		std::cout << Serializer.dump(4);
+		CSerializer ActorData;
+		InSerializeActor.Serialize(ActorData);
+		OutputFileStream << ActorData.dump(4);
+	}
+
+	void Deserialize(CActor& InSerializeActor, const std::string& InReadPath)
+	{
+		// 1. 파일 열기
+		std::ifstream InputFileStream(InReadPath);
+		if (!InputFileStream.is_open())
+		{
+			std::cerr << "Error: Could not open file " << InReadPath << std::endl;
+			return;
+		}
+
+		// 2. JSON 파싱
+		CSerializer ActorJson;
+		try {
+			// 파일 스트림에서 직접 json 객체로 데이터를 읽어옵니다.
+			InputFileStream >> ActorJson;
+			std::cout << ActorJson;
+		}
+		catch (CSerializer::parse_error& e) {
+			std::cerr << "Error: Failed to parse JSON file " << InReadPath << "\n"
+				<< e.what() << std::endl;
+			return;
+		}
+
+		InSerializeActor.Deserialize(ActorJson);
 	}
 
 	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
@@ -174,8 +201,6 @@ private:
 	
 	std::map<ObjectType, std::vector<std::unique_ptr<INewObjectEvent>>> NewObjectTypeEvents;
 	std::vector<std::unique_ptr<INewObjectEvent>> NewObjectEvents;
-
-	CSerializer Serializer;
 
 	std::queue<std::function<void()>> WorldSynchronizeEvents;
 
