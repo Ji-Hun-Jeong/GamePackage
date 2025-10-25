@@ -5,7 +5,7 @@
 
 class CUIToolPanelManager : public CActor
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CUIToolPanelManager)
 public:
 	CUIToolPanelManager() = default;
 	~CUIToolPanelManager() = default;

@@ -4,7 +4,7 @@
 
 class CUIToolPanel : public CUI
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CUIToolPanel)
 public:
 	CUIToolPanel() : CurrentFocusUI(nullptr) {}
 	~CUIToolPanel() {}

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "UIToolPanel.h"
-#include "01.Base/World/World.h"
 
 CUI* CUIToolPanel::PlaceUIOnToolPanel(CUI* InOwnerUI, const std::wstring& InUIImagePath, const Vector2& InMouseWorldPosition)
 {

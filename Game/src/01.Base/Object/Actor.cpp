@@ -12,8 +12,7 @@ void CActor::Destroy()
 	GetWorld()->PushWorldSynchronizeEvent([this]()->void
 		{
 			GetWorld()->MarkDestroyed();
-
-			bDestroy = true;
+			// Todo: 여따가 World한테 요청 떼달라고
 		});
 	for (auto& Child : Childs)
 		Child->Destroy();

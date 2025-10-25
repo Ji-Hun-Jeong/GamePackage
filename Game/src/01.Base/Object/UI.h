@@ -3,7 +3,7 @@
 
 class CUI : public CActor
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CUI)
 	DONTCOPY(CUI)
 public:
 	CUI() = default;

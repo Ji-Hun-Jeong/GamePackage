@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "InputActionManager.h"
-#include "01.Base/World/World.h"
+#include "01.Base/Object/Object.h"
 
 class CCallSetInputAction : public INewObjectEvent
 {

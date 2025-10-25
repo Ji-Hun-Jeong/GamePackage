@@ -6,7 +6,8 @@ using Microsoft::WRL::ComPtr;
 
 class CWindowIOManager : public CActor
 {
-	GENERATE_OBJECT()
+	DONTCOPY(CWindowIOManager)
+	GENERATE_OBJECT(CWindowIOManager)
 public:
 	CWindowIOManager() = default;
 	~CWindowIOManager() = default;

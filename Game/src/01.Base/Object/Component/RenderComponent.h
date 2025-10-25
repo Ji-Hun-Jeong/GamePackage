@@ -6,7 +6,7 @@
 
 class CRenderComponent : public CComponent
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CRenderComponent)
 public:
 	CRenderComponent()
 		: RenderStateObject(nullptr)

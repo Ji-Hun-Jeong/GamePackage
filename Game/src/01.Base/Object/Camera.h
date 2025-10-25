@@ -12,7 +12,7 @@ static_assert(sizeof(TCameraConst) % 16 == 0);
 
 class CCamera : public CActor
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CCamera)
 	DONTCOPY(CCamera)
 public:
 	CCamera()

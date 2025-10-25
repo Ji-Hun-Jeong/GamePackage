@@ -7,7 +7,6 @@ class CComponent : public CObject
 public:
 	CComponent()
 		: OwnerActor(nullptr)
-		, bDestroy(false)
 	{}
 	virtual ~CComponent();
 
@@ -15,14 +14,13 @@ public:
 	virtual void Initalize() override {}
 	void SetOwner(class CActor* InOwnerActor) override;
 	class CActor* GetOwnerActor() const { return OwnerActor; }
+
 	void Destroy() override;
-	bool IsDestroy() const { return bDestroy; }
 	virtual void Serialize(CSerializer& InSerializer) const override {}
 	virtual void Deserialize(const CSerializer& InDeserializer) override {}
 
 private:
 	class CActor* OwnerActor;
-	bool bDestroy;
 
 };
 

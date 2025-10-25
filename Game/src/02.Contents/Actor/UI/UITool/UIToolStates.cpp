@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "UIToolStates.h"
-#include "01.Base/World/World.h"
+
 #include "02.Contents/Actor/Base/MousePointer.h"
 #include "02.Contents/Actor/Base/WindowIOManager.h"
 

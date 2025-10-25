@@ -3,7 +3,7 @@
 
 class CCharacter : public CActor
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CCharacter)
 	DONTCOPY(CCharacter)
 public:
 	CCharacter() = default;

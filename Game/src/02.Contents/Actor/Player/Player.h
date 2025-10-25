@@ -4,7 +4,7 @@
 
 class CPlayer : public CActor
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CPlayer)
 	DONTCOPY(CPlayer)
 public:
 	CPlayer()

@@ -3,7 +3,7 @@
 
 class CBackGround : public CActor
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CBackGround)
 	DONTCOPY(CBackGround)
 public:
 	CBackGround() = default;

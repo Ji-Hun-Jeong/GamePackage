@@ -7,12 +7,12 @@
 
 class CActor : public CObject
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CActor)
 	DONTCOPY(CActor)
 public:
 	CActor()
 		: Owner(nullptr)
-		, bDestroy(false)
+		, bActive(true)
 		, Transform(nullptr)
 		, RenderComponent(nullptr)
 		, Animator(nullptr)
@@ -26,7 +26,7 @@ public:
 private:
 	friend class CWorld;
 	CActor* Owner;
-	bool bDestroy;
+	bool bActive;
 
 	std::vector<CActor*> Childs;
 	void Attach(CActor* InChild)
@@ -35,6 +35,11 @@ private:
 		Childs.push_back(InChild);
 	}
 public:
+	virtual void Reset() override
+	{
+		Owner = nullptr;
+		Childs.clear();
+	}
 	void Attach(CComponent* InComponent)
 	{
 		InComponent->OwnerActor = this;
@@ -97,25 +102,7 @@ protected:
 		for (auto& Component : Components)
 			Component->EndPlay();
 	}
-	void ComponentArrange()
-	{
-		if (Transform->IsDestroy())
-			Transform = nullptr;
-		if (RenderComponent && RenderComponent->IsDestroy())
-			RenderComponent = nullptr;
-		if (Animator && Animator->IsDestroy())
-			Animator = nullptr;
-		if (InteractionComponent && InteractionComponent->IsDestroy())
-			InteractionComponent = nullptr;
-		for (auto Iter = Components.begin(); Iter != Components.end();)
-		{
-			auto& Component = (*Iter);
-			if (Component->bDestroy)
-				Iter = Components.erase(Iter);
-			else
-				++Iter;
-		}
-	}
+
 	virtual void Update(float InDeltaTime)
 	{
 		if (InteractionComponent)

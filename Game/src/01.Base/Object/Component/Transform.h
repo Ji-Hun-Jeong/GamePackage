@@ -3,7 +3,7 @@
 
 class CTransform : public CComponent
 {
-    GENERATE_OBJECT()
+    GENERATE_OBJECT(CTransform)
 public:
     CTransform()
         : FinalPosition(Vector3(0.0f))

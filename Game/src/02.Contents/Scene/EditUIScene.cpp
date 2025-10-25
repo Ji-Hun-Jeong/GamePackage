@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "EditUIScene.h"
 
-#include "01.Base/World/World.h"
 #include "01.Base/Object/UI.h"
 #include "02.Contents/Actor/Player/Player.h"
 #include "02.Contents/Actor/Base/BackGround.h"
@@ -12,7 +11,6 @@
 void CEditUIScene::Initalize()
 {
 	CScene::Initalize();
-
 	CBackGround* BackGround = SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/UI/Title/Background.png");
 
@@ -48,9 +46,8 @@ void CEditUIScene::Initalize()
 		, L"resources/image/UI/Title/PanelMove_Clicked.png", L"resources/image/UI/Title/PanelMove_Normal.png"
 		, [this, UIToolPanel, UIToolPanelManager, MoveState](EKeyType InKeyType, const Vector2& InMousePosition)->void
 		{
-			// UIToolPanelManager->SetCurrentUIToolState(MoveState);
-			GetWorld()->Serialize(*UIToolPanel, "resources/data/ui/test1.json");
-			GetWorld()->Deserialize(*UIToolPanel, "resources/data/ui/test1.json");
+			//// UIToolPanelManager->SetCurrentUIToolState(MoveState);
+			//GetWorld()->Serialize(*UIToolPanel, "resources/data/ui/test1.json");
+			//GetWorld()->Deserialize(*UIToolPanel, "resources/data/ui/test1.json");
 		});
 }
-

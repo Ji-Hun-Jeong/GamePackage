@@ -1,13 +1,12 @@
 #pragma once
-#include <nlohmann/json.hpp>
-using CSerializer = nlohmann::json;
-using ObjectType = size_t;
+#include "01.Base/World/World.h"
+#include "03.Utils/InstancePool.h"
 
 template <typename T>
 extern T* NewObject(class CActor* InOwnerActor);
 
 template <typename T>
-extern T* SpawnActor(class CActor* InOwnerActor);
+extern T* SpawnActor(class CActor* InOwnerActor = nullptr);
 
 template <typename T_SCENE>
 extern void LoadScene();
@@ -16,27 +15,29 @@ class CObject
 {
 	DONTCOPY(CObject)
 public:
-	virtual ~CObject() = 0
-	{
-	}
-
-private:
-	friend class CWorld;
-	class CWorld* World;
-	UINT InstanceId;
-
-protected:
-	class CWorld* GetWorld() { return World; }
-	virtual void SetOwner(class CActor* InOwnerActor) = 0;
-public:
-	UINT GetInstanceId() const { return InstanceId; }
-
-protected:
 	CObject()
 		: InstanceId(0)
 		, World(nullptr)
 	{
 	}
+	virtual ~CObject() = 0
+	{
+	}
+	
+private:
+	friend class CWorld;
+	CWorld* World;
+	UINT InstanceId;
+
+protected:
+	CWorld* GetWorld() { return World; }
+	virtual void SetOwner(class CActor* InOwnerActor) = 0;
+
+public:
+	UINT GetInstanceId() const { return InstanceId; }
+
+protected:
+	
 
 public:
 	virtual void BeginPlay()
@@ -50,6 +51,11 @@ public:
 	}
 	virtual void Initalize() = 0;
 	virtual void Destroy() = 0;
+	virtual void Reset()
+	{
+		DestroyEvents.clear();
+		World = nullptr;
+	}
 
 	virtual void SetInputAction(class CInputActionManager& InInputActionManager) {}
 
@@ -70,13 +76,14 @@ private:
 
 };
 
-#define GENERATE_OBJECT() \
+
+
+#define GENERATE_OBJECT(Class) \
 public:\
 	static ObjectType GetStaticType()\
 	{\
 		static ObjectType Type = SetType();\
 		return Type;\
 	}\
-	ObjectType GetType() override {return GetStaticType();};
-
+	ObjectType GetType() override {return GetStaticType();};\
 

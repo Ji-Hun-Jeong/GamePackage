@@ -5,7 +5,7 @@
 
 class CMousePointer : public CActor
 {
-	GENERATE_OBJECT()
+	GENERATE_OBJECT(CMousePointer)
 public:
 	CMousePointer()
 		: MouseManager(nullptr)

@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Player.h"
 #include "05.Input/InputActionManager.h"
-#include "01.Base/World/World.h"
 
 CPlayer::~CPlayer()
 {

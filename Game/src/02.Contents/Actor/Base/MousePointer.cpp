@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "MousePointer.h"
 #include "WindowIOManager.h"
-#include "01.Base/World/World.h"
 
 void CMousePointer::Initalize()
 {
