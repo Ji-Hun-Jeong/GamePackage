@@ -7,5 +7,5 @@
 void CScene::Initalize()
 {
 	CActor::Initalize();
-	MainCamera = GetWorld()->SpawnActor<CCamera>(this);
+	MainCamera = SpawnActor<CCamera>(this);
 }

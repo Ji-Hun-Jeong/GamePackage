@@ -13,7 +13,7 @@ public:
 
 public:
 	virtual void Initalize() override {}
-	void SetOwner(class CActor* InOwnerActor) { assert(InOwnerActor); OwnerActor = InOwnerActor; }
+	void SetOwner(class CActor* InOwnerActor) override;
 	class CActor* GetOwnerActor() const { return OwnerActor; }
 	void Destroy() override;
 	bool IsDestroy() const { return bDestroy; }

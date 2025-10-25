@@ -29,19 +29,21 @@ private:
 	bool bDestroy;
 
 	std::vector<CActor*> Childs;
-	CActor* Attach(CActor* InChild)
+	void Attach(CActor* InChild)
 	{
 		InChild->Owner = this;
 		Childs.push_back(InChild);
-		return InChild;
-	}
-	CComponent* Attach(CComponent* InComponent)
-	{
-		InComponent->SetOwner(this);
-		Components.emplace_back(InComponent);
-		return InComponent;
 	}
 public:
+	void Attach(CComponent* InComponent)
+	{
+		InComponent->OwnerActor = this;
+		Components.emplace_back(InComponent);
+	}
+	void SetOwner(CActor* InOwnerActor) override
+	{
+		InOwnerActor->Attach(this);
+	}
 	void Detach(CActor* InChild)
 	{
 		for (auto Iter = Childs.begin(); Iter != Childs.end(); ++Iter)

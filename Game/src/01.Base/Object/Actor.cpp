@@ -4,7 +4,7 @@
 
 void CActor::Initalize()
 {
-	Transform = GetWorld()->NewObject<CTransform>(this);
+	Transform = NewObject<CTransform>(this);
 }
 
 void CActor::Destroy()
@@ -23,7 +23,7 @@ void CActor::Destroy()
 
 void CActor::SetRenderComponent()
 {
-	RenderComponent = GetWorld()->NewObject<CRenderComponent>(this);
+	RenderComponent = NewObject<CRenderComponent>(this);
 
 	RenderComponent->AddImageChangeEvent([this](const Vector2& InImageSize)->void
 		{
@@ -36,11 +36,11 @@ void CActor::SetRenderComponent()
 
 void CActor::SetInteractionComponent()
 {
-	InteractionComponent = GetWorld()->NewObject<CInteractionComponent>(this);
+	InteractionComponent = NewObject<CInteractionComponent>(this);
 }
 
 void CActor::SetAnimator()
 {
 	assert(RenderComponent);
-	Animator = GetWorld()->NewObject<CAnimator>(this);
+	Animator = NewObject<CAnimator>(this);
 }

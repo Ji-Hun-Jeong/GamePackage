@@ -12,7 +12,7 @@ void CPlayer::Initalize()
 {
 	CActor::Initalize();
 
-	Body = GetWorld()->SpawnActor<CCharacter>(this);
+	Body = SpawnActor<CCharacter>(this);
 	Body->SetAnimator();
 	CAnimation* Animation = new CAnimation(true);
 	TFrame Frame;
@@ -29,11 +29,11 @@ void CPlayer::Initalize()
 	Body->GetAnimator()->AddAnimation("Basic", std::unique_ptr<CAnimation>(Animation));
 	Body->GetAnimator()->SetCurrentAnimation("Basic");
 
-	Head = GetWorld()->SpawnActor<CCharacter>(this);
+	Head = SpawnActor<CCharacter>(this);
 	Head->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/Head_Front.png");
 	Head->GetTransform()->SetPosition(Vector3(5.0f, 6.5f, 0.0f));
 
-	Arm = GetWorld()->SpawnActor<CCharacter>(this);
+	Arm = SpawnActor<CCharacter>(this);
 	Arm->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/stand/Arm0.png");
 	Arm->GetTransform()->SetPosition(Vector3(2.0f, 0.0f, 0.0f));
 

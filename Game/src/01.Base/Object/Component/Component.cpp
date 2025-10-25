@@ -8,6 +8,11 @@ CComponent::~CComponent()
 
 }
 
+void CComponent::SetOwner(CActor* InOwnerActor)
+{
+	InOwnerActor->Attach(this);
+}
+
 void CComponent::Destroy()
 {
 	GetWorld()->PushWorldSynchronizeEvent([this]()->void

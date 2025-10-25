@@ -117,60 +117,91 @@ public:
 
 	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
 
-	template <typename T>
-	T* NewObject(CActor* InOwner)
+	void InitalizeObject(CObject* InObject, CActor* InOwnerActor)
 	{
-		T* Object = new T;
-		Object->InstanceId = NumberGenerator.GenerateNumber();
-		Object->World = this;
+		InObject->InstanceId = NumberGenerator.GenerateNumber();
+		InObject->World = this;
 
-		if (InOwner)
-			InOwner->Attach(Object);
+		if (InOwnerActor)
+			InObject->SetOwner(InOwnerActor);
 
-		Object->Initalize();
+		InObject->Initalize();
 
-		auto Iter = NewObjectTypeEvents.find(T::GetStaticType());
+		auto Iter = NewObjectTypeEvents.find(InObject->GetType());
 		if (Iter != NewObjectTypeEvents.end())
 		{
 			for (auto& NewObjectTypeEvent : Iter->second)
-				NewObjectTypeEvent->CreatedInWorld(*this, *Object);
+				NewObjectTypeEvent->CreatedInWorld(*this, *InObject);
 		}
 		for (auto& NewObjectEvent : NewObjectEvents)
-			NewObjectEvent->CreatedInWorld(*this, *Object);
-
-		return Object;
+			NewObjectEvent->CreatedInWorld(*this, *InObject);
 	}
-
-	template <typename T>
-	T* SpawnActor(CActor* InOwner = nullptr)
+	void AddActor(CActor* InActor)
 	{
-		T* Actor = NewObject<T>(InOwner);
-
-		NextAddedWorldActors.emplace(Actor);
-
-		return Actor;
+		NextAddedWorldActors.emplace(InActor);
 	}
-
-	template <typename T_SCENE>
-	void LoadScene()
-	{
-		WorldSynchronizeEvents.push([this]()->void
-			{
-				LoadSceneImmediate<T_SCENE>();
-			});
-	}
-
-private:
-	template <typename T_SCENE>
-	void LoadSceneImmediate()
+	void ClearWorld()
 	{
 		while (NextAddedWorldActors.empty() == false)
 			NextAddedWorldActors.pop();
 
 		for (auto& WorldActor : WorldActors)
 			WorldActor->Destroy();
-		SpawnActor<T_SCENE>();
 	}
+//	template <typename T>
+//	T* NewObject(CActor* InOwner)
+//	{
+//		T* Object = new T;
+//		Object->InstanceId = NumberGenerator.GenerateNumber();
+//		Object->World = this;
+//
+//		if (InOwner)
+//			InOwner->Attach(Object);
+//
+//		Object->Initalize();
+//
+//		auto Iter = NewObjectTypeEvents.find(T::GetStaticType());
+//		if (Iter != NewObjectTypeEvents.end())
+//		{
+//			for (auto& NewObjectTypeEvent : Iter->second)
+//				NewObjectTypeEvent->CreatedInWorld(*this, *Object);
+//		}
+//		for (auto& NewObjectEvent : NewObjectEvents)
+//			NewObjectEvent->CreatedInWorld(*this, *Object);
+//
+//		return Object;
+//	}
+//
+//	template <typename T>
+//	T* SpawnActor(CActor* InOwner = nullptr)
+//	{
+//		T* Actor = NewObject<T>(InOwner);
+//
+//		NextAddedWorldActors.emplace(Actor);
+//
+//		return Actor;
+//	}
+//
+//	template <typename T_SCENE>
+//	void LoadScene()
+//	{
+//		WorldSynchronizeEvents.push([this]()->void
+//			{
+//				LoadSceneImmediate<T_SCENE>();
+//			});
+//	}
+//
+//private:
+//	template <typename T_SCENE>
+//	void LoadSceneImmediate()
+//	{
+//		while (NextAddedWorldActors.empty() == false)
+//			NextAddedWorldActors.pop();
+//
+//		for (auto& WorldActor : WorldActors)
+//			WorldActor->Destroy();
+//		SpawnActor<T_SCENE>();
+//	}
 
 public:
 	const std::vector<std::unique_ptr<CActor>>& GetWorldActors() const { return WorldActors; }
@@ -205,3 +236,31 @@ private:
 	std::queue<std::function<void()>> WorldSynchronizeEvents;
 
 };
+
+extern CWorld* g_World;
+
+template <typename T>
+T* NewObject(CActor* InOwnerActor)
+{
+	T* Object = new T;
+	g_World->InitalizeObject(Object, InOwnerActor);
+	return Object;
+}
+
+template <typename T>
+T* SpawnActor(CActor* InOwnerActor = nullptr)
+{
+	T* Actor = NewObject<T>(InOwnerActor);
+	g_World->AddActor(Actor);
+	return Actor;
+}
+
+template <typename T_SCENE>
+void LoadScene()
+{
+	g_World->PushWorldSynchronizeEvent([]()->void
+		{
+			g_World->ClearWorld();
+			SpawnActor<T_SCENE>();
+		});
+}

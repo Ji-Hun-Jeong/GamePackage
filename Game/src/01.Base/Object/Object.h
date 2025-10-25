@@ -3,6 +3,15 @@
 using CSerializer = nlohmann::json;
 using ObjectType = size_t;
 
+template <typename T>
+extern T* NewObject(class CActor* InOwnerActor);
+
+template <typename T>
+extern T* SpawnActor(class CActor* InOwnerActor);
+
+template <typename T_SCENE>
+extern void LoadScene();
+
 class CObject
 {
 	DONTCOPY(CObject)
@@ -18,7 +27,7 @@ private:
 
 protected:
 	class CWorld* GetWorld() { return World; }
-
+	virtual void SetOwner(class CActor* InOwnerActor) = 0;
 public:
 	UINT GetInstanceId() const { return InstanceId; }
 
