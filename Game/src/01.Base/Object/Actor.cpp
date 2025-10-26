@@ -9,11 +9,7 @@ void CActor::Initalize()
 
 void CActor::Destroy()
 {
-	GetWorld()->PushWorldSynchronizeEvent([this]()->void
-		{
-			GetWorld()->MarkDestroyed();
-			// Todo: 여따가 World한테 요청 떼달라고
-		});
+	GetWorld()->DestroyObject(this);
 	for (auto& Child : Childs)
 		Child->Destroy();
 	for (auto& Component : Components)

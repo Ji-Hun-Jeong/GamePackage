@@ -45,9 +45,15 @@ public:
 		InComponent->OwnerActor = this;
 		Components.emplace_back(InComponent);
 	}
+	void ResetOwner(CActor* InOwnerActor) override
+	{
+		if (InOwnerActor)
+			InOwnerActor->Detach(this);
+	}
 	void SetOwner(CActor* InOwnerActor) override
 	{
-		InOwnerActor->Attach(this);
+		if (InOwnerActor)
+			InOwnerActor->Attach(this);
 	}
 	void Detach(CActor* InChild)
 	{
@@ -60,9 +66,20 @@ public:
 			}
 		}
 	}
+	void Detach(CComponent* InComponent)
+	{
+		for (auto Iter = Components.begin(); Iter != Components.end(); ++Iter)
+		{
+			if (Iter->get() == InComponent)
+			{
+				Components.erase(Iter);
+				break;
+			}
+		}
+	}
 
 public:
-	CActor* GetOwner() { return Owner; }
+	CActor* GetOwner() const override { return Owner; }
 	CTransform* GetTransform() const { return Transform; }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
 	CAnimator* GetAnimator() const { return Animator; }
@@ -218,7 +235,7 @@ public:
 	}
 
 public:
-	virtual void Destroy() override;
+	void Destroy() override final;
 
 };
 

@@ -8,7 +8,6 @@
 CWorld* g_World = nullptr;
 
 CWorld::CWorld()
-	: bFlagDestroyedWorldObject(false)
 {
 	g_World = this;
 }
@@ -25,22 +24,12 @@ void CWorld::Start()
 
 void CWorld::Arrange()
 {
-	// 오브젝트 넣어놓고 Destroy인놈들 number빼서 풀에 다시 넣어야됌
-	for (auto& WorldActor : WorldActors)
+	while (NextDeletedObjects.empty() == false)
 	{
-		if (WorldActor->bDestroy)
-			WorldActor->EndPlay();
-	}
-	for (auto& WorldActor : WorldActors)
-		WorldActor->ComponentArrange();
+		CObject* Object = NextDeletedObjects.front();
+		NextDeletedObjects.pop();
 
-	if (bFlagDestroyedWorldObject == false)
-		return;
-
-	for (auto& WorldActor : WorldActors)
-	{
-		if (WorldActor->bDestroy && WorldActor->Owner)
-			WorldActor->Owner->Detach(WorldActor.get());
+		Object->ResetOwner(Object->GetOwner());
 	}
 
 	// 3. 한 번에 제거 (O(n))
@@ -48,7 +37,6 @@ void CWorld::Arrange()
 		[](const auto& Actor) { return Actor->bDestroy; });
 	WorldActors.erase(NewEnd, WorldActors.end());
 
-	bFlagDestroyedWorldObject = false;
 }
 
 void CWorld::Ready()
@@ -83,6 +71,54 @@ void CWorld::CaptureSnapShot()
 {
 	for (auto& WorldActor : WorldActors)
 		WorldActor->CaptureSnapShot();
+}
+
+
+
+void CWorld::InitalizeObject(CObject* InObject, CActor* InOwnerActor)
+{
+	InObject->InstanceId = NumberGenerator.GenerateNumber();
+	InObject->World = this;
+
+	if (InOwnerActor)
+		InObject->SetOwner(InOwnerActor);
+
+	InObject->Initalize();
+
+	auto Iter = NewObjectTypeEvents.find(InObject->GetType());
+	if (Iter != NewObjectTypeEvents.end())
+	{
+		for (auto& NewObjectTypeEvent : Iter->second)
+			NewObjectTypeEvent->CreatedInWorld(*this, *InObject);
+	}
+	for (auto& NewObjectEvent : NewObjectEvents)
+		NewObjectEvent->CreatedInWorld(*this, *InObject);
+}
+
+void CWorld::AppearActor(CActor* InActor)
+{
+	NextAddedWorldActors.emplace(InActor);
+}
+
+void CWorld::ClearWorld()
+{
+	while (NextAddedWorldActors.empty() == false)
+		NextAddedWorldActors.pop();
+
+	for (auto& WorldActor : WorldActors)
+		WorldActor->Destroy();
+}
+
+void CWorld::DestroyObject(CObject* InObject)
+{
+	PushWorldSynchronizeEvent([this, InObject]()->void
+		{
+			if (InObject->bDestroy)
+				return;
+			InObject->bDestroy = true;
+			InObject->EndPlay();
+			NextDeletedObjects.push(InObject);
+		});
 }
 
 void CWorld::Serialize(const CActor& InSerializeActor, const std::string& InSavePath)
@@ -122,46 +158,4 @@ void CWorld::Deserialize(CActor& InSerializeActor, const std::string& InReadPath
 	}
 
 	InSerializeActor.Deserialize(ActorJson);
-}
-
-void CWorld::InitalizeObject(CObject* InObject, CActor* InOwnerActor)
-{
-	InObject->InstanceId = NumberGenerator.GenerateNumber();
-	InObject->World = this;
-
-	if (InOwnerActor)
-		InObject->SetOwner(InOwnerActor);
-
-	InObject->Initalize();
-
-	auto Iter = NewObjectTypeEvents.find(InObject->GetType());
-	if (Iter != NewObjectTypeEvents.end())
-	{
-		for (auto& NewObjectTypeEvent : Iter->second)
-			NewObjectTypeEvent->CreatedInWorld(*this, *InObject);
-	}
-	for (auto& NewObjectEvent : NewObjectEvents)
-		NewObjectEvent->CreatedInWorld(*this, *InObject);
-}
-
-void CWorld::AppearActor(CActor* InActor)
-{
-	NextAddedWorldActors.emplace(InActor);
-}
-
-void CWorld::ClearWorld()
-{
-	while (NextAddedWorldActors.empty() == false)
-		NextAddedWorldActors.pop();
-
-	for (auto& WorldActor : WorldActors)
-		WorldActor->Destroy();
-}
-
-void CWorld::ResetObject(CObject* InObject, CActor* InOwnerActor)
-{
-}
-
-void CWorld::DisappearActor(CActor* InActor, CActor* InOwnerActor)
-{
 }

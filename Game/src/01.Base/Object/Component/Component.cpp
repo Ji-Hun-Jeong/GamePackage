@@ -7,6 +7,11 @@ CComponent::~CComponent()
 
 }
 
+void CComponent::ResetOwner(CActor* InOwnerActor)
+{
+	InOwnerActor->Detach(this);
+}
+
 void CComponent::SetOwner(CActor* InOwnerActor)
 {
 	InOwnerActor->Attach(this);
@@ -14,10 +19,5 @@ void CComponent::SetOwner(CActor* InOwnerActor)
 
 void CComponent::Destroy()
 {
-	// 얘 단독으로 지워도 다음 프레임에 지워져야 하기 때문에
-	GetWorld()->PushWorldSynchronizeEvent([this]()->void
-		{
-			// Todo: World에게 요청
-			EndPlay();
-		});
+	GetWorld()->DestroyObject(this);
 }

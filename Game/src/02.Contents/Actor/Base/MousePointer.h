@@ -14,9 +14,9 @@ public:
 
 public:
 	void Initalize() override;
-	void Destroy() override
+	void EndPlay() override
 	{
-		CActor::Destroy();
+		CActor::EndPlay();
 		MouseManager->SetMousePositionInstance(nullptr);
 	}
 	void FinalUpdate() override

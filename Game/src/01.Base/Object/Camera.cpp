@@ -22,6 +22,15 @@ void CCamera::BeginPlay()
 	GetRenderComponent()->AddVertexConstBuffer(sizeof(CameraConst));
 }
 
+void CCamera::EndPlay()
+{
+	CActor::EndPlay();
+	LeftMoveActionValue->Destroy();
+	RightMoveActionValue->Destroy();
+	UpMoveActionValue->Destroy();
+	DownMoveActionValue->Destroy();
+}
+
 void CCamera::FinalUpdate()
 {
 	CActor::FinalUpdate();
@@ -67,11 +76,3 @@ void CCamera::SetInputAction(CInputActionManager& InInputActionManager)
 		});
 }
 
-void CCamera::Destroy()
-{
-	CActor::Destroy();
-	LeftMoveActionValue->Destroy();
-	RightMoveActionValue->Destroy();
-	UpMoveActionValue->Destroy();
-	DownMoveActionValue->Destroy();
-}

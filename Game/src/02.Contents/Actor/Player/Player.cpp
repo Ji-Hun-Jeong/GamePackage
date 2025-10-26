@@ -36,32 +36,21 @@ void CPlayer::Initalize()
 	Arm->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/stand/Arm0.png");
 	Arm->GetTransform()->SetPosition(Vector3(2.0f, 0.0f, 0.0f));
 
-
 	GetTransform()->SetSpeed(2.0f);
+}
+
+void CPlayer::EndPlay()
+{
+	CActor::EndPlay();
+	LeftMoveActionValue->Destroy();
+	RightMoveActionValue->Destroy();
+	UpMoveActionValue->Destroy();
+	DownMoveActionValue->Destroy();
 }
 
 void CPlayer::Update(float InDeltaTime)
 {
 	CActor::Update(InDeltaTime);
-}
-
-void CPlayer::Destroy()
-{
-	CActor::Destroy();
-
-	LeftMoveActionValue->Destroy();
-	RightMoveActionValue->Destroy();
-	UpMoveActionValue->Destroy();
-	DownMoveActionValue->Destroy();
-
-	if (Head)
-		Head->Destroy();
-	if (Body)
-		Body->Destroy();
-	if (Arm)
-		Arm->Destroy();
-	if (Hand)
-		Hand->Destroy();
 }
 
 void CPlayer::SetInputAction(CInputActionManager& InInputActionManager)

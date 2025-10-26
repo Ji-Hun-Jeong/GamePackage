@@ -21,8 +21,8 @@ public:
 
 public:
 	void Initalize() override;
+	void EndPlay() override;
 	void Update(float InDeltaTime) override;
-	void Destroy() override;
 	void SetInputAction(class CInputActionManager& InInputActionManager);
 
 private:

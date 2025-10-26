@@ -12,9 +12,9 @@ public:
 
 public:
 	void Initalize() override;
-	void Destroy() override
+	void EndPlay() override
 	{
-		CActor::Destroy();
+		CActor::EndPlay();
 		if (CurrentUIToolState)
 			CurrentUIToolState->ExitState(*UIToolPanel);
 		UIToolStates.clear();

@@ -26,6 +26,7 @@ public:
 public:
 	void Initalize() override;
 	void BeginPlay() override;
+	void EndPlay() override;
 	void FinalUpdate() override;
 	void CaptureSnapShot() override;
 	void SetInputAction(class CInputActionManager& InInputActionManager) override;
@@ -35,7 +36,6 @@ public:
 		CameraConst.ScreenHeight = InScreenHeight;
 	}
 	void SetTransformEvent(std::function<void(const Vector2&)> TransformEvent) { TransformEvents.push_back(TransformEvent); }
-	void Destroy() override;
 
 private:
 	TCameraConst CameraConst;

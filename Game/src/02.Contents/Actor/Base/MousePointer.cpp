@@ -7,6 +7,7 @@ void CMousePointer::Initalize()
 	CActor::Initalize();
 	SetRenderComponent();
 }
+
 void CMousePointer::SetMouseImageFromDialog(CWindowIOManager& InWindowIOManager)
 {
 	if (InWindowIOManager.TryOpenFileDialog())

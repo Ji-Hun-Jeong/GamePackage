@@ -18,6 +18,7 @@ public:
 	CObject()
 		: InstanceId(0)
 		, World(nullptr)
+		, bDestroy(false)
 	{
 	}
 	virtual ~CObject() = 0
@@ -28,11 +29,13 @@ private:
 	friend class CWorld;
 	CWorld* World;
 	UINT InstanceId;
+	bool bDestroy;
 
 protected:
 	CWorld* GetWorld() { return World; }
+	virtual void ResetOwner(class CActor* InOwnerActor) = 0;
 	virtual void SetOwner(class CActor* InOwnerActor) = 0;
-
+	virtual class CActor* GetOwner() const = 0;
 public:
 	UINT GetInstanceId() const { return InstanceId; }
 

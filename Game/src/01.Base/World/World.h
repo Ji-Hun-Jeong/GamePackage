@@ -31,8 +31,7 @@ public:
 	void InitalizeObject(class CObject* InObject, class CActor* InOwnerActor);
 	void AppearActor(class CActor* InActor);
 	void ClearWorld();
-	void ResetObject(class CObject* InObject, class CActor* InOwnerActor);
-	void DisappearActor(class CActor* InActor, class CActor* InOwnerActor);
+	void DestroyObject(class CObject* InObject);
 	
 public:
 	const std::vector<std::unique_ptr<CActor>>& GetWorldActors() const { return WorldActors; }
@@ -56,7 +55,7 @@ public:
 private:
 	std::vector<std::unique_ptr<class CActor>> WorldActors;
 	std::queue<std::unique_ptr<class CActor>> NextAddedWorldActors;
-	bool bFlagDestroyedWorldObject;
+	std::queue<class CObject*> NextDeletedObjects;
 
 	CNumberGenerator NumberGenerator;
 	
@@ -91,6 +90,9 @@ void LoadScene()
 	g_World->PushWorldSynchronizeEvent([]()->void
 		{
 			g_World->ClearWorld();
-			SpawnActor<T_SCENE>();
+			g_World->PushWorldSynchronizeEvent([]()->void
+				{
+					SpawnActor<T_SCENE>();
+				});
 		});
 }
