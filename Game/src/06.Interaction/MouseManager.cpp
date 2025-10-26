@@ -22,9 +22,23 @@ private:
 		if (CMousePointer::GetStaticType() == InNewObject.GetType())
 		{
 			CMousePointer* MousePointer = static_cast<CMousePointer*>(&InNewObject);
-			MousePointer->SetMouseManager(MouseManager);
+			
+			GetMousePointer = [this](CObject& InObject)->void
+				{
+					CMousePointer* MousePointer = static_cast<CMousePointer*>(&InObject);
+					MouseManager.SetMousePositionInstance(MousePointer->GetMousePositionInstance());
+				};
+			ReleaseMousePointer = [this](CObject& InObject)->void
+				{
+					CMousePointer* MousePointer = static_cast<CMousePointer*>(&InObject);
+					MouseManager.SetMousePositionInstance(nullptr);
+				};
+			MousePointer->AddBeginEvent(GetMousePointer);
+			MousePointer->AddEndEvent(ReleaseMousePointer);
 		}
 	}
+	std::function<void(CObject&)> GetMousePointer;
+	std::function<void(CObject&)> ReleaseMousePointer;
 
 	CMouseManager& MouseManager;
 };

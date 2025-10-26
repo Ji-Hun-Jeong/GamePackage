@@ -8,7 +8,7 @@ class CMousePointer : public CActor
 	GENERATE_OBJECT(CMousePointer)
 public:
 	CMousePointer()
-		: MouseManager(nullptr)
+		: MousePositionInstance(std::make_unique<CMousePositionInstance>())
 	{}
 	~CMousePointer() = default;
 
@@ -17,7 +17,6 @@ public:
 	void EndPlay() override
 	{
 		CActor::EndPlay();
-		MouseManager->SetMousePositionInstance(nullptr);
 	}
 	void FinalUpdate() override
 	{
@@ -26,19 +25,13 @@ public:
 		MousePositionInstance->SetMousePosition(
 			Vector2(GetTransform()->GetFinalPosition().x, GetTransform()->GetFinalPosition().y));
 	}
-	void SetMouseManager(CMouseManager& InMouseManager)
-	{
-		MouseManager = &InMouseManager;
-		MousePositionInstance = std::make_unique<CMousePositionInstance>();
-		MouseManager->SetMousePositionInstance(MousePositionInstance.get());
-	}
 
 	void SetMouseImageFromDialog(class CWindowIOManager& InWindowIOManager);
-
 	Vector2 GetMousePosition() const { return MousePositionInstance->GetMousePosition(); }
 
+	const CMousePositionInstance* GetMousePositionInstance() const { return MousePositionInstance.get(); }
+
 private:
-	CMouseManager* MouseManager;
 	std::unique_ptr<CMousePositionInstance> MousePositionInstance;
 
 };

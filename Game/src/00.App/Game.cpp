@@ -33,7 +33,6 @@ bool CGame::Process()
 	World.Ready();
 
 	InputActionManager.PerformAction();
-
 	MouseManager.FindCurrentInteracter();
 
 	World.Update();

@@ -29,6 +29,7 @@ void CWorld::Arrange()
 		CObject* Object = NextDeletedObjects.front();
 		NextDeletedObjects.pop();
 
+		Object->EndPlay();
 		Object->ResetOwner(Object->GetOwner());
 	}
 
@@ -116,7 +117,6 @@ void CWorld::DestroyObject(CObject* InObject)
 			if (InObject->bDestroy)
 				return;
 			InObject->bDestroy = true;
-			InObject->EndPlay();
 			NextDeletedObjects.push(InObject);
 		});
 }

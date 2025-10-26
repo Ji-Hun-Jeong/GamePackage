@@ -47,7 +47,7 @@ void CEditUIScene::Initalize()
 		, [this, UIToolPanel, UIToolPanelManager, MoveState](EKeyType InKeyType, const Vector2& InMousePosition)->void
 		{
 			//// UIToolPanelManager->SetCurrentUIToolState(MoveState);
-			//GetWorld()->Serialize(*UIToolPanel, "resources/data/ui/test1.json");
-			//GetWorld()->Deserialize(*UIToolPanel, "resources/data/ui/test1.json");
+			GetWorld()->Serialize(*UIToolPanel, "resources/data/ui/test1.json");
+			GetWorld()->Deserialize(*UIToolPanel, "resources/data/ui/test1.json");
 		});
 }

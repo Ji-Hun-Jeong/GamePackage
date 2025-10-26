@@ -6,8 +6,8 @@
                 {
                     "Name": "CTransform",
                     "Position": [
-                        -197.0,
-                        -54.0,
+                        46.0,
+                        -62.0,
                         0.0
                     ],
                     "Rotation": [
@@ -16,27 +16,57 @@
                         0.0
                     ],
                     "Scale": [
-                        140.0,
-                        35.0,
+                        318.0,
+                        361.0,
                         1.0
                     ],
                     "Speed": 0.0
                 },
                 {
-                    "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\NoSkillMain.png",
+                    "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\Skill_background.png",
                     "Name": "CRenderComponent"
                 },
                 null
             ]
         },
         {
-            "Childs": [],
+            "Childs": [
+                {
+                    "Childs": [],
+                    "Components": [
+                        {
+                            "Name": "CTransform",
+                            "Position": [
+                                -7.0,
+                                129.0,
+                                0.0
+                            ],
+                            "Rotation": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "Scale": [
+                                318.0,
+                                361.0,
+                                1.0
+                            ],
+                            "Speed": 0.0
+                        },
+                        {
+                            "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\Skill_background.png",
+                            "Name": "CRenderComponent"
+                        },
+                        null
+                    ]
+                }
+            ],
             "Components": [
                 {
                     "Name": "CTransform",
                     "Position": [
-                        92.0,
-                        78.0,
+                        -206.0,
+                        -15.0,
                         0.0
                     ],
                     "Rotation": [
@@ -45,14 +75,14 @@
                         0.0
                     ],
                     "Scale": [
-                        140.0,
-                        35.0,
+                        318.0,
+                        361.0,
                         1.0
                     ],
                     "Speed": 0.0
                 },
                 {
-                    "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\NoSkillMain.png",
+                    "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\Skill_background.png",
                     "Name": "CRenderComponent"
                 },
                 null

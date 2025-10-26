@@ -48,12 +48,23 @@ private:
 	void CreatedInWorld(CWorld& InWorld, CObject& InNewObject) override
 	{
 		CMousePointer& MousePointer = static_cast<CMousePointer&>(InNewObject);
-		Core::IMouseMove* SetMousePositionToActor = Window.RegistMouseMoveEvent(std::make_unique<CSetMousePositionToActor>(MousePointer, MouseManager));
-		MousePointer.AddDestroyEvent([this, SetMousePositionToActor](CObject& InObject)->void
+		
+		BindMousePointer = [this](CObject& InObject)->void
+			{
+				CMousePointer& MousePointer = static_cast<CMousePointer&>(InObject);
+				SetMousePositionToActor = Window.RegistMouseMoveEvent(std::make_unique<CSetMousePositionToActor>(MousePointer, MouseManager));
+			};
+		UnBindMousePointer = [this](CObject& InObject)->void
 			{
 				Window.DeRegistMouseMoveEvent(SetMousePositionToActor);
-			});
+			};
+		MousePointer.AddBeginEvent(BindMousePointer);
+		MousePointer.AddEndEvent(UnBindMousePointer);
 	}
+	std::function<void(CObject&)> BindMousePointer;
+	std::function<void(CObject&)> UnBindMousePointer;
+	Core::IMouseMove* SetMousePositionToActor;
+
 	Core::CWindow& Window;
 	CMouseManager& MouseManager;
 };

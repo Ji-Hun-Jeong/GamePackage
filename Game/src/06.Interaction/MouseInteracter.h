@@ -22,17 +22,6 @@ public:
 	void SetSize(const Vector2& InSize) { Size = InSize; }
 
 	void AttachChildInteracter(CMouseInteracter* InChildInteracter) { ChildInteracters.push_back(InChildInteracter); }
-	void DetachChildInteracter(CMouseInteracter* InChildInteracter)
-	{
-		for (auto Iter = ChildInteracters.begin(); Iter != ChildInteracters.end(); ++Iter)
-		{
-			if ((*Iter) == InChildInteracter)
-			{
-				ChildInteracters.erase(Iter);
-				break;
-			}
-		}
-	}
 
 	bool IsMouseEnter() const { return bMouseEnter; }
 	bool IsMouseOn() const { return bMouseOn; }

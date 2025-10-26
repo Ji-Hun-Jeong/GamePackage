@@ -24,7 +24,7 @@ public:
 	virtual ~CObject() = 0
 	{
 	}
-	
+
 private:
 	friend class CWorld;
 	CWorld* World;
@@ -40,23 +40,24 @@ public:
 	UINT GetInstanceId() const { return InstanceId; }
 
 protected:
-	
+
 
 public:
 	virtual void BeginPlay()
 	{
-		
+		for (auto& BeginEvent : BeginEvents)
+			(*BeginEvent)(*this);
 	}
 	virtual void EndPlay()
 	{
-		for (auto& DestroyEvent : DestroyEvents)
-			DestroyEvent(*this);
+		for (auto& EndEvent : EndEvents)
+			(*EndEvent)(*this);
 	}
 	virtual void Initalize() = 0;
 	virtual void Destroy() = 0;
 	virtual void Reset()
 	{
-		DestroyEvents.clear();
+		EndEvents.clear();
 		World = nullptr;
 	}
 
@@ -66,9 +67,14 @@ public:
 	virtual void Deserialize(const CSerializer& InDeserializer) = 0;
 
 public:
-	void AddDestroyEvent(std::function<void(CObject&)> DestroyEvent) { DestroyEvents.push_back(DestroyEvent); }
+	void AddEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.insert(&InEndEvent); }
+	void AddBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.insert(&InBeginEvent); }
+	void RemoveEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.erase(&InEndEvent); }
+	void RemoveBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.erase(&InBeginEvent); }
+
 private:
-	std::vector<std::function<void(CObject&)>> DestroyEvents;
+	std::set<std::function<void(CObject&)>*> EndEvents;
+	std::set<std::function<void(CObject&)>*> BeginEvents;
 
 public:
 	virtual ObjectType GetType() = 0;
@@ -77,9 +83,56 @@ protected:
 private:
 	static ObjectType sObjectType;
 
+protected:
+
 };
 
+class CClass
+{
+public:
+	CClass(const std::string& InClassName, std::function<CObject* (class CActor* InOwnerActor)> InCreateFunc);
+	~CClass() = default;
+public:
+	const std::string& GetName() const { return ClassName; }
+	CObject* CreateObject(class CActor* InOwnerActor);
 
+private:
+	std::string ClassName;
+	std::function<CObject* (class CActor* InOwnerActor)> CreateFunc;
+};
+
+class CClassManager
+{
+	SINGLE(CClassManager)
+public:
+	CClass* GetClass(const std::string& InClassName) const
+	{
+		auto Iter = Classes.find(InClassName);
+		if (Iter == Classes.end())
+			return nullptr;
+		return Iter->second;
+	}
+	void AddClass(CClass* InClass)
+	{
+		Classes.insert({ InClass->GetName(), InClass });
+	}
+private:
+	std::map<std::string, CClass*> Classes;
+};
+
+template <typename T>
+class CRegister
+{
+public:
+	CRegister(const std::string& InClassName)
+	{
+		static CClass ClassInstance(InClassName, [](CActor* InOwnerActor)->CObject*
+			{
+				return NewObject<T>(InOwnerActor);
+			});
+		CClassManager::GetInst().AddClass(&ClassInstance);
+	}
+};
 
 #define GENERATE_OBJECT(Class) \
 public:\
@@ -89,4 +142,6 @@ public:\
 		return Type;\
 	}\
 	ObjectType GetType() override {return GetStaticType();};\
-
+private: \
+	inline static CRegister<Class> ClassRegister{#Class};\
+	

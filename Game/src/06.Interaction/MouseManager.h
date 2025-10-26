@@ -44,7 +44,7 @@ public:
 		return NewMouseInteracter;
 	}
 
-	void SetMousePositionInstance(CMousePositionInstance* InMousePositionInstance) { MousePositionInstance = InMousePositionInstance; }
+	void SetMousePositionInstance(const CMousePositionInstance* InMousePositionInstance) { MousePositionInstance = InMousePositionInstance; }
 
 	void SetMouseClick(EKeyType InKeyType) 
 	{ 
@@ -150,11 +150,18 @@ private:
 		InMouseInteracter.bMouseOn = true;
 
 		CMouseInteracter* NewFocusInteracter = &InMouseInteracter;
-		for (auto& ChildInteracter : InMouseInteracter.ChildInteracters)
+		for (auto Iter = InMouseInteracter.ChildInteracters.begin(); Iter != InMouseInteracter.ChildInteracters.end();)
 		{
-			CMouseInteracter* NewInteracter = TryFindFocusInteracter(*ChildInteracter);
-			if (NewInteracter)
-				NewFocusInteracter = NewInteracter;
+			auto& ChildInteracter = *Iter;
+			if (ChildInteracter->bDestroy)
+				Iter = InMouseInteracter.ChildInteracters.erase(Iter);
+			else
+			{
+				CMouseInteracter* NewInteracter = TryFindFocusInteracter(*ChildInteracter);
+				if (NewInteracter)
+					NewFocusInteracter = NewInteracter;
+				++Iter;
+			}
 		}
 		return NewFocusInteracter;
 	}
@@ -185,7 +192,7 @@ private:
 	}
 
 private:
-	CMousePositionInstance* MousePositionInstance;
+	const CMousePositionInstance* MousePositionInstance;
 	Vector2 MousePosition;
 
 	std::vector<std::unique_ptr<CMouseInteracter>> MouseInteracters;
