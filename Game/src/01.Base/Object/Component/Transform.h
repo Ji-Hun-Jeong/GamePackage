@@ -19,8 +19,9 @@ public:
     void Serialize(CSerializer& InSerializer) const override
     {
         CComponent::Serialize(InSerializer);
+        CClass* Class = CClassManager::GetInst().GetClass<CTransform>();
+        assert(Class);
         CSerializer Data;
-        Data["Name"] = "CTransform";
         Data["Position"] = { Position.x, Position.y, Position.z };
         Data["Rotation"] = { Rotation.x, Rotation.y, Rotation.z };
         Data["Scale"] = { Scale.x, Scale.y, Scale.z };
@@ -29,7 +30,17 @@ public:
     }
     void Deserialize(const CSerializer& InDeserializer) override
     {
-
+        CComponent::Deserialize(InDeserializer);
+        Position.x = InDeserializer["Position"][0];
+        Position.y = InDeserializer["Position"][1];
+        Position.z = InDeserializer["Position"][2];
+        Rotation.x = InDeserializer["Rotation"][0];
+        Rotation.y = InDeserializer["Rotation"][1];
+        Rotation.z = InDeserializer["Rotation"][2];
+        Scale.x = InDeserializer["Scale"][0];
+        Scale.y = InDeserializer["Scale"][1];
+        Scale.z = InDeserializer["Scale"][2];
+        Speed = InDeserializer["Speed"];
     }
     // =================================================================
     // Getters

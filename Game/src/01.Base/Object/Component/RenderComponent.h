@@ -31,10 +31,14 @@ public:
 		if (CurrentSettingImagePath.empty() == false)
 		{
 			CSerializer Data;
-			Data["Name"] = "CRenderComponent";
 			Data["ImagePath"] = CurrentSettingImagePath.c_str();
 			InSerializer = Data;
 		}
+	}
+	void Deserialize(const CSerializer& InDeserializer) override
+	{
+		CComponent::Deserialize(InDeserializer);
+		//CurrentSettingImagePath = InDeserializer["ImagePath"];
 	}
 	void SetMesh(Graphics::MeshKey InMeshKey)
 	{

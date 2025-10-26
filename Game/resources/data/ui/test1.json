@@ -2,114 +2,134 @@
     "Childs": [
         {
             "Childs": [],
-            "Components": [
-                {
-                    "Name": "CTransform",
-                    "Position": [
-                        46.0,
-                        -62.0,
-                        0.0
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Scale": [
-                        318.0,
-                        361.0,
-                        1.0
-                    ],
-                    "Speed": 0.0
-                },
-                {
-                    "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\Skill_background.png",
-                    "Name": "CRenderComponent"
-                },
-                null
-            ]
+            "Components": {
+                "CInteractionComponent": [
+                    null
+                ],
+                "CRenderComponent": [
+                    {
+                        "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\NoSkillMain.png"
+                    }
+                ],
+                "CTransform": [
+                    {
+                        "Position": [
+                            -160.0,
+                            56.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Scale": [
+                            140.0,
+                            35.0,
+                            1.0
+                        ],
+                        "Speed": 0.0
+                    }
+                ]
+            },
+            "Name": "CUI"
         },
         {
-            "Childs": [
-                {
-                    "Childs": [],
-                    "Components": [
-                        {
-                            "Name": "CTransform",
-                            "Position": [
-                                -7.0,
-                                129.0,
-                                0.0
-                            ],
-                            "Rotation": [
-                                0.0,
-                                0.0,
-                                0.0
-                            ],
-                            "Scale": [
-                                318.0,
-                                361.0,
-                                1.0
-                            ],
-                            "Speed": 0.0
-                        },
-                        {
-                            "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\Skill_background.png",
-                            "Name": "CRenderComponent"
-                        },
-                        null
-                    ]
-                }
-            ],
-            "Components": [
-                {
-                    "Name": "CTransform",
-                    "Position": [
-                        -206.0,
-                        -15.0,
-                        0.0
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Scale": [
-                        318.0,
-                        361.0,
-                        1.0
-                    ],
-                    "Speed": 0.0
-                },
-                {
-                    "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\Skill_background.png",
-                    "Name": "CRenderComponent"
-                },
-                null
-            ]
+            "Childs": [],
+            "Components": {
+                "CInteractionComponent": [
+                    null
+                ],
+                "CRenderComponent": [
+                    {
+                        "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\NoSkillMain.png"
+                    }
+                ],
+                "CTransform": [
+                    {
+                        "Position": [
+                            19.0,
+                            170.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Scale": [
+                            140.0,
+                            35.0,
+                            1.0
+                        ],
+                        "Speed": 0.0
+                    }
+                ]
+            },
+            "Name": "CUI"
+        },
+        {
+            "Childs": [],
+            "Components": {
+                "CInteractionComponent": [
+                    null
+                ],
+                "CRenderComponent": [
+                    {
+                        "ImagePath": "E:\\source\\repos\\GamePackage\\Game\\resources\\image\\UI\\Skill\\NoSkillMain.png"
+                    }
+                ],
+                "CTransform": [
+                    {
+                        "Position": [
+                            150.0,
+                            24.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Scale": [
+                            140.0,
+                            35.0,
+                            1.0
+                        ],
+                        "Speed": 0.0
+                    }
+                ]
+            },
+            "Name": "CUI"
         }
     ],
-    "Components": [
-        {
-            "Name": "CTransform",
-            "Position": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "Rotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "Scale": [
-                900.0,
-                600.0,
-                0.0
-            ],
-            "Speed": 0.0
-        },
-        null,
-        null
-    ]
+    "Components": {
+        "CInteractionComponent": [
+            null
+        ],
+        "CRenderComponent": [
+            null
+        ],
+        "CTransform": [
+            {
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    900.0,
+                    600.0,
+                    0.0
+                ],
+                "Speed": 0.0
+            }
+        ]
+    },
+    "Name": "CUIToolPanel"
 }

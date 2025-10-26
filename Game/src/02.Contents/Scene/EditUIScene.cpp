@@ -48,6 +48,6 @@ void CEditUIScene::Initalize()
 		{
 			//// UIToolPanelManager->SetCurrentUIToolState(MoveState);
 			GetWorld()->Serialize(*UIToolPanel, "resources/data/ui/test1.json");
-			GetWorld()->Deserialize(*UIToolPanel, "resources/data/ui/test1.json");
+			//GetWorld()->Deserialize("resources/data/ui/test1.json");
 		});
 }

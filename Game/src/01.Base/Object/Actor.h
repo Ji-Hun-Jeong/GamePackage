@@ -8,7 +8,7 @@
 class CActor : public CObject
 {
 	GENERATE_OBJECT(CActor)
-	DONTCOPY(CActor)
+		DONTCOPY(CActor)
 public:
 	CActor()
 		: Owner(nullptr)
@@ -92,6 +92,20 @@ public:
 			if (Component->GetType() == T::GetStaticType())
 				return Component;
 		}
+	}
+	std::vector<CComponent*> GetComponentsByName(const std::string& InComponentName)
+	{
+		std::vector<CComponent*> FoundComponents;
+		for (auto& Component : Components)
+		{
+			CClass* Class = Component->GetClass();
+			const std::string& ClassName = Class->GetName();
+			if (ClassName == InComponentName)
+			{
+				FoundComponents.push_back(Component.get());
+			}
+		}
+		return FoundComponents;
 	}
 
 private:
@@ -182,14 +196,31 @@ protected:
 public:
 	virtual void Serialize(CSerializer& InSerializer) const override
 	{
-		CSerializer ComponentArray = CSerializer::array();
-		for (auto& Component : Components)
+		CClass* Class = GetClass();
+		assert(Class);
+		InSerializer["Name"] = Class->GetName();
+
+		if (!InSerializer.contains("Components"))
+			InSerializer["Components"] = CSerializer::object();
+
+		CSerializer& ComponentsObject = InSerializer["Components"];
+
+		for (const auto& Component : Components)
 		{
+			CClass* ComponentClass = Component->GetClass();
+			const std::string& ComponentName = ComponentClass->GetName();
+
+			// 해당 이름의 배열이 componentsObject 안에 없으면 빈 배열([])로 생성
+			if (!ComponentsObject.contains(ComponentName))
+				ComponentsObject[ComponentName] = CSerializer::array();
+
+			CSerializer& ComponentArray = ComponentsObject[ComponentName];
+
 			CSerializer ComponentData;
 			Component->Serialize(ComponentData);
+
 			ComponentArray.push_back(ComponentData);
 		}
-		InSerializer["Components"] = ComponentArray;
 
 		CSerializer ChildArray = CSerializer::array();
 		for (auto& Child : Childs)
@@ -202,35 +233,26 @@ public:
 	}
 	virtual void Deserialize(const CSerializer& InDeserializer) override
 	{
-		// "components" 키가 실제로 존재하는지 확인
-		if (InDeserializer.contains("components"))
-		{
-			// const auto&로 받아야 수정되지 않음을 보장해요.
-			const auto& ComponentArray = InDeserializer["components"]; // 또는 InDeserializer.at("components");
+		// const auto&로 받아야 수정되지 않음을 보장해요.
+		const auto& ComponentsObject = InDeserializer["Components"];
 
-			// 정말 배열인지 확인하는 것이 좋아요.
-			if (ComponentArray.is_array())
+		for (auto& [key, value] : ComponentsObject.items())
+		{
+			std::vector<CComponent*> MatchComponentArray = GetComponentsByName(key);
+			for (size_t i = 0; i < value.size(); ++i)
 			{
-				for (const auto& componentDataJson : ComponentArray)
-				{
-					//matchingComponent->Deserialize(componentDataJson);
-				}
+				const CSerializer& ComponentData = value[i];
+				MatchComponentArray[i]->Deserialize(ComponentData);
 			}
 		}
 
-		// "childs"도 비슷하게 확인
-		if (InDeserializer.contains("childs")) {
-			const auto& ChildArray = InDeserializer["childs"];
-			if (ChildArray.is_array()) {
-				for (const auto& childDataJson : ChildArray) {
-					// childDataJson["Type"]을 보고 팩토리로 자식 액터 생성
-					// CActor* newChild = CObjectFactory::Get().Create(childDataJson["Type"]);
-					// if (newChild) {
-					//     newChild->Deserialize(childDataJson);
-					//     // Attach...
-					// }
-				}
-			}
+		const auto& ChildArray = InDeserializer["Childs"];
+		for (const auto& ChildDataJson : ChildArray)
+		{
+			const std::string& ClassName = ChildDataJson["Name"];
+			CClass* Class = CClassManager::GetInst().GetClassByName(ClassName);
+			CActor* Child = Class->CreateObject<CActor>(this);
+			Child->Deserialize(ChildDataJson);
 		}
 	}
 

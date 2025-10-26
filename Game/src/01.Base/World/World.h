@@ -24,7 +24,7 @@ public:
 
 	void Serialize(const class CActor& InSerializeActor, const std::string& InSavePath);
 
-	void Deserialize(class CActor& InSerializeActor, const std::string& InReadPath);
+	CObject* Deserialize(const std::string& InReadPath, CActor* InOwnerActor);
 
 	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
 
