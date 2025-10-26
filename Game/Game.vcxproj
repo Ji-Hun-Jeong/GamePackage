@@ -231,6 +231,7 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolStates.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\TestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\03.Utils\InstancePool.h" />
@@ -271,6 +272,7 @@
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolStates.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.h" />
+    <ClInclude Include="src\02.Contents\Scene\TestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

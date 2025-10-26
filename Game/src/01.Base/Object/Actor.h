@@ -241,6 +241,8 @@ public:
 			std::vector<CComponent*> MatchComponentArray = GetComponentsByName(key);
 			for (size_t i = 0; i < value.size(); ++i)
 			{
+				if (value[i].is_null())
+					continue;
 				const CSerializer& ComponentData = value[i];
 				MatchComponentArray[i]->Deserialize(ComponentData);
 			}
@@ -252,6 +254,7 @@ public:
 			const std::string& ClassName = ChildDataJson["Name"];
 			CClass* Class = CClassManager::GetInst().GetClassByName(ClassName);
 			CActor* Child = Class->CreateObject<CActor>(this);
+			GetWorld()->AppearActor(Child);
 			Child->Deserialize(ChildDataJson);
 		}
 	}

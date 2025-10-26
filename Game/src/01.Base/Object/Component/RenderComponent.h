@@ -38,7 +38,9 @@ public:
 	void Deserialize(const CSerializer& InDeserializer) override
 	{
 		CComponent::Deserialize(InDeserializer);
-		//CurrentSettingImagePath = InDeserializer["ImagePath"];
+		const std::string& Path = InDeserializer["ImagePath"];
+		CurrentSettingImagePath = std::wstring(Path.begin(), Path.end());
+		SetDiffuseImage(CurrentSettingImagePath);
 	}
 	void SetMesh(Graphics::MeshKey InMeshKey)
 	{
