@@ -1,9 +1,7 @@
 #pragma once
-#include <nlohmann/json.hpp>
 #include "WorldEvent.h"
 #include "03.Utils/NumberGenerator/NumberGenerator.h"
-using CSerializer = nlohmann::json;
-using ObjectType = size_t;
+
 
 class CWorld
 {

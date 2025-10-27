@@ -29,6 +29,8 @@ CGame::~CGame()
 
 bool CGame::Process()
 {
+	CCoreSystem::GetInst().ArrangeObjects();
+
 	World.Arrange();
 	World.Ready();
 

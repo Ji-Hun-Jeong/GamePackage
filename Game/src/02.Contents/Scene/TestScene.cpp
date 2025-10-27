@@ -4,6 +4,6 @@
 void CTestScene::Initalize()
 {
 	CScene::Initalize();
-	CObject* Object = GetWorld()->Deserialize("resources/data/ui/test1.json", this);
-	GetWorld()->AppearActor((CActor*)Object);
+	//CObject* Object = GetWorld()->Deserialize("resources/data/ui/test1.json", this);
+	//GetWorld()->AppearActor((CActor*)Object);
 }

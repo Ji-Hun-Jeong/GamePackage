@@ -45,7 +45,8 @@ public:
 public:
 	void SetMesh(Graphics::CMesh* InMesh)
 	{
-		if (InMesh == nullptr)std::cout << "Mesh Is None\n";
+		if (InMesh == nullptr)
+			std::cout << "Mesh Is None\n";
 		Mesh = InMesh;
 	}
 	void SetPixelShaderResource(uint8_t InPixelShaderResourceSlot, CImage* InImage)

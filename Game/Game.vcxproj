@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\00.App\ObjectPtr.cpp" />
     <ClCompile Include="src\03.Utils\InstancePool.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\WindowIOManager.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\MousePointer.cpp" />
@@ -213,7 +214,7 @@
     <ClCompile Include="src\04.Renderer\PSOManager.cpp" />
     <ClCompile Include="src\04.Renderer\RenderStateObject.cpp" />
     <ClCompile Include="src\04.Renderer\SpriteRenderer.cpp" />
-    <ClCompile Include="src\01.Base\Object\Object.cpp" />
+    <ClCompile Include="src\00.App\Object.cpp" />
     <ClCompile Include="src\03.Utils\NumberGenerator\NumberGenerator.cpp" />
     <ClCompile Include="src\01.Base\Object\Actor.cpp" />
     <ClCompile Include="src\00.App\Game.cpp" />
@@ -232,8 +233,10 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolStates.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\TestScene.cpp" />
+    <ClCompile Include="src\00.App\CoreSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\00.App\ObjectPtr.h" />
     <ClInclude Include="src\03.Utils\InstancePool.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\WindowIOManager.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\MousePointer.h" />
@@ -259,7 +262,7 @@
     <ClInclude Include="src\04.Renderer\PSOManager.h" />
     <ClInclude Include="src\04.Renderer\RenderStateObject.h" />
     <ClInclude Include="src\04.Renderer\SpriteRenderer.h" />
-    <ClInclude Include="src\01.Base\Object\Object.h" />
+    <ClInclude Include="src\00.App\Object.h" />
     <ClInclude Include="src\03.Utils\NumberGenerator\NumberGenerator.h" />
     <ClInclude Include="src\01.Base\Object\Actor.h" />
     <ClInclude Include="src\Common\Define.h" />
@@ -273,6 +276,7 @@
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolStates.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.h" />
     <ClInclude Include="src\02.Contents\Scene\TestScene.h" />
+    <ClInclude Include="src\00.App\CoreSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

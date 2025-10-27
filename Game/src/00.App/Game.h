@@ -1,6 +1,7 @@
 #pragma once
 #include <Core/public/Application.h>
 
+#include "CoreSystem.h"
 #include "01.Base/World/World.h"
 #include "04.Renderer/SpriteRenderer.h"
 #include "05.Input/InputActionManager.h"

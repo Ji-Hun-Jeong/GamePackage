@@ -10,17 +10,17 @@
 void CLobbyScene::Initalize()
 {
 	CScene::Initalize();
-	CBackGround* BackGround = SpawnActor<CBackGround>(this);
-	BackGround->InitalizeBackGround(L"resources/image/UI/Title/Background.png");
+	//CBackGround* BackGround = SpawnActor<CBackGround>(this);
+	//BackGround->InitalizeBackGround(L"resources/image/UI/Title/Background.png");
 
-	CUI* UI = SpawnActor<CUI>(GetMainCamera());
-	UI->InitalizeBasicButtonUI(L"resources/image/UI/Title/SceneToolUI_Normal.png", L"resources/image/UI/Title/SceneToolUI_Hover.png"
-		, L"resources/image/UI/Title/SceneToolUI_Clicked.png", L"resources/image/UI/Title/SceneToolUI_Normal.png"
-		, [this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-		{
-			if (InKeyType == EKeyType::LButton)
-				LoadScene<CEditUIScene>();
-		});
-	
-	CMousePointer* MousePointer = SpawnActor<CMousePointer>(GetMainCamera());
+	//CUI* UI = SpawnActor<CUI>(GetMainCamera());
+	//UI->InitalizeBasicButtonUI(L"resources/image/UI/Title/SceneToolUI_Normal.png", L"resources/image/UI/Title/SceneToolUI_Hover.png"
+	//	, L"resources/image/UI/Title/SceneToolUI_Clicked.png", L"resources/image/UI/Title/SceneToolUI_Normal.png"
+	//	, [this](EKeyType InKeyType, const Vector2& InMousePosition)->void
+	//	{
+	//		if (InKeyType == EKeyType::LButton)
+	//			LoadScene<CEditUIScene>();
+	//	});
+	//
+	//CMousePointer* MousePointer = SpawnActor<CMousePointer>(GetMainCamera());
 }
