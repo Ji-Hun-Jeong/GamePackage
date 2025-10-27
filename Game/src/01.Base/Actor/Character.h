@@ -12,7 +12,7 @@ public:
 	virtual void Initalize() override
 	{
 		CActor::Initalize();
-		CActor::SetRenderComponent();
+		//CActor::SetRenderComponent();
 	}
 
 private:

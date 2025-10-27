@@ -1,6 +1,6 @@
 #pragma once
 #include "Actor.h"
-#include "01.Base/Object/Camera.h"
+#include "01.Base/Actor/Camera.h"
 
 class CScene : public CActor
 {

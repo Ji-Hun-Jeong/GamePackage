@@ -24,7 +24,7 @@
     <ClCompile Include="src\00.App\Game.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Actor.cpp">
+    <ClCompile Include="src\01.Base\Actor\Actor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\03.Utils\NumberGenerator\NumberGenerator.cpp">
@@ -42,10 +42,10 @@
     <ClCompile Include="src\04.Renderer\RenderStateObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Component\Component.cpp">
+    <ClCompile Include="src\01.Base\Actor\Component\Component.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Component\RenderComponent.cpp">
+    <ClCompile Include="src\01.Base\Actor\Component\RenderComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\01.Base\World\WorldEvent.cpp">
@@ -54,7 +54,7 @@
     <ClCompile Include="src\04.Renderer\PSOManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Component\Transform.cpp">
+    <ClCompile Include="src\01.Base\Actor\Component\Transform.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\04.Renderer\RenderResourceLoader.cpp">
@@ -69,28 +69,28 @@
     <ClCompile Include="src\02.Contents\Actor\Player\Player.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Character.cpp">
+    <ClCompile Include="src\01.Base\Actor\Character.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\05.Input\InputActionManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Camera.cpp">
+    <ClCompile Include="src\01.Base\Actor\Camera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\04.Renderer\SpriteRendererProvide.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Component\Animation\Animator.cpp">
+    <ClCompile Include="src\01.Base\Actor\Component\Animation\Animator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Component\Animation\Animation.cpp">
+    <ClCompile Include="src\01.Base\Actor\Component\Animation\Animation.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Component\Animation\AnimationTransition.cpp">
+    <ClCompile Include="src\01.Base\Actor\Component\Animation\AnimationTransition.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Scene.cpp">
+    <ClCompile Include="src\01.Base\Actor\Scene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Scene\LobbyScene.cpp">
@@ -99,7 +99,7 @@
     <ClCompile Include="src\02.Contents\Scene\EditUIScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\UI.cpp">
+    <ClCompile Include="src\01.Base\Actor\UI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\06.Interaction\MouseManager.cpp">
@@ -111,7 +111,7 @@
     <ClCompile Include="src\00.App\Binding.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Object\Component\InteractionComponent.cpp">
+    <ClCompile Include="src\01.Base\Actor\Component\InteractionComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\Base\BackGround.cpp">
@@ -155,7 +155,7 @@
     <ClInclude Include="src\Common\Define.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Actor.h">
+    <ClInclude Include="src\01.Base\Actor\Actor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\03.Utils\NumberGenerator\NumberGenerator.h">
@@ -173,10 +173,10 @@
     <ClInclude Include="src\04.Renderer\RenderStateObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Component\Component.h">
+    <ClInclude Include="src\01.Base\Actor\Component\Component.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Component\RenderComponent.h">
+    <ClInclude Include="src\01.Base\Actor\Component\RenderComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\World\WorldEvent.h">
@@ -185,7 +185,7 @@
     <ClInclude Include="src\04.Renderer\PSOManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Component\Transform.h">
+    <ClInclude Include="src\01.Base\Actor\Component\Transform.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\04.Renderer\RenderResourceLoader.h">
@@ -200,25 +200,25 @@
     <ClInclude Include="src\02.Contents\Actor\Player\Player.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Character.h">
+    <ClInclude Include="src\01.Base\Actor\Character.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\05.Input\InputActionManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Camera.h">
+    <ClInclude Include="src\01.Base\Actor\Camera.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Component\Animation\Animator.h">
+    <ClInclude Include="src\01.Base\Actor\Component\Animation\Animator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Component\Animation\Animation.h">
+    <ClInclude Include="src\01.Base\Actor\Component\Animation\Animation.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Component\Animation\AnimationTransition.h">
+    <ClInclude Include="src\01.Base\Actor\Component\Animation\AnimationTransition.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Scene.h">
+    <ClInclude Include="src\01.Base\Actor\Scene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Scene\LobbyScene.h">
@@ -227,7 +227,7 @@
     <ClInclude Include="src\02.Contents\Scene\EditUIScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\UI.h">
+    <ClInclude Include="src\01.Base\Actor\UI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\06.Interaction\MouseManager.h">
@@ -236,7 +236,7 @@
     <ClInclude Include="src\06.Interaction\MouseInteracter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Object\Component\InteractionComponent.h">
+    <ClInclude Include="src\01.Base\Actor\Component\InteractionComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Base\BackGround.h">

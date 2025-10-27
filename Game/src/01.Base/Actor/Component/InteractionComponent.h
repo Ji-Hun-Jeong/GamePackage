@@ -17,21 +17,21 @@ public:
 	}
 
 public:
-	void EndPlay() override
+	/*void EndPlay() override
 	{
 		CComponent::EndPlay();
 		MouseInteracter->Destroy();
-	}
+	}*/
 	void SetRectTransform(float InPositionX, float InPositionY, float InScaleX, float InScaleY)
 	{
-		MouseInteracter->SetPosition(Vector2(InPositionX, InPositionY));
-		MouseInteracter->SetSize(Vector2(InScaleX, InScaleY));
+		/*MouseInteracter->SetPosition(Vector2(InPositionX, InPositionY));
+		MouseInteracter->SetSize(Vector2(InScaleX, InScaleY));*/
 	}
 	void SetMouseManager(CMouseManager* InMouseManager);
 
 	void PerformEvent()
 	{
-		const Vector2& MousePosition = MouseManager->GetMousePosition();
+		/*const Vector2& MousePosition = MouseManager->GetMousePosition();
 		bool bMouseMove = MouseManager->IsMouseMove();
 		bool bMouseClicked = MouseManager->IsMouseClicked();
 		bool bMouseHolded= MouseManager->IsMouseHolded();
@@ -70,7 +70,7 @@ public:
 				MouseFocusHoldedEvent(KeyType, MousePosition);
 			if (MouseFocusReleaseEvent && bMouseReleased)
 				MouseFocusReleaseEvent(KeyType, MousePosition);
-		}
+		}*/
 
 	}
 

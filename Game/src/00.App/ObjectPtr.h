@@ -156,7 +156,7 @@ private:
 			DetectObjectDestroy = [this]()->void
 				{
 					RefPtr = nullptr;
-				}
+				};
 			RefPtr->AddObjectDestroyEvent(&DetectObjectDestroy);
 		}
 	}

@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "01.Base/Object/UI.h"
+#include "01.Base/Actor/UI.h"
 
 class CUIToolPanel : public CUI
 {

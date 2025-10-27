@@ -1,5 +1,5 @@
 #pragma once
-#include "../Object.h"
+#include "00.App/CoreSystem.h"
 
 class CComponent : public CObject
 {
@@ -11,12 +11,10 @@ public:
 	virtual ~CComponent();
 
 public:
-	virtual void Initalize() override {}
-	void ResetOwner(class CActor* InOwnerActor) override;
-	void SetOwner(class CActor* InOwnerActor) override;
-	class CActor* GetOwner() const override { return OwnerActor; }
+	class CActor* GetOwner() const { return OwnerActor; }
+	virtual void OnCreate() override {}
+	virtual void OnDestroy() override {}
 
-	void Destroy() override final;
 	virtual void Serialize(CSerializer& InSerializer) const override {}
 	virtual void Deserialize(const CSerializer& InDeserializer) override {}
 

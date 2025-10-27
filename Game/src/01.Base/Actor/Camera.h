@@ -29,7 +29,7 @@ public:
 	void EndPlay() override;
 	void FinalUpdate() override;
 	void CaptureSnapShot() override;
-	void SetInputAction(class CInputActionManager& InInputActionManager) override;
+	// void SetInputAction(class CInputActionManager& InInputActionManager) override;
 	void SetScreenSize(uint32_t InScreenWidth, uint32_t InScreenHeight)
 	{
 		CameraConst.ScreenWidth = InScreenWidth;

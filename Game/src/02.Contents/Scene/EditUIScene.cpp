@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "EditUIScene.h"
 
-#include "01.Base/Object/UI.h"
+#include "01.Base/Actor/UI.h"
 #include "02.Contents/Actor/Player/Player.h"
 #include "02.Contents/Actor/Base/BackGround.h"
 #include "02.Contents/Actor/Base/WindowIOManager.h"

@@ -2,18 +2,10 @@
 #include "Actor.h"
 #include "../World/World.h"
 
+
 void CActor::Initalize()
 {
 	Transform = NewObject<CTransform>(this);
-}
-
-void CActor::Destroy()
-{
-	GetWorld()->DestroyObject(this);
-	for (auto& Child : Childs)
-		Child->Destroy();
-	for (auto& Component : Components)
-		Component->Destroy();
 }
 
 void CActor::SetRenderComponent()

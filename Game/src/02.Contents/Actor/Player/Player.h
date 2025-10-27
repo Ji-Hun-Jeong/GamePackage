@@ -1,6 +1,6 @@
 #pragma once
-#include "01.Base/Object/Actor.h"
-#include "01.Base/Object/Character.h"
+#include "01.Base/Actor/Actor.h"
+#include "01.Base/Actor/Character.h"
 
 class CPlayer : public CActor
 {

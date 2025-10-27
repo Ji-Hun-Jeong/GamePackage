@@ -4,5 +4,5 @@
 void CScene::Initalize()
 {
 	CActor::Initalize();
-	MainCamera = SpawnActor<CCamera>(this);
+	//MainCamera = SpawnActor<CCamera>(this);
 }

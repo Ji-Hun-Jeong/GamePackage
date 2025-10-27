@@ -1,5 +1,5 @@
 #pragma once
-#include "01.Base/Object/Scene.h"
+#include "01.Base/Actor/Scene.h"
 
 class CLobbyScene : public CScene
 {

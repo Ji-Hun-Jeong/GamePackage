@@ -34,15 +34,15 @@ bool CGame::Process()
 	World.Arrange();
 	World.Ready();
 
-	InputActionManager.PerformAction();
-	MouseManager.FindCurrentInteracter();
+	//InputActionManager.PerformAction();
+	//MouseManager.FindCurrentInteracter();
 
 	World.Update();
 
 	World.CaptureSnapShot();
 
-	SpriteRenderer.Render();
-	MouseManager.AddNextInteracter();
+	//SpriteRenderer.Render();
+	//MouseManager.AddNextInteracter();
 	
 	return true;
 }

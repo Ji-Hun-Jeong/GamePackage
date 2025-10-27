@@ -2,7 +2,7 @@
 #include "SpriteRenderer.h"
 #include <Core/public/Window.h>
 #include "01.Base/World/World.h"
-#include "01.Base/Object/Camera.h"
+#include "01.Base/Actor/Camera.h"
 
 class CInitalizeRenderComponent : public INewObjectEvent
 {

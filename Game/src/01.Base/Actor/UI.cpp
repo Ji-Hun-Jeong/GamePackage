@@ -5,8 +5,8 @@ void CUI::Initalize()
 {
 	CActor::Initalize();
 
-	SetRenderComponent();
+	/*SetRenderComponent();
 
-	SetInteractionComponent();
+	SetInteractionComponent();*/
 
 }

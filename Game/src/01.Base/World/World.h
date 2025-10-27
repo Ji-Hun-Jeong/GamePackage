@@ -1,7 +1,6 @@
 #pragma once
 #include "WorldEvent.h"
-#include "03.Utils/NumberGenerator/NumberGenerator.h"
-
+#include "01.Base/Actor/Actor.h"
 
 class CWorld
 {
@@ -20,19 +19,52 @@ public:
 
 	void CaptureSnapShot();
 
+	template <typename T>
+	T* SpawnActor(CActor* InOwnerActor = nullptr)
+	{
+		T* Actor = NewObject<T>(InOwnerActor);
+		Actor->World = this;
+
+		if (InOwnerActor)
+			Actor->GetOwner()->Attach(InOwnerActor);
+
+		auto Iter = NewObjectTypeEvents.find(Actor->GetType());
+		if (Iter != NewObjectTypeEvents.end())
+		{
+			for (auto& NewObjectTypeEvent : Iter->second)
+				NewObjectTypeEvent->CreatedInWorld(*this, *Actor);
+		}
+		for (auto& NewObjectEvent : NewObjectEvents)
+			NewObjectEvent->CreatedInWorld(*this, *Actor);
+
+		NextAddedWorldActors.emplace(Actor);
+
+		return Actor;
+	}
+	
+public:
+	template <typename T_SCENE>
+	void LoadScene()
+	{
+		PushWorldSynchronizeEvent([this]()->void
+			{
+				while (NextAddedWorldActors.empty() == false)
+					NextAddedWorldActors.pop();
+
+				for (auto& WorldActor : WorldActors)
+					DeleteObject(WorldActor);
+				SpawnActor<T_SCENE>();
+			});
+	}
+
 	void Serialize(const class CActor& InSerializeActor, const std::string& InSavePath);
 
 	CObject* Deserialize(const std::string& InReadPath, CActor* InOwnerActor);
 
 	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
 
-	void InitalizeObject(class CObject* InObject, class CActor* InOwnerActor);
-	void AppearActor(class CActor* InActor);
-	void ClearWorld();
-	void DestroyObject(class CObject* InObject);
-
 public:
-	const std::vector<std::unique_ptr<CActor>>& GetWorldActors() const { return WorldActors; }
+	const std::vector<CActor*>& GetWorldActors() const { return WorldActors; }
 	void AddNewObjectTypeEvent(ObjectType InObjectType, std::unique_ptr<INewObjectEvent> InNewObjectEvent)
 	{
 		auto Iter = NewObjectTypeEvents.find(InObjectType);
@@ -51,11 +83,8 @@ public:
 	}
 
 private:
-	std::vector<std::unique_ptr<class CActor>> WorldActors;
-	std::queue<std::unique_ptr<class CActor>> NextAddedWorldActors;
-	std::queue<class CObject*> NextDeletedObjects;
-
-	CNumberGenerator NumberGenerator;
+	std::vector<CActor*> WorldActors;
+	std::queue<CActor*> NextAddedWorldActors;
 
 	std::map<ObjectType, std::vector<std::unique_ptr<INewObjectEvent>>> NewObjectTypeEvents;
 	std::vector<std::unique_ptr<INewObjectEvent>> NewObjectEvents;
@@ -63,31 +92,3 @@ private:
 	std::queue<std::function<void()>> WorldSynchronizeEvents;
 
 };
-
-extern CWorld* g_World;
-
-template <typename T>
-T* NewObject(class CActor* InOwnerActor)
-{
-	T* Object = new T;
-	g_World->InitalizeObject(Object, InOwnerActor);
-	return Object;
-}
-
-template <typename T>
-T* SpawnActor(class CActor* InOwnerActor)
-{
-	T* Actor = NewObject<T>(InOwnerActor);
-	g_World->AppearActor(Actor);
-	return Actor;
-}
-
-template <typename T_SCENE>
-void LoadScene()
-{
-	g_World->PushWorldSynchronizeEvent([]()->void
-		{
-			g_World->ClearWorld();
-			SpawnActor<T_SCENE>();
-		});
-}

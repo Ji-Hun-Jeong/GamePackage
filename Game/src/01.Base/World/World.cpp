@@ -25,32 +25,31 @@ void CWorld::Start()
 
 void CWorld::Arrange()
 {
-	while (NextDeletedObjects.empty() == false)
+	for (auto Iter = WorldActors.begin(); Iter != WorldActors.end();)
 	{
-		CObject* Object = NextDeletedObjects.front();
-		NextDeletedObjects.pop();
-
-		Object->EndPlay();
-		Object->ResetOwner(Object->GetOwner());
+		CActor* Actor = *Iter;
+		if (Actor->IsDestroy())
+		{
+			Actor->EndPlay();
+			if (Actor->GetOwner())
+				Actor->GetOwner()->Detach(Actor);
+			Iter = WorldActors.erase(Iter);
+		}
+		else
+			++Iter;
 	}
-
-	// 3. 한 번에 제거 (O(n))
-	auto NewEnd = std::remove_if(WorldActors.begin(), WorldActors.end(),
-		[](const auto& Actor) { return Actor->bDestroy; });
-	WorldActors.erase(NewEnd, WorldActors.end());
-
 }
 
 void CWorld::Ready()
 {
 	while (NextAddedWorldActors.empty() == false)
 	{
-		std::unique_ptr<CActor> Actor = std::move(NextAddedWorldActors.front());
+		CActor* Actor = NextAddedWorldActors.front();
 		NextAddedWorldActors.pop();
 
 		Actor->BeginPlay();
 
-		WorldActors.push_back(std::move(Actor));
+		WorldActors.push_back(Actor);
 	}
 
 	while (WorldSynchronizeEvents.empty() == false)
@@ -73,53 +72,6 @@ void CWorld::CaptureSnapShot()
 {
 	for (auto& WorldActor : WorldActors)
 		WorldActor->CaptureSnapShot();
-}
-
-
-
-void CWorld::InitalizeObject(CObject* InObject, CActor* InOwnerActor)
-{
-	InObject->InstanceId = NumberGenerator.GenerateNumber();
-	InObject->World = this;
-
-	if (InOwnerActor)
-		InObject->SetOwner(InOwnerActor);
-
-	InObject->Initalize();
-
-	auto Iter = NewObjectTypeEvents.find(InObject->GetType());
-	if (Iter != NewObjectTypeEvents.end())
-	{
-		for (auto& NewObjectTypeEvent : Iter->second)
-			NewObjectTypeEvent->CreatedInWorld(*this, *InObject);
-	}
-	for (auto& NewObjectEvent : NewObjectEvents)
-		NewObjectEvent->CreatedInWorld(*this, *InObject);
-}
-
-void CWorld::AppearActor(CActor* InActor)
-{
-	NextAddedWorldActors.emplace(InActor);
-}
-
-void CWorld::ClearWorld()
-{
-	while (NextAddedWorldActors.empty() == false)
-		NextAddedWorldActors.pop();
-
-	for (auto& WorldActor : WorldActors)
-		WorldActor->Destroy();
-}
-
-void CWorld::DestroyObject(CObject* InObject)
-{
-	PushWorldSynchronizeEvent([this, InObject]()->void
-		{
-			if (InObject->bDestroy)
-				return;
-			InObject->bDestroy = true;
-			NextDeletedObjects.push(InObject);
-		});
 }
 
 void CWorld::Serialize(const CActor& InSerializeActor, const std::string& InSavePath)

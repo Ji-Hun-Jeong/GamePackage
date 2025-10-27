@@ -16,7 +16,7 @@ public:
 	, const std::wstring& InMouseClickImagePath = L"", const std::wstring& InMouseReleaseImagePath = L""
 		, std::function<void(EKeyType, const Vector2&)> InMouseReleaseEvent = nullptr)
 	{
-		GetRenderComponent()->SetDiffuseImage(InBasicImagePath);
+		/*GetRenderComponent()->SetDiffuseImage(InBasicImagePath);
 		GetInteractionComponent()->SetInteracterDeactivateEvent([this, InBasicImagePath](const Vector2& InMousePosition)->void
 			{
 				if (GetRenderComponent())
@@ -38,7 +38,7 @@ public:
 						GetRenderComponent()->SetDiffuseImage(InMouseReleaseImagePath);
 				if (InMouseReleaseEvent)
 					InMouseReleaseEvent(InKeyType, InMousePosition);
-			});
+			});*/
 	}
 
 private:

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "MouseManager.h"
 #include "01.Base/World/World.h"
-#include "01.Base/Object/Component/InteractionComponent.h"
+#include "01.Base/Actor/Component/InteractionComponent.h"
 #include "02.Contents/Actor/Base/MousePointer.h"
 
 class CSetMouseInteracter : public INewObjectEvent

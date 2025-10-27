@@ -20,11 +20,11 @@ public:
 	}
 
 public:
-	void EndPlay() override
+	/*void EndPlay() override
 	{
 		CComponent::EndPlay();
 		RenderStateObject->Destroy();
-	}
+	}*/
 	void Serialize(CSerializer& InSerializer) const override
 	{
 		CComponent::Serialize(InSerializer);

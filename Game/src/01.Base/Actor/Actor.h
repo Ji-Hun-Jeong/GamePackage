@@ -1,5 +1,5 @@
 #pragma once
-#include "Object.h"
+#include "00.App/CoreSystem.h"
 #include "Component/Transform.h"
 #include "Component/RenderComponent.h"
 #include "Component/InteractionComponent.h"
@@ -25,6 +25,8 @@ public:
 	const std::vector<CActor*>& GetChild() const { return Childs; }
 private:
 	friend class CWorld;
+	class CWorld* World;
+
 	CActor* Owner;
 	bool bActive;
 
@@ -35,25 +37,10 @@ private:
 		Childs.push_back(InChild);
 	}
 public:
-	virtual void Reset() override
-	{
-		Owner = nullptr;
-		Childs.clear();
-	}
-	void Attach(CComponent* InComponent)
+	void AttachComponent(CComponent* InComponent)
 	{
 		InComponent->OwnerActor = this;
 		Components.emplace_back(InComponent);
-	}
-	void ResetOwner(CActor* InOwnerActor) override
-	{
-		if (InOwnerActor)
-			InOwnerActor->Detach(this);
-	}
-	void SetOwner(CActor* InOwnerActor) override
-	{
-		if (InOwnerActor)
-			InOwnerActor->Attach(this);
 	}
 	void Detach(CActor* InChild)
 	{
@@ -66,11 +53,11 @@ public:
 			}
 		}
 	}
-	void Detach(CComponent* InComponent)
+	void DetachComponent(CComponent* InComponent)
 	{
 		for (auto Iter = Components.begin(); Iter != Components.end(); ++Iter)
 		{
-			if (Iter->get() == InComponent)
+			if (*Iter == InComponent)
 			{
 				Components.erase(Iter);
 				break;
@@ -79,7 +66,7 @@ public:
 	}
 
 public:
-	CActor* GetOwner() const override { return Owner; }
+	CActor* GetOwner() const { return Owner; }
 	CTransform* GetTransform() const { return Transform; }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
 	CAnimator* GetAnimator() const { return Animator; }
@@ -102,45 +89,44 @@ public:
 			const std::string& ClassName = Class->GetName();
 			if (ClassName == InComponentName)
 			{
-				FoundComponents.push_back(Component.get());
+				FoundComponents.push_back(Component);
 			}
 		}
 		return FoundComponents;
 	}
 
 private:
+	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
 	CTransform* Transform;
 	CRenderComponent* RenderComponent;
 	CAnimator* Animator;
 	CInteractionComponent* InteractionComponent;
-	std::vector<std::unique_ptr<CComponent>> Components;
+	std::vector<CComponent*> Components;
 
 public:
 	void SetRenderComponent();
 	void SetInteractionComponent();
 	void SetAnimator();
 public:
-		void AddEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.insert(&InEndEvent); }
-		void AddBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.insert(&InBeginEvent); }
-		void RemoveEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.erase(&InEndEvent); }
-		void RemoveBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.erase(&InBeginEvent); }
+	void AddEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.insert(&InEndEvent); }
+	void AddBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.insert(&InBeginEvent); }
+	void RemoveEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.erase(&InEndEvent); }
+	void RemoveBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.erase(&InBeginEvent); }
 
 private:
 	std::set<std::function<void(CObject&)>*> EndEvents;
 	std::set<std::function<void(CObject&)>*> BeginEvents;
-protected:
-	virtual void Initalize() override;
-	virtual void BeginPlay() override
-	{
-		CObject::BeginPlay();
 
-	}
-	virtual void EndPlay() override
+protected:
+	virtual void Initalize();
+	virtual void BeginPlay()
 	{
-		CObject::EndPlay();
-		for (auto& Component : Components)
-			Component->EndPlay();
 	}
+	virtual void EndPlay()
+	{
+	}
+	virtual void OnCreate() override {}
+	virtual void OnDestroy() override {}
 
 	virtual void Update(float InDeltaTime)
 	{
@@ -262,13 +248,21 @@ public:
 			const std::string& ClassName = ChildDataJson["Name"];
 			CClass* Class = CClassManager::GetInst().GetClassByName(ClassName);
 			CActor* Child = Class->CreateObject<CActor>(this);
-			GetWorld()->AppearActor(Child);
+			//GetWorld()->AppearActor(Child);
 			Child->Deserialize(ChildDataJson);
 		}
 	}
 
 public:
-	void Destroy() override final;
+	void Destroy()
+	{
+		// 월드가 알아서 해줌
+		DeleteObject(this);
+		for (auto& Child : Childs)
+			DeleteObject(Child);
+		for (auto& Component : Components)
+			DeleteObject(Component);
+	}
 
 };
 

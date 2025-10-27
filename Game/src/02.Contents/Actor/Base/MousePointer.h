@@ -1,6 +1,5 @@
 #pragma once
-#include "01.Base/Object/Actor.h"
-#include "01.Base/Object/Component/Component.h"
+#include "01.Base/Actor/Actor.h"
 #include "06.Interaction/MouseManager.h"
 
 class CMousePointer : public CActor

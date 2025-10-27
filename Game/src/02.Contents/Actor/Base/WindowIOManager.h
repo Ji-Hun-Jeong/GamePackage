@@ -1,5 +1,5 @@
 #pragma once
-#include "01.Base/Object/Actor.h"
+#include "01.Base/Actor/Actor.h"
 #include <shobjidl.h> // IFileOpenDialog
 #include <wrl/client.h> // ComPtr (선택 사항이지만 매우 권장)
 using Microsoft::WRL::ComPtr;
