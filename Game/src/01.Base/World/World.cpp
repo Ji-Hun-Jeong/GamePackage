@@ -113,8 +113,9 @@ CObject* CWorld::Deserialize(const std::string& InReadPath, CActor* InOwnerActor
 	}
 	const std::string& Name = ActorJson["Name"];
 	CClass* Class = CClassManager::GetInst().GetClassByName(Name);
-	CObject* Object = Class->CreateObject<CObject>(InOwnerActor);
+	/*CObject* Object = Class->CreateObject<CObject>(InOwnerActor);
 	Object->Deserialize(ActorJson);
 
-	return Object;
+	return Object;*/
+	return nullptr;
 }

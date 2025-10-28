@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\00.App\Class.cpp" />
     <ClCompile Include="src\00.App\ObjectPtr.cpp" />
     <ClCompile Include="src\03.Utils\InstancePool.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\WindowIOManager.cpp" />
@@ -236,6 +237,7 @@
     <ClCompile Include="src\00.App\CoreSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\00.App\Class.h" />
     <ClInclude Include="src\00.App\ObjectPtr.h" />
     <ClInclude Include="src\03.Utils\InstancePool.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\WindowIOManager.h" />

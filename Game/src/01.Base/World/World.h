@@ -52,7 +52,7 @@ public:
 					NextAddedWorldActors.pop();
 
 				for (auto& WorldActor : WorldActors)
-					DeleteObject(WorldActor);
+					DestroyObject(WorldActor);
 				SpawnActor<T_SCENE>();
 			});
 	}

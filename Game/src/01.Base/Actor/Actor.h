@@ -247,9 +247,9 @@ public:
 		{
 			const std::string& ClassName = ChildDataJson["Name"];
 			CClass* Class = CClassManager::GetInst().GetClassByName(ClassName);
-			CActor* Child = Class->CreateObject<CActor>(this);
-			//GetWorld()->AppearActor(Child);
-			Child->Deserialize(ChildDataJson);
+			//CActor* Child = Class->CreateObject<CActor>(this);
+			////GetWorld()->AppearActor(Child);
+			//Child->Deserialize(ChildDataJson);
 		}
 	}
 
@@ -257,11 +257,11 @@ public:
 	void Destroy()
 	{
 		// 월드가 알아서 해줌
-		DeleteObject(this);
+		DestroyObject(this);
 		for (auto& Child : Childs)
-			DeleteObject(Child);
+			DestroyObject(Child);
 		for (auto& Component : Components)
-			DeleteObject(Component);
+			DestroyObject(Component);
 	}
 
 };
