@@ -2,8 +2,7 @@
 #include "TestScene.h"
 #include "GameCore.h"
 
-void CTestScene::Initalize()
+CTestScene::CTestScene()
 {
-	CScene::Initalize();
 	GetWorld()->SpawnActor<CActor>(this);
 }

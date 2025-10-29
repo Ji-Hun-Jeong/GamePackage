@@ -2,8 +2,9 @@
 #include "WorldEvent.h"
 #include "01.Base/Actor/Actor.h"
 
-class CWorld
+class CWorld : public CObject
 {
+	GENERATE_OBJECT(CWorld)
 public:
 	CWorld();
 	~CWorld();
@@ -70,12 +71,9 @@ public:
 			Actor = NewObject<T>(InOwnerActor, InClassName);
 		else
 			Actor = NewObject<T>(InOwnerActor);
-		Actor->World = this;
 
 		if (InOwnerActor)
 			InOwnerActor->Attach(Actor);
-
-		Actor->Initalize();
 
 		auto Iter = NewObjectTypeEvents.find(Actor->GetType());
 		if (Iter != NewObjectTypeEvents.end())
@@ -91,18 +89,21 @@ public:
 		return Actor;
 	}
 
-public:
 	template <typename T_SCENE>
 	void LoadScene()
 	{
-		PushWorldSynchronizeEvent([this]()->void
-			{
-				while (NextAddedWorldActors.empty() == false)
-					NextAddedWorldActors.pop();
+		while (NextAddedWorldActors.empty() == false)
+		{
+			DestroyObject(NextAddedWorldActors.front());
+			NextAddedWorldActors.pop();
+		}
 
-				for (auto& WorldActor : WorldActors)
-					DestroyObject(WorldActor);
-				SpawnActor<T_SCENE>();
+		for (auto& WorldActor : WorldActors)
+			DestroyObject(WorldActor);
+		// Todo: 나중에 상태패턴 또는 메세지큐로 전환
+		PushWorldSynchronizeEvent([this]()->void
+			{ 
+				SpawnActor<T_SCENE>(); 
 			});
 	}
 

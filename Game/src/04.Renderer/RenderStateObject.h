@@ -1,6 +1,7 @@
 #pragma once
 #include <Renderer/Rendering/Mesh.h>
 #include <Renderer/RHI/Buffer.h>
+#include "00.App/CoreSystem.h"
 #include "Image.h"
 #include "PSOManager.h"
 
@@ -26,28 +27,25 @@ private:
 
 };
 
-class CRenderStateObject
+class CRenderStateObject : public CObject
 {
-	friend class CSpriteRenderer;
+	GENERATE_OBJECT(CRenderStateObject)
+public:
 	CRenderStateObject()
 		: Mesh(nullptr)
 		, PSO(nullptr)
-		, bDestroy(false)
 		, VertexShaderResources{}
 		, PixelShaderResources{}
 		, PixelShaderResourceStartSlot(0)
 		, VertexConstBufferStartSlot(0)
 		, bRender(true)
 	{}
-public:
 	~CRenderStateObject() = default;
 
 public:
-	void SetMesh(Graphics::CMesh* InMesh)
+	void SetMesh(Graphics::CMesh* InMeshOrNull)
 	{
-		if (InMesh == nullptr)
-			std::cout << "Mesh Is None\n";
-		Mesh = InMesh;
+		Mesh = InMeshOrNull;
 	}
 	void SetPixelShaderResource(uint8_t InPixelShaderResourceSlot, CImage* InImage)
 	{
@@ -93,7 +91,6 @@ public:
 	}
 
 	void BindRenderState(Graphics::CRenderContext& InContext);
-	void Destroy() { bDestroy = true; }
 	void SetRender(bool bInRender) { bRender = bInRender; }
 
 protected:
@@ -105,8 +102,6 @@ protected:
 
 	std::vector<std::unique_ptr<Graphics::CBuffer>> VertexConstBuffers;
 	std::queue<const CBufferMapInstance*> BufferMapInstances;
-
-	bool bDestroy;
 
 	uint32_t PixelShaderResourceStartSlot;
 	uint32_t VertexConstBufferStartSlot;

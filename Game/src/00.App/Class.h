@@ -83,5 +83,3 @@ private:\
 public:\
 	static CClass* GetStaticClass() {return ClassRegister.GetClassInstance();}\
 	CClass* GetClass() const override {return GetStaticClass();};\
-
-

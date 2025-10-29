@@ -12,13 +12,15 @@ class CActor : public CObject
 public:
 	CActor()
 		: Owner(nullptr)
-		, World(nullptr)
 		, bActive(true)
 		, Transform(nullptr)
 		, RenderComponent(nullptr)
 		, Animator(nullptr)
 		, InteractionComponent(nullptr)
-	{}
+	{
+		Transform = NewObject<CTransform>(this);
+		AttachComponent(Transform);
+	}
 	virtual ~CActor()
 	{
 	}
@@ -26,7 +28,7 @@ public:
 	const std::vector<CActor*>& GetChild() const { return Childs; }
 private:
 	friend class CWorld;
-	class CWorld* World;
+	inline static class CWorld* World = nullptr;
 
 	CActor* Owner;
 	bool bActive;
@@ -115,11 +117,6 @@ private:
 	std::set<std::function<void(CObject&)>*> BeginEvents;
 
 protected:
-	virtual void Initalize()
-	{
-		Transform = NewObject<CTransform>(this);
-		AttachComponent(Transform);
-	}
 	virtual void BeginPlay()
 	{
 	}

@@ -5,11 +5,10 @@ class CTestScene : public CScene
 {
 	GENERATE_OBJECT(CTestScene)
 public:
-	CTestScene() = default;
+	CTestScene();
 	~CTestScene() = default;
 
-public:
-	void Initalize() override;
+
 private:
 
 };

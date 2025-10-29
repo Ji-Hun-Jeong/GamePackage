@@ -1,5 +1,6 @@
 #pragma once
 #include <nlohmann/json.hpp>
+
 using CSerializer = nlohmann::json;
 using ObjectType = size_t;
 

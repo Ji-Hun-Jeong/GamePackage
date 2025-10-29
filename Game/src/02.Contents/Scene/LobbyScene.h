@@ -9,8 +9,6 @@ public:
 	CLobbyScene() = default;
 	~CLobbyScene() = default;
 
-public:
-	void Initalize() override;
 
 private:
 

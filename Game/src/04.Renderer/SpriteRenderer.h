@@ -14,7 +14,6 @@ public:
 	~CSpriteRenderer() = default;
 
 public:
-	void InitalizeFromWorld(class CWorld& InWorld);
 	void InitalizeFromWindow(Core::CWindow& InWindow);
 	void SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight);
 	void SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight);
@@ -22,7 +21,7 @@ public:
 	uint32_t GetScreenHeight() const { return ScreenHeight; }
 	CRenderStateObject* NewRenderStateObject()
 	{
-		CRenderStateObject* RenderStateObject = new CRenderStateObject;
+		CRenderStateObject* RenderStateObject = NewObject<CRenderStateObject>();
 		NextAddedRSO.emplace(RenderStateObject);
 
 		return RenderStateObject;
@@ -31,7 +30,7 @@ public:
 	{
 		// 3. 한 번에 제거 (O(n))
 		auto NewEnd = std::remove_if(RenderStateObjects.begin(), RenderStateObjects.end(),
-			[](const auto& InRenderStateObject) { return InRenderStateObject->bDestroy; });
+			[](const auto& InRenderStateObject) { return InRenderStateObject->IsDestroy(); });
 		RenderStateObjects.erase(NewEnd, RenderStateObjects.end());
 
 		static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };

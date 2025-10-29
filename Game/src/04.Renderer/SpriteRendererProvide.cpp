@@ -4,49 +4,27 @@
 #include "01.Base/World/World.h"
 #include "01.Base/Actor/Camera.h"
 
-class CInitalizeRenderComponent : public INewObjectEvent
-{
-public:
-	CInitalizeRenderComponent(CSpriteRenderer& InRenderer, CRenderResourceLoader& InRenderResourceLoader)
-		: Renderer(InRenderer)
-		, RenderResourceLoader(InRenderResourceLoader)
-	{}
-private:
-	void CreatedInWorld(CWorld& InWorld, CObject& InNewObject) override
-	{
-		CRenderComponent& RenderComponent = static_cast<CRenderComponent&>(InNewObject);
-		CRenderStateObject* RenderStateObject = Renderer.NewRenderStateObject();
+//class CCameraSetScreenSize : public INewObjectEvent
+//{
+//public:
+//	CCameraSetScreenSize(CSpriteRenderer& InRenderer)
+//		: Renderer(InRenderer)
+//	{}
+//private:
+//	void CreatedInWorld(CWorld& InWorld, CObject& InNewObject) override
+//	{
+//		static_cast<CCamera&>(InNewObject).SetScreenSize(Renderer.GetScreenWidth(), Renderer.GetScreenHeight());
+//	}
+//
+//	CSpriteRenderer& Renderer;
+//};
+//
+//void CSpriteRenderer::InitalizeFromWorld(CWorld& InWorld)
+//{
+//	InWorld.AddNewObjectTypeEvent(CCamera::GetStaticType(), std::make_unique<CCameraSetScreenSize>(*this));
+//}
 
-		RenderComponent.SetRenderStateObject(RenderStateObject);
-		RenderComponent.SetRenderResourceLoader(&RenderResourceLoader);
-		RenderComponent.SetRenderer(&Renderer);
-	}
-
-	CSpriteRenderer& Renderer;
-	CRenderResourceLoader& RenderResourceLoader;
-};
-
-class CCameraSetScreenSize : public INewObjectEvent
-{
-public:
-	CCameraSetScreenSize(CSpriteRenderer& InRenderer)
-		: Renderer(InRenderer)
-	{}
-private:
-	void CreatedInWorld(CWorld& InWorld, CObject& InNewObject) override
-	{
-		static_cast<CCamera&>(InNewObject).SetScreenSize(Renderer.GetScreenWidth(), Renderer.GetScreenHeight());
-	}
-
-	CSpriteRenderer& Renderer;
-};
-
-void CSpriteRenderer::InitalizeFromWorld(CWorld& InWorld)
-{
-	InWorld.AddNewObjectTypeEvent(CRenderComponent::GetStaticType(), std::make_unique<CInitalizeRenderComponent>(*this, RenderResourceLoader));
-	InWorld.AddNewObjectTypeEvent(CCamera::GetStaticType(), std::make_unique<CCameraSetScreenSize>(*this));
-}
-
+// 모듈이 내부를 전달 불가하기 때문에 인터페이스 사용해야될듯
 class CRefreshScreen : public Core::IWindowResize
 {
 public:

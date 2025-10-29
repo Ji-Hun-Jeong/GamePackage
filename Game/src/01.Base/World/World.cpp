@@ -6,11 +6,10 @@
 #include "02.Contents/Scene/EditUIScene.h"
 #include "02.Contents/Scene/TestScene.h"
 
-CWorld* g_World = nullptr;
 
 CWorld::CWorld()
 {
-	g_World = this;
+	CActor::World = this;
 }
 
 CWorld::~CWorld()
