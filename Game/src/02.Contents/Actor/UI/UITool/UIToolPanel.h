@@ -10,12 +10,12 @@ public:
 	~CUIToolPanel() {}
 
 public:
-	void Initalize() override
-	{
-		CUI::Initalize();
-		GetRenderComponent()->SetPSO(EPSOType::Mark);
-		PlacedUIs.push_back(this);
-	}
+	//void Initalize() override
+	//{
+	//	CUI::Initalize();
+	//	//GetRenderComponent()->SetPSO(EPSOType::Mark);
+	//	PlacedUIs.push_back(this);
+	//}
 
 public:
 	void Update(float InDeltaTime) override
@@ -23,7 +23,7 @@ public:
 		CUI::Update(InDeltaTime);
 
 		CUI* NewFocusUI = nullptr;
-		for (auto& PlacedUI : PlacedUIs)
+		/*for (auto& PlacedUI : PlacedUIs)
 		{
 			if (PlacedUI->GetInteractionComponent()->IsInteracterFocus())
 			{
@@ -38,7 +38,7 @@ public:
 			const Vector2& MousePosition = GetInteractionComponent()->GetMousePosition();
 			if (CurrentFocusUIFoundEvent)
 				CurrentFocusUIFoundEvent(*this, CurrentFocusUI, MousePosition);
-		}
+		}*/
 	}
 	void SetChangeFocusUIEvent(std::function<void(CUIToolPanel&, CUI*, const Vector2&)> InNewFocusUIFoundEvent)
 	{

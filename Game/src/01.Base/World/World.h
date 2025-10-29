@@ -11,22 +11,71 @@ public:
 public:
 	void Start();
 
-	void Arrange();
+	void Arrange()
+	{
+		for (auto Iter = WorldActors.begin(); Iter != WorldActors.end();)
+		{
+			CActor* Actor = *Iter;
+			if (Actor->IsDestroy())
+			{
+				Actor->EndPlay();
+				if (Actor->GetOwner())
+					Actor->GetOwner()->Detach(Actor);
+				Iter = WorldActors.erase(Iter);
+			}
+			else
+				++Iter;
+		}
+	}
 
-	void Ready();
+	void Ready()
+	{
+		while (NextAddedWorldActors.empty() == false)
+		{
+			CActor* Actor = NextAddedWorldActors.front();
+			NextAddedWorldActors.pop();
 
-	void Update();
+			Actor->BeginPlay();
 
-	void CaptureSnapShot();
+			WorldActors.push_back(Actor);
+		}
+
+		while (WorldSynchronizeEvents.empty() == false)
+		{
+			WorldSynchronizeEvents.front()();
+			WorldSynchronizeEvents.pop();
+		}
+	}
+
+	void Update()
+	{
+		for (auto& WorldActor : WorldActors)
+			WorldActor->Update(1.0f / 60.0f);
+
+		for (auto& WorldActor : WorldActors)
+			WorldActor->FinalUpdate();
+	}
+
+	void CaptureSnapShot()
+	{
+		for (auto& WorldActor : WorldActors)
+			WorldActor->CaptureSnapShot();
+	}
 
 	template <typename T>
-	T* SpawnActor(CActor* InOwnerActor = nullptr)
+	T* SpawnActor(CActor* InOwnerActor = nullptr, const std::string& InClassName = "")
 	{
-		T* Actor = NewObject<T>(InOwnerActor);
+		T* Actor = nullptr;
+		if (InClassName.empty() == false)
+			Actor = NewObject<T>(InOwnerActor, InClassName);
+		else
+			Actor = NewObject<T>(InOwnerActor);
 		Actor->World = this;
 
 		if (InOwnerActor)
-			Actor->GetOwner()->Attach(InOwnerActor);
+			InOwnerActor->Attach(Actor);
+
+		Actor->Initalize();
 
 		auto Iter = NewObjectTypeEvents.find(Actor->GetType());
 		if (Iter != NewObjectTypeEvents.end())
@@ -41,7 +90,7 @@ public:
 
 		return Actor;
 	}
-	
+
 public:
 	template <typename T_SCENE>
 	void LoadScene()

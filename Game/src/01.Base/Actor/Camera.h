@@ -24,7 +24,6 @@ public:
 	~CCamera();
 
 public:
-	void Initalize() override;
 	void BeginPlay() override;
 	void EndPlay() override;
 	void FinalUpdate() override;

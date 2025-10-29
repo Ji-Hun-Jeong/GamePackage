@@ -275,6 +275,9 @@
     <ClInclude Include="src\00.App\Class.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameCore.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicVertexShader.hlsl" />

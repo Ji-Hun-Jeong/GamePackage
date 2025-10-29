@@ -12,8 +12,6 @@ public:
 
 public:
 	class CActor* GetOwner() const { return OwnerActor; }
-	virtual void OnCreate() override {}
-	virtual void OnDestroy() override {}
 
 	virtual void Serialize(CSerializer& InSerializer) const override {}
 	virtual void Deserialize(const CSerializer& InDeserializer) override {}

@@ -27,8 +27,6 @@ public:
 	UINT GetInstanceId() const { return InstanceId; }
 	bool IsDestroy() const { return bDestroy; }
 
-	virtual void OnCreate() = 0;
-	virtual void OnDestroy() = 0;
 	virtual void Serialize(CSerializer& InSerializer) const {}
 	virtual void Deserialize(const CSerializer& InDeserializer) {}
 

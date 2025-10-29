@@ -20,7 +20,6 @@ public:
 	~CPlayer();
 
 public:
-	void Initalize() override;
 	void EndPlay() override;
 	void Update(float InDeltaTime) override;
 	void SetInputAction(class CInputActionManager& InInputActionManager);

@@ -269,6 +269,7 @@
     <ClInclude Include="src\01.Base\Actor\Actor.h" />
     <ClInclude Include="src\Common\Define.h" />
     <ClInclude Include="src\00.App\Game.h" />
+    <ClInclude Include="src\GameCore.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\01.Base\World\World.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Transform.h" />

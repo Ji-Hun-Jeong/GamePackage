@@ -9,11 +9,11 @@ public:
 	CCharacter() = default;
 	virtual ~CCharacter() {}
 public:
-	virtual void Initalize() override
-	{
-		CActor::Initalize();
-		//CActor::SetRenderComponent();
-	}
+	//virtual void Initalize() override
+	//{
+	//	CActor::Initalize();
+	//	//CActor::SetRenderComponent();
+	//}
 
 private:
 

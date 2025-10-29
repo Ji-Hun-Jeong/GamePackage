@@ -29,10 +29,10 @@ public:
 private:
 	void MouseMove(int InX, int InY, uint32_t InScreenWidth, uint32_t InScreenHeight) override
 	{
-		float MouseX = InX - InScreenWidth / 2.0f;
+		/*float MouseX = InX - InScreenWidth / 2.0f;
 		float MouseY = -InY + InScreenHeight / 2.0f;
 		Actor.GetTransform()->SetPosition(Vector3(MouseX, MouseY, Actor.GetTransform()->GetPosition().z));
-		MouseManager.SetMouseMove(true);
+		MouseManager.SetMouseMove(true);*/
 	}
 	CActor& Actor;
 	CMouseManager& MouseManager;

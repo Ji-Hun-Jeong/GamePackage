@@ -48,29 +48,29 @@ public:
 public:
 	void EnterState(CUIToolPanel& InUIToolPanel) override
 	{
-		InUIToolPanel.SetChangeFocusUIEvent([this](CUIToolPanel& InUIToolPanel, CUI* InCurrentFocusUI, const Vector2& InMousePosition)->void
-			{
-				GetCurrentFocusUI(InUIToolPanel, InCurrentFocusUI);
-			});
-		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseClickEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				GetCurrentMovedUIFromFocusUI(InMousePosition);
-			});
-		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				ReleaseMovedUI();
-			});
-		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseMoveEvent([this](const Vector2& InMousePosition)->void
-			{
-				MoveCurrentMovedUI(InMousePosition);
-			});
+		//InUIToolPanel.SetChangeFocusUIEvent([this](CUIToolPanel& InUIToolPanel, CUI* InCurrentFocusUI, const Vector2& InMousePosition)->void
+		//	{
+		//		GetCurrentFocusUI(InUIToolPanel, InCurrentFocusUI);
+		//	});
+		//InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseClickEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		//	{
+		//		GetCurrentMovedUIFromFocusUI(InMousePosition);
+		//	});
+		//InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		//	{
+		//		ReleaseMovedUI();
+		//	});
+		//InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseMoveEvent([this](const Vector2& InMousePosition)->void
+		//	{
+		//		MoveCurrentMovedUI(InMousePosition);
+		//	});
 	}
 	void ExitState(CUIToolPanel& InUIToolPanel) override
 	{
-		InUIToolPanel.SetChangeFocusUIEvent(nullptr);
-		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseClickEvent(nullptr);
-		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent(nullptr);
-		InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseMoveEvent(nullptr);
+		//InUIToolPanel.SetChangeFocusUIEvent(nullptr);
+		//InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseClickEvent(nullptr);
+		//InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent(nullptr);
+		//InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseMoveEvent(nullptr);
 	}
 
 	void GetCurrentFocusUI(CUIToolPanel& InUIToolPanel, CUI* InCurrentFocusUI)
@@ -85,9 +85,9 @@ public:
 	{
 		if (CurrentFocusUIOnUIToolPanel)
 		{
-			CurrentMovedUI = CurrentFocusUIOnUIToolPanel;
-			MouseFocusUIDiff = InMousePosition - Vector2(CurrentMovedUI->GetTransform()->GetFinalPosition().x
-				, CurrentMovedUI->GetTransform()->GetFinalPosition().y);
+			//CurrentMovedUI = CurrentFocusUIOnUIToolPanel;
+			//MouseFocusUIDiff = InMousePosition - Vector2(CurrentMovedUI->GetTransform()->GetFinalPosition().x
+			//	, CurrentMovedUI->GetTransform()->GetFinalPosition().y);
 		}
 	}
 	void ReleaseMovedUI()
@@ -98,10 +98,10 @@ public:
 
 	void MoveCurrentMovedUI(const Vector2& InMousePosition)
 	{
-		if (CurrentMovedUI == nullptr)
-			return;
-		Vector3 NewPosition = Vector3(InMousePosition.x, InMousePosition.y, CurrentMovedUI->GetTransform()->GetPosition().z) - MouseFocusUIDiff;
-		CurrentMovedUI->GetTransform()->SetPosition(NewPosition - CurrentMovedUI->GetOwner()->GetTransform()->GetFinalPosition());
+		//if (CurrentMovedUI == nullptr)
+		//	return;
+		//Vector3 NewPosition = Vector3(InMousePosition.x, InMousePosition.y, CurrentMovedUI->GetTransform()->GetPosition().z) - MouseFocusUIDiff;
+		//CurrentMovedUI->GetTransform()->SetPosition(NewPosition - CurrentMovedUI->GetOwner()->GetTransform()->GetFinalPosition());
 	}
 
 private:

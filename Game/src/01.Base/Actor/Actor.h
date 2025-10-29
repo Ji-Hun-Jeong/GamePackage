@@ -12,6 +12,7 @@ class CActor : public CObject
 public:
 	CActor()
 		: Owner(nullptr)
+		, World(nullptr)
 		, bActive(true)
 		, Transform(nullptr)
 		, RenderComponent(nullptr)
@@ -40,7 +41,7 @@ public:
 	void AttachComponent(CComponent* InComponent)
 	{
 		InComponent->OwnerActor = this;
-		Components.emplace_back(InComponent);
+		Components.push_back(InComponent);
 	}
 	void Detach(CActor* InChild)
 	{
@@ -66,11 +67,8 @@ public:
 	}
 
 public:
+	class CWorld* GetWorld() const { return World; }
 	CActor* GetOwner() const { return Owner; }
-	CTransform* GetTransform() const { return Transform; }
-	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
-	CAnimator* GetAnimator() const { return Animator; }
-	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent; }
 	template <typename T>
 	T* GetComponent()
 	{
@@ -95,7 +93,7 @@ public:
 		return FoundComponents;
 	}
 
-private:
+protected:
 	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
 	CTransform* Transform;
 	CRenderComponent* RenderComponent;
@@ -105,8 +103,7 @@ private:
 
 public:
 	void SetRenderComponent();
-	void SetInteractionComponent();
-	void SetAnimator();
+
 public:
 	void AddEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.insert(&InEndEvent); }
 	void AddBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.insert(&InBeginEvent); }
@@ -118,15 +115,17 @@ private:
 	std::set<std::function<void(CObject&)>*> BeginEvents;
 
 protected:
-	virtual void Initalize();
+	virtual void Initalize()
+	{
+		Transform = NewObject<CTransform>(this);
+		AttachComponent(Transform);
+	}
 	virtual void BeginPlay()
 	{
 	}
 	virtual void EndPlay()
 	{
 	}
-	virtual void OnCreate() override {}
-	virtual void OnDestroy() override {}
 
 	virtual void Update(float InDeltaTime)
 	{
@@ -155,7 +154,7 @@ protected:
 	virtual void FinalUpdate()
 	{
 		if (Owner)
-			Transform->SetFinalPosition(Transform->GetPosition() + Owner->GetTransform()->GetFinalPosition());
+			Transform->SetFinalPosition(Transform->GetPosition() + Owner->Transform->GetFinalPosition());
 		else
 			Transform->SetFinalPosition(Transform->GetPosition());
 
@@ -178,7 +177,7 @@ protected:
 					, Transform->GetScale().x, Transform->GetScale().y);
 			}
 			for (auto& Child : Childs)
-				Child->GetTransform()->SetVariation(true);
+				Child->Transform->SetVariation(true);
 		}
 	}
 	struct TVertexConstBuffer

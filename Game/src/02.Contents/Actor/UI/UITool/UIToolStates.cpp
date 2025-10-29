@@ -19,29 +19,29 @@ void CUIToolInputState::DecideOwnerUI(CUI* InFocusUI)
 
 void CUIToolInputState::EnterState(CUIToolPanel& InUIToolPanel)
 {
-	LoadDialogUI.GetInteractionComponent()
-		->SetInteracterFocusMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
-			{
-				if (InKeyType == EKeyType::LButton)
-					MousePointer.SetMouseImageFromDialog(WindowIOManager);
-			});
+	//LoadDialogUI.GetInteractionComponent()
+	//	->SetInteracterFocusMouseReleaseEvent([this](EKeyType InKeyType, const Vector2& InMousePosition)->void
+	//		{
+	//			if (InKeyType == EKeyType::LButton)
+	//				MousePointer.SetMouseImageFromDialog(WindowIOManager);
+	//		});
 
-	InUIToolPanel.SetChangeFocusUIEvent([this](CUIToolPanel& InUIToolPanel, CUI* InCurrentFocusUI, const Vector2& InMousePosition)->void
-		{
-			DecideOwnerUI(InCurrentFocusUI);
-		});
-	InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent([this, &InUIToolPanel](EKeyType InKeyType, const Vector2& InMousePosition)->void
-		{
-			PlaceUIOnMouseReleased(InUIToolPanel);
-		});
+	//InUIToolPanel.SetChangeFocusUIEvent([this](CUIToolPanel& InUIToolPanel, CUI* InCurrentFocusUI, const Vector2& InMousePosition)->void
+	//	{
+	//		DecideOwnerUI(InCurrentFocusUI);
+	//	});
+	//InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent([this, &InUIToolPanel](EKeyType InKeyType, const Vector2& InMousePosition)->void
+	//	{
+	//		PlaceUIOnMouseReleased(InUIToolPanel);
+	//	});
 }
 
 void CUIToolInputState::ExitState(CUIToolPanel& InUIToolPanel)
 {
-	MousePointer.GetRenderComponent()->ResetImage();
-	LoadDialogUI.GetInteractionComponent()->SetInteracterFocusMouseReleaseEvent(nullptr);
-	InUIToolPanel.SetChangeFocusUIEvent(nullptr);
-	InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent(nullptr);
+	//MousePointer.GetRenderComponent()->ResetImage();
+	//LoadDialogUI.GetInteractionComponent()->SetInteracterFocusMouseReleaseEvent(nullptr);
+	//InUIToolPanel.SetChangeFocusUIEvent(nullptr);
+	//InUIToolPanel.GetInteractionComponent()->SetInteracterOnMouseReleaseEvent(nullptr);
 }
 
 void CUIToolInputState::PlaceUIOnMouseReleased(CUIToolPanel& InUIToolPanel)
@@ -49,7 +49,7 @@ void CUIToolInputState::PlaceUIOnMouseReleased(CUIToolPanel& InUIToolPanel)
 	if (CurrentFocusUI == nullptr)
 		return;
 
-	EKeyType MouseType = InUIToolPanel.GetInteractionComponent()->GetMouseType();
+	/*EKeyType MouseType = InUIToolPanel.GetInteractionComponent()->GetMouseType();
 
 	if (MouseType == EKeyType::LButton)
 	{
@@ -71,5 +71,5 @@ void CUIToolInputState::PlaceUIOnMouseReleased(CUIToolPanel& InUIToolPanel)
 		InUIToolPanel.EraseUIOnToolPanel(ErasedUI);
 	}
 	else
-		assert(0);
+		assert(0);*/
 }

@@ -10,7 +10,6 @@ public:
 
 public:
 	void Initalize() override;
-
 private:
 
 };

@@ -11,7 +11,6 @@ public:
 	~CUIToolPanelManager() = default;
 
 public:
-	void Initalize() override;
 	void EndPlay() override
 	{
 		CActor::EndPlay();

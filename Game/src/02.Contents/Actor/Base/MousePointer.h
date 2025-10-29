@@ -12,7 +12,6 @@ public:
 	~CMousePointer() = default;
 
 public:
-	void Initalize() override;
 	void EndPlay() override
 	{
 		CActor::EndPlay();
@@ -21,8 +20,8 @@ public:
 	{
 		CActor::FinalUpdate();
 
-		MousePositionInstance->SetMousePosition(
-			Vector2(GetTransform()->GetFinalPosition().x, GetTransform()->GetFinalPosition().y));
+		/*MousePositionInstance->SetMousePosition(
+			Vector2(GetTransform()->GetFinalPosition().x, GetTransform()->GetFinalPosition().y));*/
 	}
 
 	void SetMouseImageFromDialog(class CWindowIOManager& InWindowIOManager);

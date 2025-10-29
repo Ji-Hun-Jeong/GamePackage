@@ -10,8 +10,6 @@ public:
 	virtual ~CUI() = default;
 
 public:
-	virtual void Initalize() override;
-
 	void InitalizeBasicButtonUI(const std::wstring& InBasicImagePath, const std::wstring& InMouseOnImagePath
 	, const std::wstring& InMouseClickImagePath = L"", const std::wstring& InMouseReleaseImagePath = L""
 		, std::function<void(EKeyType, const Vector2&)> InMouseReleaseEvent = nullptr)

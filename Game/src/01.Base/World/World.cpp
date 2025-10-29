@@ -23,56 +23,6 @@ void CWorld::Start()
 	LoadScene<CTestScene>();
 }
 
-void CWorld::Arrange()
-{
-	for (auto Iter = WorldActors.begin(); Iter != WorldActors.end();)
-	{
-		CActor* Actor = *Iter;
-		if (Actor->IsDestroy())
-		{
-			Actor->EndPlay();
-			if (Actor->GetOwner())
-				Actor->GetOwner()->Detach(Actor);
-			Iter = WorldActors.erase(Iter);
-		}
-		else
-			++Iter;
-	}
-}
-
-void CWorld::Ready()
-{
-	while (NextAddedWorldActors.empty() == false)
-	{
-		CActor* Actor = NextAddedWorldActors.front();
-		NextAddedWorldActors.pop();
-
-		Actor->BeginPlay();
-
-		WorldActors.push_back(Actor);
-	}
-
-	while (WorldSynchronizeEvents.empty() == false)
-	{
-		WorldSynchronizeEvents.front()();
-		WorldSynchronizeEvents.pop();
-	}
-}
-
-void CWorld::Update()
-{
-	for (auto& WorldActor : WorldActors)
-		WorldActor->Update(1.0f / 60.0f);
-
-	for (auto& WorldActor : WorldActors)
-		WorldActor->FinalUpdate();
-}
-
-void CWorld::CaptureSnapShot()
-{
-	for (auto& WorldActor : WorldActors)
-		WorldActor->CaptureSnapShot();
-}
 
 void CWorld::Serialize(const CActor& InSerializeActor, const std::string& InSavePath)
 {

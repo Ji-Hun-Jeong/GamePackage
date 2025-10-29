@@ -9,9 +9,8 @@ public:
 	virtual ~CScene() = default;
 
 public:
-	void Initalize() override;
-
 	CCamera* GetMainCamera() const { return MainCamera; }
+
 private:
 	CCamera* MainCamera;
 
