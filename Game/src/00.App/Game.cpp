@@ -10,8 +10,6 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	, MouseManager()
 	, World()
 {
-	//SpriteRenderer.InitalizeFromWindow(Window);
-	InputActionManager.InitalizeFromWorld(World);
 	MouseManager.InitalizeFromWorld(World);
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if (FAILED(hr)) assert(0);
@@ -30,10 +28,12 @@ bool CGame::Process()
 {
 	CCoreSystem::GetInst().ArrangeObjects();
 
+	InputManager.Update();
+	World.PerformInputAction(InputActionManager);
+
 	World.Arrange();
 	World.Ready();
 
-	//InputActionManager.PerformAction();
 	//MouseManager.FindCurrentInteracter();
 
 	World.Update();
@@ -42,7 +42,6 @@ bool CGame::Process()
 
 	World.RenderWorld(SpriteRenderer);
 
-	//SpriteRenderer.Render();
 	//MouseManager.AddNextInteracter();
 	
 	return true;

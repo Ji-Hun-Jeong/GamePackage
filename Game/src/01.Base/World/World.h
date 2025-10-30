@@ -114,6 +114,7 @@ public:
 
 	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
 
+	void PerformInputAction(class CInputActionManager& InInputActionManager);
 	void RenderWorld(class CSpriteRenderer& InRenderer);
 
 public:

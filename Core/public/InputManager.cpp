@@ -13,48 +13,8 @@ namespace Core
 	};
 	bool bPressed[(UINT)EKeyType::End] = { 0 };
 
-	class CSetMousePosition : public IMouseMove
-	{
-	public:
-		CSetMousePosition(CInputManager& InInputManager)
-			: InputManager(InInputManager)
-		{}
-	public:
-		void MouseMove(int InX, int InY, uint32_t InScreenWidth, uint32_t InScreenHeight) override
-		{
-			InputManager.MouseScreenPosition.MouseX = InX;
-			InputManager.MouseScreenPosition.MouseY = InY;
-		}
-
-	private:
-		CInputManager& InputManager;
-
-	};
-
-	CInputManager::CInputManager(CWindow& InWindow)
-		: MouseScreenPosition{}
-	{
-		InWindow.RegistMouseMoveEvent(std::make_unique<CSetMousePosition>(*this));
-	}
-
 	void CInputManager::Update()
 	{
-		while (DeRegistEvents.empty() == false)
-		{
-			auto Pair = DeRegistEvents.front();
-			DeRegistEvents.pop();
-
-			auto& RefKeyEvents = KeyEvents[Pair.first];
-			for (size_t i = 0; i < RefKeyEvents.size(); ++i)
-			{
-				if (RefKeyEvents[i].get() == Pair.second)
-				{
-					RefKeyEvents[i] = std::move(RefKeyEvents.back());
-					RefKeyEvents.pop_back();
-					break;
-				}
-			}
-		}
 		for (UINT i = 0; i < (UINT)EKeyType::End; ++i)
 		{
 			if (GetAsyncKeyState(KeyMapping[i]) & 0x8000)
@@ -75,25 +35,25 @@ namespace Core
 			}
 		}
 
-		UInputBlendValue InputBlendValue;
-		for (auto& Pair : KeyEvents)
-		{
-			InputBlendValue.RealKey = Pair.first;
-			if (CorrectKeyState(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState) == false)
-				continue;
+		//UInputBlendValue InputBlendValue;
+		//for (auto& Pair : KeyEvents)
+		//{
+		//	InputBlendValue.RealKey = Pair.first;
+		//	if (CorrectKeyState(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState) == false)
+		//		continue;
 
-			for (auto& KeyEvent : Pair.second)
-				KeyEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState);
-		}
+		//	for (auto& KeyEvent : Pair.second)
+		//		KeyEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState);
+		//}
 
-		for (auto& Pair : MouseEvents)
-		{
-			InputBlendValue.RealKey = Pair.first;
-			if (CorrectKeyState(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState) == false)
-				continue;
+		//for (auto& Pair : MouseEvents)
+		//{
+		//	InputBlendValue.RealKey = Pair.first;
+		//	if (CorrectKeyState(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState) == false)
+		//		continue;
 
-			for (auto& MouseEvent : Pair.second)
-				MouseEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState, MouseScreenPosition);
-		}
+		//	for (auto& MouseEvent : Pair.second)
+		//		MouseEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState, MouseScreenPosition);
+		//}
 	}
 }

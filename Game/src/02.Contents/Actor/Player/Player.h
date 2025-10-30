@@ -7,22 +7,12 @@ class CPlayer : public CActor
 	GENERATE_OBJECT(CPlayer)
 	DONTCOPY(CPlayer)
 public:
-	CPlayer()
-		: Head(nullptr)
-		, Body(nullptr)
-		, Arm(nullptr)
-		, Hand(nullptr)
-		, LeftMoveActionValue(nullptr)
-		, RightMoveActionValue(nullptr)
-		, UpMoveActionValue(nullptr)
-		, DownMoveActionValue(nullptr)
-	{}
+	CPlayer();
 	~CPlayer();
 
 public:
-	void EndPlay() override;
 	void Update(float InDeltaTime) override;
-	void SetInputAction(class CInputActionManager& InInputActionManager);
+	void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) override;
 
 private:
 	CCharacter* Head;
@@ -31,10 +21,11 @@ private:
 	CCharacter* Hand;
 
 private:
-	class CInputActionValue* LeftMoveActionValue;
-	class CInputActionValue* RightMoveActionValue;
-	class CInputActionValue* UpMoveActionValue;
-	class CInputActionValue* DownMoveActionValue;
+	void InitalizeInputActionValue();
+	std::unique_ptr<class CInputActionValue> LeftMoveActionValue;
+	std::unique_ptr<class CInputActionValue> RightMoveActionValue;
+	std::unique_ptr<class CInputActionValue> UpMoveActionValue;
+	std::unique_ptr<class CInputActionValue> DownMoveActionValue;
 
 };
 

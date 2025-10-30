@@ -67,7 +67,7 @@ public:
 		VertexConstBufferDatas[InSlot]->bUpdated = true;
 	}
 
-	void MapBuffersToRSO()
+	void MapUpdatedBuffersToRSO()
 	{
 		for (size_t i = 0; i < VertexConstBufferDatas.size(); ++i)
 		{

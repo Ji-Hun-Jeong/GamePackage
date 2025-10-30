@@ -1,6 +1,16 @@
 #include "pch.h"
 #include "World.h"
 #include "04.Renderer/SpriteRenderer.h"
+#include "05.Input/InputActionManager.h"
+
+void CWorld::PerformInputAction(CInputActionManager& InInputActionManager)
+{
+	CInputActionValueCollector Collector;
+	for (auto& WorldActor : WorldActors)
+		WorldActor->SetupInputActionValue(Collector);
+	
+	InInputActionManager.PerformAction(Collector);
+}
 
 void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 {
@@ -30,7 +40,7 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 		RenderComponent->SetupResourceToRSO(RenderResourceLoader);
 		RenderComponent->SetupMappingInstanceToRSO(RenderResourceLoader);
 
-		RenderComponent->MapBuffersToRSO();
+		RenderComponent->MapUpdatedBuffersToRSO();
 
 		// PushRSO
 		CRenderStateObject* RenderStateObject = RenderComponent->GetRenderStateObject();

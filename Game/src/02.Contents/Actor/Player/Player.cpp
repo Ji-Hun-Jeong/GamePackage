@@ -2,6 +2,26 @@
 #include "Player.h"
 #include "05.Input/InputActionManager.h"
 
+CPlayer::CPlayer()
+	: Head(nullptr)
+	, Body(nullptr)
+	, Arm(nullptr)
+	, Hand(nullptr)
+	, LeftMoveActionValue(nullptr)
+	, RightMoveActionValue(nullptr)
+	, UpMoveActionValue(nullptr)
+	, DownMoveActionValue(nullptr)
+{
+	InitalizeInputActionValue();
+
+	RenderComponent = AddComponent<CRenderComponent>();
+
+	const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("ImageMesh");
+	RenderComponent->SetMesh(MeshData);
+	RenderComponent->SetDiffuseImage(L"resources/image/Player/Alert/0.png");
+
+	Transform->SetSpeed(5.0f);
+}
 CPlayer::~CPlayer()
 {
 	
@@ -39,36 +59,30 @@ CPlayer::~CPlayer()
 //	GetTransform()->SetSpeed(2.0f);*/
 //}
 
-void CPlayer::EndPlay()
-{
-	CActor::EndPlay();
-	//LeftMoveActionValue->Destroy();
-	//RightMoveActionValue->Destroy();
-	//UpMoveActionValue->Destroy();
-	//DownMoveActionValue->Destroy();
-}
-
 void CPlayer::Update(float InDeltaTime)
 {
 	CActor::Update(InDeltaTime);
 }
 
-void CPlayer::SetInputAction(CInputActionManager& InInputActionManager)
+void CPlayer::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)
 {
-	//LeftMoveActionValue = InInputActionManager.AddInputActionValue(EKeyType::Left, EButtonState::Hold, [this]()->void
-	//	{
-	//		GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f));
-	//	});
-	//RightMoveActionValue = InInputActionManager.AddInputActionValue(EKeyType::Right, EButtonState::Hold, [this]()->void
-	//	{
-	//		GetTransform()->Move(Vector3(1.0f, 0.0f, 0.0f));
-	//	});
-	//UpMoveActionValue = InInputActionManager.AddInputActionValue(EKeyType::Up, EButtonState::Hold, [this]()->void
-	//	{
-	//		GetTransform()->Move(Vector3(0.0f, 1.0f, 0.0f));
-	//	});
-	//DownMoveActionValue = InInputActionManager.AddInputActionValue(EKeyType::Down, EButtonState::Hold, [this]()->void
-	//	{
-	//		GetTransform()->Move(Vector3(0.0f, -1.0f, 0.0f));
-	//	});
+	InInputActionValueCollector.PushInputActionValue(*LeftMoveActionValue);
+	InInputActionValueCollector.PushInputActionValue(*RightMoveActionValue);
+	InInputActionValueCollector.PushInputActionValue(*UpMoveActionValue);
+	InInputActionValueCollector.PushInputActionValue(*DownMoveActionValue);
+}
+
+void CPlayer::InitalizeInputActionValue()
+{
+	LeftMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f)); });
+	LeftMoveActionValue->AddKeyCondition({EKeyType::A, EButtonState::Hold});
+
+	RightMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(1.0f, 0.0f, 0.0f)); });
+	RightMoveActionValue->AddKeyCondition({ EKeyType::D, EButtonState::Hold });
+
+	UpMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(0.0f, 1.0f, 0.0f)); });
+	UpMoveActionValue->AddKeyCondition({ EKeyType::W, EButtonState::Hold });
+
+	DownMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(0.0f, -1.0f, 0.0f)); });
+	DownMoveActionValue->AddKeyCondition({ EKeyType::S, EButtonState::Hold });
 }

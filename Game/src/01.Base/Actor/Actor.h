@@ -170,6 +170,8 @@ public:
 		}
 	}
 
+	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) {}
+
 public:
 	virtual void Serialize(CSerializer& InSerializer) const override
 	{
