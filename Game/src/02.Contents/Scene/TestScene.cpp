@@ -21,5 +21,5 @@ private:
 CTestScene::CTestScene()
 {
 	CActor* Actor = GetWorld()->SpawnActor<CTestActor>(this);
-	Actor->GetTransform()->SetPosition(Vector3(0.5f, 0.0f, 0.0f));
+	Actor->GetTransform()->SetPosition(Vector3(500.0f, 0.0f, 0.0f));
 }

@@ -26,16 +26,26 @@ void CRenderComponent::SetupResource(CRenderResourceLoader& InRenderResourceLoad
 		RenderStateObject.SetVertexConstBuffer(Slot, std::move(VertexConstBuffer));
 	}
 
-	ModelMatrix = (Matrix::CreateScale(Scale)
-		* Matrix::CreateRotationX(Rotation.x)
-		* Matrix::CreateRotationY(Rotation.y)
-		* Matrix::CreateRotationZ(Rotation.z)
-		* Matrix::CreateTranslation(Position)).Transpose();
 }
 
 void CRenderComponent::SetupPSO(const CPSOManager& InPSOManager)
 {
 	CPSO* PSO = InPSOManager.GetPSO(PSOType);
 	RenderStateObject.SetPSO(PSO);
+}
+
+void CRenderComponent::UpdateModelVertexConstBufferData(const CTransform& InTransform, uint32_t InScreenWidth, uint32_t InScreenHeight)
+{
+	float NormalizedX = (InTransform.GetFinalPosition().x / (InScreenWidth * 0.5f));
+	float NormalizedY = (InTransform.GetFinalPosition().y / (InScreenHeight * 0.5f));
+
+	// 3. Model Matrix ±¸¼º
+	Matrix ModelMatrix = (Matrix::CreateScale(InTransform.GetScale())
+		* Matrix::CreateRotationX(InTransform.GetRotation().x)
+		* Matrix::CreateRotationY(InTransform.GetRotation().y)
+		* Matrix::CreateRotationZ(InTransform.GetRotation().z)
+		* Matrix::CreateTranslation(NormalizedX, NormalizedY, InTransform.GetFinalPosition().z)).Transpose();
+
+	UpdateVertexConstBufferData(0, &ModelMatrix, sizeof(ModelMatrix));
 }
 

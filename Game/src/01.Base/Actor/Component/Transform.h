@@ -85,7 +85,6 @@ public:
     void SetVariation(bool bVariation) { bVariationFlag = bVariation; }
     bool OnVariation() const { return bVariationFlag; }
 
-    void UpdateRenderState(class CRenderComponent& InRenderComponent);
 
 private:
     Vector3 FinalPosition;

@@ -159,9 +159,6 @@ public:
 	{
 		if (Transform->OnVariation())
 		{
-			Transform->SetVariation(false);
-			if (RenderComponent)
-				Transform->UpdateRenderState(*RenderComponent);
 			for (auto& Child : Childs)
 				Child->Transform->SetVariation(true);
 
@@ -170,7 +167,6 @@ public:
 				InteractionComponent->SetRectTransform(Transform->GetFinalPosition().x, Transform->GetFinalPosition().y
 					, Transform->GetScale().x, Transform->GetScale().y);
 			}*/
-			
 		}
 	}
 	struct TVertexConstBuffer

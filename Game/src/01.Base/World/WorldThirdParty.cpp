@@ -6,6 +6,9 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 {
 	const CPSOManager& PSOManager = InRenderer.GetPSOManager();
 	CRenderResourceLoader& RenderResourceLoader = InRenderer.GetRenderResourceLoader();
+	const uint32_t ScreenWidth = InRenderer.GetScreenWidth();
+	const uint32_t ScreenHeight = InRenderer.GetScreenHeight();
+
 
 	std::vector<CRenderStateObject*> RenderStateObjects;
 	RenderStateObjects.reserve(WorldActors.size());
@@ -20,6 +23,13 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 		// SetupResource
 		RenderComponent->SetupPSO(PSOManager);
 		RenderComponent->SetupResource(RenderResourceLoader);
+
+		CTransform* Transform = WorldActor->GetTransform();
+		if (Transform->OnVariation())
+		{
+			RenderComponent->UpdateModelVertexConstBufferData(*Transform, ScreenWidth, ScreenHeight);
+			Transform->SetVariation(false);
+		}
 
 		// CollectUpdateBufferList
 		std::queue<TBufferMappingInstance>& UpdateBufferList = RenderComponent->GetUpdateBufferList();

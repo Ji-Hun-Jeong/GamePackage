@@ -92,10 +92,3 @@ struct TBufferMappingInstance
 	size_t UpdateSlot;
 	const std::vector<uint8_t>& BufferData;
 };
-
-struct TRenderTransform
-{
-	Vector3 Position;
-	Vector3 Rotation;
-	Vector3 Scale;
-};

@@ -9,7 +9,6 @@ public:
 	CCpuBuffer(const void* InMappingPoint, size_t InByteWidth)
 	{
 		BufferData.resize(InByteWidth, 0);
-		memcpy(BufferData.data(), InMappingPoint, InByteWidth);
 	}
 
 private:
@@ -23,10 +22,7 @@ class CRenderComponent : public CComponent
 public:
 	CRenderComponent()
 		: PSOType(EPSOType::Basic)
-		, Scale(1.0f)
-	{
-		SetVertexConstBufferData(0, &ModelMatrix, sizeof(ModelMatrix));
-	}
+	{}
 	~CRenderComponent()
 	{
 	}
@@ -69,6 +65,7 @@ public:
 		memcpy(VertexConstBufferDatas[InSlot]->BufferData.data(), InMappingPoint, InByteWidth);
 		UpdateBufferList.emplace(RenderStateObject, InSlot, VertexConstBufferDatas[InSlot]->BufferData);
 	}
+	void UpdateModelVertexConstBufferData(const class CTransform& InTransform, uint32_t InScreenWidth, uint32_t InScreenHeight);
 
 public:
 	void Serialize(CSerializer& InSerializer) const override
@@ -101,25 +98,7 @@ private:
 
 	std::queue<TBufferMappingInstance> UpdateBufferList;
 
-public:
-	void SetPosition(const Vector3& InPosition)
-	{
-		Position = InPosition;
-	}
-	void SetRotation(const Vector3& InRotation)
-	{
-		Rotation = InRotation;
-	}
-	void SetScale(const Vector3& InScale)
-	{
-		Scale = InScale;
-	}
 
-private:
-	Matrix ModelMatrix;
-	Vector3 Position;
-	Vector3 Rotation;
-	Vector3 Scale;
 
 };
 
