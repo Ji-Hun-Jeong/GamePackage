@@ -1,45 +1,36 @@
 #pragma once
 #include "00.App/CoreSystem.h"
+#include "03.Utils/AssetLoader.h"
 #include "Component/Transform.h"
 #include "Component/RenderComponent.h"
 #include "Component/InteractionComponent.h"
 #include "Component/Animation/Animator.h"
+
+extern class CWorld* g_World;
 
 class CActor : public CObject
 {
 	GENERATE_OBJECT(CActor)
 		DONTCOPY(CActor)
 public:
-	CActor()
-		: Owner(nullptr)
-		, bActive(true)
-		, Transform(nullptr)
-		, RenderComponent(nullptr)
-		, Animator(nullptr)
-		, InteractionComponent(nullptr)
-	{
-		Transform = NewObject<CTransform>(this);
-		AttachComponent(Transform);
-	}
+	CActor();
 	virtual ~CActor()
 	{
 	}
 
 	const std::vector<CActor*>& GetChild() const { return Childs; }
 private:
-	friend class CWorld;
-	inline static class CWorld* World = nullptr;
-
 	CActor* Owner;
 	bool bActive;
 
 	std::vector<CActor*> Childs;
+
+public:
 	void Attach(CActor* InChild)
 	{
 		InChild->Owner = this;
 		Childs.push_back(InChild);
 	}
-public:
 	void AttachComponent(CComponent* InComponent)
 	{
 		InComponent->OwnerActor = this;
@@ -69,8 +60,19 @@ public:
 	}
 
 public:
-	class CWorld* GetWorld() const { return World; }
+	class CWorld* GetWorld() const { return g_World; }
 	CActor* GetOwner() const { return Owner; }
+
+	CTransform* GetTransform() const { return Transform; }
+	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+protected:
+	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
+	CTransform* Transform;
+	CRenderComponent* RenderComponent;
+	CAnimator* Animator;
+	CInteractionComponent* InteractionComponent;
+	std::vector<CComponent*> Components;
+
 	template <typename T>
 	T* GetComponent()
 	{
@@ -79,6 +81,13 @@ public:
 			if (Component->GetType() == T::GetStaticType())
 				return Component;
 		}
+	}
+	template <typename T>
+	T* AddComponent()
+	{
+		T* Component = NewObject<T>(this);
+		AttachComponent(Component);
+		return Component;
 	}
 	std::vector<CComponent*> GetComponentsByName(const std::string& InComponentName)
 	{
@@ -95,17 +104,6 @@ public:
 		return FoundComponents;
 	}
 
-protected:
-	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
-	CTransform* Transform;
-	CRenderComponent* RenderComponent;
-	CAnimator* Animator;
-	CInteractionComponent* InteractionComponent;
-	std::vector<CComponent*> Components;
-
-public:
-	void SetRenderComponent();
-
 public:
 	void AddEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.insert(&InEndEvent); }
 	void AddBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.insert(&InBeginEvent); }
@@ -116,7 +114,7 @@ private:
 	std::set<std::function<void(CObject&)>*> EndEvents;
 	std::set<std::function<void(CObject&)>*> BeginEvents;
 
-protected:
+public:
 	virtual void BeginPlay()
 	{
 	}
@@ -126,7 +124,7 @@ protected:
 
 	virtual void Update(float InDeltaTime)
 	{
-		if (InteractionComponent)
+		/*if (InteractionComponent)
 			InteractionComponent->PerformEvent();
 		if (Animator)
 		{
@@ -146,14 +144,15 @@ protected:
 			}
 
 			CurrentAnimation->UpdateAnimationState(InDeltaTime);
-		}
+		}*/
 	}
 	virtual void FinalUpdate()
 	{
+		Vector3 FinalPosition = Transform->GetPosition();
 		if (Owner)
-			Transform->SetFinalPosition(Transform->GetPosition() + Owner->Transform->GetFinalPosition());
-		else
-			Transform->SetFinalPosition(Transform->GetPosition());
+			FinalPosition += Owner->Transform->GetFinalPosition();
+
+		Transform->SetFinalPosition(FinalPosition);
 
 	}
 	virtual void CaptureSnapShot()
@@ -161,20 +160,17 @@ protected:
 		if (Transform->OnVariation())
 		{
 			Transform->SetVariation(false);
-
 			if (RenderComponent)
-			{
-				VertexConstBuffer.ModelMatrix = RenderComponent->GetModelMatrix(Transform->GetFinalPosition(), Transform->GetRotation(), Transform->GetScale());
-				RenderComponent->UpdateVertexConstBuffer(0, &VertexConstBuffer, sizeof(VertexConstBuffer));
-			}
+				Transform->UpdateRenderState(*RenderComponent);
+			for (auto& Child : Childs)
+				Child->Transform->SetVariation(true);
 
-			if (InteractionComponent)
+			/*if (InteractionComponent)
 			{
 				InteractionComponent->SetRectTransform(Transform->GetFinalPosition().x, Transform->GetFinalPosition().y
 					, Transform->GetScale().x, Transform->GetScale().y);
-			}
-			for (auto& Child : Childs)
-				Child->Transform->SetVariation(true);
+			}*/
+			
 		}
 	}
 	struct TVertexConstBuffer

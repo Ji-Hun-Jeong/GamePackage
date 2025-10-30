@@ -11,7 +11,6 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	, World()
 {
 	//SpriteRenderer.InitalizeFromWindow(Window);
-	SpriteRenderer.InitalizeFromWorld(World);
 	InputActionManager.InitalizeFromWorld(World);
 	MouseManager.InitalizeFromWorld(World);
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
@@ -41,6 +40,8 @@ bool CGame::Process()
 
 	World.CaptureSnapShot();
 
+	World.RenderWorld(SpriteRenderer);
+
 	//SpriteRenderer.Render();
 	//MouseManager.AddNextInteracter();
 	
@@ -49,4 +50,5 @@ bool CGame::Process()
 
 void CGame::ShutDown()
 {
+	CCoreSystem::GetInst().ShutDown();
 }

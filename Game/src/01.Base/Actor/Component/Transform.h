@@ -75,22 +75,19 @@ public:
     }
     void SetSpeed(float InSpeed) { Speed = InSpeed; }
 
-    // =================================================================
-    // Other Methods
-    // =================================================================
     void Move(const Vector3& InDirection)
     {
         if (Speed == 0.0f)
             std::cout << "Speed Is Zero\n";
-        Position += InDirection * Speed;
-        SetVariation(true);
+        SetPosition(Position + InDirection * Speed);
     }
 
     void SetVariation(bool bVariation) { bVariationFlag = bVariation; }
     bool OnVariation() const { return bVariationFlag; }
 
+    void UpdateRenderState(class CRenderComponent& InRenderComponent);
+
 private:
-    Matrix ModelMatrix;
     Vector3 FinalPosition;
     Vector3 Position;
     Vector3 Rotation;

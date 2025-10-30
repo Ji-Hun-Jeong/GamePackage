@@ -5,31 +5,8 @@
 #include "Image.h"
 #include "PSOManager.h"
 
-class CBufferMapInstance
+class CRenderStateObject
 {
-	friend class CRenderStateObject;
-	CBufferMapInstance(size_t InMappingIndex)
-		: MappingIndex(InMappingIndex)
-		, MapDataPoint(nullptr)
-		, DataSize(0)
-	{}
-public:
-	~CBufferMapInstance() = default;
-
-public:
-	size_t GetMappingIndex() const { return MappingIndex; }
-
-private:
-	size_t MappingIndex;
-
-	const void* MapDataPoint;
-	size_t DataSize;
-
-};
-
-class CRenderStateObject : public CObject
-{
-	GENERATE_OBJECT(CRenderStateObject)
 public:
 	CRenderStateObject()
 		: Mesh(nullptr)
@@ -39,7 +16,8 @@ public:
 		, PixelShaderResourceStartSlot(0)
 		, VertexConstBufferStartSlot(0)
 		, bRender(true)
-	{}
+	{
+	}
 	~CRenderStateObject() = default;
 
 public:
@@ -70,29 +48,28 @@ public:
 		VertexConstBufferStartSlot = InVertexConstBufferStartSlot;
 	}
 
-	std::unique_ptr<CBufferMapInstance> AddVertexConstBuffer(std::unique_ptr<Graphics::CBuffer> InVertexConstBuffer, const void* InMapDataPoint = nullptr, size_t InDataSize = 0)
+	void SetVertexConstBuffer(size_t InSlot, std::unique_ptr<Graphics::CBuffer> InVertexConstBuffer)
 	{
-		assert(InVertexConstBuffer);
-		VertexConstBuffers.push_back(std::move(InVertexConstBuffer));
-		size_t Index = VertexConstBuffers.size() - 1;
-
-		CBufferMapInstance* BufferMapInstance = new CBufferMapInstance(Index);
-		if (InMapDataPoint)
-			UpdateVertexConstBuffer(BufferMapInstance, InMapDataPoint, InDataSize);
-
-		return std::unique_ptr<CBufferMapInstance>(BufferMapInstance);
+		if (VertexConstBuffer[InSlot] != nullptr)
+		{
+			VertexConstBuffer[InSlot].reset();
+			std::cout << "VertexConstBuffer Is Overlapped\n";
+		}
+		VertexConstBuffer[InSlot] = std::move(InVertexConstBuffer);
 	}
 
-	void UpdateVertexConstBuffer(CBufferMapInstance* InBufferMapInstance, const void* InMapDataPoint, size_t InDataSize)
-	{
-		InBufferMapInstance->MapDataPoint = InMapDataPoint;
-		InBufferMapInstance->DataSize = InDataSize;
-		BufferMapInstances.push(InBufferMapInstance);
-	}
-
+	void UpdateVertexConstBuffer(Graphics::CRenderContext& InContext, size_t InSlot, const void* InMappingPoint, size_t InByteWidth);
 	void BindRenderState(Graphics::CRenderContext& InContext);
+
 	void SetRender(bool bInRender) { bRender = bInRender; }
 
+	bool IsExistBufferInSlot(size_t InSlot)
+	{
+		assert(InSlot < VertexConstBuffer.size());
+		if (VertexConstBuffer[InSlot])
+			return true;
+		return false;
+	}
 protected:
 	Graphics::CMesh* Mesh;
 	CPSO* PSO;
@@ -100,11 +77,25 @@ protected:
 	std::array<CImage*, 6> VertexShaderResources;
 	std::array<CImage*, 6> PixelShaderResources;
 
-	std::vector<std::unique_ptr<Graphics::CBuffer>> VertexConstBuffers;
-	std::queue<const CBufferMapInstance*> BufferMapInstances;
+	std::array<std::unique_ptr<Graphics::CBuffer>, 6> VertexConstBuffer;
+	std::queue<size_t> UpdateList;
 
 	uint32_t PixelShaderResourceStartSlot;
 	uint32_t VertexConstBufferStartSlot;
 
 	bool bRender;
+};
+
+struct TBufferMappingInstance
+{
+	CRenderStateObject& RenderStateObject;
+	size_t UpdateSlot;
+	const std::vector<uint8_t>& BufferData;
+};
+
+struct TRenderTransform
+{
+	Vector3 Position;
+	Vector3 Rotation;
+	Vector3 Scale;
 };

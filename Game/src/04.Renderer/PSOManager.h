@@ -56,7 +56,7 @@ public:
 	~CPSOManager() = default;
 
 public:
-	CPSO* GetPSO(EPSOType InPSOType)
+	CPSO* GetPSO(EPSOType InPSOType) const
 	{
 		return PSOs[(size_t)InPSOType].get();
 	}

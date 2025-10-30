@@ -1,37 +1,83 @@
 #pragma once
 #include "Component.h"
-#include "04.Renderer/RenderResourceLoader.h"
 #include "04.Renderer/RenderStateObject.h"
-#include "04.Renderer/SpriteRenderer.h"
+
+class CCpuBuffer
+{
+	friend class CRenderComponent;
+public:
+	CCpuBuffer(const void* InMappingPoint, size_t InByteWidth)
+	{
+		BufferData.resize(InByteWidth, 0);
+		memcpy(BufferData.data(), InMappingPoint, InByteWidth);
+	}
+
+private:
+	std::vector<uint8_t> BufferData;
+
+};
 
 class CRenderComponent : public CComponent
 {
 	GENERATE_OBJECT(CRenderComponent)
 public:
 	CRenderComponent()
-		: RenderStateObject(nullptr)
-		, RenderResourceLoader(nullptr)
-		, Renderer(nullptr)
-		, CurrentSettingImage(nullptr)
-	{}
+		: PSOType(EPSOType::Basic)
+		, Scale(1.0f)
+	{
+		SetVertexConstBufferData(0, &ModelMatrix, sizeof(ModelMatrix));
+	}
 	~CRenderComponent()
 	{
-
 	}
 
 public:
-	/*void EndPlay() override
+	void SetMesh(const Graphics::TMeshData& InMeshData)
 	{
-		CComponent::EndPlay();
-		RenderStateObject->Destroy();
-	}*/
+		MeshData = InMeshData;
+	}
+	void SetDiffuseImage(const std::wstring& InImagePath)
+	{
+		CurrentImagePath = InImagePath;
+	}
+	void SetPSO(EPSOType InPSOType)
+	{
+		PSOType = InPSOType;
+	}
+
+	CRenderStateObject* GetRenderStateObject() { return &RenderStateObject; }
+	std::queue<TBufferMappingInstance>& GetUpdateBufferList() { return UpdateBufferList; }
+
+	void SetupResource(class CRenderResourceLoader& InRenderResourceLoader);
+	void SetupPSO(const class CPSOManager& InPSOManager);
+
+	void SetVertexConstBufferData(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
+	{
+		if (VertexConstBufferDatas[InSlot])
+		{
+			VertexConstBufferDatas[InSlot].reset();
+			std::cout << "ConstBuffer Covered\n";
+		}
+		VertexConstBufferDatas[InSlot] = std::make_unique<CCpuBuffer>(InMappingPoint, InByteWidth);
+		MakeVertexConstBufferDataRequestSlots.push(InSlot);
+	}
+	void UpdateVertexConstBufferData(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
+	{
+		if (VertexConstBufferDatas[InSlot] == nullptr)
+			SetVertexConstBufferData(InSlot, InMappingPoint, InByteWidth);
+		
+		memcpy(VertexConstBufferDatas[InSlot]->BufferData.data(), InMappingPoint, InByteWidth);
+		UpdateBufferList.emplace(RenderStateObject, InSlot, VertexConstBufferDatas[InSlot]->BufferData);
+	}
+
+public:
 	void Serialize(CSerializer& InSerializer) const override
 	{
 		CComponent::Serialize(InSerializer);
-		if (CurrentSettingImagePath.empty() == false)
+		if (CurrentImagePath.empty() == false)
 		{
 			CSerializer Data;
-			Data["ImagePath"] = CurrentSettingImagePath.c_str();
+			Data["ImagePath"] = CurrentImagePath.c_str();
 			InSerializer = Data;
 		}
 	}
@@ -39,111 +85,41 @@ public:
 	{
 		CComponent::Deserialize(InDeserializer);
 		const std::string& Path = InDeserializer["ImagePath"];
-		CurrentSettingImagePath = std::wstring(Path.begin(), Path.end());
-		SetDiffuseImage(CurrentSettingImagePath);
+		CurrentImagePath = std::wstring(Path.begin(), Path.end());
+		SetDiffuseImage(CurrentImagePath);
 	}
-	void SetMesh(Graphics::MeshKey InMeshKey)
-	{
-		Graphics::CMesh* Mesh = RenderResourceLoader->GetMeshOrNull(InMeshKey);
-		RenderStateObject->SetMesh(Mesh);
-	}
-	void SetDiffuseImage(const std::wstring& InImagePath)
-	{
-		CImage* Image = nullptr;
-		auto Iter = CacheImages.find(InImagePath);
-		if (Iter != CacheImages.end())
-			Image = Iter->second;
-		else
-		{
-			Image = RenderResourceLoader->LoadImageFromFile(InImagePath);
-			CacheImages.emplace(InImagePath, Image);
-		}
-		CurrentSettingImagePath = InImagePath;
-		CurrentSettingImage = Image;
-		assert(CurrentSettingImage);
-
-		RenderStateObject->SetPixelShaderResource(0, CurrentSettingImage);
-
-		const Vector2& ImageSize = CurrentSettingImage->GetTexture2D().GetTextureSize();
-		for (auto& ImageChangeEvent : ImageChangeEvents)
-			ImageChangeEvent(ImageSize);
-	}
-	void SetPSO(EPSOType InPSOType)
-	{
-		CPSO* PSO = RenderResourceLoader->GetPSO(InPSOType);
-		RenderStateObject->SetPSO(PSO);
-	}
-	void ResetImage()
-	{
-		CurrentSettingImagePath = L"";
-		CurrentSettingImage = nullptr;
-		RenderStateObject->SetPixelShaderResource(0, CurrentSettingImage);
-
-		Vector2 ImageSize(0.0f);
-		for (auto& ImageChangeEvent : ImageChangeEvents)
-			ImageChangeEvent(ImageSize);
-	}
-	void AddVertexConstBuffer(uint32_t InByteWidth)
-	{
-		Graphics::TBufferDesc ConstBufferDesc;
-		ConstBufferDesc.ByteWidth = InByteWidth;
-		ConstBufferDesc.Usage = Graphics::EUsage::UsageDynamic;
-		ConstBufferDesc.BindFlags = Graphics::EBindFlags::BindConstantBuffer;
-		ConstBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessWrite;
-
-		std::unique_ptr<Graphics::CBuffer> VertexConstBuffer = RenderResourceLoader->CreateConstBuffer(ConstBufferDesc, nullptr);
-		auto VertexConstBufferMapInstance = RenderStateObject->AddVertexConstBuffer(std::move(VertexConstBuffer));
-		VertexConstBufferMapInstances.push_back(std::move(VertexConstBufferMapInstance));
-	}
-	void UpdateVertexConstBuffer(size_t InIndex, const void* InMapDataPoint, size_t InDataSize)
-	{
-		RenderStateObject->UpdateVertexConstBuffer(VertexConstBufferMapInstances[InIndex].get(), InMapDataPoint, InDataSize);
-	}
-	const Vector2& GetCurrentImageScale() const { return CurrentSettingImage->GetTexture2D().GetTextureSize(); }
-
-	Matrix GetModelMatrix(const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale)
-	{
-		Vector3 Position = Vector3(InPosition.x * 2.0f / Renderer->GetScreenWidth(), InPosition.y * 2.0f / Renderer->GetScreenHeight(), InPosition.z);
-		const Vector3& Rotation = InRotation;
-		Vector3 Scale = Vector3(InScale.x / Renderer->GetScreenWidth(), InScale.y / Renderer->GetScreenHeight(), InScale.z);
-
-		return (Matrix::CreateScale(Scale)
-			* Matrix::CreateRotationX(Rotation.x)
-			* Matrix::CreateRotationY(Rotation.y)
-			* Matrix::CreateRotationZ(Rotation.z)
-			* Matrix::CreateTranslation(Position)).Transpose();
-	}
-	void AddImageChangeEvent(std::function<void(const Vector2&)> InImageChangeEvent)
-	{
-		ImageChangeEvents.push_back(InImageChangeEvent);
-	}
-	const std::wstring& GetCurrentImagePath() const { return CurrentSettingImagePath; }
-
-public:
-	void SetRenderStateObject(CRenderStateObject* InRenderStateObject)
-	{
-		assert(InRenderStateObject);
-		RenderStateObject = InRenderStateObject;
-	}
-	void SetRenderResourceLoader(CRenderResourceLoader* InRenderResourceLoader)
-	{
-		assert(InRenderResourceLoader);
-		RenderResourceLoader = InRenderResourceLoader;
-	}
-	void SetRenderer(const CSpriteRenderer* InRenderer) { Renderer = InRenderer; }
 
 private:
-	const CSpriteRenderer* Renderer;
-	CRenderStateObject* RenderStateObject;
-	CRenderResourceLoader* RenderResourceLoader;
+	CRenderStateObject RenderStateObject;
 
-	std::vector<std::unique_ptr<CBufferMapInstance>> VertexConstBufferMapInstances;
+	Graphics::TMeshData MeshData;
+	EPSOType PSOType;
+	std::wstring CurrentImagePath;
 
-	std::vector<std::function<void(const Vector2&)>> ImageChangeEvents;
+	std::array<std::unique_ptr<CCpuBuffer>, 6> VertexConstBufferDatas;
+	std::queue<size_t> MakeVertexConstBufferDataRequestSlots;
 
-	std::map<std::wstring, CImage*> CacheImages;
-	CImage* CurrentSettingImage;
-	std::wstring CurrentSettingImagePath;
+	std::queue<TBufferMappingInstance> UpdateBufferList;
+
+public:
+	void SetPosition(const Vector3& InPosition)
+	{
+		Position = InPosition;
+	}
+	void SetRotation(const Vector3& InRotation)
+	{
+		Rotation = InRotation;
+	}
+	void SetScale(const Vector3& InScale)
+	{
+		Scale = InScale;
+	}
+
+private:
+	Matrix ModelMatrix;
+	Vector3 Position;
+	Vector3 Rotation;
+	Vector3 Scale;
 
 };
 

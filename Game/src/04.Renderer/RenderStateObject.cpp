@@ -1,18 +1,22 @@
 #include "pch.h"
 #include "RenderStateObject.h"
 #include <Renderer/Base/RenderContext.h>
+#include "RenderResourceLoader.h"
+
+void CRenderStateObject::UpdateVertexConstBuffer(Graphics::CRenderContext& InContext, size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
+{
+	// UpdateConstBuffer
+	InContext.CopyBuffer(VertexConstBuffer[InSlot].get(), InMappingPoint, InByteWidth);
+}
 
 void CRenderStateObject::BindRenderState(Graphics::CRenderContext& InContext)
 {
-	while (BufferMapInstances.empty() == false)
+	// SetConstBuffer
+	for (size_t i = 0; i < VertexConstBuffer.size(); ++i)
 	{
-		const CBufferMapInstance* BufferMapInstance = BufferMapInstances.front();
-		BufferMapInstances.pop();
-		InContext.CopyBuffer(VertexConstBuffers[BufferMapInstance->MappingIndex].get(), BufferMapInstance->MapDataPoint, BufferMapInstance->DataSize);
-	};
-
-	if (VertexConstBuffers.size())
-		InContext.VSSetConstantBuffers(VertexConstBufferStartSlot, uint32_t(VertexConstBuffers.size()), VertexConstBuffers);
+		auto& GpuBuffer = VertexConstBuffer[i];
+		InContext.VSSetConstantBuffer(VertexConstBufferStartSlot + uint32_t(i), GpuBuffer.get());
+	}
 
 	if (PSO)
 	{

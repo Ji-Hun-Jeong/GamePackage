@@ -1,46 +1,52 @@
 #pragma once
 #include <Renderer/Base/RenderDevice.h>
 #include <Renderer/Rendering/Mesh.h>
-#include "PSOManager.h"
 #include "03.Utils/GeometryGenerator.h"
 #include "Image.h"
 
 class CRenderResourceLoader
 {
 public:
-	CRenderResourceLoader(Graphics::CRenderDevice& InDevice, CPSOManager& InPSOManager)
+	CRenderResourceLoader(Graphics::CRenderDevice& InDevice)
 		: Device(InDevice)
-		, PSOManager(InPSOManager)
 	{}
 	~CRenderResourceLoader() = default;
 
 public:
-	void LoadMesh(const Graphics::TMeshData& InMeshData)
+	Graphics::CMesh* LoadMesh(const Graphics::TMeshData& InMeshData)
 	{
 		auto Iter = Meshes.find(InMeshData.Key);
+
 		if (Iter != Meshes.end())
-			return;
+			return Iter->second.get();
 
-		assert(InMeshData.VertexBufferInitData.CopyStartPoint);
-		assert(InMeshData.IndexBufferInitData.CopyStartPoint);
+		Graphics::TBufferDesc VertexBufferDesc;
+		VertexBufferDesc.BindFlags = Graphics::EBindFlags::BindVertexBuffer;
+		VertexBufferDesc.ByteWidth = uint32_t(sizeof(TVertex) * InMeshData.Vertices.size());
+		VertexBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
+		VertexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
 
-		auto VertexBuffer = Device.CreateBuffer(InMeshData.VertexBufferDesc, &InMeshData.VertexBufferInitData);
-		auto IndexBuffer = Device.CreateBuffer(InMeshData.IndexBufferDesc, &InMeshData.IndexBufferInitData);
+		Graphics::TBufferInitalizeData VertexBufferInitData;
+		VertexBufferInitData.CopyStartPoint = InMeshData.Vertices.data();
+		
+		Graphics::TBufferDesc IndexBufferDesc;
+		IndexBufferDesc.BindFlags = Graphics::EBindFlags::BindIndexBuffer;
+		IndexBufferDesc.ByteWidth = uint32_t(sizeof(uint32_t) * InMeshData.Indices.size());
+		IndexBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
+		IndexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
+
+		Graphics::TBufferInitalizeData IndexBufferInitData;
+		IndexBufferInitData.CopyStartPoint = InMeshData.Indices.data();
+
+		auto VertexBuffer = Device.CreateBuffer(VertexBufferDesc, &VertexBufferInitData);
+		auto IndexBuffer = Device.CreateBuffer(IndexBufferDesc, &IndexBufferInitData);
 
 		Graphics::CMesh* Mesh = new Graphics::CMesh(std::move(VertexBuffer), std::move(IndexBuffer)
 			, InMeshData.IndexFormat, InMeshData.IndexCount, InMeshData.Stride, InMeshData.Offset);
 
 		Meshes.emplace(InMeshData.Key, Mesh);
-	}
 
-	Graphics::CMesh* GetMeshOrNull(Graphics::MeshKey InMeshKey)
-	{
-		auto Iter = Meshes.find(InMeshKey);
-
-		if (Iter == Meshes.end())
-			return nullptr;
-
-		return Iter->second.get();
+		return Mesh;
 	}
 
 	CImage* LoadImageFromFile(const std::wstring& InPath)
@@ -54,19 +60,23 @@ public:
 		CImage* RawImage = new CImage(std::move(SRV_Texture2D.first), std::move(SRV_Texture2D.second));
 		Images.emplace(InPath, RawImage);
 
+		assert(RawImage);
+
 		return RawImage;
 	}
 
-	CPSO* GetPSO(EPSOType InPSOType) const { return PSOManager.GetPSO(InPSOType); }
-
-	std::unique_ptr<Graphics::CBuffer> CreateConstBuffer(const Graphics::TBufferDesc& InConstBufferDesc, const Graphics::TBufferInitalizeData* InBufferInitalizeData) const
+	std::unique_ptr<Graphics::CBuffer> CreateConstBuffer(size_t InByteWidth) const
 	{
-		return Device.CreateBuffer(InConstBufferDesc, InBufferInitalizeData);
+		Graphics::TBufferDesc ConstBufferDesc;
+		ConstBufferDesc.ByteWidth = uint32_t(InByteWidth);
+		ConstBufferDesc.Usage = Graphics::EUsage::UsageDynamic;
+		ConstBufferDesc.BindFlags = Graphics::EBindFlags::BindConstantBuffer;
+		ConstBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessWrite;
+		return Device.CreateBuffer(ConstBufferDesc, nullptr);
 	}
 
 private:
 	Graphics::CRenderDevice& Device;
-	CPSOManager& PSOManager;
 
 	std::map<Graphics::MeshKey, std::unique_ptr<Graphics::CMesh>> Meshes;
 	std::map<std::wstring, std::unique_ptr<CImage>> Images;

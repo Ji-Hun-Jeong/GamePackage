@@ -2,6 +2,7 @@
 #include "WorldEvent.h"
 #include "01.Base/Actor/Actor.h"
 
+
 class CWorld : public CObject
 {
 	GENERATE_OBJECT(CWorld)
@@ -112,6 +113,8 @@ public:
 	CObject* Deserialize(const std::string& InReadPath, CActor* InOwnerActor);
 
 	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
+
+	void RenderWorld(class CSpriteRenderer& InRenderer);
 
 public:
 	const std::vector<CActor*>& GetWorldActors() const { return WorldActors; }

@@ -17,38 +17,31 @@ public:
 	void InitalizeFromWindow(Core::CWindow& InWindow);
 	void SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight);
 	void SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight);
-	uint32_t GetScreenWidth() const { return ScreenWidth; }
-	uint32_t GetScreenHeight() const { return ScreenHeight; }
-	CRenderStateObject* NewRenderStateObject()
-	{
-		CRenderStateObject* RenderStateObject = NewObject<CRenderStateObject>();
-		NextAddedRSO.emplace(RenderStateObject);
 
-		return RenderStateObject;
+	void UpdateRSOs(std::queue<TBufferMappingInstance>& InBufferMappingInstances)
+	{
+		while (InBufferMappingInstances.empty() == false)
+		{
+			TBufferMappingInstance BufferMappingInstance = InBufferMappingInstances.front();
+			InBufferMappingInstances.pop();
+
+			BufferMappingInstance.RenderStateObject.UpdateVertexConstBuffer(Context, BufferMappingInstance.UpdateSlot
+				, BufferMappingInstance.BufferData.data(), BufferMappingInstance.BufferData.size());
+		}
 	}
-	void Render()
+	void RenderRSOs(const std::vector<CRenderStateObject*>& InRenderStateObjects)
 	{
-		// 3. 한 번에 제거 (O(n))
-		auto NewEnd = std::remove_if(RenderStateObjects.begin(), RenderStateObjects.end(),
-			[](const auto& InRenderStateObject) { return InRenderStateObject->IsDestroy(); });
-		RenderStateObjects.erase(NewEnd, RenderStateObjects.end());
-
 		static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		Context.ClearRenderTarget(RenderTargetView.get(), ClearColor);
 
-		for (auto& RenderStateObject : RenderStateObjects)
-		{
+		for (auto& RenderStateObject : InRenderStateObjects)
 			RenderStateObject->BindRenderState(Context);
-		}
 
 		SwapChain.Present();
-
-		while (NextAddedRSO.empty() == false)
-		{
-			RenderStateObjects.push_back(std::move(NextAddedRSO.front()));
-			NextAddedRSO.pop();
-		}
 	}
+
+	const CPSOManager& GetPSOManager() const { return PSOManager; }
+	CRenderResourceLoader& GetRenderResourceLoader() { return RenderResourceLoader; }
 
 private:
 	uint32_t ScreenWidth;
@@ -63,8 +56,5 @@ private:
 	CRenderResourceLoader RenderResourceLoader;
 
 	std::unique_ptr<Graphics::CRenderTargetView> RenderTargetView;
-
-	std::vector<std::unique_ptr<CRenderStateObject>> RenderStateObjects;
-	std::queue<std::unique_ptr<CRenderStateObject>> NextAddedRSO;
 
 };

@@ -7,10 +7,8 @@ namespace Graphics
 	using MeshKey = uint32_t;
 	struct TMeshData
 	{
-		TBufferDesc VertexBufferDesc;
-		TBufferInitalizeData VertexBufferInitData;
-		TBufferDesc IndexBufferDesc;
-		TBufferInitalizeData IndexBufferInitData;
+		std::vector<uint8_t> Vertices;
+		std::vector<uint8_t> Indices;
 
 		EGIFormat IndexFormat = EGIFormat::GI_FORMAT_R32_UINT;
 		uint32_t IndexCount = 0;

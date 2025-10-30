@@ -9,8 +9,7 @@ class CCoreSystem
 public:
 	~CCoreSystem()
 	{
-		for (auto& Object : Objects)
-			delete Object;
+		
 	}
 	void ArrangeObjects()
 	{
@@ -44,6 +43,17 @@ public:
 	void DeregistObject(CObject* InObject)
 	{
 		DeletedObjects.push(InObject);
+	}
+	void ShutDown()
+	{
+		for (auto& Object : Objects)
+			delete Object;
+		while (DeletedObjects.empty() == false)
+		{
+			CObject* Object =  DeletedObjects.front();
+			DeletedObjects.pop();
+			delete Object;
+		}
 	}
 private:
 	std::vector<CObject*> Objects;

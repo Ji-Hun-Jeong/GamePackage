@@ -10,33 +10,10 @@ CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGrap
 	, SwapChain(GraphicInfra->GetSwapChain())
 	, RenderTargetView(Device.CreateRenderTargetView(*SwapChain.GetWindowTextureBuffer()))
 	, PSOManager(Device)
-	, RenderResourceLoader(Device, PSOManager)
+	, RenderResourceLoader(Device)
 {
 	SetViewPort(ScreenWidth, ScreenHeight);
 	Context.OMSetRenderTargets(1, RenderTargetView.get(), nullptr);
-
-	TGeometryData GeometryData = CGeometryGenerator::GenerateSquare();
-
-	Graphics::TMeshData MeshData;
-	MeshData.VertexBufferDesc.BindFlags = Graphics::EBindFlags::BindVertexBuffer;
-	MeshData.VertexBufferDesc.ByteWidth = uint32_t(sizeof(TVertex) * GeometryData.Vertices.size());
-	MeshData.VertexBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
-	MeshData.VertexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
-	MeshData.VertexBufferInitData.CopyStartPoint = GeometryData.Vertices.data();
-
-	MeshData.IndexBufferDesc.BindFlags = Graphics::EBindFlags::BindIndexBuffer;
-	MeshData.IndexBufferDesc.ByteWidth = uint32_t(sizeof(uint32_t) * GeometryData.Indices.size());
-	MeshData.IndexBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
-	MeshData.IndexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
-	MeshData.IndexBufferInitData.CopyStartPoint = GeometryData.Indices.data();
-
-	MeshData.IndexFormat = Graphics::EGIFormat::GI_FORMAT_R32_UINT;
-	MeshData.IndexCount = uint32_t(GeometryData.Indices.size());
-	MeshData.Stride = sizeof(TVertex);
-	MeshData.Offset = 0;
-	MeshData.Key = 0;
-
-	RenderResourceLoader.LoadMesh(MeshData);
 }
 
 void CSpriteRenderer::SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight)
