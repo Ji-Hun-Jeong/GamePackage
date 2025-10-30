@@ -7,6 +7,7 @@ class CCpuBuffer
 	friend class CRenderComponent;
 public:
 	CCpuBuffer(const void* InMappingPoint, size_t InByteWidth)
+		: bUpdated(true)
 	{
 		BufferData.resize(InByteWidth, 0);
 	}
@@ -14,6 +15,7 @@ public:
 private:
 	std::vector<uint8_t> BufferData;
 
+	bool bUpdated;
 };
 
 class CRenderComponent : public CComponent
@@ -42,10 +44,9 @@ public:
 	}
 
 	CRenderStateObject* GetRenderStateObject() { return &RenderStateObject; }
-	std::queue<TBufferMappingInstance>& GetUpdateBufferList() { return UpdateBufferList; }
-
-	void SetupResource(class CRenderResourceLoader& InRenderResourceLoader);
-	void SetupPSO(const class CPSOManager& InPSOManager);
+	void SetupResourceToRSO(class CRenderResourceLoader& InRenderResourceLoader);
+	void SetupMappingInstanceToRSO(class CRenderResourceLoader& InRenderResourceLoader);
+	void SetupPSOToRSO(const class CPSOManager& InPSOManager);
 
 	void SetVertexConstBufferData(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
 	{
@@ -55,17 +56,34 @@ public:
 			std::cout << "ConstBuffer Covered\n";
 		}
 		VertexConstBufferDatas[InSlot] = std::make_unique<CCpuBuffer>(InMappingPoint, InByteWidth);
-		MakeVertexConstBufferDataRequestSlots.push(InSlot);
 	}
+
 	void UpdateVertexConstBufferData(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
 	{
 		if (VertexConstBufferDatas[InSlot] == nullptr)
 			SetVertexConstBufferData(InSlot, InMappingPoint, InByteWidth);
 		
 		memcpy(VertexConstBufferDatas[InSlot]->BufferData.data(), InMappingPoint, InByteWidth);
-		UpdateBufferList.emplace(RenderStateObject, InSlot, VertexConstBufferDatas[InSlot]->BufferData);
+		VertexConstBufferDatas[InSlot]->bUpdated = true;
 	}
-	void UpdateModelVertexConstBufferData(const class CTransform& InTransform, uint32_t InScreenWidth, uint32_t InScreenHeight);
+
+	void MapBuffersToRSO()
+	{
+		for (size_t i = 0; i < VertexConstBufferDatas.size(); ++i)
+		{
+			auto& CpuBuffer = VertexConstBufferDatas[i];
+			if (CpuBuffer == nullptr)
+				continue;
+			if (CpuBuffer->bUpdated == false)
+				continue;
+
+			RenderStateObject.UpdateMappingInstance(i, CpuBuffer->BufferData.data(), CpuBuffer->BufferData.size());
+
+			CpuBuffer->bUpdated = false;
+		}
+	}
+
+	void UpdateModelDataToNDC(const class CTransform& InTransform, uint32_t InScreenWidth, uint32_t InScreenHeight);
 
 public:
 	void Serialize(CSerializer& InSerializer) const override
@@ -94,11 +112,6 @@ private:
 	std::wstring CurrentImagePath;
 
 	std::array<std::unique_ptr<CCpuBuffer>, 6> VertexConstBufferDatas;
-	std::queue<size_t> MakeVertexConstBufferDataRequestSlots;
-
-	std::queue<TBufferMappingInstance> UpdateBufferList;
-
-
 
 };
 

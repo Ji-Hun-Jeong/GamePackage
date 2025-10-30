@@ -3,18 +3,35 @@
 #include <Renderer/Base/RenderContext.h>
 #include "RenderResourceLoader.h"
 
-void CRenderStateObject::UpdateVertexConstBuffer(Graphics::CRenderContext& InContext, size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
+
+void CRenderStateObject::MapBuffersOnUpdated(Graphics::CRenderContext& InContext)
 {
 	// UpdateConstBuffer
-	InContext.CopyBuffer(VertexConstBuffer[InSlot].get(), InMappingPoint, InByteWidth);
+	for (auto& MappingInstance : VertexConstBufferMappingInstance)
+	{
+		if (MappingInstance == nullptr)
+			continue;
+		if (MappingInstance->bUpdated == false)
+			continue;
+
+		auto& CpuBuffer = MappingInstance.get()->CpuBuffer;
+		auto& GpuBuffer = MappingInstance.get()->GpuBuffer;
+
+		InContext.CopyBuffer(GpuBuffer.get(), CpuBuffer.data(), CpuBuffer.size());
+
+		MappingInstance->bUpdated = false;
+	}
 }
 
 void CRenderStateObject::BindRenderState(Graphics::CRenderContext& InContext)
 {
 	// SetConstBuffer
-	for (size_t i = 0; i < VertexConstBuffer.size(); ++i)
+	for (size_t i = 0; i < VertexConstBufferMappingInstance.size(); ++i)
 	{
-		auto& GpuBuffer = VertexConstBuffer[i];
+		auto& MappingInstance = VertexConstBufferMappingInstance[i];
+		if (MappingInstance == nullptr)
+			continue;
+		auto& GpuBuffer = MappingInstance->GpuBuffer;
 		InContext.VSSetConstantBuffer(VertexConstBufferStartSlot + uint32_t(i), GpuBuffer.get());
 	}
 

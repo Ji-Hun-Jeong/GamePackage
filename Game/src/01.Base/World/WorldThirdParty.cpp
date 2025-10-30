@@ -9,41 +9,34 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 	const uint32_t ScreenWidth = InRenderer.GetScreenWidth();
 	const uint32_t ScreenHeight = InRenderer.GetScreenHeight();
 
-
 	std::vector<CRenderStateObject*> RenderStateObjects;
 	RenderStateObjects.reserve(WorldActors.size());
 
-	std::queue<TBufferMappingInstance> FinalUpdateBufferList;
 	for (auto& WorldActor : WorldActors)
 	{
 		CRenderComponent* RenderComponent = WorldActor->GetRenderComponent();
 		if (RenderComponent == nullptr)
 			continue;
 
-		// SetupResource
-		RenderComponent->SetupPSO(PSOManager);
-		RenderComponent->SetupResource(RenderResourceLoader);
-
 		CTransform* Transform = WorldActor->GetTransform();
 		if (Transform->OnVariation())
 		{
-			RenderComponent->UpdateModelVertexConstBufferData(*Transform, ScreenWidth, ScreenHeight);
+			RenderComponent->UpdateModelDataToNDC(*Transform, ScreenWidth, ScreenHeight);
 			Transform->SetVariation(false);
 		}
 
-		// CollectUpdateBufferList
-		std::queue<TBufferMappingInstance>& UpdateBufferList = RenderComponent->GetUpdateBufferList();
-		while (UpdateBufferList.empty() == false)
-		{
-			FinalUpdateBufferList.push(UpdateBufferList.front());
-			UpdateBufferList.pop();
-		}
+		// SetupResource
+		RenderComponent->SetupPSOToRSO(PSOManager);
+		RenderComponent->SetupResourceToRSO(RenderResourceLoader);
+		RenderComponent->SetupMappingInstanceToRSO(RenderResourceLoader);
+
+		RenderComponent->MapBuffersToRSO();
 
 		// PushRSO
 		CRenderStateObject* RenderStateObject = RenderComponent->GetRenderStateObject();
 		RenderStateObjects.push_back(RenderStateObject);
 	}
 
-	InRenderer.UpdateRSOs(FinalUpdateBufferList);
+	InRenderer.UpdateRSOs(RenderStateObjects);
 	InRenderer.RenderRSOs(RenderStateObjects);
 }

@@ -19,16 +19,11 @@ public:
 	void SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight);
 	uint32_t GetScreenWidth() const { return ScreenWidth; }
 	uint32_t GetScreenHeight() const { return ScreenHeight; }
-	void UpdateRSOs(std::queue<TBufferMappingInstance>& InBufferMappingInstances)
-	{
-		while (InBufferMappingInstances.empty() == false)
-		{
-			TBufferMappingInstance BufferMappingInstance = InBufferMappingInstances.front();
-			InBufferMappingInstances.pop();
 
-			BufferMappingInstance.RenderStateObject.UpdateVertexConstBuffer(Context, BufferMappingInstance.UpdateSlot
-				, BufferMappingInstance.BufferData.data(), BufferMappingInstance.BufferData.size());
-		}
+	void UpdateRSOs(const std::vector<CRenderStateObject*>& InRenderStateObjects)
+	{
+		for (auto& RenderStateObject : InRenderStateObjects)
+			RenderStateObject->MapBuffersOnUpdated(Context);
 	}
 	void RenderRSOs(const std::vector<CRenderStateObject*>& InRenderStateObjects)
 	{

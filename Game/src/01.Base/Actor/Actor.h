@@ -169,11 +169,6 @@ public:
 			}*/
 		}
 	}
-	struct TVertexConstBuffer
-	{
-		Matrix ModelMatrix;
-	} VertexConstBuffer;
-	static_assert(sizeof(TVertexConstBuffer) % 16 == 0);
 
 public:
 	virtual void Serialize(CSerializer& InSerializer) const override

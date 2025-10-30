@@ -5,6 +5,25 @@
 #include "Image.h"
 #include "PSOManager.h"
 
+class CBufferMappingInstance
+{
+	friend class CRenderStateObject;
+public:
+	CBufferMappingInstance(size_t InByteWidth, std::unique_ptr<Graphics::CBuffer> InGpuBuffer)
+		: GpuBuffer(std::move(InGpuBuffer))
+		, bUpdated(false)
+	{
+		CpuBuffer.resize(InByteWidth, 0);
+	}
+	~CBufferMappingInstance() = default;
+
+private:
+	std::vector<uint8_t> CpuBuffer;
+	std::unique_ptr<Graphics::CBuffer> GpuBuffer;
+	bool bUpdated;
+
+};
+
 class CRenderStateObject
 {
 public:
@@ -48,28 +67,38 @@ public:
 		VertexConstBufferStartSlot = InVertexConstBufferStartSlot;
 	}
 
-	void SetVertexConstBuffer(size_t InSlot, std::unique_ptr<Graphics::CBuffer> InVertexConstBuffer)
+	void SetVertexConstBuffer(size_t InSlot, std::unique_ptr<CBufferMappingInstance> InVertexConstBufferMappingInstance)
 	{
-		if (VertexConstBuffer[InSlot] != nullptr)
+		if (VertexConstBufferMappingInstance[InSlot] != nullptr)
 		{
-			VertexConstBuffer[InSlot].reset();
+			VertexConstBufferMappingInstance[InSlot].reset();
 			std::cout << "VertexConstBuffer Is Overlapped\n";
 		}
-		VertexConstBuffer[InSlot] = std::move(InVertexConstBuffer);
+		VertexConstBufferMappingInstance[InSlot] = std::move(InVertexConstBufferMappingInstance);
 	}
 
-	void UpdateVertexConstBuffer(Graphics::CRenderContext& InContext, size_t InSlot, const void* InMappingPoint, size_t InByteWidth);
+	void UpdateMappingInstance(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
+	{
+		auto& MappingInstance = VertexConstBufferMappingInstance[InSlot];
+		assert(MappingInstance);
+
+		memcpy(MappingInstance->CpuBuffer.data(), InMappingPoint, InByteWidth);
+		MappingInstance->bUpdated = true;
+	}
+
+	void MapBuffersOnUpdated(Graphics::CRenderContext& InContext);
 	void BindRenderState(Graphics::CRenderContext& InContext);
 
 	void SetRender(bool bInRender) { bRender = bInRender; }
 
 	bool IsExistBufferInSlot(size_t InSlot)
 	{
-		assert(InSlot < VertexConstBuffer.size());
-		if (VertexConstBuffer[InSlot])
+		assert(InSlot < VertexConstBufferMappingInstance.size());
+		if (VertexConstBufferMappingInstance[InSlot])
 			return true;
 		return false;
 	}
+
 protected:
 	Graphics::CMesh* Mesh;
 	CPSO* PSO;
@@ -77,18 +106,10 @@ protected:
 	std::array<CImage*, 6> VertexShaderResources;
 	std::array<CImage*, 6> PixelShaderResources;
 
-	std::array<std::unique_ptr<Graphics::CBuffer>, 6> VertexConstBuffer;
-	std::queue<size_t> UpdateList;
+	std::array<std::unique_ptr<CBufferMappingInstance>, 6> VertexConstBufferMappingInstance;
 
 	uint32_t PixelShaderResourceStartSlot;
 	uint32_t VertexConstBufferStartSlot;
 
 	bool bRender;
-};
-
-struct TBufferMappingInstance
-{
-	CRenderStateObject& RenderStateObject;
-	size_t UpdateSlot;
-	const std::vector<uint8_t>& BufferData;
 };
