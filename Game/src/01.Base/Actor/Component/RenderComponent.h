@@ -6,7 +6,7 @@ class CCpuBuffer
 {
 	friend class CRenderComponent;
 public:
-	CCpuBuffer(const void* InMappingPoint, size_t InByteWidth)
+	CCpuBuffer(size_t InByteWidth)
 		: bUpdated(true)
 	{
 		BufferData.resize(InByteWidth, 0);
@@ -24,7 +24,11 @@ class CRenderComponent : public CComponent
 public:
 	CRenderComponent()
 		: PSOType(EPSOType::Basic)
-	{}
+		, bUpdateMesh(false)
+		, bUpdateImage(false)
+	{
+		SetVertexConstBufferData(0, sizeof(Matrix));
+	}
 	~CRenderComponent()
 	{
 	}
@@ -33,10 +37,12 @@ public:
 	void SetMesh(const Graphics::TMeshData& InMeshData)
 	{
 		MeshData = InMeshData;
+		bUpdateMesh = true;
 	}
 	void SetDiffuseImage(const std::wstring& InImagePath)
 	{
 		CurrentImagePath = InImagePath;
+		bUpdateImage = true;
 	}
 	void SetPSO(EPSOType InPSOType)
 	{
@@ -48,21 +54,19 @@ public:
 	void SetupMappingInstanceToRSO(class CRenderResourceLoader& InRenderResourceLoader);
 	void SetupPSOToRSO(const class CPSOManager& InPSOManager);
 
-	void SetVertexConstBufferData(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
+	void SetVertexConstBufferData(size_t InSlot, size_t InByteWidth)
 	{
 		if (VertexConstBufferDatas[InSlot])
 		{
 			VertexConstBufferDatas[InSlot].reset();
 			std::cout << "ConstBuffer Covered\n";
 		}
-		VertexConstBufferDatas[InSlot] = std::make_unique<CCpuBuffer>(InMappingPoint, InByteWidth);
+		VertexConstBufferDatas[InSlot] = std::make_unique<CCpuBuffer>(InByteWidth);
+		VertexConstBufferDatas[InSlot]->bUpdated = true;
 	}
 
 	void UpdateVertexConstBufferData(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
 	{
-		if (VertexConstBufferDatas[InSlot] == nullptr)
-			SetVertexConstBufferData(InSlot, InMappingPoint, InByteWidth);
-		
 		memcpy(VertexConstBufferDatas[InSlot]->BufferData.data(), InMappingPoint, InByteWidth);
 		VertexConstBufferDatas[InSlot]->bUpdated = true;
 	}
@@ -84,6 +88,17 @@ public:
 	}
 
 	void UpdateModelDataToNDC(const class CTransform& InTransform, uint32_t InScreenWidth, uint32_t InScreenHeight);
+	void SynchronizeScaleToImageOnImageChange(class CTransform& InTransform);
+	void ClearState()
+	{
+		bUpdateMesh = false;
+		bUpdateImage = false;
+		for (size_t i = 0; i < VertexConstBufferDatas.size(); ++i)
+		{
+			if (VertexConstBufferDatas[i])
+				VertexConstBufferDatas[i]->bUpdated = false;
+		}
+	}
 
 public:
 	void Serialize(CSerializer& InSerializer) const override
@@ -110,8 +125,11 @@ private:
 	Graphics::TMeshData MeshData;
 	EPSOType PSOType;
 	std::wstring CurrentImagePath;
+	Graphics::TTexture2DDesc CurrentImageDesc;
 
 	std::array<std::unique_ptr<CCpuBuffer>, 6> VertexConstBufferDatas;
+	bool bUpdateMesh;
+	bool bUpdateImage;
 
 };
 

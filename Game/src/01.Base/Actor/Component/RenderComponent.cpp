@@ -6,14 +6,19 @@
 
 void CRenderComponent::SetupResourceToRSO(CRenderResourceLoader& InRenderResourceLoader)
 {
-	Graphics::CMesh* Mesh = InRenderResourceLoader.LoadMesh(MeshData);
-	RenderStateObject.SetMesh(Mesh);
-	if (Mesh == nullptr)
-		std::cout << "CRenderComponent: Mesh Is None\n";
-
-	CImage* Image = InRenderResourceLoader.LoadImageFromFile(CurrentImagePath);
-	RenderStateObject.SetPixelShaderResource(0, Image);
-	RenderStateObject.SetPixelShaderResourceStartSlot(0);
+	if (bUpdateMesh)
+	{
+		Graphics::CMesh* Mesh = InRenderResourceLoader.LoadMesh(MeshData);
+		if (Mesh == nullptr)
+			std::cout << "CRenderComponent: Mesh Is None\n";
+		RenderStateObject.SetMesh(Mesh);
+	}
+	if (bUpdateImage)
+	{
+		CImage* Image = InRenderResourceLoader.LoadImageFromFile(CurrentImagePath);
+		RenderStateObject.SetPixelShaderResource(0, Image);
+		CurrentImageDesc = Image->GetTexture2D().GetTexture2DDesc();
+	}
 }
 
 void CRenderComponent::SetupMappingInstanceToRSO(CRenderResourceLoader& InRenderResourceLoader)
@@ -42,15 +47,30 @@ void CRenderComponent::SetupPSOToRSO(const CPSOManager& InPSOManager)
 
 void CRenderComponent::UpdateModelDataToNDC(const CTransform& InTransform, uint32_t InScreenWidth, uint32_t InScreenHeight)
 {
+	const Vector3& scale = InTransform.GetScale();
+	Vector3 normalizedScale = Vector3(
+		scale.x / InScreenWidth,
+		scale.y / InScreenHeight,
+		scale.z // Z축은 보통 그대로 둠
+	);
 	float NormalizedX = (InTransform.GetFinalPosition().x / (InScreenWidth * 0.5f));
 	float NormalizedY = (InTransform.GetFinalPosition().y / (InScreenHeight * 0.5f));
 
-	Matrix ModelMatrix = (Matrix::CreateScale(InTransform.GetScale())
+	Matrix ModelMatrix = (Matrix::CreateScale(normalizedScale)
 		* Matrix::CreateRotationX(InTransform.GetRotation().x)
 		* Matrix::CreateRotationY(InTransform.GetRotation().y)
 		* Matrix::CreateRotationZ(InTransform.GetRotation().z)
 		* Matrix::CreateTranslation(NormalizedX, NormalizedY, InTransform.GetFinalPosition().z)).Transpose();
 
 	UpdateVertexConstBufferData(0, &ModelMatrix, sizeof(ModelMatrix));
+}
+
+void CRenderComponent::SynchronizeScaleToImageOnImageChange(CTransform& InTransform)
+{
+	if (bUpdateImage)
+	{
+		Vector3 Scale{ float(CurrentImageDesc.Width), float(CurrentImageDesc.Height), InTransform.GetScale().z };
+		InTransform.SetScale(Scale);
+	}
 }
 

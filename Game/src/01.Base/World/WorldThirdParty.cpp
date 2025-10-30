@@ -28,20 +28,23 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 		if (RenderComponent == nullptr)
 			continue;
 
+		// SetupResource
+		RenderComponent->SetupPSOToRSO(PSOManager);
+		RenderComponent->SetupResourceToRSO(RenderResourceLoader);
+		RenderComponent->SetupMappingInstanceToRSO(RenderResourceLoader);
+
 		CTransform* Transform = WorldActor->GetTransform();
+		RenderComponent->SynchronizeScaleToImageOnImageChange(*Transform);
+
 		if (Transform->OnVariation())
 		{
 			RenderComponent->UpdateModelDataToNDC(*Transform, ScreenWidth, ScreenHeight);
 			Transform->SetVariation(false);
 		}
 
-		// SetupResource
-		RenderComponent->SetupPSOToRSO(PSOManager);
-		RenderComponent->SetupResourceToRSO(RenderResourceLoader);
-		RenderComponent->SetupMappingInstanceToRSO(RenderResourceLoader);
-
 		RenderComponent->MapUpdatedBuffersToRSO();
 
+		RenderComponent->ClearState();
 		// PushRSO
 		CRenderStateObject* RenderStateObject = RenderComponent->GetRenderStateObject();
 		RenderStateObjects.push_back(RenderStateObject);
