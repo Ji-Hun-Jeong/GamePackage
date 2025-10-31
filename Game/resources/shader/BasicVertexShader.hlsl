@@ -20,7 +20,7 @@ PixelShaderInput main(VertexShaderInput InInput)
     PixelShaderInput Output;
     float4 Position = float4(InInput.Position, 1.0f);
     Position = mul(Position, Model);
-    // Position = mul(Position, ViewProj);
+    Position = mul(Position, ViewProj);
     
     Output.Position = Position;
     Output.UV = InInput.UV;

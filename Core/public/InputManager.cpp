@@ -34,26 +34,5 @@ namespace Core
 				bPressed[i] = false;
 			}
 		}
-
-		//UInputBlendValue InputBlendValue;
-		//for (auto& Pair : KeyEvents)
-		//{
-		//	InputBlendValue.RealKey = Pair.first;
-		//	if (CorrectKeyState(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState) == false)
-		//		continue;
-
-		//	for (auto& KeyEvent : Pair.second)
-		//		KeyEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState);
-		//}
-
-		//for (auto& Pair : MouseEvents)
-		//{
-		//	InputBlendValue.RealKey = Pair.first;
-		//	if (CorrectKeyState(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState) == false)
-		//		continue;
-
-		//	for (auto& MouseEvent : Pair.second)
-		//		MouseEvent->OnActivate(InputBlendValue.BlendKey.KeyType, InputBlendValue.BlendKey.ButtonState, MouseScreenPosition);
-		//}
 	}
 }

@@ -11,6 +11,7 @@ public:
 	~CPlayer();
 
 public:
+	void BeginPlay() override;
 	void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) override;
 
 private:

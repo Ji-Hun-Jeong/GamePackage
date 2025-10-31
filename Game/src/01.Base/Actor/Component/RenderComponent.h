@@ -87,8 +87,6 @@ public:
 		}
 	}
 
-	void UpdateModelDataToNDC(const class CTransform& InTransform, uint32_t InScreenWidth, uint32_t InScreenHeight);
-	void SynchronizeScaleToImageOnImageChange(class CTransform& InTransform);
 	void ClearState()
 	{
 		bUpdateMesh = false;
@@ -99,6 +97,9 @@ public:
 				VertexConstBufferDatas[i]->bUpdated = false;
 		}
 	}
+
+	bool IsUpdateImage() const { return bUpdateImage; }
+	const Graphics::TTexture2DDesc& GetCurrentImageDesc() const { return CurrentImageDesc; }
 
 public:
 	void Serialize(CSerializer& InSerializer) const override

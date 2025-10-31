@@ -12,18 +12,23 @@ void CWorld::PerformInputAction(CInputActionManager& InInputActionManager)
 	InInputActionManager.PerformAction(Collector);
 }
 
-void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
+void CWorld::CaptureSnapShot(CSpriteRenderer& InRenderer)
 {
 	const CPSOManager& PSOManager = InRenderer.GetPSOManager();
 	CRenderResourceLoader& RenderResourceLoader = InRenderer.GetRenderResourceLoader();
+
 	const uint32_t ScreenWidth = InRenderer.GetScreenWidth();
 	const uint32_t ScreenHeight = InRenderer.GetScreenHeight();
-
-	std::vector<CRenderStateObject*> RenderStateObjects;
-	RenderStateObjects.reserve(WorldActors.size());
-
 	for (auto& WorldActor : WorldActors)
 	{
+		if (WorldActor->GetTransform()->OnVariation())
+		{
+			for (auto& Child : WorldActor->GetChild())
+				Child->GetTransform()->SetVariation(true);
+
+			WorldActor->GetTransform()->SetVariation(false);
+		}
+
 		CRenderComponent* RenderComponent = WorldActor->GetRenderComponent();
 		if (RenderComponent == nullptr)
 			continue;
@@ -33,14 +38,20 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 		RenderComponent->SetupResourceToRSO(RenderResourceLoader);
 		RenderComponent->SetupMappingInstanceToRSO(RenderResourceLoader);
 
-		CTransform* Transform = WorldActor->GetTransform();
-		RenderComponent->SynchronizeScaleToImageOnImageChange(*Transform);
+		WorldActor->CaptureSnapShot(ScreenWidth, ScreenHeight);
+	}
+}
 
-		if (Transform->OnVariation())
-		{
-			RenderComponent->UpdateModelDataToNDC(*Transform, ScreenWidth, ScreenHeight);
-			Transform->SetVariation(false);
-		}
+void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
+{
+	std::vector<CRenderStateObject*> RenderStateObjects;
+	RenderStateObjects.reserve(WorldActors.size());
+
+	for (auto& WorldActor : WorldActors)
+	{
+		CRenderComponent* RenderComponent = WorldActor->GetRenderComponent();
+		if (RenderComponent == nullptr)
+			continue;
 
 		RenderComponent->MapUpdatedBuffersToRSO();
 

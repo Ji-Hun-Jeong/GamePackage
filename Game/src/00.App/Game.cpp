@@ -38,8 +38,7 @@ bool CGame::Process()
 
 	World.Update();
 
-	World.CaptureSnapShot();
-
+	World.CaptureSnapShot(SpriteRenderer);
 	World.RenderWorld(SpriteRenderer);
 
 	//MouseManager.AddNextInteracter();

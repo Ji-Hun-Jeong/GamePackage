@@ -5,7 +5,7 @@
 class CScene : public CActor
 {
 public:
-	CScene() = default;
+	CScene();
 	virtual ~CScene() = default;
 
 public:

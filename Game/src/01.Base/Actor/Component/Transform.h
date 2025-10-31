@@ -82,9 +82,28 @@ public:
         SetPosition(Position + InDirection * Speed);
     }
 
-    void SetVariation(bool bVariation) { bVariationFlag = bVariation; }
+    void SetVariation(bool bVariation) 
+    { 
+        bVariationFlag = bVariation; 
+    }
     bool OnVariation() const { return bVariationFlag; }
 
+    Matrix GetNDCModelMatrix(uint32_t InScreenWidth, uint32_t InScreenHeight)
+    {
+        Vector3 NormalizedScale = Vector3(
+            Scale.x / InScreenWidth,
+            Scale.y / InScreenHeight,
+            Scale.z // Z축은 보통 그대로 둠
+        );
+        float NormalizedX = (FinalPosition.x / (InScreenWidth * 0.5f));
+        float NormalizedY = (FinalPosition.y / (InScreenHeight * 0.5f));
+
+        return Matrix::CreateScale(NormalizedScale)
+            * Matrix::CreateRotationX(Rotation.x)
+            * Matrix::CreateRotationY(Rotation.y)
+            * Matrix::CreateRotationZ(Rotation.z)
+            * Matrix::CreateTranslation(Vector3(NormalizedX, NormalizedY, FinalPosition.z));
+    }
 
 private:
     Vector3 FinalPosition;

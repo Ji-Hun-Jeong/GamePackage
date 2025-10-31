@@ -158,19 +158,24 @@ public:
 
 		Transform->SetFinalPosition(FinalPosition);
 	}
-	virtual void CaptureSnapShot()
+	virtual void CaptureSnapShot(uint32_t InScreenWidth, uint32_t InScreenHeight)
 	{
-		if (Transform->OnVariation())
+		if (RenderComponent->IsUpdateImage())
 		{
-			for (auto& Child : Childs)
-				Child->Transform->SetVariation(true);
-
-			/*if (InteractionComponent)
-			{
-				InteractionComponent->SetRectTransform(Transform->GetFinalPosition().x, Transform->GetFinalPosition().y
-					, Transform->GetScale().x, Transform->GetScale().y);
-			}*/
+			auto CurrentImageDesc = RenderComponent->GetCurrentImageDesc();
+			Vector3 Scale{ float(CurrentImageDesc.Width), float(CurrentImageDesc.Height), Transform->GetScale().z };
+			Transform->SetScale(Scale);
 		}
+
+		const Matrix& NDCModelMatrix = Transform->GetNDCModelMatrix(InScreenWidth, InScreenHeight).Transpose();
+
+		RenderComponent->UpdateVertexConstBufferData(0, &NDCModelMatrix, sizeof(Matrix));
+
+		/*if (InteractionComponent)
+		{
+			InteractionComponent->SetRectTransform(Transform->GetFinalPosition().x, Transform->GetFinalPosition().y
+				, Transform->GetScale().x, Transform->GetScale().y);
+		}*/
 	}
 
 	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) {}

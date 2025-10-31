@@ -6,4 +6,5 @@
 CTestScene::CTestScene()
 {
 	CActor* Actor = GetWorld()->SpawnActor<CPlayer>(this);
+
 }
