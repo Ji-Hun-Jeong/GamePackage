@@ -25,7 +25,7 @@ public:
 	~CAnimation() = default;
 
 public:
-	void SaveFrameData(CSerializer& InSerializer) const
+	void Serialize(CSerializer& InSerializer) const
 	{
 		CSerializer FrameArray = CSerializer::array();
 		for (size_t i = 0; i < Frames.size(); ++i)

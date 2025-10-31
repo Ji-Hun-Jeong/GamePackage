@@ -11,7 +11,6 @@ public:
 	~CPlayer();
 
 public:
-	void Update(float InDeltaTime) override;
 	void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) override;
 
 private:

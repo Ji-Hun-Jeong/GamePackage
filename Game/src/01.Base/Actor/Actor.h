@@ -65,6 +65,11 @@ public:
 
 	CTransform* GetTransform() const { return Transform; }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+	CAnimator* SetAnimator()
+	{
+		Animator = AddComponent<CAnimator>();
+		return Animator;
+	}
 protected:
 	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
 	CTransform* Transform;
@@ -73,6 +78,7 @@ protected:
 	CInteractionComponent* InteractionComponent;
 	std::vector<CComponent*> Components;
 
+public:
 	template <typename T>
 	T* GetComponent()
 	{
@@ -103,8 +109,6 @@ protected:
 		}
 		return FoundComponents;
 	}
-
-public:
 	void AddEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.insert(&InEndEvent); }
 	void AddBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.insert(&InBeginEvent); }
 	void RemoveEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.erase(&InEndEvent); }
@@ -125,8 +129,8 @@ public:
 	virtual void Update(float InDeltaTime)
 	{
 		/*if (InteractionComponent)
-			InteractionComponent->PerformEvent();
-		if (Animator)
+			InteractionComponent->PerformEvent();*/
+		if (Animator && RenderComponent)
 		{
 			bool bChangeAnimation = Animator->TryChangeCurrentAnimation();
 
@@ -144,7 +148,7 @@ public:
 			}
 
 			CurrentAnimation->UpdateAnimationState(InDeltaTime);
-		}*/
+		}
 	}
 	virtual void FinalUpdate()
 	{
@@ -153,7 +157,6 @@ public:
 			FinalPosition += Owner->Transform->GetFinalPosition();
 
 		Transform->SetFinalPosition(FinalPosition);
-
 	}
 	virtual void CaptureSnapShot()
 	{

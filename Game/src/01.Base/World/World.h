@@ -2,7 +2,6 @@
 #include "WorldEvent.h"
 #include "01.Base/Actor/Actor.h"
 
-
 class CWorld : public CObject
 {
 	GENERATE_OBJECT(CWorld)

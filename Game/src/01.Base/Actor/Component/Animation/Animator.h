@@ -52,7 +52,7 @@ public:
 		for (auto& Animation : Animations)
 		{
 			CSerializer AnimationData;
-			Animation.second->SaveFrameData(AnimationData);
+			Animation.second->Serialize(AnimationData);
 			AnimationArray.push_back(AnimationData);
 		}
 		InSerializer = AnimationArray;

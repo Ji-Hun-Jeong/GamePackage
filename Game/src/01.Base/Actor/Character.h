@@ -6,7 +6,12 @@ class CCharacter : public CActor
 	GENERATE_OBJECT(CCharacter)
 	DONTCOPY(CCharacter)
 public:
-	CCharacter() = default;
+	CCharacter()
+	{
+		RenderComponent = AddComponent<CRenderComponent>();
+		const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("ImageMesh");
+		RenderComponent->SetMesh(MeshData);
+	}
 	virtual ~CCharacter() {}
 public:
 	//virtual void Initalize() override

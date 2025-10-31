@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Player.h"
+#include "GameCore.h"
 #include "05.Input/InputActionManager.h"
 
 CPlayer::CPlayer()
@@ -14,55 +15,38 @@ CPlayer::CPlayer()
 {
 	InitalizeInputActionValue();
 
-	RenderComponent = AddComponent<CRenderComponent>();
+	Body = GetWorld()->SpawnActor<CCharacter>(this);
+	CAnimator* BodyAnimator = Body->SetAnimator();
+	CAnimation* Animation = new CAnimation(true);
+	TFrame Frame;
+	Frame.ImagePath = L"resources/image/Character/stand/Body0.png";
+	Animation->AddFrame(Frame);
+	Frame.ImagePath = L"resources/image/Character/stand/Body1.png";
+	Animation->AddFrame(Frame);
+	Frame.ImagePath = L"resources/image/Character/stand/Body2.png";
+	Animation->AddFrame(Frame);
+	Frame.ImagePath = L"resources/image/Character/stand/Body1.png";
+	Animation->AddFrame(Frame);
+	Animation->UnifyFrameDuration(1.0f);
 
-	const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("ImageMesh");
-	RenderComponent->SetMesh(MeshData);
-	RenderComponent->SetDiffuseImage(L"resources/image/Player/Alert/0.png");
+	BodyAnimator->AddAnimation("Basic", std::unique_ptr<CAnimation>(Animation));
+	BodyAnimator->SetCurrentAnimation("Basic");
 
-	Transform->SetSpeed(5.0f);
+	/*Head = GetWorld()->SpawnActor<CCharacter>(this);
+	Head->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/Head_Front.png");
+	Head->GetTransform()->SetPosition(Vector3(5.0f, 6.5f, 0.0f));
+
+	Arm = GetWorld()->SpawnActor<CCharacter>(this);
+	Arm->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/stand/Arm0.png");
+	Arm->GetTransform()->SetPosition(Vector3(2.0f, 0.0f, 0.0f));*/
+
+	Transform->SetSpeed(2.0f);
 }
 CPlayer::~CPlayer()
 {
 	
 }
 
-//void CPlayer::Initalize()
-//{
-//	CActor::Initalize();
-//
-//	/*Body = SpawnActor<CCharacter>(this);
-//	Body->SetAnimator();
-//	CAnimation* Animation = new CAnimation(true);
-//	TFrame Frame;
-//	Frame.ImagePath = L"resources/image/Character/stand/Body0.png";
-//	Animation->AddFrame(Frame);
-//	Frame.ImagePath = L"resources/image/Character/stand/Body1.png";
-//	Animation->AddFrame(Frame);
-//	Frame.ImagePath = L"resources/image/Character/stand/Body2.png";
-//	Animation->AddFrame(Frame);
-//	Frame.ImagePath = L"resources/image/Character/stand/Body1.png";
-//	Animation->AddFrame(Frame);
-//	Animation->UnifyFrameDuration(1.0f);
-//
-//	Body->GetAnimator()->AddAnimation("Basic", std::unique_ptr<CAnimation>(Animation));
-//	Body->GetAnimator()->SetCurrentAnimation("Basic");
-//
-//	Head = SpawnActor<CCharacter>(this);
-//	Head->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/Head_Front.png");
-//	Head->GetTransform()->SetPosition(Vector3(5.0f, 6.5f, 0.0f));
-//
-//	Arm = SpawnActor<CCharacter>(this);
-//	Arm->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/stand/Arm0.png");
-//	Arm->GetTransform()->SetPosition(Vector3(2.0f, 0.0f, 0.0f));
-//
-//	GetTransform()->SetSpeed(2.0f);*/
-//}
-
-void CPlayer::Update(float InDeltaTime)
-{
-	CActor::Update(InDeltaTime);
-}
 
 void CPlayer::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)
 {
