@@ -14,11 +14,9 @@ CLobbyScene::CLobbyScene()
 
 	CUI* UI = GetWorld()->SpawnActor<CUI>(GetMainCamera());
 	UI->InitalizeBasicButtonUI(L"resources/image/UI/Title/SceneToolUI_Normal.png", L"resources/image/UI/Title/SceneToolUI_Hover.png"
-		, L"resources/image/UI/Title/SceneToolUI_Clicked.png", L"resources/image/UI/Title/SceneToolUI_Normal.png"
-		, [this](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		, L"resources/image/UI/Title/SceneToolUI_Clicked.png"
+		, [this]()->void
 		{
-			std::cout << "Hi\n";
-			/*if (InKeyType == EKeyType::LButton)
-				LoadScene<CEditUIScene>();*/
+			GetWorld()->LoadScene<CEditUIScene>();
 		});
 }

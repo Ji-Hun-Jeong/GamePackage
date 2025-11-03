@@ -70,7 +70,7 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 
 void CWorld::DetectMouseInteraction(CMouseInteractionManager& InMouseInteractionManager)
 {
-	std::vector<const CMouseInteracter*> MouseInteracters;
+	std::vector<CMouseInteracter*> MouseInteracters;
 	Vector2 MousePosition = CMouseManager::GetInst().GetMousePosition();
 
 	const CCamera* Camera = nullptr;
@@ -99,5 +99,5 @@ void CWorld::DetectMouseInteraction(CMouseInteractionManager& InMouseInteraction
 		}
 	}
 
-	InMouseInteractionManager.FindFocusInteracter(MouseInteracters, MousePosition);
+	InMouseInteractionManager.FindFocusInteracter(std::move(MouseInteracters), MousePosition);
 }

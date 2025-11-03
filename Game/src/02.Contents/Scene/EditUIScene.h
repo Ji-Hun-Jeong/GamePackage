@@ -16,7 +16,7 @@ public:
 	~CEditUIScene() = default;
 
 public:
-	void BeginPlay() override {}
+	void BeginPlay() override;
 
 };
 

@@ -37,7 +37,9 @@ CGame::~CGame()
 bool CGame::Process()
 {
 	CCoreSystem::GetInst().ArrangeObjects();
+
 	InputManager.Update();
+	CMouseManager::GetInst().SetStateByInputManager(InputManager);
 
 	World.Arrange();
 	World.Ready();
@@ -49,7 +51,8 @@ bool CGame::Process()
 
 	World.CaptureSnapShot(SpriteRenderer);
 	World.RenderWorld(SpriteRenderer);
-	
+
+	MouseInteractionManager.ClearState();
 	return true;
 }
 

@@ -15,7 +15,10 @@ void CRenderComponent::SetupResourceToRSO(CRenderResourceLoader& InRenderResourc
 	}
 	if (bUpdateImage)
 	{
-		CImage* Image = InRenderResourceLoader.LoadImageFromFile(CurrentImagePath);
+		CImage* Image = nullptr;
+		if (CurrentImagePath.empty() == false)
+			Image = InRenderResourceLoader.LoadImageFromFile(CurrentImagePath);
+
 		RenderStateObject.SetPixelShaderResource(0, Image);
 		CurrentImageDesc = Image->GetTexture2D().GetTexture2DDesc();
 	}

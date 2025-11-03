@@ -1,49 +1,34 @@
 #pragma once
-#include "pch.h"
 #include "01.Base/Actor/UI.h"
 
 class CUIToolPanel : public CUI
 {
 	GENERATE_OBJECT(CUIToolPanel)
 public:
-	CUIToolPanel() : CurrentFocusUI(nullptr) {}
-	~CUIToolPanel() {}
-
-public:
-	//void Initalize() override
-	//{
-	//	CUI::Initalize();
-	//	//GetRenderComponent()->SetPSO(EPSOType::Mark);
-	//	PlacedUIs.push_back(this);
-	//}
+	CUIToolPanel() 
+		: CurrentFocusUI(nullptr) 
+	{
+		RenderComponent->SetPSO(EPSOType::Mark);
+		PlacedUIs.push_back(this);
+	}
+	~CUIToolPanel() = default;
 
 public:
 	void Update(float InDeltaTime) override
 	{
 		CUI::Update(InDeltaTime);
 
-		CUI* NewFocusUI = nullptr;
-		/*for (auto& PlacedUI : PlacedUIs)
+		CurrentFocusUI = nullptr;
+		for (auto& PlacedUI : PlacedUIs)
 		{
-			if (PlacedUI->GetInteractionComponent()->IsInteracterFocus())
+			if (PlacedUI->GetInteractionComponent()->IsMouseFocus())
 			{
-				NewFocusUI = PlacedUI;
+				CurrentFocusUI = PlacedUI;
 				break;
 			}
 		}
-
-		if (CurrentFocusUI != NewFocusUI)
-		{
-			CurrentFocusUI = NewFocusUI;
-			const Vector2& MousePosition = GetInteractionComponent()->GetMousePosition();
-			if (CurrentFocusUIFoundEvent)
-				CurrentFocusUIFoundEvent(*this, CurrentFocusUI, MousePosition);
-		}*/
 	}
-	void SetChangeFocusUIEvent(std::function<void(CUIToolPanel&, CUI*, const Vector2&)> InNewFocusUIFoundEvent)
-	{
-		CurrentFocusUIFoundEvent = InNewFocusUIFoundEvent;
-	}
+	CUI* GetCurrentFocusPlacedUI() const { return CurrentFocusUI; }
 	CUI* PlaceUIOnToolPanel(CUI* InOwnerUI, const std::wstring& InUIImagePath, const Vector2& InMouseWorldPosition);
 	void EraseUIOnToolPanel(CUI* InErasedUI)
 	{
@@ -63,5 +48,4 @@ private:
 	std::vector<CUI*> PlacedUIs;
 	CUI* CurrentFocusUI;
 
-	std::function<void(CUIToolPanel&, CUI*, const Vector2&)> CurrentFocusUIFoundEvent;
 };

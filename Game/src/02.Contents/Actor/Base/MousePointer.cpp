@@ -2,19 +2,13 @@
 #include "MousePointer.h"
 #include "WindowIOManager.h"
 
-//void CMousePointer::Initalize()
-//{
-//	CActor::Initalize();
-//	SetRenderComponent();
-//}
-
-//void CMousePointer::SetMouseImageFromDialog(CWindowIOManager& InWindowIOManager)
-//{
-//	//if (InWindowIOManager.TryOpenFileDialog())
-//	//{
-//	//	const std::wstring& ImagePath = InWindowIOManager.GetOpenFilePath();
-//	//	GetRenderComponent()->SetDiffuseImage(ImagePath);
-//	//}
-//	//else
-//	//	GetRenderComponent()->ResetImage();
-//}
+void CMousePointer::SetMouseImageFromDialog(CWindowIOManager& InWindowIOManager)
+{
+	if (InWindowIOManager.TryOpenFileDialog())
+	{
+		const std::wstring& ImagePath = InWindowIOManager.GetOpenFilePath();
+		RenderComponent->SetDiffuseImage(ImagePath);
+	}
+	else
+		RenderComponent->SetDiffuseImage(L"");
+}

@@ -28,7 +28,7 @@ namespace Core
 
 	public:
 		void Update();
-		bool CorrectKeyState(EKeyType InKeyType, EButtonState InButtonState) { return KeyStates[(UINT)InKeyType] == InButtonState; }
+		bool CorrectKeyState(EKeyType InKeyType, EButtonState InButtonState) const { return KeyStates[(UINT)InKeyType] == InButtonState; }
 
 	private:
 		EButtonState KeyStates[(UINT)EKeyType::End];

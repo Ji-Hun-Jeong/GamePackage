@@ -1,6 +1,7 @@
 #pragma once
 #include "00.App/CoreSystem.h"
 #include "03.Utils/AssetLoader.h"
+#include "06.Interaction/MouseManager.h"
 #include "Component/Transform.h"
 #include "Component/RenderComponent.h"
 #include "Component/InteractionComponent.h"
@@ -30,6 +31,8 @@ public:
 	{
 		InChild->Owner = this;
 		Childs.push_back(InChild);
+		if (InteractionComponent && InChild->InteractionComponent)
+			InteractionComponent->GetMouseInteracter()->AttachChildInteracter(InChild->InteractionComponent->GetMouseInteracter());
 	}
 	void AttachComponent(CComponent* InComponent)
 	{
@@ -42,6 +45,8 @@ public:
 		{
 			if ((*Iter) == InChild)
 			{
+				if (InteractionComponent && InChild->InteractionComponent)
+					InteractionComponent->GetMouseInteracter()->DetachChildInteracter(InChild->InteractionComponent->GetMouseInteracter());
 				Childs.erase(Iter);
 				break;
 			}
@@ -130,8 +135,8 @@ public:
 
 	virtual void Update(float InDeltaTime)
 	{
-		/*if (InteractionComponent)
-			InteractionComponent->PerformEvent();*/
+		if (InteractionComponent)
+			InteractionComponent->PerformEvent();
 		if (Animator && RenderComponent)
 		{
 			bool bChangeAnimation = Animator->TryChangeCurrentAnimation();
@@ -174,7 +179,10 @@ public:
 		RenderComponent->UpdateVertexConstBufferData(0, &NDCModelMatrix, sizeof(Matrix));
 	}
 
-	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) {}
+	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) 
+	{
+
+	}
 
 public:
 	virtual void Serialize(CSerializer& InSerializer) const override

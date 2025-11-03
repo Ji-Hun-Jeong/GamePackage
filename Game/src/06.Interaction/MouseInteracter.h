@@ -15,11 +15,6 @@ public:
 	void SetPosition(const Vector2& InPosition) { Position = InPosition; }
 	void SetSize(const Vector2& InSize) { Size = InSize; }
 
-	void SetMouseEnterEvent(std::function<void(const Vector2&)> InMouseEnterEvent) { MouseEnterEvent = InMouseEnterEvent; }
-	void SetMouseExitEvent(std::function<void(const Vector2&)> InMouseExitEvent) { MouseExitEvent = InMouseExitEvent; }
-	void SetMouseOnEvent(std::function<void(const Vector2&)> InMouseOnEvent) { MouseOnEvent = InMouseOnEvent; }
-	void SetMouseFocusEvent(std::function<void(const Vector2&)> InMouseFocusEvent) { MouseFocusEvent = InMouseFocusEvent; }
-
 	void AttachChildInteracter(CMouseInteracter* InChildInteracter) { ChildInteracters.push_back(InChildInteracter); }
 	void DetachChildInteracter(CMouseInteracter* InChildInteracter)
 	{
@@ -35,20 +30,28 @@ public:
 	static int32_t GetCurrentMouseX() { return MouseX; }
 	static int32_t GetCurrentMouseY() { return MouseY; }
 
+	bool IsMouseEnter() const { return bMouseEnter; }
+	bool IsMouseExit() const { return bMouseExit; }
+	bool IsMouseOn() const { return bMouseOn; }
+	bool IsMouseFocus() const { return bMouseFocus; }
+
 private:
-	void ActivateMouseEnterEvent(const Vector2& InMousePosition) const { if (MouseEnterEvent) MouseEnterEvent(InMousePosition); }
-	void ActivateMouseExitEvent(const Vector2& InMousePosition) const { if (MouseExitEvent) MouseExitEvent(InMousePosition); }
-	void ActivateMouseOnEvent(const Vector2& InMousePosition) const { if (MouseOnEvent) MouseOnEvent(InMousePosition); }
-	void ActivateMouseFocusEvent(const Vector2& InMousePosition) const { if (MouseFocusEvent) MouseFocusEvent(InMousePosition); }
+	void ClearState()
+	{
+		bMouseEnter = false;
+		bMouseExit = false;
+		bMouseOn = false;
+		bMouseFocus = false;
+	}
 
 private:
 	Vector2 Position;
 	Vector2 Size;
 
-	std::function<void(const Vector2&)> MouseEnterEvent = nullptr;
-	std::function<void(const Vector2&)> MouseExitEvent = nullptr;
-	std::function<void(const Vector2&)> MouseOnEvent = nullptr;
-	std::function<void(const Vector2&)> MouseFocusEvent = nullptr;
+	bool bMouseEnter = false;
+	bool bMouseExit = false;
+	bool bMouseOn = false;
+	bool bMouseFocus = false;
 
 	std::vector<CMouseInteracter*> ChildInteracters;
 
