@@ -102,13 +102,10 @@
     <ClCompile Include="src\01.Base\Actor\UI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\06.Interaction\MouseManager.cpp">
+    <ClCompile Include="src\06.Interaction\MouseInteractionManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\06.Interaction\MouseInteracter.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\00.App\Binding.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\01.Base\Actor\Component\InteractionComponent.cpp">
@@ -151,6 +148,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\03.Utils\AssetLoader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\06.Interaction\MouseManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\01.Base\Actor\StaticActor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -239,7 +242,7 @@
     <ClInclude Include="src\01.Base\Actor\UI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\06.Interaction\MouseManager.h">
+    <ClInclude Include="src\06.Interaction\MouseInteractionManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\06.Interaction\MouseInteracter.h">
@@ -285,6 +288,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\03.Utils\AssetLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\06.Interaction\MouseManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Actor\StaticActor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -65,6 +65,8 @@ public:
 
 	CTransform* GetTransform() const { return Transform; }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent; }
+	CAnimator* GetAnimator() const { return Animator; }
 	CAnimator* SetAnimator()
 	{
 		Animator = AddComponent<CAnimator>();
@@ -170,12 +172,6 @@ public:
 		const Matrix& NDCModelMatrix = Transform->GetNDCModelMatrix(InScreenWidth, InScreenHeight).Transpose();
 
 		RenderComponent->UpdateVertexConstBufferData(0, &NDCModelMatrix, sizeof(Matrix));
-
-		/*if (InteractionComponent)
-		{
-			InteractionComponent->SetRectTransform(Transform->GetFinalPosition().x, Transform->GetFinalPosition().y
-				, Transform->GetScale().x, Transform->GetScale().y);
-		}*/
 	}
 
 	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) {}

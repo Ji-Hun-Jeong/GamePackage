@@ -48,12 +48,6 @@ public:
 	{
 		for (auto& Object : Objects)
 			delete Object;
-		while (DeletedObjects.empty() == false)
-		{
-			CObject* Object =  DeletedObjects.front();
-			DeletedObjects.pop();
-			delete Object;
-		}
 	}
 private:
 	std::vector<CObject*> Objects;

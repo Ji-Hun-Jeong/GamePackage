@@ -1,41 +1,40 @@
 #pragma once
-#include "Actor.h"
+#include "StaticActor.h"
 
-class CUI : public CActor
+class CUI : public CStaticActor
 {
 	GENERATE_OBJECT(CUI)
-	DONTCOPY(CUI)
+		DONTCOPY(CUI)
 public:
-	CUI() = default;
+	CUI()
+	{
+		InteractionComponent = AddComponent<CInteractionComponent>();
+	}
 	virtual ~CUI() = default;
 
 public:
 	void InitalizeBasicButtonUI(const std::wstring& InBasicImagePath, const std::wstring& InMouseOnImagePath
-	, const std::wstring& InMouseClickImagePath = L"", const std::wstring& InMouseReleaseImagePath = L""
+		, const std::wstring& InMouseClickImagePath = L"", const std::wstring& InMouseReleaseImagePath = L""
 		, std::function<void(EKeyType, const Vector2&)> InMouseReleaseEvent = nullptr)
 	{
-		/*GetRenderComponent()->SetDiffuseImage(InBasicImagePath);
-		GetInteractionComponent()->SetInteracterDeactivateEvent([this, InBasicImagePath](const Vector2& InMousePosition)->void
+		RenderComponent->SetDiffuseImage(InBasicImagePath);
+		InteractionComponent->SetMouseExitEvent([this, InBasicImagePath](const Vector2& InMousePosition)->void
 			{
-				if (GetRenderComponent())
-					GetRenderComponent()->SetDiffuseImage(InBasicImagePath);
+				RenderComponent->SetDiffuseImage(InBasicImagePath);
 			});
-		GetInteractionComponent()->SetInteracterActivateEvent([this, InMouseOnImagePath](const Vector2& InMousePosition)->void
+		InteractionComponent->SetMouseEnterEvent([this, InMouseOnImagePath](const Vector2& InMousePosition)->void
 			{
-				if (GetRenderComponent())
-					GetRenderComponent()->SetDiffuseImage(InMouseOnImagePath);
+				RenderComponent->SetDiffuseImage(InMouseOnImagePath);
 			});
-		GetInteractionComponent()->SetInteracterFocusMouseClickEvent([this, InMouseClickImagePath](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		/*InteractionComponent->SetMouseOnEvent([this, InMouseClickImagePath](const Vector2& InMousePosition)->void
 			{
-				if (GetRenderComponent() && InMouseClickImagePath.empty() == false)
-						GetRenderComponent()->SetDiffuseImage(InMouseClickImagePath);
+				if (InMouseClickImagePath.empty() == false)
+					RenderComponent->SetDiffuseImage(InMouseClickImagePath);
 			});
-		GetInteractionComponent()->SetInteracterFocusMouseReleaseEvent([this, InMouseReleaseImagePath, InMouseReleaseEvent](EKeyType InKeyType, const Vector2& InMousePosition)->void
+		InteractionComponent->SetMouseEnterEvent([this, InMouseReleaseImagePath, InMouseReleaseEvent](const Vector2& InMousePosition)->void
 			{
-				if (GetRenderComponent() && InMouseReleaseImagePath.empty() == false)
-						GetRenderComponent()->SetDiffuseImage(InMouseReleaseImagePath);
-				if (InMouseReleaseEvent)
-					InMouseReleaseEvent(InKeyType, InMousePosition);
+				if (InMouseReleaseImagePath.empty() == false)
+					RenderComponent->SetDiffuseImage(InMouseReleaseImagePath);
 			});*/
 	}
 

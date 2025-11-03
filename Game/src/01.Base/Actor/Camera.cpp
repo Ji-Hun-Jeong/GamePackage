@@ -34,6 +34,8 @@ void CCamera::CaptureSnapShot(uint32_t InScreenWidth, uint32_t InScreenHeight)
 	Transform->SetScale(Vector3(float(InScreenWidth), float(InScreenHeight), 1.0f));
 
 	CameraConst.ViewProj = (Transform->GetNDCModelMatrix(InScreenWidth, InScreenHeight).Invert()).Transpose();
+	CameraConst.ScreenWidth = InScreenWidth;
+	CameraConst.ScreenHeight = InScreenHeight;
 
 	RenderComponent->UpdateVertexConstBufferData(1, &CameraConst, sizeof(CameraConst));
 }

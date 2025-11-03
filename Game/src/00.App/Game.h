@@ -5,7 +5,7 @@
 #include "01.Base/World/World.h"
 #include "04.Renderer/SpriteRenderer.h"
 #include "05.Input/InputActionManager.h"
-#include "06.Interaction/MouseManager.h"
+#include "06.Interaction/MouseInteractionManager.h"
 
 /*
 리소스를 개발단계에서 사용한다음 빌드폴더에도 넣는 방법
@@ -26,7 +26,6 @@ public:
 	~CGame();
 
 public:
-	void Binding();
 	bool Process() override;
 	void ShutDown() override;
 
@@ -35,7 +34,7 @@ private:
 
 	CInputActionManager InputActionManager;
 
-	CMouseManager MouseManager;
+	CMouseInteractionManager MouseInteractionManager;
 
 	CWorld World;
 };

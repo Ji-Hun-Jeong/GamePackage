@@ -75,9 +75,8 @@ public:
 	void PerformAction(const CInputActionValueCollector& InInputActionValueCollector) const
 	{
 		for (const CInputActionValue* InputActionValue : InInputActionValueCollector.GetInputActionValues())
-		{
 			InputActionValue->PerformAction(InputManager);
-		}
+		
 	}
 
 private:

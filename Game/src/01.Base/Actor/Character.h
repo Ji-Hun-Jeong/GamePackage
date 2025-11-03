@@ -1,16 +1,14 @@
 #pragma once
-#include "Actor.h"
+#include "StaticActor.h"
 
-class CCharacter : public CActor
+class CCharacter : public CStaticActor
 {
 	GENERATE_OBJECT(CCharacter)
 	DONTCOPY(CCharacter)
 public:
 	CCharacter()
 	{
-		RenderComponent = AddComponent<CRenderComponent>();
-		const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("ImageMesh");
-		RenderComponent->SetMesh(MeshData);
+		Animator = AddComponent<CAnimator>();
 	}
 	virtual ~CCharacter() {}
 public:

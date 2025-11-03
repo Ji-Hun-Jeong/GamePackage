@@ -110,6 +110,7 @@ public:
 	void PerformInputAction(class CInputActionManager& InInputActionManager);
 	void CaptureSnapShot(class CSpriteRenderer& InRenderer);
 	void RenderWorld(class CSpriteRenderer& InRenderer);
+	void DetectMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager);
 
 public:
 	const std::vector<CActor*>& GetWorldActors() const { return WorldActors; }

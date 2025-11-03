@@ -34,7 +34,6 @@ CPlayer::~CPlayer()
 void CPlayer::BeginPlay()
 {
 	Body = GetWorld()->SpawnActor<CCharacter>(this);
-	CAnimator* BodyAnimator = Body->SetAnimator();
 	CAnimation* Animation = new CAnimation(true);
 	TFrame Frame;
 	Frame.ImagePath = L"resources/image/Character/stand/Body0.png";
@@ -47,8 +46,8 @@ void CPlayer::BeginPlay()
 	Animation->AddFrame(Frame);
 	Animation->UnifyFrameDuration(1.0f);
 
-	BodyAnimator->AddAnimation("Basic", std::unique_ptr<CAnimation>(Animation));
-	BodyAnimator->SetCurrentAnimation("Basic");
+	Body->GetAnimator()->AddAnimation("Basic", std::unique_ptr<CAnimation>(Animation));
+	Body->GetAnimator()->SetCurrentAnimation("Basic");
 }
 
 void CPlayer::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)

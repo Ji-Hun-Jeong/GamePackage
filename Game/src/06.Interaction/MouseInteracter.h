@@ -1,54 +1,59 @@
 #pragma once
 #include <Core/public/InputManager.h>
+#include "MouseManager.h"
 
 class CMouseInteracter
 {
-	friend class CMouseManager;
+	friend class CMouseInteractionManager;
 public:
 	CMouseInteracter()
 		: Size(0.0f)
-		, bDestroy(false)
 	{}
 	~CMouseInteracter() = default;
 
 public:
-	void Destroy()
-	{
-		bDestroy = true;
-		for (auto& ChildInteracter : ChildInteracters)
-			ChildInteracter->Destroy();
-	}
 	void SetPosition(const Vector2& InPosition) { Position = InPosition; }
 	void SetSize(const Vector2& InSize) { Size = InSize; }
 
-	void AttachChildInteracter(CMouseInteracter* InChildInteracter) { ChildInteracters.push_back(InChildInteracter); }
+	void SetMouseEnterEvent(std::function<void(const Vector2&)> InMouseEnterEvent) { MouseEnterEvent = InMouseEnterEvent; }
+	void SetMouseExitEvent(std::function<void(const Vector2&)> InMouseExitEvent) { MouseExitEvent = InMouseExitEvent; }
+	void SetMouseOnEvent(std::function<void(const Vector2&)> InMouseOnEvent) { MouseOnEvent = InMouseOnEvent; }
+	void SetMouseFocusEvent(std::function<void(const Vector2&)> InMouseFocusEvent) { MouseFocusEvent = InMouseFocusEvent; }
 
-	bool IsMouseEnter() const { return bMouseEnter; }
-	bool IsMouseOn() const { return bMouseOn; }
-	bool IsMouseFocus() const { return bMouseFocus; }
-	bool IsMouseExit() const { return bMouseExit; }
+	void AttachChildInteracter(CMouseInteracter* InChildInteracter) { ChildInteracters.push_back(InChildInteracter); }
+	void DetachChildInteracter(CMouseInteracter* InChildInteracter)
+	{
+		for (auto Iter = ChildInteracters.begin(); Iter != ChildInteracters.end(); ++Iter)
+		{
+			if (*Iter == InChildInteracter)
+			{
+				ChildInteracters.erase(Iter);
+				break;
+			}
+		}
+	}
+	static int32_t GetCurrentMouseX() { return MouseX; }
+	static int32_t GetCurrentMouseY() { return MouseY; }
 
 private:
-	void ClearState()
-	{
-		bMouseEnter = false;
-		bMouseExit = false;
-		bMouseOn = false;
-		bMouseFocus = false;
-	}
+	void ActivateMouseEnterEvent(const Vector2& InMousePosition) const { if (MouseEnterEvent) MouseEnterEvent(InMousePosition); }
+	void ActivateMouseExitEvent(const Vector2& InMousePosition) const { if (MouseExitEvent) MouseExitEvent(InMousePosition); }
+	void ActivateMouseOnEvent(const Vector2& InMousePosition) const { if (MouseOnEvent) MouseOnEvent(InMousePosition); }
+	void ActivateMouseFocusEvent(const Vector2& InMousePosition) const { if (MouseFocusEvent) MouseFocusEvent(InMousePosition); }
 
 private:
 	Vector2 Position;
 	Vector2 Size;
 
-	bool bMouseEnter = false;
-	bool bMouseOn = false;	// 올라가 있는 상태
-	bool bMouseFocus = false;	// 가장 자식, 포커싱 되있는 상태
-	bool bMouseExit = false;
+	std::function<void(const Vector2&)> MouseEnterEvent = nullptr;
+	std::function<void(const Vector2&)> MouseExitEvent = nullptr;
+	std::function<void(const Vector2&)> MouseOnEvent = nullptr;
+	std::function<void(const Vector2&)> MouseFocusEvent = nullptr;
 
 	std::vector<CMouseInteracter*> ChildInteracters;
 
-	bool bDestroy;
+	inline static int32_t MouseX;
+	inline static int32_t MouseY;
 
 };
 
