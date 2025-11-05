@@ -17,6 +17,7 @@ namespace Graphics
 class CPSO
 {
 	friend class CRenderStateObject;
+	friend class CSpriteRenderer;
 public:
 	CPSO(Graphics::ETopology InPrimitiveTopology, Graphics::CInputLayout* InInputLayout
 		, Graphics::CVertexShader* InVertexShader, Graphics::CRasterizerState* InRasterizerState
