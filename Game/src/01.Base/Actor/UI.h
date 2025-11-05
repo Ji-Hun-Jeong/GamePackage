@@ -32,7 +32,8 @@ public:
 				else if (LReleased())
 				{
 					RenderComponent->SetDiffuseImage(InBasicImagePath);
-					InButtonEvent();
+					if (InButtonEvent)
+						InButtonEvent();
 				}
 			});
 	}

@@ -24,6 +24,7 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 
 	BasicPixelShader = InDevice.CreatePixelShader(L"resources/shader/BasicPixelShader.hlsl");
 	EdgePixelShader = InDevice.CreatePixelShader(L"resources/shader/EdgePixelShader.hlsl");
+	ColorPixelShader = InDevice.CreatePixelShader(L"resources/shader/ColorPixelShader.hlsl");
 
 	Graphics::TSamplerDesc SamplerDesc;
 	SamplerDesc.Filter = Graphics::EFilter::FILTER_MIN_MAG_MIP_POINT;
@@ -36,25 +37,52 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 	
 	LinearSamplerState = InDevice.CreateSamplerState(SamplerDesc);
 
-	Graphics::TBlendDesc BlendStateDesc;
-	BlendStateDesc.RenderTarget[0].BlendEnable = true;
-	BlendStateDesc.RenderTarget[0].SrcBlend = Graphics::EBlend::BLEND_SRC_ALPHA;
-	BlendStateDesc.RenderTarget[0].DestBlend = Graphics::EBlend::BLEND_INV_SRC_ALPHA;
-	BlendStateDesc.RenderTarget[0].BlendOp = Graphics::EBlendOP::BLEND_OP_ADD;
+	Graphics::TBlendDesc BasicBlendStateDesc;
+	BasicBlendStateDesc.RenderTarget[0].BlendEnable = true;
+	BasicBlendStateDesc.RenderTarget[0].SrcBlend = Graphics::EBlend::BLEND_SRC_ALPHA;
+	BasicBlendStateDesc.RenderTarget[0].DestBlend = Graphics::EBlend::BLEND_INV_SRC_ALPHA;
+	BasicBlendStateDesc.RenderTarget[0].BlendOp = Graphics::EBlendOP::BLEND_OP_ADD;
 
-	BlendStateDesc.RenderTarget[0].SrcBlendAlpha = Graphics::EBlend::BLEND_SRC_ALPHA;
-	BlendStateDesc.RenderTarget[0].DestBlendAlpha = Graphics::EBlend::BLEND_INV_SRC_ALPHA;
-	BlendStateDesc.RenderTarget[0].BlendOpAlpha = Graphics::EBlendOP::BLEND_OP_ADD;
+	BasicBlendStateDesc.RenderTarget[0].SrcBlendAlpha = Graphics::EBlend::BLEND_SRC_ALPHA;
+	BasicBlendStateDesc.RenderTarget[0].DestBlendAlpha = Graphics::EBlend::BLEND_INV_SRC_ALPHA;
+	BasicBlendStateDesc.RenderTarget[0].BlendOpAlpha = Graphics::EBlendOP::BLEND_OP_ADD;
 
 	// 필요하면 RGBA 각각에 대해서도 조절 가능
-	BlendStateDesc.RenderTarget[0].RenderTargetWriteMask = Graphics::EColorWhiteEnable::COLOR_WRITE_ENABLE_ALL;
-	BasicBlendState = InDevice.CreateBlendState(BlendStateDesc);
+	BasicBlendStateDesc.RenderTarget[0].RenderTargetWriteMask = Graphics::EColorWhiteEnable::COLOR_WRITE_ENABLE_ALL;
+	BasicBlendState = InDevice.CreateBlendState(BasicBlendStateDesc);
+	std::cout << BasicBlendState << std::endl;
+
+	Graphics::TBlendDesc TransparentBlendStateDesc;
+	TransparentBlendStateDesc.RenderTarget[0].BlendEnable = true;
+	TransparentBlendStateDesc.RenderTarget[0].SrcBlend = Graphics::EBlend::BLEND_SRC_ALPHA;
+	TransparentBlendStateDesc.RenderTarget[0].DestBlend = Graphics::EBlend::BLEND_INV_SRC_ALPHA;
+	TransparentBlendStateDesc.RenderTarget[0].BlendOp = Graphics::EBlendOP::BLEND_OP_ADD;
+
+	TransparentBlendStateDesc.RenderTarget[0].SrcBlendAlpha = Graphics::EBlend::BLEND_ONE;
+	TransparentBlendStateDesc.RenderTarget[0].DestBlendAlpha = Graphics::EBlend::BLEND_ZERO;
+	TransparentBlendStateDesc.RenderTarget[0].BlendOpAlpha = Graphics::EBlendOP::BLEND_OP_ADD;
+
+	TransparentBlendStateDesc.RenderTarget[0].RenderTargetWriteMask = Graphics::EColorWhiteEnable::COLOR_WRITE_ENABLE_ALL;
+
+	TransparentBlendState = InDevice.CreateBlendState(TransparentBlendStateDesc);
+	std::cout << TransparentBlendState << std::endl;
 
 	CPSO* ImagePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
 		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
 	PSOs[size_t(EPSOType::Basic)] = std::unique_ptr<CPSO>(ImagePSO);
 
+
 	CPSO* EdgePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
 		, BasicRasterizerState.get(), EdgePixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
 	PSOs[size_t(EPSOType::Mark)] = std::unique_ptr<CPSO>(EdgePSO);
+
+
+	CPSO* TransparentPSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
+		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get(), TransparentBlendState.get());
+	PSOs[size_t(EPSOType::Transparent)] = std::unique_ptr<CPSO>(TransparentPSO);
+
+	CPSO* ColorPSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
+		, BasicRasterizerState.get(), ColorPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
+	PSOs[size_t(EPSOType::Color)] = std::unique_ptr<CPSO>(ColorPSO);
+
 }

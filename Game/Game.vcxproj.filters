@@ -156,6 +156,18 @@
     <ClCompile Include="src\01.Base\Actor\StaticActor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\02.Contents\Scene\LoginScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\UI\OnOffUI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\04.Renderer\RenderSorter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\Base\Fader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -296,11 +308,24 @@
     <ClInclude Include="src\01.Base\Actor\StaticActor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\02.Contents\Scene\LoginScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\UI\OnOffUI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\04.Renderer\RenderSorter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\Base\Fader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicVertexShader.hlsl" />
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl" />
     <FxCompile Include="resources\shader\EdgePixelShader.hlsl" />
+    <FxCompile Include="resources\shader\ColorPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shader\Common.hlsli" />

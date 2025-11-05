@@ -6,39 +6,65 @@
 
 void CRenderStateObject::MapBuffersOnUpdated(Graphics::CRenderContext& InContext)
 {
-	// UpdateConstBuffer
-	for (auto& MappingInstance : VertexConstBufferMappingInstance)
+	// UpdateVertexConstBuffer
+	for (auto& VertexConstMappingInstance : VertexConstBufferMappingInstance)
 	{
-		if (MappingInstance == nullptr)
+		if (VertexConstMappingInstance == nullptr)
 			continue;
-		if (MappingInstance->bUpdated == false)
+		if (VertexConstMappingInstance->bUpdated == false)
 			continue;
 
-		auto& CpuBuffer = MappingInstance.get()->CpuBuffer;
-		auto& GpuBuffer = MappingInstance.get()->GpuBuffer;
+		auto& CpuBuffer = VertexConstMappingInstance.get()->CpuBuffer;
+		auto& GpuBuffer = VertexConstMappingInstance.get()->GpuBuffer;
 
 		InContext.CopyBuffer(GpuBuffer.get(), CpuBuffer.data(), CpuBuffer.size());
 
-		MappingInstance->bUpdated = false;
+		VertexConstMappingInstance->bUpdated = false;
+	}
+
+	// UpdatePixelConstBuffer
+	for (auto& PixelConstMappingInstance : PixelConstBufferMappingInstance)
+	{
+		if (PixelConstMappingInstance == nullptr)
+			continue;
+		if (PixelConstMappingInstance->bUpdated == false)
+			continue;
+
+		auto& CpuBuffer = PixelConstMappingInstance.get()->CpuBuffer;
+		auto& GpuBuffer = PixelConstMappingInstance.get()->GpuBuffer;
+
+		InContext.CopyBuffer(GpuBuffer.get(), CpuBuffer.data(), CpuBuffer.size());
+
+		PixelConstMappingInstance->bUpdated = false;
 	}
 }
 
 void CRenderStateObject::BindRenderState(Graphics::CRenderContext& InContext)
 {
-	// SetConstBuffer
+	// SetVertexConstBuffer
 	for (size_t i = 0; i < VertexConstBufferMappingInstance.size(); ++i)
 	{
 		auto& MappingInstance = VertexConstBufferMappingInstance[i];
 		if (MappingInstance == nullptr)
 			continue;
 		auto& GpuBuffer = MappingInstance->GpuBuffer;
-		InContext.VSSetConstantBuffer(VertexConstBufferStartSlot + uint32_t(i), GpuBuffer.get());
+		InContext.VSSetConstantBuffer(uint32_t(i), GpuBuffer.get());
+	}
+
+	// SetPixelConstBuffer
+	for (size_t i = 0; i < PixelConstBufferMappingInstance.size(); ++i)
+	{
+		auto& MappingInstance = PixelConstBufferMappingInstance[i];
+		if (MappingInstance == nullptr)
+			continue;
+		auto& GpuBuffer = MappingInstance->GpuBuffer;
+		InContext.PSSetConstantBuffer(uint32_t(i), GpuBuffer.get());
 	}
 
 	if (PSO)
 	{
 		const float Factor = 1.0f;
-		const float BlendFactor[4] = { Factor, Factor, Factor, 1.0f };
+		const float BlendFactor[4] = { Factor, Factor, Factor, 0.0f };
 		InContext.OMSetBlendState(PSO->BlendState, BlendFactor, 0xffffffff);
 		InContext.IASetPrimitiveTopology(PSO->PrimitiveTopology);
 		InContext.IASetInputLayout(PSO->InputLayout);
@@ -60,9 +86,9 @@ void CRenderStateObject::BindRenderState(Graphics::CRenderContext& InContext)
 	for (size_t i = 0; i < PixelShaderResources.size(); ++i)
 	{
 		if (PixelShaderResources[i])
-			InContext.PSSetShaderResource(PixelShaderResourceStartSlot + uint32_t(i), &PixelShaderResources[i]->GetSRV());
+			InContext.PSSetShaderResource(uint32_t(i), &PixelShaderResources[i]->GetSRV());
 		else
-			InContext.PSSetShaderResource(PixelShaderResourceStartSlot + uint32_t(i), nullptr);
+			InContext.PSSetShaderResource(uint32_t(i), nullptr);
 	}
 
 	if (Mesh)

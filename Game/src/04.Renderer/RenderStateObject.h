@@ -32,8 +32,7 @@ public:
 		, PSO(nullptr)
 		, VertexShaderResources{}
 		, PixelShaderResources{}
-		, PixelShaderResourceStartSlot(0)
-		, VertexConstBufferStartSlot(0)
+		, RenderLayer(0)
 		, bRender(true)
 	{
 	}
@@ -61,11 +60,6 @@ public:
 		assert(InPSO);
 		PSO = InPSO;
 	}
-	void SetPixelShaderResourceStartSlot(uint32_t InPixelShaderResourceStartSlot) { PixelShaderResourceStartSlot = InPixelShaderResourceStartSlot; }
-	void SetVertexConstBufferStartSlot(uint32_t InVertexConstBufferStartSlot)
-	{
-		VertexConstBufferStartSlot = InVertexConstBufferStartSlot;
-	}
 
 	void SetVertexConstBuffer(size_t InSlot, std::unique_ptr<CBufferMappingInstance> InVertexConstBufferMappingInstance)
 	{
@@ -77,9 +71,28 @@ public:
 		VertexConstBufferMappingInstance[InSlot] = std::move(InVertexConstBufferMappingInstance);
 	}
 
-	void UpdateMappingInstance(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
+	void SetPixelConstBuffer(size_t InSlot, std::unique_ptr<CBufferMappingInstance> InPixelConstBufferMappingInstance)
+	{
+		if (PixelConstBufferMappingInstance[InSlot] != nullptr)
+		{
+			PixelConstBufferMappingInstance[InSlot].reset();
+			std::cout << "PixelConstBufferMappingInstance Is Overlapped\n";
+		}
+		PixelConstBufferMappingInstance[InSlot] = std::move(InPixelConstBufferMappingInstance);
+	}
+
+	void UpdateVertexConstMappingInstance(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
 	{
 		auto& MappingInstance = VertexConstBufferMappingInstance[InSlot];
+		assert(MappingInstance);
+
+		memcpy(MappingInstance->CpuBuffer.data(), InMappingPoint, InByteWidth);
+		MappingInstance->bUpdated = true;
+	}
+
+	void UpdatePixelConstMappingInstance(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
+	{
+		auto& MappingInstance = PixelConstBufferMappingInstance[InSlot];
 		assert(MappingInstance);
 
 		memcpy(MappingInstance->CpuBuffer.data(), InMappingPoint, InByteWidth);
@@ -89,12 +102,21 @@ public:
 	void MapBuffersOnUpdated(Graphics::CRenderContext& InContext);
 	void BindRenderState(Graphics::CRenderContext& InContext);
 
+	void SetRenderLayer(uint32_t InLayer) { RenderLayer = InLayer; }
 	void SetRender(bool bInRender) { bRender = bInRender; }
+	uint32_t GetRenderLayer() const { return RenderLayer; }
 
-	bool IsExistBufferInSlot(size_t InSlot)
+	bool IsExistVertexConstBufferInSlot(size_t InSlot)
 	{
 		assert(InSlot < VertexConstBufferMappingInstance.size());
 		if (VertexConstBufferMappingInstance[InSlot])
+			return true;
+		return false;
+	}
+	bool IsExistPixelConstBufferInSlot(size_t InSlot)
+	{
+		assert(InSlot < PixelConstBufferMappingInstance.size());
+		if (PixelConstBufferMappingInstance[InSlot])
 			return true;
 		return false;
 	}
@@ -107,9 +129,9 @@ protected:
 	std::array<CImage*, 6> PixelShaderResources;
 
 	std::array<std::unique_ptr<CBufferMappingInstance>, 6> VertexConstBufferMappingInstance;
+	std::array<std::unique_ptr<CBufferMappingInstance>, 6> PixelConstBufferMappingInstance;
 
-	uint32_t PixelShaderResourceStartSlot;
-	uint32_t VertexConstBufferStartSlot;
+	uint32_t RenderLayer;
 
 	bool bRender;
 };

@@ -23,11 +23,13 @@ class CRenderComponent : public CComponent
 	GENERATE_OBJECT(CRenderComponent)
 public:
 	CRenderComponent()
-		: PSOType(EPSOType::Basic)
+		: PSOType(EPSOType::End)
 		, bUpdateMesh(false)
 		, bUpdateImage(false)
+		, bUpdatePSO(false)
 	{
 		SetVertexConstBufferData(0, sizeof(Matrix));
+		SetPSO(EPSOType::Basic);
 	}
 	~CRenderComponent()
 	{
@@ -47,7 +49,9 @@ public:
 	void SetPSO(EPSOType InPSOType)
 	{
 		PSOType = InPSOType;
+		bUpdatePSO = true;
 	}
+	void SetLayer(uint32_t InLayer) { RenderStateObject.SetRenderLayer(InLayer); }
 
 	CRenderStateObject* GetRenderStateObject() { return &RenderStateObject; }
 	void SetupResourceToRSO(class CRenderResourceLoader& InRenderResourceLoader);
@@ -71,6 +75,23 @@ public:
 		VertexConstBufferDatas[InSlot]->bUpdated = true;
 	}
 
+	void SetPixelConstBufferData(size_t InSlot, size_t InByteWidth)
+	{
+		if (PixelConstBufferDatas[InSlot])
+		{
+			PixelConstBufferDatas[InSlot].reset();
+			std::cout << "ConstBuffer Covered\n";
+		}
+		PixelConstBufferDatas[InSlot] = std::make_unique<CCpuBuffer>(InByteWidth);
+		PixelConstBufferDatas[InSlot]->bUpdated = true;
+	}
+
+	void UpdatePixelConstBufferData(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
+	{
+		memcpy(PixelConstBufferDatas[InSlot]->BufferData.data(), InMappingPoint, InByteWidth);
+		PixelConstBufferDatas[InSlot]->bUpdated = true;
+	}
+
 	void MapUpdatedBuffersToRSO()
 	{
 		for (size_t i = 0; i < VertexConstBufferDatas.size(); ++i)
@@ -81,7 +102,19 @@ public:
 			if (CpuBuffer->bUpdated == false)
 				continue;
 
-			RenderStateObject.UpdateMappingInstance(i, CpuBuffer->BufferData.data(), CpuBuffer->BufferData.size());
+			RenderStateObject.UpdateVertexConstMappingInstance(i, CpuBuffer->BufferData.data(), CpuBuffer->BufferData.size());
+
+			CpuBuffer->bUpdated = false;
+		}
+		for (size_t i = 0; i < PixelConstBufferDatas.size(); ++i)
+		{
+			auto& CpuBuffer = PixelConstBufferDatas[i];
+			if (CpuBuffer == nullptr)
+				continue;
+			if (CpuBuffer->bUpdated == false)
+				continue;
+
+			RenderStateObject.UpdatePixelConstMappingInstance(i, CpuBuffer->BufferData.data(), CpuBuffer->BufferData.size());
 
 			CpuBuffer->bUpdated = false;
 		}
@@ -91,10 +124,16 @@ public:
 	{
 		bUpdateMesh = false;
 		bUpdateImage = false;
+		bUpdatePSO = false;
 		for (size_t i = 0; i < VertexConstBufferDatas.size(); ++i)
 		{
 			if (VertexConstBufferDatas[i])
 				VertexConstBufferDatas[i]->bUpdated = false;
+		}
+		for (size_t i = 0; i < PixelConstBufferDatas.size(); ++i)
+		{
+			if (PixelConstBufferDatas[i])
+				PixelConstBufferDatas[i]->bUpdated = false;
 		}
 	}
 
@@ -129,8 +168,11 @@ private:
 	Graphics::TTexture2DDesc CurrentImageDesc;
 
 	std::array<std::unique_ptr<CCpuBuffer>, 6> VertexConstBufferDatas;
+	std::array<std::unique_ptr<CCpuBuffer>, 6> PixelConstBufferDatas;
+
 	bool bUpdateMesh;
 	bool bUpdateImage;
+	bool bUpdatePSO;
 
 };
 

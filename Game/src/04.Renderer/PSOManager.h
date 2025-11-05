@@ -46,6 +46,8 @@ enum class EPSOType
 {
 	Basic,
 	Mark,
+	Transparent,
+	Color,
 	End,
 };
 
@@ -70,10 +72,12 @@ private:
 
 	std::unique_ptr<Graphics::CPixelShader> BasicPixelShader;
 	std::unique_ptr<Graphics::CPixelShader> EdgePixelShader;
+	std::unique_ptr<Graphics::CPixelShader> ColorPixelShader;
 
 	std::unique_ptr<Graphics::CSamplerState> LinearSamplerState;
 
 	std::unique_ptr<Graphics::CBlendState> BasicBlendState;
+	std::unique_ptr<Graphics::CBlendState> TransparentBlendState;
 
 	std::array<std::unique_ptr<CPSO>, size_t(EPSOType::End)> PSOs;
 

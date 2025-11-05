@@ -2,6 +2,7 @@
 #include "World.h"
 #include "01.Base/Actor/Camera.h"
 #include "04.Renderer/SpriteRenderer.h"
+#include "04.Renderer/RenderSorter.h"
 #include "05.Input/InputActionManager.h"
 #include "06.Interaction/MouseInteractionManager.h"
 
@@ -23,25 +24,23 @@ void CWorld::CaptureSnapShot(CSpriteRenderer& InRenderer)
 	const uint32_t ScreenHeight = InRenderer.GetScreenHeight();
 	for (auto& WorldActor : WorldActors)
 	{
-		if (WorldActor->GetTransform()->OnVariation() == false)
-			continue;
-
-		for (auto& Child : WorldActor->GetChild())
-			Child->GetTransform()->SetVariation(true);
-
 		CRenderComponent* RenderComponent = WorldActor->GetRenderComponent();
-		if (RenderComponent == nullptr)
-			continue;
+		if (RenderComponent)
+		{
+			// SetupResource
+			RenderComponent->SetupPSOToRSO(PSOManager);
+			RenderComponent->SetupResourceToRSO(RenderResourceLoader);
+			RenderComponent->SetupMappingInstanceToRSO(RenderResourceLoader);
+		}
 
-		// SetupResource
-		RenderComponent->SetupPSOToRSO(PSOManager);
-		RenderComponent->SetupResourceToRSO(RenderResourceLoader);
-		RenderComponent->SetupMappingInstanceToRSO(RenderResourceLoader);
-
-		WorldActor->CaptureSnapShot(ScreenWidth, ScreenHeight);
-
-		WorldActor->GetTransform()->SetVariation(false);
-
+		if (WorldActor->GetTransform()->OnVariation())
+		{
+			for (auto& Child : WorldActor->GetChild())
+				Child->GetTransform()->SetVariation(true);
+			if(RenderComponent)
+				WorldActor->CaptureSnapShot(ScreenWidth, ScreenHeight);
+			WorldActor->GetTransform()->SetVariation(false);
+		}
 	}
 }
 
@@ -63,6 +62,9 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 		CRenderStateObject* RenderStateObject = RenderComponent->GetRenderStateObject();
 		RenderStateObjects.push_back(RenderStateObject);
 	}
+
+	CRenderSorter RenderSorter;
+	RenderSorter.SortByLayer(RenderStateObjects);
 
 	InRenderer.UpdateRSOs(RenderStateObjects);
 	InRenderer.RenderRSOs(RenderStateObjects);

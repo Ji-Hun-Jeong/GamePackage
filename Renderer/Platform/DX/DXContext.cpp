@@ -111,6 +111,13 @@ namespace Graphics::DX
 			ShaderResourceView = DXResourceStorage.GetResource<ID3D11ShaderResourceView>(InShaderResourceView->GetResourceHandle());
 		Context->PSSetShaderResources(InStartSlot, 1, &ShaderResourceView);
 	}
+	void CDXContext::PSSetConstantBuffer(uint32_t InStartSlot, const CBuffer* InBuffer)
+	{
+		ID3D11Buffer* Buffer = nullptr;
+		if (InBuffer)
+			Buffer = DXResourceStorage.GetResource<ID3D11Buffer>(InBuffer->GetResourceHandle());
+		Context->PSSetConstantBuffers(InStartSlot, 1, &Buffer);
+	}
 	void CDXContext::PSSetSamplers(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers)
 	{
 		std::vector<ID3D11SamplerState*> SamplerStates(InNumSamplers, nullptr);

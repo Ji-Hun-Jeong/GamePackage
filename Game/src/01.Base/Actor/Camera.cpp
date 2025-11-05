@@ -31,6 +31,7 @@ void CCamera::CaptureSnapShot(uint32_t InScreenWidth, uint32_t InScreenHeight)
 {
 	CActor::CaptureSnapShot(InScreenWidth, InScreenHeight);
 
+	// Todo: Window에 screen걸어두고 거기서 얻어오기 Final로
 	Transform->SetScale(Vector3(float(InScreenWidth), float(InScreenHeight), 1.0f));
 
 	CameraConst.ViewProj = (Transform->GetNDCModelMatrix(InScreenWidth, InScreenHeight).Invert()).Transpose();

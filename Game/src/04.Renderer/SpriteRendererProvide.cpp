@@ -4,26 +4,6 @@
 #include "01.Base/World/World.h"
 #include "01.Base/Actor/Camera.h"
 
-//class CCameraSetScreenSize : public INewObjectEvent
-//{
-//public:
-//	CCameraSetScreenSize(CSpriteRenderer& InRenderer)
-//		: Renderer(InRenderer)
-//	{}
-//private:
-//	void CreatedInWorld(CWorld& InWorld, CObject& InNewObject) override
-//	{
-//		static_cast<CCamera&>(InNewObject).SetScreenSize(Renderer.GetScreenWidth(), Renderer.GetScreenHeight());
-//	}
-//
-//	CSpriteRenderer& Renderer;
-//};
-//
-//void CSpriteRenderer::InitalizeFromWorld(CWorld& InWorld)
-//{
-//	InWorld.AddNewObjectTypeEvent(CCamera::GetStaticType(), std::make_unique<CCameraSetScreenSize>(*this));
-//}
-
 // 모듈이 내부를 전달 불가하기 때문에 인터페이스 사용해야될듯
 class CRefreshScreen : public Core::IWindowResize
 {

@@ -186,6 +186,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\Actor\Base\Fader.cpp" />
+    <ClCompile Include="src\04.Renderer\RenderSorter.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\UI\OnOffUI.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\LoginScene.cpp" />
     <ClCompile Include="src\06.Interaction\MouseManager.cpp" />
     <ClCompile Include="src\03.Utils\AssetLoader.cpp" />
     <ClCompile Include="src\00.App\Class.cpp" />
@@ -240,6 +244,10 @@
     <ClCompile Include="src\01.Base\Actor\StaticActor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\Actor\Base\Fader.h" />
+    <ClInclude Include="src\04.Renderer\RenderSorter.h" />
+    <ClInclude Include="src\02.Contents\Actor\UI\OnOffUI.h" />
+    <ClInclude Include="src\02.Contents\Scene\LoginScene.h" />
     <ClInclude Include="src\06.Interaction\MouseManager.h" />
     <ClInclude Include="src\03.Utils\AssetLoader.h" />
     <ClInclude Include="src\00.App\Class.h" />
@@ -307,6 +315,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="resources\shader\ColorPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="resources\shader\EdgePixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

@@ -35,6 +35,7 @@ namespace Graphics
 		virtual void PSSetShader(const CPixelShader* InPixelShader) = 0;
 		virtual void PSSetShaderResources(uint32_t InStartSlot, uint32_t InNumViews, const std::vector<std::unique_ptr<CShaderResourceView>>& InShaderResourceViews) = 0;
 		virtual void PSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView* InShaderResourceView) = 0;
+		virtual void PSSetConstantBuffer(uint32_t InStartSlot, const CBuffer* InBuffer) = 0;
 		virtual void DrawIndexed(uint32_t InIndexCount) = 0;
 		virtual void CopyBuffer(CBuffer* InBuffer, const void* InMapDataPoint, size_t InDataSize) = 0;
 		virtual void PSSetSamplers(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers) = 0;

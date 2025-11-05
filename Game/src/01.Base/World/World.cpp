@@ -5,6 +5,7 @@
 #include "02.Contents/Scene/LobbyScene.h"
 #include "02.Contents/Scene/EditUIScene.h"
 #include "02.Contents/Scene/TestScene.h"
+#include "02.Contents/Scene/LoginScene.h"
 
 CWorld* g_World = nullptr;
 
@@ -20,7 +21,7 @@ CWorld::~CWorld()
 
 void CWorld::Start()
 {
-	LoadScene<CLobbyScene>();
+	LoadScene<CLoginScene>();
 }
 
 

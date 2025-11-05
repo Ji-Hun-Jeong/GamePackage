@@ -2,13 +2,10 @@
 #include "Scene.h"
 #include "GameCore.h"
 
-//void CScene::Initalize()
-//{
-//	CActor::Initalize();
-//	//MainCamera = SpawnActor<CCamera>(this);
-//}
-
 CScene::CScene()
 {
 	MainCamera = GetWorld()->SpawnActor<CCamera>(this);
+	Fader = GetWorld()->SpawnActor<CFader>(this);
+	Fader->GetTransform()->SetScale(Vector3(1280.0f, 960.0f, 0.0f));
+	Fader->GetRenderComponent()->SetLayer(1);
 }
