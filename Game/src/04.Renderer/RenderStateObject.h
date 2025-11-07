@@ -5,27 +5,15 @@
 #include "Image.h"
 #include "PSOManager.h"
 
-class CBufferMappingInstance
+enum class EShaderType
 {
-	friend class CRenderStateObject;
-public:
-	CBufferMappingInstance(size_t InByteWidth, std::unique_ptr<Graphics::CBuffer> InGpuBuffer)
-		: GpuBuffer(std::move(InGpuBuffer))
-		, bUpdated(false)
-	{
-		CpuBuffer.resize(InByteWidth, 0);
-	}
-	~CBufferMappingInstance() = default;
-
-private:
-	std::vector<uint8_t> CpuBuffer;
-	std::unique_ptr<Graphics::CBuffer> GpuBuffer;
-	bool bUpdated;
-
+	VertexShader,
+	PixelShader,
 };
 
 class CRenderStateObject
 {
+	friend class CSpriteRenderer;
 public:
 	CRenderStateObject()
 		: Mesh(nullptr)
@@ -39,85 +27,87 @@ public:
 	~CRenderStateObject() = default;
 
 public:
-	void SetMesh(Graphics::CMesh* InMeshOrNull)
+	void MountMesh(Graphics::CMesh* InMeshOrNull)
 	{
 		Mesh = InMeshOrNull;
 	}
-	void SetPixelShaderResource(uint8_t InPixelShaderResourceSlot, CImage* InImage)
+	void MountShaderResource(EShaderType InShaderType, uint8_t InSlot, const Graphics::CShaderResourceView* InSRV)
 	{
-		assert(InPixelShaderResourceSlot < 12);
-		PixelShaderResources[InPixelShaderResourceSlot] = InImage;
+		assert(InSlot < VertexShaderResources.size());
+		switch (InShaderType)
+		{
+		case EShaderType::VertexShader:
+			if (VertexShaderResources[InSlot] != nullptr)
+				std::cout << "VertexShaderResources Is Overlapped\n";
+			
+			VertexShaderResources[InSlot] = InSRV;
+			break;
+		case EShaderType::PixelShader:
+			if (PixelShaderResources[InSlot] != nullptr)
+				std::cout << "PixelShaderResources Is Overlapped\n";
+
+			PixelShaderResources[InSlot] = InSRV;
+			break;
+		default:
+			assert(0);
+			break;
+		}
 	}
-	void SetVertexShaderResource(uint8_t InVertexShaderResourceSlot, CImage* InImage)
-	{
-		// 구현해야함
-		assert(0);
-		assert(InImage);
-		VertexShaderResources[InVertexShaderResourceSlot] = InImage;
-	}
-	void SetPSO(CPSO* InPSO)
+	void MountPSO(CPSO* InPSO)
 	{
 		assert(InPSO);
 		PSO = InPSO;
 	}
 
-	void SetVertexConstBuffer(size_t InSlot, std::unique_ptr<CBufferMappingInstance> InVertexConstBufferMappingInstance)
+	void MountConstBuffer(EShaderType InShaderType, size_t InSlot, std::unique_ptr<Graphics::CBuffer> InConstBuffer)
 	{
-		if (VertexConstBufferMappingInstance[InSlot] != nullptr)
+		switch (InShaderType)
 		{
-			VertexConstBufferMappingInstance[InSlot].reset();
-			std::cout << "VertexConstBuffer Is Overlapped\n";
+		case EShaderType::VertexShader:
+			if (VertexConstBuffers[InSlot] != nullptr)
+			{
+				VertexConstBuffers[InSlot].reset();
+				std::cout << "VertexConstBuffer Is Overlapped\n";
+			}
+			VertexConstBuffers[InSlot] = std::move(InConstBuffer);
+			break;
+		case EShaderType::PixelShader:
+			if (PixelConstBuffers[InSlot] != nullptr)
+			{
+				PixelConstBuffers[InSlot].reset();
+				std::cout << "PixelConstBuffer Is Overlapped\n";
+			}
+			PixelConstBuffers[InSlot] = std::move(InConstBuffer);
+			break;
+		default:
+			assert(0);
+			break;
 		}
-		VertexConstBufferMappingInstance[InSlot] = std::move(InVertexConstBufferMappingInstance);
 	}
-
-	void SetPixelConstBuffer(size_t InSlot, std::unique_ptr<CBufferMappingInstance> InPixelConstBufferMappingInstance)
-	{
-		if (PixelConstBufferMappingInstance[InSlot] != nullptr)
-		{
-			PixelConstBufferMappingInstance[InSlot].reset();
-			std::cout << "PixelConstBufferMappingInstance Is Overlapped\n";
-		}
-		PixelConstBufferMappingInstance[InSlot] = std::move(InPixelConstBufferMappingInstance);
-	}
-
-	void UpdateVertexConstMappingInstance(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
-	{
-		auto& MappingInstance = VertexConstBufferMappingInstance[InSlot];
-		assert(MappingInstance);
-
-		memcpy(MappingInstance->CpuBuffer.data(), InMappingPoint, InByteWidth);
-		MappingInstance->bUpdated = true;
-	}
-
-	void UpdatePixelConstMappingInstance(size_t InSlot, const void* InMappingPoint, size_t InByteWidth)
-	{
-		auto& MappingInstance = PixelConstBufferMappingInstance[InSlot];
-		assert(MappingInstance);
-
-		memcpy(MappingInstance->CpuBuffer.data(), InMappingPoint, InByteWidth);
-		MappingInstance->bUpdated = true;
-	}
-
-	void MapBuffersOnUpdated(Graphics::CRenderContext& InContext);
-	void BindRenderState(Graphics::CRenderContext& InContext);
 
 	void SetRenderLayer(uint32_t InLayer) { RenderLayer = InLayer; }
 	void SetRender(bool bInRender) { bRender = bInRender; }
 	uint32_t GetRenderLayer() const { return RenderLayer; }
 
-	bool IsExistVertexConstBufferInSlot(size_t InSlot)
+	bool IsExistConstBufferInSlot(EShaderType InShaderType, size_t InSlot)
 	{
-		assert(InSlot < VertexConstBufferMappingInstance.size());
-		if (VertexConstBufferMappingInstance[InSlot])
-			return true;
-		return false;
-	}
-	bool IsExistPixelConstBufferInSlot(size_t InSlot)
-	{
-		assert(InSlot < PixelConstBufferMappingInstance.size());
-		if (PixelConstBufferMappingInstance[InSlot])
-			return true;
+		assert(InSlot < VertexConstBuffers.size());
+		switch (InShaderType)
+		{
+		case EShaderType::VertexShader:
+			if (VertexConstBuffers[InSlot])
+				return true;
+			return false;
+			break;
+		case EShaderType::PixelShader:
+			if (PixelConstBuffers[InSlot])
+				return true;
+			return false;
+			break;
+		default:
+			assert(0);
+			break;
+		}
 		return false;
 	}
 
@@ -125,11 +115,11 @@ protected:
 	Graphics::CMesh* Mesh;
 	CPSO* PSO;
 
-	std::array<CImage*, 6> VertexShaderResources;
-	std::array<CImage*, 6> PixelShaderResources;
+	std::array<const Graphics::CShaderResourceView*, 6> VertexShaderResources;
+	std::array<const Graphics::CShaderResourceView*, 6> PixelShaderResources;
 
-	std::array<std::unique_ptr<CBufferMappingInstance>, 6> VertexConstBufferMappingInstance;
-	std::array<std::unique_ptr<CBufferMappingInstance>, 6> PixelConstBufferMappingInstance;
+	std::array<std::unique_ptr<Graphics::CBuffer>, 6> VertexConstBuffers;
+	std::array<std::unique_ptr<Graphics::CBuffer>, 6> PixelConstBuffers;
 
 	uint32_t RenderLayer;
 

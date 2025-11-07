@@ -17,30 +17,21 @@ void CWorld::PerformInputAction(CInputActionManager& InInputActionManager)
 
 void CWorld::CaptureSnapShot(CSpriteRenderer& InRenderer)
 {
-	const CPSOManager& PSOManager = InRenderer.GetPSOManager();
-	CRenderResourceLoader& RenderResourceLoader = InRenderer.GetRenderResourceLoader();
-
 	const uint32_t ScreenWidth = InRenderer.GetScreenWidth();
 	const uint32_t ScreenHeight = InRenderer.GetScreenHeight();
 	for (auto& WorldActor : WorldActors)
 	{
 		CRenderComponent* RenderComponent = WorldActor->GetRenderComponent();
-		if (RenderComponent)
-		{
-			// SetupResource
-			RenderComponent->SetupPSOToRSO(PSOManager);
-			RenderComponent->SetupResourceToRSO(RenderResourceLoader);
-			RenderComponent->SetupMappingInstanceToRSO(RenderResourceLoader);
-		}
-
-		if (WorldActor->GetTransform()->OnVariation())
+		/*if (WorldActor->GetTransform()->OnVariation())
 		{
 			for (auto& Child : WorldActor->GetChild())
 				Child->GetTransform()->SetVariation(true);
 			if(RenderComponent)
 				WorldActor->CaptureSnapShot(ScreenWidth, ScreenHeight);
 			WorldActor->GetTransform()->SetVariation(false);
-		}
+		}*/
+		if (RenderComponent)
+			WorldActor->CaptureSnapShot(ScreenWidth, ScreenHeight);
 	}
 }
 
@@ -52,22 +43,10 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 	for (auto& WorldActor : WorldActors)
 	{
 		CRenderComponent* RenderComponent = WorldActor->GetRenderComponent();
-		if (RenderComponent == nullptr)
-			continue;
-
-		RenderComponent->MapUpdatedBuffersToRSO();
-
-		RenderComponent->ClearState();
-		// PushRSO
-		CRenderStateObject* RenderStateObject = RenderComponent->GetRenderStateObject();
-		RenderStateObjects.push_back(RenderStateObject);
+		if (RenderComponent)
+			RenderComponent->Render(InRenderer);
 	}
-
-	CRenderSorter RenderSorter;
-	RenderSorter.SortByLayer(RenderStateObjects);
-
-	InRenderer.UpdateRSOs(RenderStateObjects);
-	InRenderer.RenderRSOs(RenderStateObjects);
+	InRenderer.Draw();
 }
 
 void CWorld::DetectMouseInteraction(CMouseInteractionManager& InMouseInteractionManager)

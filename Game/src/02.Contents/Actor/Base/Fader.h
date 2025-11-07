@@ -11,8 +11,8 @@ public:
 		, FaderState(EFaderState::None)
 	{
 		RenderComponent->SetPSO(EPSOType::Color);
-		RenderComponent->SetPixelConstBufferData(0, sizeof(TColorData));
-		RenderComponent->UpdatePixelConstBufferData(0, &ColorData, sizeof(TColorData));
+		RenderComponent->SetConstBuffer(EShaderType::PixelShader, 0, sizeof(TColorData));
+		RenderComponent->UpdateConstBuffer(EShaderType::PixelShader, 0, &ColorData, sizeof(TColorData));
 	}
 	~CFader() = default;
 
@@ -44,7 +44,7 @@ public:
 			break;
 		}
 
-		RenderComponent->UpdatePixelConstBufferData(0, &ColorData, sizeof(TColorData));
+		RenderComponent->UpdateConstBuffer(EShaderType::PixelShader, 0, &ColorData, sizeof(TColorData));
 	}
 
 private:

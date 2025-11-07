@@ -7,7 +7,6 @@ namespace Graphics
 	class CRenderContext;
 }
 
-
 class CImage
 {
 public:

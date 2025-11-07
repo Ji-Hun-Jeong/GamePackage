@@ -8,47 +8,6 @@ namespace Core
 	class CWindow;
 }
 
-class CRenderCommand
-{
-	friend class CSpriteRenderer;
-public:
-	CRenderCommand()
-		: RenderLayer(0)
-	{}
-	~CRenderCommand() = default;
-public:
-	void ClearCommand()
-	{
-		Mesh = nullptr;
-		PSO = nullptr;
-		for (auto& VertexShaderResource : VertexShaderResources)
-			VertexShaderResource = nullptr;
-		for (auto& PixelShaderResource : PixelShaderResources)
-			PixelShaderResource = nullptr;
-		for (auto& VertexConstBuffer : VertexConstBuffers)
-			VertexConstBuffer = nullptr;
-		for (auto& PixelConstBuffer : PixelConstBuffers)
-			PixelConstBuffer = nullptr;
-	}
-private:
-	const Graphics::CMesh* Mesh;
-	const CPSO* PSO;
-
-	std::array<CImage*, 6> VertexShaderResources;
-	std::array<CImage*, 6> PixelShaderResources;
-
-	std::array<Graphics::CBuffer*, 6> VertexConstBuffers;
-	std::array<Graphics::CBuffer*, 6> PixelConstBuffers;
-
-public:
-	uint32_t RenderLayer;
-
-};
-enum class EShaderType
-{
-	VertexShader,
-	PixelShader,
-};
 class CSpriteRenderer
 {
 public:
@@ -62,105 +21,92 @@ public:
 	uint32_t GetScreenWidth() const { return ScreenWidth; }
 	uint32_t GetScreenHeight() const { return ScreenHeight; }
 
-	void UpdateConstBuffer(Graphics::CBuffer& InConstBuffer, const void* InMappingPoint, size_t InByteWidth)
+	void UpdateConstBuffer(CRenderStateObject& InRenderStateObject, EShaderType InShaderType, size_t InSlot
+		, const void* InMappingPoint, size_t InByteWidth)
 	{
-		Context.CopyBuffer(&InConstBuffer, InMappingPoint, InByteWidth);
+		Graphics::CBuffer* Buffer = nullptr;
+		if (InRenderStateObject.IsExistConstBufferInSlot(InShaderType, InSlot) == false)
+		{
+			InRenderStateObject.MountConstBuffer(InShaderType, InSlot
+				, RenderResourceLoader.CreateConstBuffer(InByteWidth));
+		}
+
+		switch (InShaderType)
+		{
+		case EShaderType::VertexShader:
+			Buffer = InRenderStateObject.VertexConstBuffers[InSlot].get();
+			break;
+		case EShaderType::PixelShader:
+			Buffer = InRenderStateObject.PixelConstBuffers[InSlot].get();
+			break;
+		default:
+			break;
+		}
+		Context.CopyBuffer(Buffer, InMappingPoint, InByteWidth);
 	}
-	void StartRender()
-	{
-		CurrentLoadingCommand.ClearCommand();
-	}
-	void MountMesh(const Graphics::TMeshData& InMeshData, EPSOType InPSOType)
+	void SetMeshToRSO(CRenderStateObject& InRenderStateObject, const Graphics::TMeshData& InMeshData)
 	{
 		Graphics::CMesh* Mesh = RenderResourceLoader.LoadMesh(InMeshData);
-		CPSO* PSO = PSOManager.GetPSO(InPSOType);
-
-		CurrentLoadingCommand.Mesh = Mesh;
-		CurrentLoadingCommand.PSO = PSO;
+		InRenderStateObject.MountMesh(Mesh);
 	}
-	CImage* MountImage(size_t InSlot, const std::wstring& InImagePath)
+	CImage* SetShaderResourceToRSOByImagePath(CRenderStateObject& InRenderStateObject, const std::wstring& InImagePath)
 	{
 		CImage* Image = RenderResourceLoader.LoadImageFromFile(InImagePath);
-		CurrentLoadingCommand.PixelShaderResources[InSlot] = Image;
+		InRenderStateObject.MountShaderResource(EShaderType::PixelShader, 0, &Image->GetSRV());
 		return Image;
 	}
-	void MountConstBuffer(EShaderType InShaderType, size_t InSlot, Graphics::CBuffer& InConstBuffer)
+	void SetPSOToRSO(CRenderStateObject& InRenderStateObject, EPSOType InPSOType)
 	{
-		switch (InShaderType)
-		{
-		case EShaderType::VertexShader:
-			CurrentLoadingCommand.VertexConstBuffers[InSlot] = &InConstBuffer;
-			break;
-		case EShaderType::PixelShader:
-			CurrentLoadingCommand.PixelConstBuffers[InSlot] = &InConstBuffer;
-			break;
-		default:
-			assert(0);
-		}
+		CPSO* PSO = PSOManager.GetPSO(InPSOType);
+		InRenderStateObject.MountPSO(PSO);
 	}
-	void MountShaderResource(EShaderType InShaderType, size_t InSlot, CImage& InResource)
+	void RenderObject(CRenderStateObject& InRenderStateObject)
 	{
-		switch (InShaderType)
-		{
-		case EShaderType::VertexShader:
-			CurrentLoadingCommand.VertexShaderResources[InSlot] = &InResource;
-			break;
-		case EShaderType::PixelShader:
-			CurrentLoadingCommand.PixelShaderResources[InSlot] = &InResource;
-			break;
-		default:
-			assert(0);
-		}
-	}
-	void MountRenderLayer(uint32_t InRenderLayer)
-	{
-		CurrentLoadingCommand.RenderLayer = InRenderLayer;
-	}
-	void FinishRender()
-	{
-		RenderCommands.push_back(CurrentLoadingCommand);
+		RenderStateObjects.push_back(&InRenderStateObject);
 	}
 	void Draw()
 	{
-		std::sort(RenderCommands.begin(), RenderCommands.end(), [](CRenderCommand& InA, CRenderCommand& InB)->bool
+		std::sort(RenderStateObjects.begin(), RenderStateObjects.end(), [](CRenderStateObject* InA, CRenderStateObject* InB)->bool
 			{
-				return InA.RenderLayer < InB.RenderLayer;
+				return InA->GetRenderLayer() < InB->GetRenderLayer();
 			});
 
 		static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		Context.ClearRenderTarget(RenderTargetView.get(), ClearColor);
 
-		for (auto& RenderCommand : RenderCommands)
-			DDraw(RenderCommand);
+		for (auto& RenderStateObject : RenderStateObjects)
+			DDraw(*RenderStateObject);
 
 		SwapChain.Present();
+
+		RenderStateObjects.clear();
 	}
-	void DDraw(const CRenderCommand& InRenderCommand)
+	void DDraw(const CRenderStateObject& InRenderStateObject)
 	{
-		for (size_t i = 0; i < InRenderCommand.VertexConstBuffers.size(); ++i)
+		for (size_t i = 0; i < InRenderStateObject.VertexConstBuffers.size(); ++i)
 		{
-			auto& VertexConstBuffer = InRenderCommand.VertexConstBuffers[i];
+			auto& VertexConstBuffer = InRenderStateObject.VertexConstBuffers[i];
 			if (VertexConstBuffer == nullptr)
 				continue;
-			Context.VSSetConstantBuffer(uint32_t(i), VertexConstBuffer);
+			Context.VSSetConstantBuffer(uint32_t(i), VertexConstBuffer.get());
 		}
-		for (size_t i = 0; i < InRenderCommand.PixelConstBuffers.size(); ++i)
+		for (size_t i = 0; i < InRenderStateObject.PixelConstBuffers.size(); ++i)
 		{
-			auto& PixelConstBuffer = InRenderCommand.PixelConstBuffers[i];
+			auto& PixelConstBuffer = InRenderStateObject.PixelConstBuffers[i];
 			if (PixelConstBuffer == nullptr)
 				continue;
-			Context.PSSetConstantBuffer(uint32_t(i), PixelConstBuffer);
+			Context.PSSetConstantBuffer(uint32_t(i), PixelConstBuffer.get());
 		}
-		for (size_t i = 0; i < InRenderCommand.PixelShaderResources.size(); ++i)
+		for (size_t i = 0; i < InRenderStateObject.PixelShaderResources.size(); ++i)
 		{
-			auto& PixelShaderResource = InRenderCommand.PixelShaderResources[i];
+			auto& PixelShaderResource = InRenderStateObject.PixelShaderResources[i];
 			if (PixelShaderResource == nullptr)
 				continue;
-			Context.PSSetShaderResource(uint32_t(i), &PixelShaderResource->GetSRV());
+			Context.PSSetShaderResource(uint32_t(i), PixelShaderResource);
 		}
 
-		const Graphics::CMesh* Mesh = InRenderCommand.Mesh;
-		const CPSO* PSO = InRenderCommand.PSO;
+		const Graphics::CMesh* Mesh = InRenderStateObject.Mesh;
+		const CPSO* PSO = InRenderStateObject.PSO;
 		if (Mesh && PSO)
 		{
 			const float Factor = 1.0f;
@@ -171,7 +117,7 @@ public:
 			Context.VSSetShader(PSO->VertexShader);
 			Context.RSSetState(PSO->RasterizerState);
 			Context.PSSetShader(PSO->PixelShader);
-			Context.PSSetSamplers(0, 1, PSO->SamplerState);
+			Context.PSSetSampler(0, 1, PSO->SamplerState);
 
 			Context.IASetVertexBuffer(&Mesh->GetVertexBuffer(), &Mesh->GetStride(), &Mesh->GetOffset());
 			Context.IASetIndexBuffer(&Mesh->GetIndexBuffer(), Mesh->GetIndexFormat(), 0);
@@ -184,30 +130,13 @@ public:
 			Context.VSSetShader(nullptr);
 			Context.RSSetState(nullptr);
 			Context.PSSetShader(nullptr);
-			Context.PSSetSamplers(0, 1, nullptr);
+			Context.PSSetSampler(0, 1, nullptr);
 
 			uint32_t Stride = 0;
 			uint32_t Offset = 0;
 			Context.IASetVertexBuffer(nullptr, &Stride, &Offset);
 			Context.IASetIndexBuffer(nullptr, Graphics::EGIFormat(0), 0);
-			Context.DrawIndexed(0);
 		}
-	}
-
-	void UpdateRSOs(const std::vector<CRenderStateObject*>& InRenderStateObjects)
-	{
-		for (auto& RenderStateObject : InRenderStateObjects)
-			RenderStateObject->MapBuffersOnUpdated(Context);
-	}
-	void RenderRSOs(const std::vector<CRenderStateObject*>& InRenderStateObjects)
-	{
-		static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-		Context.ClearRenderTarget(RenderTargetView.get(), ClearColor);
-
-		for (auto& RenderStateObject : InRenderStateObjects)
-			RenderStateObject->BindRenderState(Context);
-
-		SwapChain.Present();
 	}
 
 	const CPSOManager& GetPSOManager() const { return PSOManager; }
@@ -227,6 +156,5 @@ private:
 
 	std::unique_ptr<Graphics::CRenderTargetView> RenderTargetView;
 
-	std::vector<CRenderCommand> RenderCommands;
-	CRenderCommand CurrentLoadingCommand;
+	std::vector<CRenderStateObject*> RenderStateObjects;
 };

@@ -167,16 +167,12 @@ public:
 	}
 	virtual void CaptureSnapShot(uint32_t InScreenWidth, uint32_t InScreenHeight)
 	{
-		if (RenderComponent->IsUpdateImage())
+		/*if (RenderComponent->IsUpdateImage())
 		{
 			auto CurrentImageDesc = RenderComponent->GetCurrentImageDesc();
 			Vector3 Scale{ float(CurrentImageDesc.Width), float(CurrentImageDesc.Height), Transform->GetScale().z };
 			Transform->SetScale(Scale);
-		}
-
-		const Matrix& NDCModelMatrix = Transform->GetNDCModelMatrix(InScreenWidth, InScreenHeight).Transpose();
-
-		RenderComponent->UpdateVertexConstBufferData(0, &NDCModelMatrix, sizeof(Matrix));
+		}*/
 	}
 
 	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) 

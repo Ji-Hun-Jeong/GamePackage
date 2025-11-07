@@ -32,7 +32,7 @@ namespace Graphics::DX
 		void PSSetShader(const CPixelShader* InPixelShader) override;
 		void PSSetShaderResources(uint32_t InStartSlot, uint32_t InNumViews, const std::vector<std::unique_ptr<CShaderResourceView>>& InShaderResourceViews) override;
 		void PSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView* InShaderResourceView) override;
-		void PSSetSamplers(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers) override;
+		void PSSetSampler(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers) override;
 		void PSSetConstantBuffer(uint32_t InStartSlot, const CBuffer* InBuffer) override;
 		void OMSetBlendState(const CBlendState* InBlendState, const float* InBlendFactor, uint32_t InSampleMask) override;
 		void DrawIndexed(uint32_t InIndexCount) override

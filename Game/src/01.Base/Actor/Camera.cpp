@@ -22,7 +22,7 @@ CCamera::CCamera()
 
 	RenderComponent = AddComponent<CRenderComponent>();
 
-	RenderComponent->SetVertexConstBufferData(1, sizeof(CameraConst));
+	RenderComponent->SetConstBuffer(EShaderType::VertexShader, 1, sizeof(CameraConst));
 
 	Transform->SetSpeed(2.0f);
 }
@@ -38,7 +38,7 @@ void CCamera::CaptureSnapShot(uint32_t InScreenWidth, uint32_t InScreenHeight)
 	CameraConst.ScreenWidth = InScreenWidth;
 	CameraConst.ScreenHeight = InScreenHeight;
 
-	RenderComponent->UpdateVertexConstBufferData(1, &CameraConst, sizeof(CameraConst));
+	RenderComponent->UpdateConstBuffer(EShaderType::VertexShader, 1, &CameraConst, sizeof(CameraConst));
 }
 
 void CCamera::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)

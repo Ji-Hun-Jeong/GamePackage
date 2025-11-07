@@ -118,12 +118,12 @@ namespace Graphics::DX
 			Buffer = DXResourceStorage.GetResource<ID3D11Buffer>(InBuffer->GetResourceHandle());
 		Context->PSSetConstantBuffers(InStartSlot, 1, &Buffer);
 	}
-	void CDXContext::PSSetSamplers(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers)
+	void CDXContext::PSSetSampler(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers)
 	{
-		std::vector<ID3D11SamplerState*> SamplerStates(InNumSamplers, nullptr);
-		for (size_t i = 0; i < InNumSamplers; ++i)
-			SamplerStates[i] = DXResourceStorage.GetResource<ID3D11SamplerState>(InSamplers[i].GetResourceHandle());
-		Context->PSSetSamplers(InStartSlot, InNumSamplers, SamplerStates.data());
+		ID3D11SamplerState* SamplerStates = nullptr;
+		if (InSamplers)
+			SamplerStates = DXResourceStorage.GetResource<ID3D11SamplerState>(InSamplers->GetResourceHandle());
+		Context->PSSetSamplers(InStartSlot, 1, &SamplerStates);
 	}
 	void CDXContext::OMSetBlendState(const CBlendState* InBlendState, const float* InBlendFactor, uint32_t InSampleMask)
 	{
