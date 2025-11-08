@@ -39,18 +39,34 @@ namespace Graphics::DX
 		{
 			Context->DrawIndexed(InIndexCount, 0, 0);
 		}
-		void CopyBuffer(CBuffer* InBuffer, const void* InMapDataPoint, size_t InDataSize) override
+		void UpLoadBuffer(CBuffer& InBuffer, const void* InMapDataPoint, size_t InDataSize, EMapType InMapType) override;
+		void DownLoadBuffer(void* InMappingPoint, size_t InByteWidth, const CBuffer& InBuffer, EMapType InMapType) override;
+		void CopyResource(CBuffer& InDstBuffer, CBuffer& InSrcBuffer) override;
+		void CSSetShader(const CComputeShader* InComputeShader) override
 		{
-			if (InBuffer == nullptr)
-				return;
-			const TBufferDesc& BufferDesc = InBuffer->GetBufferDesc();
-
-			ID3D11Resource* Resource = DXResourceStorage.GetResource<ID3D11Resource>(InBuffer->GetResourceHandle());
-			D3D11_MAPPED_SUBRESOURCE MappedSubResource;
-			ZeroMemory(&MappedSubResource, sizeof(MappedSubResource));
-			Context->Map(Resource, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedSubResource);
-			memcpy(MappedSubResource.pData, InMapDataPoint, InDataSize);
-			Context->Unmap(Resource, 0);
+			ID3D11ComputeShader* RawComputeShader = nullptr;
+			if (InComputeShader)
+				RawComputeShader = DXResourceStorage.GetResource<ID3D11ComputeShader>(InComputeShader->GetResourceHandle());
+			Context->CSSetShader(RawComputeShader, nullptr, 0);
+		}
+		void CSSetUnorderedAccessView(uint32_t InStartSlot, const CUnorderedAccessView* InUAV) override
+		{
+			ID3D11UnorderedAccessView* RawUAV = nullptr;
+			if(InUAV)
+				RawUAV = DXResourceStorage.GetResource<ID3D11UnorderedAccessView>(InUAV->GetResourceHandle());
+			Context->CSSetUnorderedAccessViews(InStartSlot, 1, &RawUAV, nullptr);
+		}
+		void CSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView* InShaderResourceView) override
+		{
+			ID3D11ShaderResourceView* RawSRV = nullptr;
+			if(InShaderResourceView)
+				RawSRV = DXResourceStorage.GetResource<ID3D11ShaderResourceView>(InShaderResourceView->GetResourceHandle());
+			Context->CSSetShaderResources(InStartSlot, 1, &RawSRV);
+		}
+		void Dispatch(uint32_t InThreadGroupCountX, uint32_t InThreadGroupCountY, uint32_t InThreadGroupCountZ) override
+		{
+			Context->Dispatch(InThreadGroupCountX, InThreadGroupCountY, InThreadGroupCountZ);
+			Context->Flush();
 		}
 
 	private:

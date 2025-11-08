@@ -75,6 +75,45 @@ public:
 		return Device.CreateBuffer(ConstBufferDesc, nullptr);
 	}
 
+	std::unique_ptr<Graphics::CBuffer> CreateUAVBuffer(size_t InStructSize, size_t InNumOfElement) const
+	{
+		Graphics::TBufferDesc UAVBufferDesc;
+		UAVBufferDesc.Usage = Graphics::EUsage::UsageDefault;
+		UAVBufferDesc.ByteWidth = uint32_t(InStructSize * InNumOfElement);
+		UAVBufferDesc.BindFlags = Graphics::EBindFlags::BindUnorderedAccess;
+		UAVBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
+		UAVBufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+		UAVBufferDesc.StructureByteStride = uint32_t(InStructSize);
+
+		return Device.CreateBuffer(UAVBufferDesc, nullptr);
+	}
+
+	std::unique_ptr<Graphics::CBuffer> CreateStagingBuffer(size_t InStructSize, size_t InNumOfElement) const
+	{
+		Graphics::TBufferDesc StagingBufferDesc;
+		StagingBufferDesc.Usage = Graphics::EUsage::UsageStaging;
+		StagingBufferDesc.ByteWidth = uint32_t(InStructSize * InNumOfElement);
+		StagingBufferDesc.BindFlags = Graphics::EBindFlags::InValid;
+		StagingBufferDesc.CPUAccessFlags =
+			Graphics::ECPUAccessFlags(uint32_t(Graphics::ECPUAccessFlags::CpuAccessRead) | uint32_t(Graphics::ECPUAccessFlags::CpuAccessWrite));
+		StagingBufferDesc.MiscFlags = 0;
+		StagingBufferDesc.StructureByteStride = 0;
+
+		return Device.CreateBuffer(StagingBufferDesc, nullptr);
+	}
+
+	std::unique_ptr<Graphics::CUnorderedAccessView> CreateUAV(const Graphics::CBuffer& InUAVBuffer, size_t InNumOfElement) const
+	{
+		Graphics::TUnorderedAccessViewDesc UAVDesc;
+		UAVDesc.Format = DXGI_FORMAT_UNKNOWN;
+		UAVDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+		UAVDesc.Buffer.FirstElement = 0;
+		UAVDesc.Buffer.NumElements = UINT(InNumOfElement);
+		UAVDesc.Buffer.Flags = 0;
+
+		return Device.CreateUnorderedAccessView(InUAVBuffer, UAVDesc);
+	}
+
 private:
 	Graphics::CRenderDevice& Device;
 

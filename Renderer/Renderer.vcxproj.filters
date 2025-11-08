@@ -108,6 +108,12 @@
     <ClInclude Include="RHI\BlendState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="RHI\UnorderedAccessView.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="RHI\ComputeShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -195,6 +201,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="RHI\BlendState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="RHI\UnorderedAccessView.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="RHI\ComputeShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

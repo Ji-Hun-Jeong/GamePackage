@@ -171,6 +171,9 @@
     <ClCompile Include="src\00.App\WindowManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\07.Collision\PixelCollisionManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -326,12 +329,19 @@
     <ClInclude Include="src\00.App\WindowManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\07.Collision\PixelCollisionManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\07.Collision\CollisionCommon.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicVertexShader.hlsl" />
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl" />
     <FxCompile Include="resources\shader\EdgePixelShader.hlsl" />
     <FxCompile Include="resources\shader\ColorPixelShader.hlsl" />
+    <FxCompile Include="resources\shader\PixelCollisionComputeShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shader\Common.hlsli" />

@@ -1,11 +1,10 @@
 #include "pch.h"
 #include "SpriteRenderer.h"
 
-CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight)
-	: GraphicInfra(std::move(InGraphicInfra))
-	, Device(GraphicInfra->GetDevice())
-	, Context(GraphicInfra->GetContext())
-	, SwapChain(GraphicInfra->GetSwapChain())
+CSpriteRenderer::CSpriteRenderer(Graphics::IGraphicInfra& InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight)
+	: Device(InGraphicInfra.GetDevice())
+	, Context(InGraphicInfra.GetContext())
+	, SwapChain(InGraphicInfra.GetSwapChain())
 	, RenderTargetView(Device.CreateRenderTargetView(*SwapChain.GetWindowTextureBuffer()))
 	, PSOManager(Device)
 	, RenderResourceLoader(Device)

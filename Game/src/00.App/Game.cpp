@@ -23,8 +23,9 @@ class CSetScreenSize : public Core::IWindowResize
 
 CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	: Core::CApplication(InScreenWidth, InScreenHeight)
-	, SpriteRenderer(std::make_unique<Graphics::DX::CDXInfra>(Window.GetWindowHandle(), Window.GetScreenWidth(), Window.GetScreenHeight())
-		, Window.GetScreenWidth(), Window.GetScreenHeight())
+	, GraphicInfra(std::make_unique<Graphics::DX::CDXInfra>(Window.GetWindowHandle(), Window.GetScreenWidth(), Window.GetScreenHeight()))
+	, SpriteRenderer(*GraphicInfra.get(), Window.GetScreenWidth(), Window.GetScreenHeight())
+	, PixelCollisionManager(GraphicInfra->GetDevice(), SpriteRenderer.GetRenderResourceLoader(), 1000)
 	, InputActionManager(InputManager)
 	, MouseInteractionManager()
 	, World()
@@ -56,6 +57,8 @@ bool CGame::Process()
 	World.Arrange();
 	World.Ready();
 
+	PixelCollisionManager.RequestCollision(Collider);
+	PixelCollisionManager.ProgressCollisionCheck(GraphicInfra->GetContext());
 	World.PerformInputAction(InputActionManager);
 	World.DetectMouseInteraction(MouseInteractionManager);
 

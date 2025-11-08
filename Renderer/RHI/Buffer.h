@@ -42,6 +42,15 @@ namespace Graphics
 		uint32_t SysMemSlicePitch = 0;
 	};
 
+	enum class EMapType
+	{
+		MAP_READ = 1,
+		MAP_WRITE = 2,
+		MAP_READ_WRITE = 3,
+		MAP_WRITE_DISCARD = 4,
+		MAP_WRITE_NO_OVERWRITE = 5
+	};
+
 	// Usage가 D3D11_USAGE_IMMUTABLE인 경우에는 pInitialData가 필수. nullptr 넣으면 에러
 	/*- DEFAULT: 일반적인 정점 버퍼, 인덱스 버퍼, 텍스처 등 GPU 중심 리소스
 	  - IMMUTABLE : 절대 바뀌지 않는 텍스처, 셰이더 상수 등

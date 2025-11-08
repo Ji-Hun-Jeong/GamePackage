@@ -132,4 +132,35 @@ namespace Graphics::DX
 			BlendState = DXResourceStorage.GetResource<ID3D11BlendState>(InBlendState->GetResourceHandle());
 		Context->OMSetBlendState(BlendState, InBlendFactor, InSampleMask);
 	}
+	void CDXContext::UpLoadBuffer(CBuffer& InBuffer, const void* InMapDataPoint, size_t InDataSize, EMapType InMapType)
+	{
+		const TBufferDesc& BufferDesc = InBuffer.GetBufferDesc();
+
+		ID3D11Resource* Resource = DXResourceStorage.GetResource<ID3D11Resource>(InBuffer.GetResourceHandle());
+		D3D11_MAPPED_SUBRESOURCE MappedSubResource;
+		ZeroMemory(&MappedSubResource, sizeof(MappedSubResource));
+
+		D3D11_MAP MapType = D3D11_MAP(InMapType);
+		Context->Map(Resource, 0, MapType, 0, &MappedSubResource);
+		memcpy(MappedSubResource.pData, InMapDataPoint, InDataSize);
+		Context->Unmap(Resource, 0);
+	}
+	void CDXContext::DownLoadBuffer(void* InMappingPoint, size_t InByteWidth, const CBuffer& InBuffer, EMapType InMapType)
+	{
+		ID3D11Resource* Resource = DXResourceStorage.GetResource<ID3D11Resource>(InBuffer.GetResourceHandle());
+
+		D3D11_MAPPED_SUBRESOURCE MappedSubResource;
+		ZeroMemory(&MappedSubResource, sizeof(MappedSubResource));
+
+		D3D11_MAP MapType = D3D11_MAP(InMapType);
+		Context->Map(Resource, 0, MapType, 0, &MappedSubResource);
+		memcpy(InMappingPoint, MappedSubResource.pData, InByteWidth);
+		Context->Unmap(Resource, 0);
+	}
+	void CDXContext::CopyResource(CBuffer& InDstBuffer, CBuffer& InSrcBuffer)
+	{
+		ID3D11Buffer* DstBuffer = DXResourceStorage.GetResource<ID3D11Buffer>(InDstBuffer.GetResourceHandle());
+		ID3D11Buffer* SrcBuffer = DXResourceStorage.GetResource<ID3D11Buffer>(InSrcBuffer.GetResourceHandle());
+		Context->CopyResource(DstBuffer, SrcBuffer);
+	}
 }

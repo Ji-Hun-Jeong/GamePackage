@@ -11,7 +11,7 @@ namespace Core
 class CSpriteRenderer
 {
 public:
-	CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight);
+	CSpriteRenderer(Graphics::IGraphicInfra& InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight);
 	~CSpriteRenderer() = default;
 
 public:
@@ -40,7 +40,9 @@ public:
 		default:
 			break;
 		}
-		Context.CopyBuffer(Buffer, InMappingPoint, InByteWidth);
+
+		assert(Buffer);
+		Context.UpLoadBuffer(*Buffer, InMappingPoint, InByteWidth, Graphics::EMapType::MAP_WRITE_DISCARD);
 	}
 	void SetMeshToRSO(CRenderStateObject& InRenderStateObject, const Graphics::TMeshData& InMeshData)
 	{
@@ -141,7 +143,6 @@ public:
 	CRenderResourceLoader& GetRenderResourceLoader() { return RenderResourceLoader; }
 
 private:
-	std::unique_ptr<Graphics::IGraphicInfra> GraphicInfra;
 	Graphics::CRenderDevice& Device;
 	Graphics::CRenderContext& Context;
 	Graphics::CRenderSwapChain& SwapChain;

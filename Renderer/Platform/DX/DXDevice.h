@@ -31,6 +31,8 @@ namespace Graphics::DX
 		std::pair<std::unique_ptr<CShaderResourceView>, std::unique_ptr<CTexture2D>> CreateImage(const std::wstring& InImagePath) override;
 		std::unique_ptr<CSamplerState> CreateSamplerState(const TSamplerDesc& InSamplerDesc) override;
 		std::unique_ptr<CBlendState> CreateBlendState(const TBlendDesc& InBlendDesc) override;
+		std::unique_ptr<CUnorderedAccessView> CreateUnorderedAccessView(const CBuffer& InUAVBuffer, const TUnorderedAccessViewDesc& InUAVDesc) override;
+		std::unique_ptr<CComputeShader> CreateComputeShader(const std::wstring& InShaderPath) override;
 
 	private:
 		void ReleaseResource(size_t InRHIHandle)

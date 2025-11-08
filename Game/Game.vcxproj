@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\07.Collision\PixelCollisionManager.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\Fader.cpp" />
     <ClCompile Include="src\04.Renderer\RenderSorter.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\OnOffUI.cpp" />
@@ -245,6 +246,8 @@
     <ClCompile Include="src\00.App\WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\07.Collision\CollisionCommon.h" />
+    <ClInclude Include="src\07.Collision\PixelCollisionManager.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\Fader.h" />
     <ClInclude Include="src\04.Renderer\RenderSorter.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\OnOffUI.h" />
@@ -329,6 +332,16 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="resources\shader\PixelCollisionComputeShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

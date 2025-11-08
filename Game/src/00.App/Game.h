@@ -6,6 +6,7 @@
 #include "04.Renderer/SpriteRenderer.h"
 #include "05.Input/InputActionManager.h"
 #include "06.Interaction/MouseInteractionManager.h"
+#include "07.Collision/PixelCollisionManager.h"
 
 /*
 리소스를 개발단계에서 사용한다음 빌드폴더에도 넣는 방법
@@ -30,7 +31,10 @@ public:
 	void ShutDown() override;
 
 private:
+	std::unique_ptr<Graphics::IGraphicInfra> GraphicInfra;
 	CSpriteRenderer SpriteRenderer;
+	CPixelCollisionManager PixelCollisionManager;
+	CPixelCollider Collider;
 
 	CInputActionManager InputActionManager;
 

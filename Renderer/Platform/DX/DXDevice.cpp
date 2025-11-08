@@ -248,4 +248,44 @@ namespace Graphics::DX
 		size_t BlendStateHandle = DXResourceStorage.InsertResource(D3DBlendState);
 		return std::make_unique<CBlendState>(BlendStateHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
 	}
+	std::unique_ptr<CUnorderedAccessView> CDXDevice::CreateUnorderedAccessView(const CBuffer& InUAVBuffer, const TUnorderedAccessViewDesc& InUAVDesc)
+	{
+		ComPtr<ID3D11Buffer> UAVBuffer = DXResourceStorage.GetResource<ID3D11Buffer>(InUAVBuffer.GetResourceHandle());
+
+		ComPtr<ID3D11UnorderedAccessView> UAV;
+
+		D3D11_UNORDERED_ACCESS_VIEW_DESC UAVDesc = {};
+		UAVDesc.Format = InUAVDesc.Format;
+		UAVDesc.ViewDimension = InUAVDesc.ViewDimension;
+		UAVDesc.Buffer.NumElements = InUAVDesc.Buffer.NumElements;
+
+		HRESULT HR = Device->CreateUnorderedAccessView(UAVBuffer.Get(), &UAVDesc, UAV.GetAddressOf());
+		if (FAILED(HR)) assert(0);
+
+		size_t UAVHandle = DXResourceStorage.InsertResource(UAV);
+		return std::make_unique<CUnorderedAccessView>(UAVHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
+	}
+	std::unique_ptr<CComputeShader> CDXDevice::CreateComputeShader(const std::wstring& InShaderPath)
+	{
+		ComPtr<ID3DBlob> shaderBlob;
+		ComPtr<ID3DBlob> errorBlob;
+
+		UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+		compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+		HRESULT hr = D3DCompileFromFile(
+			InShaderPath.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+			"cs_5_0", compileFlags, 0, shaderBlob.GetAddressOf(), errorBlob.GetAddressOf());
+		if (FAILED(hr))	assert(0);
+
+		ComPtr<ID3D11ComputeShader> ComputeShader;
+		hr = Device->CreateComputeShader(shaderBlob->GetBufferPointer(),
+			shaderBlob->GetBufferSize(), NULL,
+			ComputeShader.GetAddressOf());
+		if (FAILED(hr))	assert(0);
+
+		size_t ComputeShaderHandle = DXResourceStorage.InsertResource(ComputeShader);
+		return std::make_unique<CComputeShader>(ComputeShaderHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
+	}
 }

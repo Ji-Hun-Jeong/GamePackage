@@ -22,6 +22,7 @@ namespace Graphics
 		virtual std::pair<std::unique_ptr<CShaderResourceView>, std::unique_ptr<CTexture2D>> CreateImage(const std::wstring& InImagePath) = 0;
 		virtual std::unique_ptr<CSamplerState> CreateSamplerState(const TSamplerDesc& InSamplerDesc) = 0;
 		virtual std::unique_ptr<CBlendState> CreateBlendState(const TBlendDesc& InBlendDesc) = 0;
-
+		virtual std::unique_ptr<CUnorderedAccessView> CreateUnorderedAccessView(const CBuffer& InUAVBuffer, const TUnorderedAccessViewDesc& InUAVDesc) = 0;
+		virtual std::unique_ptr<CComputeShader> CreateComputeShader(const std::wstring& InShaderPath) = 0;
 	};
 }
