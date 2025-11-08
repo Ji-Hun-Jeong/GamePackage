@@ -33,8 +33,6 @@ CActor::CActor()
 	: Owner(nullptr)
 	, bActive(true)
 	, Transform(nullptr)
-	, RenderComponent(nullptr)
-	, Animator(nullptr)
 	, InteractionComponent(nullptr)
 {
 	Transform = AddComponent<CTransform>();

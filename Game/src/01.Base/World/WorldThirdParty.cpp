@@ -14,27 +14,6 @@ void CWorld::PerformInputAction(CInputActionManager& InInputActionManager)
 
 	InInputActionManager.PerformAction(Collector);
 }
-
-void CWorld::CaptureSnapShot(CSpriteRenderer& InRenderer)
-{
-	const uint32_t ScreenWidth = InRenderer.GetScreenWidth();
-	const uint32_t ScreenHeight = InRenderer.GetScreenHeight();
-	for (auto& WorldActor : WorldActors)
-	{
-		CRenderComponent* RenderComponent = WorldActor->GetRenderComponent();
-		/*if (WorldActor->GetTransform()->OnVariation())
-		{
-			for (auto& Child : WorldActor->GetChild())
-				Child->GetTransform()->SetVariation(true);
-			if(RenderComponent)
-				WorldActor->CaptureSnapShot(ScreenWidth, ScreenHeight);
-			WorldActor->GetTransform()->SetVariation(false);
-		}*/
-		if (RenderComponent)
-			WorldActor->CaptureSnapShot(ScreenWidth, ScreenHeight);
-	}
-}
-
 void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 {
 	std::vector<CRenderStateObject*> RenderStateObjects;

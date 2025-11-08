@@ -52,10 +52,17 @@ public:
 	{
 		for (auto& WorldActor : WorldActors)
 			WorldActor->Update(1.0f / 60.0f);
+	}
 
+	void CaptureSnapShot()
+	{
 		for (auto& WorldActor : WorldActors)
 			WorldActor->FinalUpdate();
+
+		for (auto& WorldActor : WorldActors)
+			WorldActor->CaptureSnapShot();
 	}
+
 
 	template <typename T>
 	T* SpawnActor(CActor* InOwnerActor = nullptr, const std::string& InClassName = "")
@@ -108,7 +115,6 @@ public:
 	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
 
 	void PerformInputAction(class CInputActionManager& InInputActionManager);
-	void CaptureSnapShot(class CSpriteRenderer& InRenderer);
 	void RenderWorld(class CSpriteRenderer& InRenderer);
 	void DetectMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager);
 

@@ -19,7 +19,7 @@ public:
 	~CCamera() = default;
 
 public:
-	void CaptureSnapShot(uint32_t InScreenWidth, uint32_t InScreenHeight) override;
+	void CaptureSnapShot() override;
 	void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) override;
 
 private:

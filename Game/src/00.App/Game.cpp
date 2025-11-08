@@ -12,6 +12,14 @@ class CSetMousePositionToMouseManager : public Core::IMouseMove
 		CMouseManager::GetInst().SetMousePosition({ MouseX, MouseY });
 	}
 };
+class CSetScreenSize : public Core::IWindowResize
+{
+	void WindowResize(UINT InNewScreenWidth, UINT InNewScreenHeight) override
+	{
+		CWindowManager::SetScreenWidth(InNewScreenWidth);
+		CWindowManager::SetScreenHeight(InNewScreenHeight);
+	}
+};
 
 CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	: Core::CApplication(InScreenWidth, InScreenHeight)
@@ -24,7 +32,11 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if (FAILED(hr)) assert(0);
 
+	CWindowManager::SetScreenWidth(Window.GetScreenWidth());
+	CWindowManager::SetScreenHeight(Window.GetScreenHeight());
+
 	Window.RegistMouseMoveEvent(std::make_unique<CSetMousePositionToMouseManager>());
+	Window.RegistWindowResizeEvent(std::make_unique<CSetScreenSize>());
 
 	World.Start();
 }
@@ -49,7 +61,7 @@ bool CGame::Process()
 
 	World.Update();
 
-	World.CaptureSnapShot(SpriteRenderer);
+	World.CaptureSnapShot();
 	World.RenderWorld(SpriteRenderer);
 
 	MouseInteractionManager.ClearState();

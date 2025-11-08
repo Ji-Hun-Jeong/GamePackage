@@ -168,6 +168,9 @@
     <ClCompile Include="src\02.Contents\Actor\Base\Fader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\00.App\WindowManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -318,6 +321,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Base\Fader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\00.App\WindowManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

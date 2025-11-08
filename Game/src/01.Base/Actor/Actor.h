@@ -1,5 +1,6 @@
 #pragma once
 #include "00.App/CoreSystem.h"
+#include "00.App/WindowManager.h"
 #include "03.Utils/AssetLoader.h"
 #include "06.Interaction/MouseManager.h"
 #include "Component/Transform.h"
@@ -69,22 +70,15 @@ public:
 	CActor* GetOwner() const { return Owner; }
 
 	CTransform* GetTransform() const { return Transform; }
-	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
 	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent; }
-	CAnimator* GetAnimator() const { return Animator; }
-	CAnimator* SetAnimator()
-	{
-		Animator = AddComponent<CAnimator>();
-		return Animator;
-	}
+	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+
 protected:
 	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
 	CTransform* Transform;
 	CRenderComponent* RenderComponent;
-	CAnimator* Animator;
 	CInteractionComponent* InteractionComponent;
 	std::vector<CComponent*> Components;
-
 public:
 	template <typename T>
 	T* GetComponent()
@@ -137,25 +131,6 @@ public:
 	{
 		if (InteractionComponent)
 			InteractionComponent->PerformEvent();
-		if (Animator && RenderComponent)
-		{
-			bool bChangeAnimation = Animator->TryChangeCurrentAnimation();
-
-			CAnimation* CurrentAnimation = Animator->GetCurrentAnimation();
-			if (bChangeAnimation)
-				CurrentAnimation->RequestFrame(0);
-
-			bool bChangeFrame = CurrentAnimation->TryChangeFrame();
-			if (bChangeFrame)
-			{
-				const TFrame& ChangedFrame = CurrentAnimation->GetCurrentFrame();
-
-				if (ChangedFrame.ImagePath.empty() == false)
-					RenderComponent->SetDiffuseImage(ChangedFrame.ImagePath);
-			}
-
-			CurrentAnimation->UpdateAnimationState(InDeltaTime);
-		}
 	}
 	virtual void FinalUpdate()
 	{
@@ -165,19 +140,12 @@ public:
 
 		Transform->SetFinalPosition(FinalPosition);
 	}
-	virtual void CaptureSnapShot(uint32_t InScreenWidth, uint32_t InScreenHeight)
-	{
-		/*if (RenderComponent->IsUpdateImage())
-		{
-			auto CurrentImageDesc = RenderComponent->GetCurrentImageDesc();
-			Vector3 Scale{ float(CurrentImageDesc.Width), float(CurrentImageDesc.Height), Transform->GetScale().z };
-			Transform->SetScale(Scale);
-		}*/
+	virtual void CaptureSnapShot()
+	{		
 	}
 
 	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) 
 	{
-
 	}
 
 public:

@@ -18,8 +18,6 @@ public:
 	void InitalizeFromWindow(Core::CWindow& InWindow);
 	void SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight);
 	void SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight);
-	uint32_t GetScreenWidth() const { return ScreenWidth; }
-	uint32_t GetScreenHeight() const { return ScreenHeight; }
 
 	void UpdateConstBuffer(CRenderStateObject& InRenderStateObject, EShaderType InShaderType, size_t InSlot
 		, const void* InMappingPoint, size_t InByteWidth)
@@ -143,9 +141,6 @@ public:
 	CRenderResourceLoader& GetRenderResourceLoader() { return RenderResourceLoader; }
 
 private:
-	uint32_t ScreenWidth;
-	uint32_t ScreenHeight;
-
 	std::unique_ptr<Graphics::IGraphicInfra> GraphicInfra;
 	Graphics::CRenderDevice& Device;
 	Graphics::CRenderContext& Context;

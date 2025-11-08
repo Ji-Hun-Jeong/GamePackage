@@ -27,16 +27,18 @@ CCamera::CCamera()
 	Transform->SetSpeed(2.0f);
 }
 
-void CCamera::CaptureSnapShot(uint32_t InScreenWidth, uint32_t InScreenHeight)
+void CCamera::CaptureSnapShot()
 {
-	CActor::CaptureSnapShot(InScreenWidth, InScreenHeight);
+	CActor::CaptureSnapShot();
+	
+	uint32_t ScreenWidth = CWindowManager::GetScreenWidth();
+	uint32_t ScreenHeight = CWindowManager::GetScreenHeight();
 
-	// Todo: Window에 screen걸어두고 거기서 얻어오기 Final로
-	Transform->SetScale(Vector3(float(InScreenWidth), float(InScreenHeight), 1.0f));
+	Transform->SetScale(Vector3(float(ScreenWidth), float(ScreenHeight), 1.0f));
 
-	CameraConst.ViewProj = (Transform->GetNDCModelMatrix(InScreenWidth, InScreenHeight).Invert()).Transpose();
-	CameraConst.ScreenWidth = InScreenWidth;
-	CameraConst.ScreenHeight = InScreenHeight;
+	CameraConst.ViewProj = (Transform->GetNDCModelMatrix(ScreenWidth, ScreenHeight).Invert()).Transpose();
+	CameraConst.ScreenWidth = ScreenWidth;
+	CameraConst.ScreenHeight = ScreenHeight;
 
 	RenderComponent->UpdateConstBuffer(EShaderType::VertexShader, 1, &CameraConst, sizeof(CameraConst));
 }

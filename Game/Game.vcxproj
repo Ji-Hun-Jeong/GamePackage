@@ -242,6 +242,7 @@
     <ClCompile Include="src\02.Contents\Scene\TestScene.cpp" />
     <ClCompile Include="src\00.App\CoreSystem.cpp" />
     <ClCompile Include="src\01.Base\Actor\StaticActor.cpp" />
+    <ClCompile Include="src\00.App\WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\02.Contents\Actor\Base\Fader.h" />
@@ -294,6 +295,7 @@
     <ClInclude Include="src\02.Contents\Scene\TestScene.h" />
     <ClInclude Include="src\00.App\CoreSystem.h" />
     <ClInclude Include="src\01.Base\Actor\StaticActor.h" />
+    <ClInclude Include="src\00.App\WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

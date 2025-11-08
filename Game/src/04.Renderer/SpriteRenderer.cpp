@@ -2,9 +2,7 @@
 #include "SpriteRenderer.h"
 
 CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight)
-	: ScreenWidth(InScreenWidth)
-	, ScreenHeight(InScreenHeight)
-	, GraphicInfra(std::move(InGraphicInfra))
+	: GraphicInfra(std::move(InGraphicInfra))
 	, Device(GraphicInfra->GetDevice())
 	, Context(GraphicInfra->GetContext())
 	, SwapChain(GraphicInfra->GetSwapChain())
@@ -12,20 +10,18 @@ CSpriteRenderer::CSpriteRenderer(std::unique_ptr<Graphics::IGraphicInfra> InGrap
 	, PSOManager(Device)
 	, RenderResourceLoader(Device)
 {
-	SetViewPort(ScreenWidth, ScreenHeight);
+	SetViewPort(InScreenWidth, InScreenHeight);
 	Context.OMSetRenderTargets(1, RenderTargetView.get(), nullptr);
 }
 
 void CSpriteRenderer::SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight)
 {
-	ScreenWidth = InScreenWidth;
-	ScreenHeight = InScreenHeight;
-	SetViewPort(ScreenWidth, ScreenHeight);
+	SetViewPort(InScreenWidth, InScreenHeight);
 
 	Context.OMSetRenderTargets(0, nullptr, nullptr);
 	RenderTargetView.reset();
 
-	SwapChain.ResizeBuffers(0, ScreenWidth, ScreenHeight, Graphics::EGIFormat::GI_FORMAT_UNKNOWN);
+	SwapChain.ResizeBuffers(0, InScreenWidth, InScreenHeight, Graphics::EGIFormat::GI_FORMAT_UNKNOWN);
 	SwapChain.GenerateWindowTextureBuffer();
 
 	RenderTargetView = Device.CreateRenderTargetView(*SwapChain.GetWindowTextureBuffer());

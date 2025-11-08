@@ -37,15 +37,9 @@ public:
 		switch (InShaderType)
 		{
 		case EShaderType::VertexShader:
-			if (VertexShaderResources[InSlot] != nullptr)
-				std::cout << "VertexShaderResources Is Overlapped\n";
-			
 			VertexShaderResources[InSlot] = InSRV;
 			break;
 		case EShaderType::PixelShader:
-			if (PixelShaderResources[InSlot] != nullptr)
-				std::cout << "PixelShaderResources Is Overlapped\n";
-
 			PixelShaderResources[InSlot] = InSRV;
 			break;
 		default:
