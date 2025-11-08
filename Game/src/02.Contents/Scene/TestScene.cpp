@@ -5,6 +5,12 @@
 
 CTestScene::CTestScene()
 {
-	CActor* Actor = GetWorld()->SpawnActor<CPlayer>(this);
+}
 
+void CTestScene::BeginPlay()
+{
+	CScene::BeginPlay();
+
+	GetFader()->FadeIn(5.0f);
+	CActor* Actor = GetWorld()->SpawnActor<CPlayer>(this);
 }

@@ -57,16 +57,11 @@ private:
 };
 
 template <typename T>
-T* NewObject(CObject* InOwner = nullptr, const std::string& InClassName = "")
+T* NewObject(CObject* InOwner = nullptr, CClass* InClass = nullptr)
 {
 	T* Object = nullptr;
-	if (InClassName.empty() == false)
-	{
-		CClass* Class = CClassManager::GetInst().GetClassByName(InClassName);
-		ObjectType Type = Class->GetClassType();
-		if (Type == T::GetStaticType())
-			Object = static_cast<T*>(Class->CreateObject());
-	}
+	if (InClass)
+		Object = static_cast<T*>(InClass->CreateObject());
 	else
 		Object = new T;
 

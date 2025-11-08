@@ -19,18 +19,31 @@ public:
 public:
 	void FadeIn(float InHoldingTime)
 	{
-		HoldingTime = InHoldingTime;
-		FaderState = EFaderState::FadeIn;
+		if (FaderState == EFaderState::None)
+		{
+			HoldingTime = InHoldingTime;
+			FaderState = EFaderState::FadeIn;
+		}
 	}
 	void FadeOut(float InHoldingTime)
 	{
-		HoldingTime = InHoldingTime;
-		FaderState = EFaderState::FadeOut;
+		if (FaderState == EFaderState::None)
+		{
+			HoldingTime = InHoldingTime;
+			FaderState = EFaderState::FadeOut;
+		}
+	}
+	void SetStateEndEvent(std::function<void()> InStateEndEvent)
+	{
+		if (FaderState == EFaderState::None)
+			StateEndEvent = InStateEndEvent;
 	}
 	void Update(float InDeltaTime) override
 	{
 		CStaticActor::Update(InDeltaTime);
 
+		Transform->SetScale(Vector3(float(CWindowManager::GetScreenWidth()), float(CWindowManager::GetScreenHeight()), Transform->GetScale().z));
+		
 		switch (FaderState)
 		{
 		case EFaderState::FadeIn:
@@ -43,7 +56,14 @@ public:
 			return;
 			break;
 		}
-
+	}
+	void FinalUpdate() override
+	{
+		CStaticActor::FinalUpdate();
+	}
+	void CaptureSnapShot() override
+	{
+		CStaticActor::CaptureSnapShot();
 		RenderComponent->UpdateConstBuffer(EShaderType::PixelShader, 0, &ColorData, sizeof(TColorData));
 	}
 
@@ -57,6 +77,12 @@ private:
 	void SetState(EFaderState InFaderState)
 	{
 		FaderState = InFaderState;
+		if (FaderState == EFaderState::None)
+		{
+			ProgressTime = 0.0f;
+			if (StateEndEvent)
+				StateEndEvent();
+		}
 	}
 	void OnFadeIn(float InDeltaTime)
 	{
@@ -91,5 +117,7 @@ private:
 	} ColorData;
 
 	EFaderState FaderState;
+	std::function<void()> StateEndEvent;
+
 };
 

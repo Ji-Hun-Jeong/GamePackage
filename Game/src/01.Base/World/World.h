@@ -63,15 +63,11 @@ public:
 			WorldActor->CaptureSnapShot();
 	}
 
-
 	template <typename T>
-	T* SpawnActor(CActor* InOwnerActor = nullptr, const std::string& InClassName = "")
+	T* SpawnActor(CActor* InOwnerActor = nullptr, CClass* InClass = nullptr)
 	{
 		T* Actor = nullptr;
-		if (InClassName.empty() == false)
-			Actor = NewObject<T>(InOwnerActor, InClassName);
-		else
-			Actor = NewObject<T>(InOwnerActor);
+		Actor = NewObject<T>(InOwnerActor, InClass);
 
 		if (InOwnerActor)
 			InOwnerActor->Attach(Actor);
@@ -104,7 +100,23 @@ public:
 		// Todo: 나중에 상태패턴 또는 메세지큐로 전환
 		PushWorldSynchronizeEvent([this]()->void
 			{ 
-				SpawnActor<T_SCENE>(); 
+				SpawnActor<T_SCENE>();
+			});
+	}
+	void LoadSceneByClass(CClass* InSceneClass)
+	{
+		while (NextAddedWorldActors.empty() == false)
+		{
+			DestroyObject(NextAddedWorldActors.front());
+			NextAddedWorldActors.pop();
+		}
+
+		for (auto& WorldActor : WorldActors)
+			DestroyObject(WorldActor);
+
+		PushWorldSynchronizeEvent([this, InSceneClass]()->void
+			{
+				SpawnActor<CActor>(nullptr, InSceneClass);
 			});
 	}
 

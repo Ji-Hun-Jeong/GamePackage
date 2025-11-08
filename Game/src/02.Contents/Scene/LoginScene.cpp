@@ -5,10 +5,12 @@
 #include "01.Base/Actor/UI.h"
 #include "02.Contents/Actor/Base/BackGround.h"
 #include "02.Contents/Actor/UI/OnOffUI.h"
+#include "02.Contents/Scene/TestScene.h"
 
 void CLoginScene::BeginPlay()
 {
 	CScene::BeginPlay();
+	GetFader()->FadeIn(3.0f);
 
 	CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/UI/Title/Background.png");
@@ -42,7 +44,7 @@ void CLoginScene::BeginPlay()
 		, L"resources/image/UI/Title/Login/LoginButton/Pressed/0.png"
 		, [this]()->void
 		{
-			GetFader()->FadeOut(10.0f);
+			LoadNewSceneWithFadeOut(CTestScene::GetStaticClass(), 5.0f);
 		});
 
 	CUI* CreateIDButton = GetWorld()->SpawnActor<CUI>(LoginBackGround);

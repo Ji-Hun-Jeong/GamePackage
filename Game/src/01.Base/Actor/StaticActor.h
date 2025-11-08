@@ -20,9 +20,12 @@ public:
 	{
 		CActor::FinalUpdate();
 
-		auto CurrentImageDesc = RenderComponent->GetCurrentImageDesc();
-		Vector3 Scale{ float(CurrentImageDesc.Width), float(CurrentImageDesc.Height), Transform->GetScale().z };
-		Transform->SetScale(Scale);
+		if (RenderComponent->IsExistImage())
+		{
+			auto CurrentImageDesc = RenderComponent->GetCurrentImageDesc();
+			Vector3 Scale{ float(CurrentImageDesc.Width), float(CurrentImageDesc.Height), Transform->GetScale().z };
+			Transform->SetScale(Scale);
+		}
 	}
 	void CaptureSnapShot() override
 	{

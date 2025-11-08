@@ -13,6 +13,8 @@ public:
 	CCamera* GetMainCamera() const { return MainCamera; }
 	CFader* GetFader() const { return Fader; }
 
+	void LoadNewSceneWithFadeOut(CClass* InSceneClass, float InHoldingTime);
+
 private:
 	CCamera* MainCamera;
 	CFader* Fader;

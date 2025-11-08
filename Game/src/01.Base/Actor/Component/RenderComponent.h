@@ -162,6 +162,7 @@ public:
 	}
 
 	const Graphics::TTexture2DDesc& GetCurrentImageDesc() const { return ImageDescs[0].GetImageTextureDesc(); }
+	bool IsExistImage() const { return ImageDescs[0].IsValid(); }
 
 private:
 	void ClearState()

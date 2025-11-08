@@ -8,6 +8,8 @@ public:
 	CTestScene();
 	~CTestScene() = default;
 
+public:
+	void BeginPlay() override;
 
 private:
 
