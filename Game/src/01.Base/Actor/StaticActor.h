@@ -16,14 +16,17 @@ public:
 	}
 
 public:
-	void CaptureSnapShot() override
+	void FinalUpdate() override
 	{
-		CActor::CaptureSnapShot();
+		CActor::FinalUpdate();
 
 		auto CurrentImageDesc = RenderComponent->GetCurrentImageDesc();
 		Vector3 Scale{ float(CurrentImageDesc.Width), float(CurrentImageDesc.Height), Transform->GetScale().z };
 		Transform->SetScale(Scale);
-
+	}
+	void CaptureSnapShot() override
+	{
+		CActor::CaptureSnapShot();
 		if (Transform->OnVariation())
 		{
 			uint32_t ScreenWidth = CWindowManager::GetScreenWidth();
@@ -31,14 +34,10 @@ public:
 			const Matrix& NDCModelMatrix = Transform->GetNDCModelMatrix(ScreenWidth, ScreenHeight).Transpose();
 
 			RenderComponent->UpdateConstBuffer(EShaderType::VertexShader, 0, &NDCModelMatrix, sizeof(Matrix));
+
+			Transform->ClearVariation();
 		}
-		
-		/*if (RenderComponent->IsUpdateImage())
-		{
-			auto CurrentImageDesc = RenderComponent->GetCurrentImageDesc();
-			Vector3 Scale{ float(CurrentImageDesc.Width), float(CurrentImageDesc.Height), Transform->GetScale().z };
-			Transform->SetScale(Scale);
-		}*/
+
 	}
 };
 

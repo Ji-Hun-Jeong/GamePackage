@@ -56,22 +56,31 @@ public:
     // =================================================================
     void SetFinalPosition(const Vector3& InFinalPosition)
     {
-        FinalPosition = InFinalPosition;
+        if (FinalPosition != InFinalPosition)
+        {
+            bVariationFlag = true;
+            FinalPosition = InFinalPosition;
+        }
     }
     void SetPosition(const Vector3& InPosition)
     {
         Position = InPosition;
-        SetVariation(true);
     }
     void SetRotation(const Vector3& InRotation)
     {
-        Rotation = InRotation;
-        SetVariation(true);
+        if (Rotation != InRotation)
+        {
+            bVariationFlag = true;
+            Rotation = InRotation;
+        }
     }
     void SetScale(const Vector3& InScale)
     {
-        Scale = InScale;
-        SetVariation(true);
+        if (Scale != InScale)
+        {
+            bVariationFlag = true;
+            Scale = InScale;
+        }
     }
     void SetSpeed(float InSpeed) { Speed = InSpeed; }
 
@@ -82,11 +91,8 @@ public:
         SetPosition(Position + InDirection * Speed);
     }
 
-    void SetVariation(bool bVariation) 
-    { 
-        bVariationFlag = bVariation; 
-    }
     bool OnVariation() const { return bVariationFlag; }
+    void ClearVariation() { bVariationFlag = false; }
 
     Matrix GetNDCModelMatrix(uint32_t InScreenWidth, uint32_t InScreenHeight)
     {

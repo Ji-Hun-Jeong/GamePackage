@@ -31,16 +31,17 @@ void CCamera::CaptureSnapShot()
 {
 	CActor::CaptureSnapShot();
 	
-	uint32_t ScreenWidth = CWindowManager::GetScreenWidth();
-	uint32_t ScreenHeight = CWindowManager::GetScreenHeight();
+	if (Transform->OnVariation())
+	{
+		uint32_t ScreenWidth = CWindowManager::GetScreenWidth();
+		uint32_t ScreenHeight = CWindowManager::GetScreenHeight();
+		CameraConst.ViewProj = (Transform->GetNDCModelMatrix(ScreenWidth, ScreenHeight).Invert()).Transpose();
+		CameraConst.ScreenWidth = ScreenWidth;
+		CameraConst.ScreenHeight = ScreenHeight;
 
-	Transform->SetScale(Vector3(float(ScreenWidth), float(ScreenHeight), 1.0f));
-
-	CameraConst.ViewProj = (Transform->GetNDCModelMatrix(ScreenWidth, ScreenHeight).Invert()).Transpose();
-	CameraConst.ScreenWidth = ScreenWidth;
-	CameraConst.ScreenHeight = ScreenHeight;
-
-	RenderComponent->UpdateConstBuffer(EShaderType::VertexShader, 1, &CameraConst, sizeof(CameraConst));
+		RenderComponent->UpdateConstBuffer(EShaderType::VertexShader, 1, &CameraConst, sizeof(CameraConst));
+		Transform->ClearVariation();
+	}
 }
 
 void CCamera::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)

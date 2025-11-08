@@ -141,7 +141,7 @@ public:
 		Transform->SetFinalPosition(FinalPosition);
 	}
 	virtual void CaptureSnapShot()
-	{		
+	{
 	}
 
 	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) 
