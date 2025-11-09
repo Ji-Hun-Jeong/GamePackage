@@ -4,87 +4,162 @@
 #include "CollisionCommon.h"
 #include "04.Renderer/RenderResourceLoader.h"
 
-class CPixelCollider
+class CPixelCollisionObject
 {
 	friend class CPixelCollisionManager;
 public:
-	CPixelCollider()
-		: bCollision(false)
+	CPixelCollisionObject()
+		: Collisions{false}
 	{}
-	~CPixelCollider()
+	~CPixelCollisionObject()
 	{}
 
 public:
 	void SetPosition(const Vector2& InPosition) { Position = InPosition; }
-	void SetScale(const Vector2& InScale) { Scale = InScale; }
-	bool IsCollision() const { return bCollision; }
+
+private:
+	void ClearState() 
+	{
+		for (auto& Collision : Collisions)
+			Collision = false;
+	}
+	void Collision(size_t InSlot, bool bInCollision)
+	{
+		Collisions[InSlot] = bInCollision;
+	}
+	void CopyCollisionResult(const CPixelCollisionObject& InOther)
+	{
+		for (size_t i = 0; i < Collisions.size(); ++i)
+		{
+			Collisions[i] = InOther.Collisions[i];
+		}
+	}
 
 private:
 	Vector2 Position;
-	Vector2 Scale;
 
-	uint32_t bCollision;
+	std::array<uint32_t, 6> Collisions;
 
 };
 
+
+enum class EPixelMapType
+{
+	FloorMap,
+	LadderMap,
+	RopeMap,
+	WallMap,
+	MonsterWallMap,
+	OtherMap,
+};
+
+struct TPixelCollisionConstBufferData
+{
+	uint32_t ScreenWidth;
+	uint32_t ScreenHeight;
+	uint32_t NumOfColliders;
+	uint32_t Dummy;
+};
 class CPixelCollisionManager
 {
 public:
 	CPixelCollisionManager(Graphics::CRenderDevice& InDevice, CRenderResourceLoader& InRenderResourceLoader, size_t InNumOfMaxCollider)
 		: NumOfMaxCollider(InNumOfMaxCollider)
+		, RenderResourceLoader(InRenderResourceLoader)
+		, PixelMaps{nullptr}
 	{
-		uint32_t ColliderSize = sizeof(CPixelCollider);
+		uint32_t ColliderSize = sizeof(CPixelCollisionObject);
 		ColliderBuffer = InRenderResourceLoader.CreateUAVBuffer(ColliderSize, NumOfMaxCollider);
 		ColliderUAV = InRenderResourceLoader.CreateUAV(*ColliderBuffer.get(), NumOfMaxCollider);
 		ColliderStagingBuffer = InRenderResourceLoader.CreateStagingBuffer(ColliderSize, NumOfMaxCollider);
 
-		PixelColliders.reserve(NumOfMaxCollider);
+		PixelCollisionObjects.reserve(NumOfMaxCollider);
 
 		CollisionComputeShader = InDevice.CreateComputeShader(L"resources/shader/PixelCollisionComputeShader.hlsl");
+
+		PixelCollisionConstBuffer = InRenderResourceLoader.CreateConstBuffer(sizeof(TPixelCollisionConstBufferData));
+
+		Graphics::TSamplerDesc SamplerDesc;
+		SamplerDesc.Filter = Graphics::EFilter::FILTER_MIN_MAG_MIP_POINT;
+		SamplerDesc.AddressU = Graphics::ETextureAddressMode::TEXTURE_ADDRESS_CLAMP;
+		SamplerDesc.AddressV = Graphics::ETextureAddressMode::TEXTURE_ADDRESS_CLAMP;
+		SamplerDesc.AddressW = Graphics::ETextureAddressMode::TEXTURE_ADDRESS_CLAMP;
+		SamplerDesc.ComparisonFunc = Graphics::EComparisonFunc::COMPARISON_NEVER;
+		SamplerDesc.MinLOD = 0;
+		SamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		PointSampler = InDevice.CreateSamplerState(SamplerDesc);
 	}
 	~CPixelCollisionManager() = default;
 
 public:
-	void F()
+	void SetPixelMap(EPixelMapType InPixelMapType, const std::wstring& InPixelMapPath)
 	{
-		// Context.CSSetShaderResource();
+		CImage* Image = RenderResourceLoader.LoadImageFromFile(InPixelMapPath);
+		PixelMaps[size_t(InPixelMapType)] = &Image->GetSRV();
 	}
-	void RequestCollision(CPixelCollider& InPixelCollider)
+	void RequestCollisionCheck(CPixelCollisionObject& InPixelCollisionObject)
 	{
-		PixelColliders.push_back(&InPixelCollider);
+		InPixelCollisionObject.ClearState();
+		PixelCollisionObjects.push_back(&InPixelCollisionObject);
 	}
-	void ProgressCollisionCheck(Graphics::CRenderContext& InContext)
+	void ProgressCollisionCheck(Graphics::CRenderContext& InContext, uint32_t InScreenWidth, uint32_t InScreenHeight)
 	{
-		std::vector<CPixelCollider> ColliderCpuDatas;
-		ColliderCpuDatas.reserve(PixelColliders.size());
-		for (auto& PixelCollider : PixelColliders)
+		if (PixelMaps.empty())
+			return;
+
+		std::vector<CPixelCollisionObject> ColliderCpuDatas;
+		ColliderCpuDatas.reserve(PixelCollisionObjects.size());
+		for (auto& PixelCollider : PixelCollisionObjects)
 			ColliderCpuDatas.push_back(*PixelCollider);
-		
+
+		for (size_t i = 0; i < PixelMaps.size(); ++i)
+			InContext.CSSetShaderResource(uint32_t(i), PixelMaps[i]);
+
+		InContext.CSSetSampler(0, PointSampler.get());
+
 		if (ColliderCpuDatas.size())
 		{
-			InContext.UpLoadBuffer(*ColliderStagingBuffer.get(), ColliderCpuDatas.data(), sizeof(CPixelCollider) * ColliderCpuDatas.size(), Graphics::EMapType::MAP_WRITE);
+			TPixelCollisionConstBufferData PixelCollisionConstBufferData;
+			PixelCollisionConstBufferData.ScreenWidth = InScreenWidth;
+			PixelCollisionConstBufferData.ScreenHeight = InScreenHeight;
+			PixelCollisionConstBufferData.NumOfColliders = uint32_t(ColliderCpuDatas.size());
+
+			InContext.UpLoadBuffer(*PixelCollisionConstBuffer.get(), &PixelCollisionConstBufferData, sizeof(PixelCollisionConstBufferData)
+				, Graphics::EMapType::MAP_WRITE_DISCARD);
+			InContext.CSSetConstantBuffer(0, PixelCollisionConstBuffer.get());
+
+			InContext.UpLoadBuffer(*ColliderStagingBuffer.get(), ColliderCpuDatas.data(), sizeof(CPixelCollisionObject) * ColliderCpuDatas.size(), Graphics::EMapType::MAP_WRITE);
 			InContext.CopyResource(*ColliderBuffer.get(), *ColliderStagingBuffer.get());
 
 			InContext.CSSetShader(CollisionComputeShader.get());
 			InContext.CSSetUnorderedAccessView(0, ColliderUAV.get());
-			InContext.Dispatch(64, 1, 1);
+			InContext.Dispatch(8, 1, 1);
 
 			InContext.CopyResource(*ColliderStagingBuffer.get(), *ColliderBuffer.get());
-			InContext.DownLoadBuffer(ColliderCpuDatas.data(), sizeof(CPixelCollider) * ColliderCpuDatas.size(), *ColliderStagingBuffer.get(), Graphics::EMapType::MAP_READ);
+			InContext.DownLoadBuffer(ColliderCpuDatas.data(), sizeof(CPixelCollisionObject) * ColliderCpuDatas.size(), *ColliderStagingBuffer.get(), Graphics::EMapType::MAP_READ);
 
 			for (size_t i = 0; i < ColliderCpuDatas.size(); ++i)
 			{
-				PixelColliders[i]->bCollision = ColliderCpuDatas[i].bCollision;
+				PixelCollisionObjects[i]->CopyCollisionResult(ColliderCpuDatas[i]);
 			}
-
-			PixelColliders.clear();
+			std::cout << PixelCollisionObjects[0]->Collisions[0] << std::endl;
+			PixelCollisionObjects.clear();
 		}
+
+		for (auto& PixelMap : PixelMaps)
+			PixelMap = nullptr;
 	}
 	
 
 private:
-	std::vector<CPixelCollider*> PixelColliders;
+	CRenderResourceLoader& RenderResourceLoader;
+
+	std::vector<CPixelCollisionObject*> PixelCollisionObjects;
 	size_t NumOfMaxCollider;
+	std::array<const Graphics::CShaderResourceView*, 6> PixelMaps;
+
+	std::unique_ptr<Graphics::CSamplerState> PointSampler;
 
 	std::unique_ptr<Graphics::CBuffer> ColliderBuffer;
 	std::unique_ptr<Graphics::CBuffer> ColliderStagingBuffer;
@@ -92,5 +167,6 @@ private:
 
 	std::unique_ptr<Graphics::CComputeShader> CollisionComputeShader;
 
+	std::unique_ptr<Graphics::CBuffer> PixelCollisionConstBuffer;
 };
 

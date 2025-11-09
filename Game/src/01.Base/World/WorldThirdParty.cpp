@@ -5,6 +5,7 @@
 #include "04.Renderer/RenderSorter.h"
 #include "05.Input/InputActionManager.h"
 #include "06.Interaction/MouseInteractionManager.h"
+#include "07.Collision/PixelCollisionManager.h"
 
 void CWorld::PerformInputAction(CInputActionManager& InInputActionManager)
 {
@@ -60,4 +61,14 @@ void CWorld::DetectMouseInteraction(CMouseInteractionManager& InMouseInteraction
 	}
 
 	InMouseInteractionManager.FindFocusInteracter(std::move(MouseInteracters), MousePosition);
+}
+
+void CWorld::CollectCollisionObjects(CPixelCollisionManager& InPixelCollisionManager)
+{
+	for (auto& WorldActor : WorldActors)
+	{
+		CPixelCollider* PixelCollider = WorldActor->GetPixelCollider();
+		if (PixelCollider)
+			PixelCollider->CollisionProcess(InPixelCollisionManager);
+	}
 }

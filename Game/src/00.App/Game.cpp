@@ -57,14 +57,14 @@ bool CGame::Process()
 	World.Arrange();
 	World.Ready();
 
-	PixelCollisionManager.RequestCollision(Collider);
-	PixelCollisionManager.ProgressCollisionCheck(GraphicInfra->GetContext());
 	World.PerformInputAction(InputActionManager);
 	World.DetectMouseInteraction(MouseInteractionManager);
 
 	World.Update();
-
 	World.CaptureSnapShot();
+
+	World.CollectCollisionObjects(PixelCollisionManager);
+	PixelCollisionManager.ProgressCollisionCheck(GraphicInfra->GetContext(), Window.GetScreenWidth(), Window.GetScreenHeight());
 	World.RenderWorld(SpriteRenderer);
 
 	MouseInteractionManager.ClearState();

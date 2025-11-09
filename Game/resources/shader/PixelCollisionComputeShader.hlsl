@@ -3,66 +3,75 @@
 struct PixelCollider
 {
     float2 Position;
-    float2 Scale;
-    uint bCollision;
+    uint bCollision0;
+    uint bCollision1;
+    uint bCollision2;
+    uint bCollision3;
+    uint bCollision4;
+    uint bCollision5;
 };
 
 RWStructuredBuffer<PixelCollider> PixelColliders : register(u0);
 
-// float2 ConvertWorldPositionToImageUV(float3 _Position, uint2 _ImageScale)
-// {
-//     _Position.xy *= float2(ScreenWidth, ScreenHeight) / float2(_ImageScale);
-//     
-//     float2 UV = clamp((_Position.xy * float2(1.0f, -1.0f) + 1.0f) / 2.0f, 0.0f, 1.0f);
-//     
-//     return UV;
-// }
-// void ConvertImageUVToWorldPosition(inout float3 _Position, float2 _UV, uint2 _ImageScale)
-// {
-//     _Position = float3((_UV * 2.0f - 1.0f) * float2(1.0f, -1.0f), _Position.z);
-//     _Position.xy *= float2(_ImageScale) / float2(ScreenWidth, ScreenHeight);
-// }
-// 
-// bool Collision(inout float3 _Position, float2 _UV, uint2 _ImageScale, int2 _OffsetPixel, Texture2D _Image)
-// {
-//     uint2 OriginPosition = _UV * _ImageScale;
-//     
-//     for (int i = -_OffsetPixel.x; i < _OffsetPixel.x; ++i)
-//     {
-//         float2 Position = OriginPosition + int2(i, 0);
-//         float2 UV = Position / float2(_ImageScale);
-//         UV = clamp(UV, 0.0f, 1.0f);
-//         float4 PixelColor = _Image.SampleLevel(PointSampler, UV, 0);
-//         
-//         if (PixelColor.r != 1.0f || PixelColor.g != 1.0f || PixelColor.b != 1.0f)
-//         {
-//             ConvertImageUVToWorldPosition(_Position, UV, _ImageScale);
-//             return true;
-//         }
-//            
-//     }
-//     
-//     for (int j = -_OffsetPixel.y; j < _OffsetPixel.y; ++j)
-//     {
-//         float2 Position = OriginPosition + int2(0, j);
-//         float2 UV = Position / float2(_ImageScale);
-//         UV = clamp(UV, 0.0f, 1.0f);
-//         float4 PixelColor = _Image.SampleLevel(PointSampler, UV, 0);
-//         
-//         if (PixelColor.r != 1.0f || PixelColor.g != 1.0f || PixelColor.b != 1.0f)
-//         {
-//             ConvertImageUVToWorldPosition(_Position, UV, _ImageScale);
-//             return true;
-//         }
-//     }
-//     
-//     return false;
-// }
-[numthreads(1, 1, 1)]
+Texture2D FloorMap : register(t0);
+Texture2D LadderMap : register(t1);
+Texture2D RopeMap : register(t2);
+Texture2D WallMap : register(t3);
+Texture2D MonsterWallMap : register(t4);
+Texture2D OtherMap : register(t5);
+
+SamplerState PointSampler : register(s0);
+
+cbuffer ConstBuffer : register(b0)
+{
+    uint ScreenWidth;
+    uint ScreenHeight;
+    uint NumOfColliders;
+    uint Dummy;
+}
+
+float2 ConvertToUVPosition(float2 InPosition, uint2 InStandardScale)
+{
+    float2 UVPosition = InPosition;
+    UVPosition.x = (UVPosition.x + InStandardScale.x / 2.0f) / InStandardScale.x;
+    UVPosition.y = (-UVPosition.y + InStandardScale.y / 2.0f) / InStandardScale.y;
+    return UVPosition;
+}
+bool IsNotBlack(float4 InColor)
+{
+    return InColor.r != 0.0f || InColor.g != 0.0f || InColor.b != 0.0f;
+}
+bool Collision(float2 InPosition, int2 InOffset, Texture2D InTexture)
+{
+    uint ImageWidth = 0;
+    uint ImageHeight = 0;
+    InTexture.GetDimensions(ImageWidth, ImageHeight);
+    
+    for (int i = -InOffset.x; i < InOffset.x; ++i)
+    {
+        float2 UVPosition = saturate(ConvertToUVPosition(InPosition + float2(i, 0), uint2(ImageWidth, ImageHeight)));
+        float4 Color = InTexture.SampleLevel(PointSampler, UVPosition, 0);
+        if (IsNotBlack(Color))
+            return true;
+    }
+    for (int j = -InOffset.y; j < InOffset.y; ++j)
+    {
+        float2 UVPosition = saturate(ConvertToUVPosition(InPosition + float2(0, j), uint2(ImageWidth, ImageHeight)));
+        float4 Color = InTexture.SampleLevel(PointSampler, UVPosition, 0);
+        if (IsNotBlack(Color))
+            return true;
+    }
+    return false;
+}
+
+[numthreads(256, 1, 1)]
 void main(uint3 DTid : SV_DispatchThreadID)
 {
-    // WorldPosition -> UV
-    // CollisionCheck
-    PixelColliders[DTid.x].Position.x = 523.0f;
-    PixelColliders[DTid.x].bCollision = 1;
+    if(NumOfColliders <= DTid.x)
+        return;
+    
+    float2 Position = PixelColliders[DTid.x].Position;
+    if (Collision(Position, int2(0, 10), FloorMap))
+        PixelColliders[DTid.x].bCollision0 = true;
+    
 }

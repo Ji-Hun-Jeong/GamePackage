@@ -7,6 +7,7 @@
 #include "Component/RenderComponent.h"
 #include "Component/InteractionComponent.h"
 #include "Component/Animation/Animator.h"
+#include "Component/PixelCollider.h"
 
 extern class CWorld* g_World;
 
@@ -72,12 +73,14 @@ public:
 	CTransform* GetTransform() const { return Transform; }
 	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent; }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+	CPixelCollider* GetPixelCollider() const { return PixelCollider; }
 
 protected:
 	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
 	CTransform* Transform;
 	CRenderComponent* RenderComponent;
 	CInteractionComponent* InteractionComponent;
+	CPixelCollider* PixelCollider;
 	std::vector<CComponent*> Components;
 public:
 	template <typename T>

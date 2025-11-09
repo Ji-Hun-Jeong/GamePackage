@@ -47,6 +47,8 @@ namespace Graphics
 		virtual void CSSetShader(const CComputeShader* InComputeShader) = 0;
 		virtual void CSSetUnorderedAccessView(uint32_t InStartSlot, const CUnorderedAccessView* InUAV) = 0;
 		virtual void CSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView* InShaderResourceView) = 0;
+		virtual void CSSetConstantBuffer(uint32_t InStartSlot, const CBuffer* InBuffer) = 0;
+		virtual void CSSetSampler(uint32_t InStartSlot, const CSamplerState* InSamplerState) = 0;
 		virtual void Dispatch(uint32_t InThreadGroupCountX, uint32_t InThreadGroupCountY, uint32_t InThreadGroupCountZ) = 0;
 	private:
 

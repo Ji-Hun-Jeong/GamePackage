@@ -34,7 +34,6 @@ private:
 	std::unique_ptr<Graphics::IGraphicInfra> GraphicInfra;
 	CSpriteRenderer SpriteRenderer;
 	CPixelCollisionManager PixelCollisionManager;
-	CPixelCollider Collider;
 
 	CInputActionManager InputActionManager;
 

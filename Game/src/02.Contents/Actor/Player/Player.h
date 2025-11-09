@@ -12,6 +12,7 @@ public:
 
 public:
 	void BeginPlay() override;
+	void FinalUpdate() override;
 	void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) override;
 
 private:

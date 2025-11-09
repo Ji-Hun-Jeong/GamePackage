@@ -63,6 +63,20 @@ namespace Graphics::DX
 				RawSRV = DXResourceStorage.GetResource<ID3D11ShaderResourceView>(InShaderResourceView->GetResourceHandle());
 			Context->CSSetShaderResources(InStartSlot, 1, &RawSRV);
 		}
+		void CSSetConstantBuffer(uint32_t InStartSlot, const CBuffer* InBuffer) override
+		{
+			ID3D11Buffer* RawBuffer = nullptr;
+			if(InBuffer)
+				RawBuffer = DXResourceStorage.GetResource<ID3D11Buffer>(InBuffer->GetResourceHandle());
+			Context->CSSetConstantBuffers(InStartSlot, 1, &RawBuffer);
+		}
+		void CSSetSampler(uint32_t InStartSlot, const CSamplerState* InSamplerState) override
+		{
+			ID3D11SamplerState* RawSamplerState = nullptr;
+			if(InSamplerState)
+				RawSamplerState = DXResourceStorage.GetResource<ID3D11SamplerState>(InSamplerState->GetResourceHandle());
+			Context->CSSetSamplers(InStartSlot, 1, &RawSamplerState);
+		}
 		void Dispatch(uint32_t InThreadGroupCountX, uint32_t InThreadGroupCountY, uint32_t InThreadGroupCountZ) override
 		{
 			Context->Dispatch(InThreadGroupCountX, InThreadGroupCountY, InThreadGroupCountZ);

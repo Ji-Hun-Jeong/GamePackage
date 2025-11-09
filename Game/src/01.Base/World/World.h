@@ -129,6 +129,7 @@ public:
 	void PerformInputAction(class CInputActionManager& InInputActionManager);
 	void RenderWorld(class CSpriteRenderer& InRenderer);
 	void DetectMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager);
+	void CollectCollisionObjects(class CPixelCollisionManager& InPixelCollisionManager);
 
 public:
 	const std::vector<CActor*>& GetWorldActors() const { return WorldActors; }

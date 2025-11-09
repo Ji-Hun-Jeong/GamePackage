@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\01.Base\Actor\Component\PixelCollider.cpp" />
     <ClCompile Include="src\07.Collision\PixelCollisionManager.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\Fader.cpp" />
     <ClCompile Include="src\04.Renderer\RenderSorter.cpp" />
@@ -246,6 +247,7 @@
     <ClCompile Include="src\00.App\WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\01.Base\Actor\Component\PixelCollider.h" />
     <ClInclude Include="src\07.Collision\CollisionCommon.h" />
     <ClInclude Include="src\07.Collision\PixelCollisionManager.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\Fader.h" />

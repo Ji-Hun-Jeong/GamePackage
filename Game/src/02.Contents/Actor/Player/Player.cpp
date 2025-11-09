@@ -24,6 +24,9 @@ CPlayer::CPlayer()
 	Arm->GetTransform()->SetPosition(Vector3(2.0f, 0.0f, 0.0f));*/
 
 	Transform->SetSpeed(2.0f);
+
+	PixelCollider = AddComponent<CPixelCollider>();
+	PixelCollider->StartUse();
 }
 CPlayer::~CPlayer()
 {
@@ -48,6 +51,12 @@ void CPlayer::BeginPlay()
 
 	Body->GetAnimator()->AddAnimation("Basic", std::unique_ptr<CAnimation>(Animation));
 	Body->GetAnimator()->SetCurrentAnimation("Basic");
+}
+
+void CPlayer::FinalUpdate()
+{
+	CActor::FinalUpdate();
+	PixelCollider->SetPosition(Transform->GetFinalPosition());
 }
 
 void CPlayer::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)
