@@ -65,10 +65,10 @@ void CWorld::DetectMouseInteraction(CMouseInteractionManager& InMouseInteraction
 
 void CWorld::CollectCollisionObjects(CPixelCollisionManager& InPixelCollisionManager)
 {
-	for (auto& WorldActor : WorldActors)
+	/*for (auto& WorldActor : WorldActors)
 	{
 		CPixelCollider* PixelCollider = WorldActor->GetPixelCollider();
 		if (PixelCollider)
 			PixelCollider->CollisionProcess(InPixelCollisionManager);
-	}
+	}*/
 }

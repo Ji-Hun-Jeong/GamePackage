@@ -42,7 +42,7 @@ public:
 	{
 		CStaticActor::Update(InDeltaTime);
 
-		Transform->SetScale(Vector3(float(CWindowManager::GetScreenWidth()), float(CWindowManager::GetScreenHeight()), Transform->GetScale().z));
+		Transform->SetScale(Vector3(float(CWindowManager::GetInst().GetScreenWidth()), float(CWindowManager::GetInst().GetScreenHeight()), Transform->GetScale().z));
 		
 		switch (FaderState)
 		{

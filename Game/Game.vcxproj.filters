@@ -177,6 +177,9 @@
     <ClCompile Include="src\01.Base\Actor\Component\PixelCollider.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\07.Collision\CollisionManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -339,6 +342,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Actor\Component\PixelCollider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\07.Collision\CollisionManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

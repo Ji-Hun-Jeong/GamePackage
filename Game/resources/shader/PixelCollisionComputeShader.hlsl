@@ -3,12 +3,8 @@
 struct PixelCollider
 {
     float2 Position;
-    uint bCollision0;
-    uint bCollision1;
-    uint bCollision2;
-    uint bCollision3;
-    uint bCollision4;
-    uint bCollision5;
+    float2 Scale;
+    uint bCollision[6];
 };
 
 RWStructuredBuffer<PixelCollider> PixelColliders : register(u0);
@@ -67,11 +63,45 @@ bool Collision(float2 InPosition, int2 InOffset, Texture2D InTexture)
 [numthreads(256, 1, 1)]
 void main(uint3 DTid : SV_DispatchThreadID)
 {
-    if(NumOfColliders <= DTid.x)
+    if (NumOfColliders <= DTid.x)
         return;
     
     float2 Position = PixelColliders[DTid.x].Position;
-    if (Collision(Position, int2(0, 10), FloorMap))
-        PixelColliders[DTid.x].bCollision0 = true;
+    float2 Scale = PixelColliders[DTid.x].Scale;
+    if (Collision(Position, int2(0, Scale.y / 2.0f), FloorMap))
+        PixelColliders[DTid.x].bCollision[0] = 1;
     
+    if (Collision(Position, int2(Scale.x, 0), LadderMap))
+        PixelColliders[DTid.x].bCollision[1] = 1;
+    
+    if (Collision(Position, int2(Scale.x, 0), RopeMap))
+        PixelColliders[DTid.x].bCollision[2] = 1;
+    
+    if (Collision(Position, int2(Scale.x, 0), WallMap))
+        PixelColliders[DTid.x].bCollision[3] = 1;
+    
+    if (Collision(Position, int2(Scale.x, 0), MonsterWallMap))
+        PixelColliders[DTid.x].bCollision[4] = 1;
+    
+    //uint ImageWidth = 0;
+    //uint ImageHeight = 0;
+    //LadderMap.GetDimensions(ImageWidth, ImageHeight);
+    //
+    //
+    //if (DTid.x == 0)
+    //{
+    //    float3 FinalColor = 0.0f;
+    //    for (int i = 0; i < 30; ++i)
+    //    {
+    //        for (int j = 0; j < 30; ++j)
+    //        {
+    //            float2 UV = ConvertToUVPosition(Position + float2(i, j), uint2(ImageWidth, ImageHeight));
+    //            FinalColor += LadderMap.SampleLevel(PointSampler, UV, 0.0f).rgb;
+    //        }
+    //    }
+    //    
+    //    PixelColliders[DTid.x].Position.x = FinalColor.r;
+    //    PixelColliders[DTid.x].Position.y = FinalColor.g;
+    //}
+
 }

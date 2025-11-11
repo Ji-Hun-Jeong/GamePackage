@@ -33,8 +33,8 @@ void CCamera::CaptureSnapShot()
 	
 	if (Transform->OnVariation())
 	{
-		uint32_t ScreenWidth = CWindowManager::GetScreenWidth();
-		uint32_t ScreenHeight = CWindowManager::GetScreenHeight();
+		uint32_t ScreenWidth = CWindowManager::GetInst().GetScreenWidth();
+		uint32_t ScreenHeight = CWindowManager::GetInst().GetScreenHeight();
 		CameraConst.ViewProj = (Transform->GetNDCModelMatrix(ScreenWidth, ScreenHeight).Invert()).Transpose();
 		CameraConst.ScreenWidth = ScreenWidth;
 		CameraConst.ScreenHeight = ScreenHeight;

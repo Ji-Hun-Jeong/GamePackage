@@ -24,6 +24,11 @@ public:
 		if (PixelCollisionObject)
 			PixelCollisionObject->SetPosition(Vector2(InPosition.x, InPosition.y));
 	}
+	void SetScale(const Vector3& InScale)
+	{
+		if (PixelCollisionObject)
+			PixelCollisionObject->SetScale(Vector2(InScale.x, InScale.y));
+	}
 	void CollisionProcess(CPixelCollisionManager& InPixelCollisionManager)
 	{
 		for (size_t i = 0; i < PixelMapPaths.size(); ++i)

@@ -8,7 +8,7 @@ class CBackGround : public CStaticActor
 public:
 	CBackGround()
 	{
-		PixelCollider = AddComponent<CPixelCollider>();
+		
 	}
 	~CBackGround() = default;
 
@@ -16,7 +16,6 @@ public:
 	void InitalizeBackGround(const std::wstring& InBackGroundImagePath)
 	{
 		RenderComponent->SetDiffuseImage(InBackGroundImagePath);
-		PixelCollider->SetPixelMap(EPixelMapType::OtherMap, InBackGroundImagePath);
 	}
 
 private:

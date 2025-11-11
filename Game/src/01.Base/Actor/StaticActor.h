@@ -32,8 +32,8 @@ public:
 		CActor::CaptureSnapShot();
 		if (Transform->OnVariation())
 		{
-			uint32_t ScreenWidth = CWindowManager::GetScreenWidth();
-			uint32_t ScreenHeight = CWindowManager::GetScreenHeight();
+			uint32_t ScreenWidth = CWindowManager::GetInst().GetScreenWidth();
+			uint32_t ScreenHeight = CWindowManager::GetInst().GetScreenHeight();
 			const Matrix& NDCModelMatrix = Transform->GetNDCModelMatrix(ScreenWidth, ScreenHeight).Transpose();
 
 			RenderComponent->UpdateConstBuffer(EShaderType::VertexShader, 0, &NDCModelMatrix, sizeof(Matrix));

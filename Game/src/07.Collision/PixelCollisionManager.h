@@ -16,6 +16,7 @@ public:
 
 public:
 	void SetPosition(const Vector2& InPosition) { Position = InPosition; }
+	void SetScale(const Vector2& InScale) { Scale = InScale; }
 
 private:
 	void ClearState() 
@@ -29,7 +30,7 @@ private:
 	}
 	void CopyCollisionResult(const CPixelCollisionObject& InOther)
 	{
-		for (size_t i = 0; i < Collisions.size(); ++i)
+		for (size_t i = 0; i < 6; ++i)
 		{
 			Collisions[i] = InOther.Collisions[i];
 		}
@@ -37,8 +38,9 @@ private:
 
 private:
 	Vector2 Position;
+	Vector2 Scale;
 
-	std::array<uint32_t, 6> Collisions;
+	uint32_t Collisions[6] = { 0 };
 
 };
 
@@ -60,6 +62,7 @@ struct TPixelCollisionConstBufferData
 	uint32_t NumOfColliders;
 	uint32_t Dummy;
 };
+
 class CPixelCollisionManager
 {
 public:
@@ -142,8 +145,12 @@ public:
 			for (size_t i = 0; i < ColliderCpuDatas.size(); ++i)
 			{
 				PixelCollisionObjects[i]->CopyCollisionResult(ColliderCpuDatas[i]);
+				/*for (size_t j = 0; j < 6; ++j)
+				{
+					printf("%zd: %d\n", j, PixelCollisionObjects[i]->Collisions[j]);
+				}*/
 			}
-			std::cout << PixelCollisionObjects[0]->Collisions[0] << std::endl;
+			printf("%d\n", PixelCollisionObjects[0]->Collisions[1]);
 			PixelCollisionObjects.clear();
 		}
 

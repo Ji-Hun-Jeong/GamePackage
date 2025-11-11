@@ -23,8 +23,8 @@ public:
 	{
 		CActor::FinalUpdate();
 
-		uint32_t ScreenWidth = CWindowManager::GetScreenWidth();
-		uint32_t ScreenHeight = CWindowManager::GetScreenHeight();
+		uint32_t ScreenWidth = CWindowManager::GetInst().GetScreenWidth();
+		uint32_t ScreenHeight = CWindowManager::GetInst().GetScreenHeight();
 		Transform->SetScale(Vector3(float(ScreenWidth), float(ScreenHeight), 1.0f));
 	}
 	void CaptureSnapShot() override;

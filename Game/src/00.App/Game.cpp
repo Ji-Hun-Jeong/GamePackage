@@ -16,8 +16,8 @@ class CSetScreenSize : public Core::IWindowResize
 {
 	void WindowResize(UINT InNewScreenWidth, UINT InNewScreenHeight) override
 	{
-		CWindowManager::SetScreenWidth(InNewScreenWidth);
-		CWindowManager::SetScreenHeight(InNewScreenHeight);
+		CWindowManager::GetInst().SetScreenWidth(InNewScreenWidth);
+		CWindowManager::GetInst().SetScreenHeight(InNewScreenHeight);
 	}
 };
 
@@ -33,8 +33,8 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if (FAILED(hr)) assert(0);
 
-	CWindowManager::SetScreenWidth(Window.GetScreenWidth());
-	CWindowManager::SetScreenHeight(Window.GetScreenHeight());
+	CWindowManager::GetInst().SetScreenWidth(Window.GetScreenWidth());
+	CWindowManager::GetInst().SetScreenHeight(Window.GetScreenHeight());
 
 	Window.RegistMouseMoveEvent(std::make_unique<CSetMousePositionToMouseManager>());
 	Window.RegistWindowResizeEvent(std::make_unique<CSetScreenSize>());
@@ -63,8 +63,8 @@ bool CGame::Process()
 	World.Update();
 	World.CaptureSnapShot();
 
-	World.CollectCollisionObjects(PixelCollisionManager);
-	PixelCollisionManager.ProgressCollisionCheck(GraphicInfra->GetContext(), Window.GetScreenWidth(), Window.GetScreenHeight());
+	//World.CollectCollisionObjects(PixelCollisionManager);
+	//PixelCollisionManager.ProgressCollisionCheck(GraphicInfra->GetContext(), Window.GetScreenWidth(), Window.GetScreenHeight());
 	World.RenderWorld(SpriteRenderer);
 
 	MouseInteractionManager.ClearState();
