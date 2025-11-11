@@ -59,6 +59,7 @@ bool CGame::Process()
 
 	World.PerformInputAction(InputActionManager);
 	World.DetectMouseInteraction(MouseInteractionManager);
+	World.ProgressCollisionCheck(CollisionManager);
 
 	World.Update();
 	World.CaptureSnapShot();

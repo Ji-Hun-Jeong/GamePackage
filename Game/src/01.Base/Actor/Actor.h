@@ -8,6 +8,7 @@
 #include "Component/InteractionComponent.h"
 #include "Component/Animation/Animator.h"
 #include "Component/PixelCollider.h"
+#include "Component/Collider/CollisionManager.h"
 
 extern class CWorld* g_World;
 
@@ -89,6 +90,19 @@ public:
 			if (Component->GetType() == T::GetStaticType())
 				return Component;
 		}
+	}
+	// Move할까 그냥
+	template <typename T>
+	std::vector<T*> GetComponents()
+	{
+		std::vector<T*> FoundComponents;
+		FoundComponents.reserve(Components.size());
+		for (auto Component : Components)
+		{
+			if (Component->GetType() == T::GetStaticType())
+				FoundComponents.push_back(static_cast<T*>(Component));
+		}
+		return FoundComponents;
 	}
 	template <typename T>
 	T* AddComponent()
