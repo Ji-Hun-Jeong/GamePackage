@@ -93,15 +93,11 @@ public:
 		for (size_t i = 0; i < InRenderStateObject.PixelConstBuffers.size(); ++i)
 		{
 			auto& PixelConstBuffer = InRenderStateObject.PixelConstBuffers[i];
-			if (PixelConstBuffer == nullptr)
-				continue;
 			Context.PSSetConstantBuffer(uint32_t(i), PixelConstBuffer.get());
 		}
 		for (size_t i = 0; i < InRenderStateObject.PixelShaderResources.size(); ++i)
 		{
 			auto& PixelShaderResource = InRenderStateObject.PixelShaderResources[i];
-			if (PixelShaderResource == nullptr)
-				continue;
 			Context.PSSetShaderResource(uint32_t(i), PixelShaderResource);
 		}
 

@@ -72,13 +72,9 @@ void CWorld::ProgressCollisionCheck(CCollisionManager& InCollisionManager)
 {
 	for (auto WorldActor : WorldActors)
 	{
-		std::vector<CRectCollider*> RectColliders = WorldActor->GetComponents<CRectCollider>();
-		for (auto RectCollider : RectColliders)
-			InCollisionManager.RequestCollision(*RectCollider);
-
-		std::vector<CCircleCollider*> CircleColliders = WorldActor->GetComponents<CCircleCollider>();
-		for (auto CircleCollider : CircleColliders)
-			InCollisionManager.RequestCollision(*CircleCollider);
+		std::vector<CCollider*> Colliders = WorldActor->GetComponents<CCollider>();
+		for (auto Collider : Colliders)
+			InCollisionManager.RequestCollision(*Collider);
 	}
 	InCollisionManager.CheckCollisionProcess();
 }

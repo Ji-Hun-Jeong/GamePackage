@@ -41,6 +41,9 @@ public:
 	{
 		InComponent->OwnerActor = this;
 		Components.push_back(InComponent);
+		CCollider* Collider = dynamic_cast<CCollider*>(InComponent);
+		if (Collider)
+			Colliders.push_back(Collider);
 	}
 	void Detach(CActor* InChild)
 	{
@@ -65,6 +68,14 @@ public:
 				break;
 			}
 		}
+		for (auto Iter = Colliders.begin(); Iter != Colliders.end(); ++Iter)
+		{
+			if (*Iter == InComponent)
+			{
+				Colliders.erase(Iter);
+				break;
+			}
+		}
 	}
 
 public:
@@ -81,14 +92,18 @@ protected:
 	CRenderComponent* RenderComponent;
 	CInteractionComponent* InteractionComponent;
 	std::vector<CComponent*> Components;
+	std::vector<CCollider*> Colliders;
+
 public:
 	template <typename T>
 	T* GetComponent()
 	{
+		// 리플렉션 쓸수가 없으니까 그냥 dynamic_cast ㅜㅜ
 		for (auto& Component : Components)
 		{
-			if (Component->GetType() == T::GetStaticType())
-				return Component;
+			T* Result = dynamic_cast<T*>(Component);
+			if (Result)
+				return Result;
 		}
 	}
 	// Move할까 그냥
@@ -99,8 +114,9 @@ public:
 		FoundComponents.reserve(Components.size());
 		for (auto Component : Components)
 		{
-			if (Component->GetType() == T::GetStaticType())
-				FoundComponents.push_back(static_cast<T*>(Component));
+			T* Result = dynamic_cast<T*>(Component);
+			if (Result)
+				FoundComponents.push_back(Result);
 		}
 		return FoundComponents;
 	}
@@ -141,9 +157,33 @@ public:
 	virtual void EndPlay()
 	{
 	}
-
+	virtual void OnCollisionEnter(CCollider& InTargetCollider) {}
+	virtual void OnCollisionStay(CCollider& InTargetCollider) {}
+	virtual void OnCollisionExit(CCollider& InTargetCollider) {}
 	virtual void Update(float InDeltaTime)
 	{
+		for (auto Collider : Colliders)
+		{
+			while (Collider->IsEmptyCollisionInfo() == false)
+			{
+				CCollider::TCollisionInfo CollisionInfo = Collider->GetCollisionInfo();
+				switch (CollisionInfo.CollisionState)
+				{
+				case CCollider::ECollisionState::Enter:
+					OnCollisionEnter(*CollisionInfo.TargetCollider);
+					break;
+				case CCollider::ECollisionState::Stay:
+					OnCollisionStay(*CollisionInfo.TargetCollider);
+					break;
+				case CCollider::ECollisionState::Exit:
+					OnCollisionExit(*CollisionInfo.TargetCollider);
+					break;
+				default:
+					assert(0);
+					break;
+				}
+			}
+		}
 		if (InteractionComponent)
 			InteractionComponent->PerformEvent();
 	}
@@ -157,14 +197,17 @@ public:
 	}
 	virtual void CaptureSnapShot()
 	{
+		const Vector3& FinalPosition = Transform->GetFinalPosition();
+
 		if (InteractionComponent)
-		{
-			const Vector3& FinalPosition = Transform->GetFinalPosition();
 			InteractionComponent->SetRectPosition(FinalPosition.x, FinalPosition.y);
-		}
+
+		for (auto Collider : Colliders)
+			Collider->SetCenterPosition(Vector2(FinalPosition.x, FinalPosition.y));
+		
 	}
 
-	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) 
+	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector)
 	{
 	}
 

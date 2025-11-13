@@ -72,3 +72,9 @@ T* NewObject(CObject* InOwner = nullptr, CClass* InClass = nullptr)
 }
 
 void DestroyObject(CObject* InObject);
+
+template <typename T>
+bool IsSame(CObject& InCompareObject)
+{
+	return InCompareObject.GetType() == T::GetStaticType();
+}

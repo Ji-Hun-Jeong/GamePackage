@@ -31,25 +31,35 @@ public:
 
 public:
 	void SetCenterPosition(const Vector2& InCenterPosition) { CenterPosition = InCenterPosition; }
-	const Vector2& GetCenterPosition() const { return CenterPosition; }
+	Vector2 GetFinalPosition() const { return CenterPosition + Offset; }
 	EColliderType GetColliderType() const { return ColliderType; }
 
-	void ReadyToCollision()
+	void ReadyToCollisionCheck()
 	{
-		CollisionInfos.clear();
+		while (CollisionInfos.empty() == false)
+			CollisionInfos.pop();
 	}
 
-	void DeliverCollisionInfo(CCollider& InCollisionTarget, ECollisionState InCollisionState)
+	void ReceiveCollisionInfo(CCollider& InCollisionTarget, ECollisionState InCollisionState)
 	{
-		CollisionInfos.push_back({ &InCollisionTarget, InCollisionState });
+		CollisionInfos.push({ &InCollisionTarget, InCollisionState });
+	}
+
+	bool IsEmptyCollisionInfo() const { return CollisionInfos.empty(); }
+	TCollisionInfo GetCollisionInfo()
+	{
+		TCollisionInfo CollisionInfo = CollisionInfos.front();
+		CollisionInfos.pop();
+		return CollisionInfo;
 	}
 
 private:
 	EColliderType ColliderType;
 
-	std::vector<TCollisionInfo> CollisionInfos;
+	std::queue<TCollisionInfo> CollisionInfos;
 
 	Vector2 CenterPosition;
+	Vector2 Offset;
 
 };
 

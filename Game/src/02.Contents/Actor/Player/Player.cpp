@@ -25,10 +25,7 @@ CPlayer::CPlayer()
 	Arm->GetTransform()->SetPosition(Vector3(2.0f, 0.0f, 0.0f));*/
 
 	Transform->SetSpeed(2.0f);
-	Transform->SetScale(Vector3(50.0f, 50.0f, 0.0f));
-
-	
-
+	Transform->SetScale(Vector3(50.0f, 50.0f, 1.0f));
 }
 CPlayer::~CPlayer()
 {
@@ -55,9 +52,9 @@ void CPlayer::BeginPlay()
 	Body->GetAnimator()->SetCurrentAnimation("Basic");
 }
 
-void CPlayer::FinalUpdate()
+void CPlayer::CaptureSnapShot()
 {
-	CActor::FinalUpdate();
+	CActor::CaptureSnapShot();
 
 	const Vector3& Position = Transform->GetFinalPosition();
 	const Vector3& Scale = Transform->GetScale();

@@ -4,9 +4,11 @@
 
 bool CCollisionManager::IsCollision(CRectCollider& InRectCollider1, CRectCollider& InRectCollider2)
 {
+    const Vector2 Rect1Position = InRectCollider1.GetFinalPosition();
+    const Vector2 Rect2Position = InRectCollider2.GetFinalPosition();
 	// 1. 두 중심점 사이의 X, Y축 거리(절댓값)를 계산
-    float dx = std::abs(InRectCollider1.GetCenterPosition().x - InRectCollider2.GetCenterPosition().x);
-    float dy = std::abs(InRectCollider1.GetCenterPosition().y - InRectCollider2.GetCenterPosition().y);
+    float dx = std::abs(Rect1Position.x - Rect2Position.x);
+    float dy = std::abs(Rect1Position.y - Rect2Position.y);
 
     // 2. 두 사각형의 절반 너비(x)와 절반 높이(y)의 합을 계산
     float sumHalfWidths = InRectCollider1.GetRectScale().x + InRectCollider2.GetRectScale().x;
@@ -18,9 +20,9 @@ bool CCollisionManager::IsCollision(CRectCollider& InRectCollider1, CRectCollide
 bool CCollisionManager::IsCollision(CRectCollider& InRectCollider, CCircleCollider& InCircleCollider)
 {
     // 1. 필요한 변수들 가져오기
-    Vector2 rectPos = InRectCollider.GetCenterPosition();
+    Vector2 rectPos = InRectCollider.GetFinalPosition();
     Vector2 rectScale = InRectCollider.GetRectScale(); // {halfWidth, halfHeight}
-    Vector2 circlePos = InCircleCollider.GetCenterPosition();
+    Vector2 circlePos = InCircleCollider.GetFinalPosition();
     float circleRadius = InCircleCollider.GetRadius();
 
     // 2. 사각형 중심에서 원 중심까지의 벡터

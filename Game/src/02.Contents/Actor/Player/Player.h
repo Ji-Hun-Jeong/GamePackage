@@ -1,6 +1,7 @@
 #pragma once
 #include "01.Base/Actor/Actor.h"
 #include "01.Base/Actor/Character.h"
+#include "02.Contents/Actor/Base/BackGround.h"
 
 class CPlayer : public CActor
 {
@@ -12,8 +13,17 @@ public:
 
 public:
 	void BeginPlay() override;
-	void FinalUpdate() override;
+	void CaptureSnapShot() override;
 	void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) override;
+	void OnCollisionEnter(CCollider& InTargetCollider) override
+	{
+		if (IsSame<CBackGround>(*InTargetCollider.GetOwner()) == false)
+			std::cout << "Hi\n";
+	}
+	void OnCollisionExit(CCollider& InTargetCollider) override
+	{
+		std::cout << "Bye\n";
+	}
 
 private:
 	CCharacter* Head;
