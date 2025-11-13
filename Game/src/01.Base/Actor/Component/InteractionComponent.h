@@ -17,9 +17,12 @@ public:
 public:
 	CMouseInteracter* GetMouseInteracter() { return &MouseInteracter; }
 
-	void SetRectTransform(float InPositionX, float InPositionY, float InScaleX, float InScaleY)
+	void SetRectPosition(float InPositionX, float InPositionY)
 	{
 		MouseInteracter.SetPosition(Vector2(InPositionX, InPositionY));
+	}
+	void SetRectScale(float InScaleX, float InScaleY)
+	{
 		MouseInteracter.SetSize(Vector2(InScaleX, InScaleY));
 	}
 

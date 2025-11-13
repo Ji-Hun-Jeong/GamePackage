@@ -45,7 +45,7 @@
     <ClCompile Include="src\01.Base\Actor\Component\Component.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Actor\Component\RenderComponent.cpp">
+    <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\RenderComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\01.Base\World\WorldEvent.cpp">
@@ -183,6 +183,12 @@
     <ClCompile Include="src\01.Base\Actor\Component\Collider\Collider.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -215,7 +221,7 @@
     <ClInclude Include="src\01.Base\Actor\Component\Component.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Actor\Component\RenderComponent.h">
+    <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\RenderComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\World\WorldEvent.h">
@@ -351,6 +357,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Actor\Component\Collider\Collider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

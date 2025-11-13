@@ -26,12 +26,12 @@ public:
 private:
 	void Off()
 	{
-		RenderComponent->SetDiffuseImage(OffImagePath);
+		SpriteRenderComponent->SetDiffuseImage(OffImagePath);
 		bOn = false;
 	}
 	void On()
 	{
-		RenderComponent->SetDiffuseImage(OnImagePath);
+		SpriteRenderComponent->SetDiffuseImage(OnImagePath);
 		bOn = true;
 	}
 	

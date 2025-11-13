@@ -7,6 +7,7 @@ CCamera::CCamera()
 	, RightMoveActionValue(nullptr)
 	, UpMoveActionValue(nullptr)
 	, DownMoveActionValue(nullptr)
+	, CameraComponent(nullptr)
 {
 	LeftMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f)); });
 	LeftMoveActionValue->AddKeyCondition({ EKeyType::Left, EButtonState::Hold });
@@ -20,9 +21,8 @@ CCamera::CCamera()
 	DownMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(0.0f, -1.0f, 0.0f)); });
 	DownMoveActionValue->AddKeyCondition({ EKeyType::Down, EButtonState::Hold });
 
-	RenderComponent = AddComponent<CRenderComponent>();
-
-	RenderComponent->SetConstBuffer(EShaderType::VertexShader, 1, sizeof(CameraConst));
+	CameraComponent = AddComponent<CCameraComponent>();
+	RenderComponent = CameraComponent;
 
 	Transform->SetSpeed(2.0f);
 }
@@ -35,11 +35,11 @@ void CCamera::CaptureSnapShot()
 	{
 		uint32_t ScreenWidth = CWindowManager::GetInst().GetScreenWidth();
 		uint32_t ScreenHeight = CWindowManager::GetInst().GetScreenHeight();
-		CameraConst.ViewProj = (Transform->GetNDCModelMatrix(ScreenWidth, ScreenHeight).Invert()).Transpose();
-		CameraConst.ScreenWidth = ScreenWidth;
-		CameraConst.ScreenHeight = ScreenHeight;
+		const Vector3& Position = Transform->GetFinalPosition();
+		const Vector3& Rotation = Transform->GetRotation();
+		const Vector3& Scale = Transform->GetScale();
 
-		RenderComponent->UpdateConstBuffer(EShaderType::VertexShader, 1, &CameraConst, sizeof(CameraConst));
+		CameraComponent->UpdateViewToNDC(Position, Rotation, Scale, ScreenWidth, ScreenHeight);
 		Transform->ClearVariation();
 	}
 }

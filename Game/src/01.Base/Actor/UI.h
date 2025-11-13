@@ -16,22 +16,22 @@ public:
 	void InitalizeBasicButtonUI(const std::wstring& InBasicImagePath, const std::wstring& InMouseOnImagePath
 		, const std::wstring& InMouseClickImagePath, std::function<void()> InButtonEvent)
 	{
-		RenderComponent->SetDiffuseImage(InBasicImagePath);
+		SpriteRenderComponent->SetDiffuseImage(InBasicImagePath);
 		InteractionComponent->SetMouseExitEvent([this, InBasicImagePath]()->void
 			{
-				RenderComponent->SetDiffuseImage(InBasicImagePath);
+				SpriteRenderComponent->SetDiffuseImage(InBasicImagePath);
 			});
 		InteractionComponent->SetMouseEnterEvent([this, InMouseOnImagePath]()->void
 			{
-				RenderComponent->SetDiffuseImage(InMouseOnImagePath);
+				SpriteRenderComponent->SetDiffuseImage(InMouseOnImagePath);
 			});
 		InteractionComponent->SetMouseFocusEvent([this, InBasicImagePath, InMouseClickImagePath, InButtonEvent]()->void
 			{
 				if (LClicked() && InMouseClickImagePath.empty() == false)
-					RenderComponent->SetDiffuseImage(InMouseClickImagePath);
+					SpriteRenderComponent->SetDiffuseImage(InMouseClickImagePath);
 				else if (LReleased())
 				{
-					RenderComponent->SetDiffuseImage(InBasicImagePath);
+					SpriteRenderComponent->SetDiffuseImage(InBasicImagePath);
 					if (InButtonEvent)
 						InButtonEvent();
 				}

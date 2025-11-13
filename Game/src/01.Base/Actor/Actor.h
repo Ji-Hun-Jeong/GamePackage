@@ -4,7 +4,7 @@
 #include "03.Utils/AssetLoader.h"
 #include "06.Interaction/MouseManager.h"
 #include "Component/Transform.h"
-#include "Component/RenderComponent.h"
+#include "Component/RenderComponents/RenderComponent.h"
 #include "Component/InteractionComponent.h"
 #include "Component/Animation/Animator.h"
 #include "Component/PixelCollider.h"
@@ -157,6 +157,11 @@ public:
 	}
 	virtual void CaptureSnapShot()
 	{
+		if (InteractionComponent)
+		{
+			const Vector3& FinalPosition = Transform->GetFinalPosition();
+			InteractionComponent->SetRectPosition(FinalPosition.x, FinalPosition.y);
+		}
 	}
 
 	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) 

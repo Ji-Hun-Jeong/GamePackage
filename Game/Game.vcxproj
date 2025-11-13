@@ -186,6 +186,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.cpp" />
+    <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Collider\Collider.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Collider\CollisionManager.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\PixelCollider.cpp" />
@@ -219,7 +221,7 @@
     <ClCompile Include="src\04.Renderer\Image.cpp" />
     <ClCompile Include="src\03.Utils\GeometryGenerator.cpp" />
     <ClCompile Include="src\04.Renderer\RenderResourceLoader.cpp" />
-    <ClCompile Include="src\01.Base\Actor\Component\RenderComponent.cpp" />
+    <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\RenderComponent.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Component.cpp" />
     <ClCompile Include="src\01.Base\World\WorldEvent.cpp" />
     <ClCompile Include="src\04.Renderer\PSOManager.cpp" />
@@ -249,6 +251,8 @@
     <ClCompile Include="src\00.App\WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.h" />
+    <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Collider\Collider.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Collider\CollisionManager.h" />
     <ClInclude Include="src\01.Base\Actor\Component\PixelCollider.h" />
@@ -281,7 +285,7 @@
     <ClInclude Include="src\04.Renderer\Image.h" />
     <ClInclude Include="src\03.Utils\GeometryGenerator.h" />
     <ClInclude Include="src\04.Renderer\RenderResourceLoader.h" />
-    <ClInclude Include="src\01.Base\Actor\Component\RenderComponent.h" />
+    <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\RenderComponent.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Component.h" />
     <ClInclude Include="src\01.Base\World\WorldEvent.h" />
     <ClInclude Include="src\04.Renderer\PSOManager.h" />

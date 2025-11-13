@@ -52,12 +52,7 @@ void CWorld::DetectMouseInteraction(CMouseInteractionManager& InMouseInteraction
 	{
 		CInteractionComponent* InteractionComponent = WorldActor->GetInteractionComponent();
 		if (InteractionComponent)
-		{
-			InteractionComponent->SetRectTransform(WorldActor->GetTransform()->GetFinalPosition().x, WorldActor->GetTransform()->GetFinalPosition().y
-				, WorldActor->GetTransform()->GetScale().x, WorldActor->GetTransform()->GetScale().y);
-
 			MouseInteracters.push_back(InteractionComponent->GetMouseInteracter());
-		}
 	}
 
 	InMouseInteractionManager.FindFocusInteracter(std::move(MouseInteracters), MousePosition);

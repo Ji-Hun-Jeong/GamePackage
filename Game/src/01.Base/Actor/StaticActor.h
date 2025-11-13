@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "Component/RenderComponents/SpriteRenderComponent.h"
 
 class CStaticActor : public CActor
 {
@@ -7,25 +8,20 @@ class CStaticActor : public CActor
 public:
 	CStaticActor()
 		: CActor()
+		, SpriteRenderComponent(nullptr)
 	{
-		RenderComponent = AddComponent<CRenderComponent>();
+		SpriteRenderComponent = AddComponent<CSpriteRenderComponent>();
+		RenderComponent = SpriteRenderComponent;
+
 		const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("ImageMesh");
-		RenderComponent->SetMesh(MeshData);
-		RenderComponent->SetPSO(EPSOType::Basic);
-		RenderComponent->SetConstBuffer(EShaderType::VertexShader, 0, sizeof(Matrix));
+		SpriteRenderComponent->SetMesh(MeshData);
+		SpriteRenderComponent->SetPSO(EPSOType::Basic);
 	}
 
 public:
 	void FinalUpdate() override
 	{
 		CActor::FinalUpdate();
-
-		if (RenderComponent->IsExistImage())
-		{
-			auto CurrentImageDesc = RenderComponent->GetCurrentImageDesc();
-			Vector3 Scale{ float(CurrentImageDesc.Width), float(CurrentImageDesc.Height), Transform->GetScale().z };
-			Transform->SetScale(Scale);
-		}
 	}
 	void CaptureSnapShot() override
 	{
@@ -34,12 +30,24 @@ public:
 		{
 			uint32_t ScreenWidth = CWindowManager::GetInst().GetScreenWidth();
 			uint32_t ScreenHeight = CWindowManager::GetInst().GetScreenHeight();
-			const Matrix& NDCModelMatrix = Transform->GetNDCModelMatrix(ScreenWidth, ScreenHeight).Transpose();
+			const Vector3& Position = Transform->GetFinalPosition();
+			const Vector3& Rotation = Transform->GetRotation();
+			const Vector3& Scale = Transform->GetScale();
 
-			RenderComponent->UpdateConstBuffer(EShaderType::VertexShader, 0, &NDCModelMatrix, sizeof(Matrix));
+			SpriteRenderComponent->UpdateModelToNDC(Position, Rotation, Scale, ScreenWidth, ScreenHeight);
 
 			Transform->ClearVariation();
 		}
+		if (InteractionComponent && SpriteRenderComponent->IsImageType())
+		{
+			const Vector2& ImageScale = SpriteRenderComponent->GetImageScale();
+			InteractionComponent->SetRectScale(ImageScale.x, ImageScale.y);
+		}
 	}
+	CSpriteRenderComponent* GetSpriteRenderComponent() const { return SpriteRenderComponent; }
+
+protected:
+	CSpriteRenderComponent* SpriteRenderComponent;
+
 };
 

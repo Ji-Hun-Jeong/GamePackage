@@ -7,8 +7,8 @@ void CMousePointer::SetMouseImageFromDialog(CWindowIOManager& InWindowIOManager)
 	if (InWindowIOManager.TryOpenFileDialog())
 	{
 		const std::wstring& ImagePath = InWindowIOManager.GetOpenFilePath();
-		RenderComponent->SetDiffuseImage(ImagePath);
+		SpriteRenderComponent->SetDiffuseImage(ImagePath);
 	}
 	else
-		RenderComponent->SetDiffuseImage(L"");
+		SpriteRenderComponent->SetDiffuseImage(L"");
 }

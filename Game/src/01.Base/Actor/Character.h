@@ -29,7 +29,7 @@ public:
 			const TFrame& ChangedFrame = CurrentAnimation->GetCurrentFrame();
 
 			if (ChangedFrame.ImagePath.empty() == false)
-				RenderComponent->SetDiffuseImage(ChangedFrame.ImagePath);
+				SpriteRenderComponent->SetDiffuseImage(ChangedFrame.ImagePath);
 		}
 
 		CurrentAnimation->UpdateAnimationState(InDeltaTime);

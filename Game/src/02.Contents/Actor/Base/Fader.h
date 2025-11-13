@@ -9,10 +9,9 @@ public:
 		: HoldingTime(1.0f)
 		, ProgressTime(0.0f)
 		, FaderState(EFaderState::None)
+		, Alpha(1.0f)
 	{
-		RenderComponent->SetPSO(EPSOType::Color);
-		RenderComponent->SetConstBuffer(EShaderType::PixelShader, 0, sizeof(TColorData));
-		RenderComponent->UpdateConstBuffer(EShaderType::PixelShader, 0, &ColorData, sizeof(TColorData));
+		SpriteRenderComponent->SetPSO(EPSOType::Color);
 	}
 	~CFader() = default;
 
@@ -64,7 +63,7 @@ public:
 	void CaptureSnapShot() override
 	{
 		CStaticActor::CaptureSnapShot();
-		RenderComponent->UpdateConstBuffer(EShaderType::PixelShader, 0, &ColorData, sizeof(TColorData));
+		SpriteRenderComponent->UpdateColor(Vector3(0.0f,0.0f,0.0f), Alpha);
 	}
 
 private:
@@ -87,22 +86,22 @@ private:
 	void OnFadeIn(float InDeltaTime)
 	{
 		// 밝아지는(투명해져야함)
-		ColorData.Transparency = 1.0f - ProgressTime / HoldingTime;
+		Alpha = 1.0f - ProgressTime / HoldingTime;
 		ProgressTime += InDeltaTime;
 		if (HoldingTime <= ProgressTime)
 		{
-			ColorData.Transparency = 0.0f;
+			Alpha = 0.0f;
 			SetState(EFaderState::None);
 		}
 	}
 	void OnFadeOut(float InDeltaTime)
 	{
 		// 어두워지는
-		ColorData.Transparency = ProgressTime / HoldingTime;
+		Alpha = ProgressTime / HoldingTime;
 		ProgressTime += InDeltaTime;
 		if (HoldingTime <= ProgressTime)
 		{
-			ColorData.Transparency = 1.0f;
+			Alpha = 1.0f;
 			SetState(EFaderState::None);
 		}
 	}
@@ -110,14 +109,10 @@ private:
 private:
 	float HoldingTime;
 	float ProgressTime;
-	struct TColorData
-	{
-		Vector3 Color{ 0.0f,0.0f,0.0f };
-		float Transparency = 0.0f;
-	} ColorData;
-
+	
 	EFaderState FaderState;
 	std::function<void()> StateEndEvent;
 
+	float Alpha;
 };
 

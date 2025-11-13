@@ -1,14 +1,6 @@
 #pragma once
 #include "Actor.h"
-
-struct TCameraConst
-{
-	Matrix ViewProj;
-	uint32_t ScreenWidth = 0;
-	uint32_t ScreenHeight = 0;
-	uint32_t Dummy[2] = { 0 };
-};
-static_assert(sizeof(TCameraConst) % 16 == 0);
+#include "Component/RenderComponents/CameraComponent.h"
 
 class CCamera : public CActor
 {
@@ -31,11 +23,11 @@ public:
 	void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) override;
 
 private:
-	TCameraConst CameraConst;
-
 	std::unique_ptr<class CInputActionValue> LeftMoveActionValue;
 	std::unique_ptr<class CInputActionValue> RightMoveActionValue;
 	std::unique_ptr<class CInputActionValue> UpMoveActionValue;
 	std::unique_ptr<class CInputActionValue> DownMoveActionValue;
+
+	CCameraComponent* CameraComponent;
 };
 

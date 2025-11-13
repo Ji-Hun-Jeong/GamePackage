@@ -6,7 +6,7 @@ CScene::CScene()
 {
 	MainCamera = GetWorld()->SpawnActor<CCamera>(this);
 	Fader = GetWorld()->SpawnActor<CFader>(this);
-	Fader->GetRenderComponent()->SetLayer(1);
+	Fader->GetSpriteRenderComponent()->SetLayer(1);
 }
 
 void CScene::LoadNewSceneWithFadeOut(CClass* InSceneClass, float InHoldingTime)

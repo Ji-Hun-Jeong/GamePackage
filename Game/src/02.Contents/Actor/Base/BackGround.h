@@ -15,7 +15,7 @@ public:
 public:
 	void InitalizeBackGround(const std::wstring& InBackGroundImagePath)
 	{
-		RenderComponent->SetDiffuseImage(InBackGroundImagePath);
+		SpriteRenderComponent->SetDiffuseImage(InBackGroundImagePath);
 	}
 
 private:
