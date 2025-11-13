@@ -24,7 +24,7 @@ public:
 	}
 	void CheckCollisionProcess()
 	{
-		for (size_t i = 0; i < Colliders.size() - 1; ++i)
+		for (size_t i = 0; i < Colliders.size(); ++i)
 		{
 			CCollider& Collider1 = *Colliders[i];
 			for (size_t j = i + 1; j < Colliders.size(); ++j)

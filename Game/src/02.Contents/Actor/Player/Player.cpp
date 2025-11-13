@@ -12,6 +12,7 @@ CPlayer::CPlayer()
 	, RightMoveActionValue(nullptr)
 	, UpMoveActionValue(nullptr)
 	, DownMoveActionValue(nullptr)
+	, Collider(AddComponent<CRectCollider>())
 {
 	InitalizeInputActionValue();
 
@@ -25,6 +26,8 @@ CPlayer::CPlayer()
 
 	Transform->SetSpeed(2.0f);
 	Transform->SetScale(Vector3(50.0f, 50.0f, 0.0f));
+
+	
 
 }
 CPlayer::~CPlayer()
@@ -55,6 +58,11 @@ void CPlayer::BeginPlay()
 void CPlayer::FinalUpdate()
 {
 	CActor::FinalUpdate();
+
+	const Vector3& Position = Transform->GetFinalPosition();
+	const Vector3& Scale = Transform->GetScale();
+	Collider->SetCenterPosition(Vector2(Position.x, Position.y));
+	Collider->SetRectScale(Vector2(Scale.x, Scale.y));
 }
 
 void CPlayer::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)

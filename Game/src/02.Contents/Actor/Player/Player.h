@@ -29,5 +29,6 @@ private:
 	std::unique_ptr<class CInputActionValue> UpMoveActionValue;
 	std::unique_ptr<class CInputActionValue> DownMoveActionValue;
 
+	CRectCollider* Collider;
 };
 
