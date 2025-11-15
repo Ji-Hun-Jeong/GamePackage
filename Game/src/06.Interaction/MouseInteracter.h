@@ -27,8 +27,8 @@ public:
 			}
 		}
 	}
-	static int32_t GetCurrentMouseX() { return MouseX; }
-	static int32_t GetCurrentMouseY() { return MouseY; }
+	static int32_t GetCurrentMouseX() { return MouseWorldX; }
+	static int32_t GetCurrentMouseY() { return MouseWorldY; }
 
 	bool IsMouseEnter() const { return bMouseEnter; }
 	bool IsMouseExit() const { return bMouseExit; }
@@ -55,8 +55,8 @@ private:
 
 	std::vector<CMouseInteracter*> ChildInteracters;
 
-	inline static int32_t MouseX;
-	inline static int32_t MouseY;
+	inline static int32_t MouseWorldX;
+	inline static int32_t MouseWorldY;
 
 };
 

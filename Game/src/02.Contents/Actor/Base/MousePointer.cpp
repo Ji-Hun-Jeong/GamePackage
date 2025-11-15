@@ -1,12 +1,11 @@
 #include "pch.h"
 #include "MousePointer.h"
-#include "WindowIOManager.h"
 
-void CMousePointer::SetMouseImageFromDialog(CWindowIOManager& InWindowIOManager)
+void CMousePointer::SetMouseImageFromDialog(CWindowManager& InWindowManager)
 {
-	if (InWindowIOManager.TryOpenFileDialog())
+	if (InWindowManager.TryOpenFileDialog())
 	{
-		const std::wstring& ImagePath = InWindowIOManager.GetOpenFilePath();
+		const std::wstring& ImagePath = InWindowManager.GetOpenFilePath();
 		SpriteRenderComponent->SetDiffuseImage(ImagePath);
 	}
 	else

@@ -21,7 +21,7 @@ public:
 			Transform->SetPosition(Position);
 		}
 	}
-	void SetMouseImageFromDialog(class CWindowIOManager& InWindowIOManager);
+	void SetMouseImageFromDialog(class CWindowManager& InWindowManager);
 
 private:
 

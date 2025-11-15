@@ -1,18 +1,18 @@
 #pragma once
 #include "StaticActor.h"
 
-class CCharacter : public CStaticActor
+class CDynamicActor : public CStaticActor
 {
-	GENERATE_OBJECT(CCharacter)
-		DONTCOPY(CCharacter)
+	GENERATE_OBJECT(CDynamicActor)
+		DONTCOPY(CDynamicActor)
 public:
-	CCharacter()
+	CDynamicActor()
 		: CStaticActor()
 		, Animator(nullptr)
 	{
 		Animator = AddComponent<CAnimator>();
 	}
-	virtual ~CCharacter() {}
+	virtual ~CDynamicActor() {}
 public:
 	void Update(float InDeltaTime) override
 	{

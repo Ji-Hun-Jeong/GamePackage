@@ -5,7 +5,6 @@
 #include "01.Base/Actor/UI.h"
 #include "02.Contents/Actor/Player/Player.h"
 #include "02.Contents/Actor/Base/BackGround.h"
-#include "02.Contents/Actor/Base/WindowIOManager.h"
 #include "02.Contents/Actor/Base/MousePointer.h"
 #include "02.Contents/Actor/UI/UITool/UIToolPanelManager.h"
 
@@ -15,16 +14,15 @@ void CEditUIScene::BeginPlay()
 	CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/UI/Title/Background.png");
 
-	CWindowIOManager* WindowIOManager = GetWorld()->SpawnActor<CWindowIOManager>(this);
 	CMousePointer* MousePointer = GetWorld()->SpawnActor<CMousePointer>(GetMainCamera());
 
 	CUI* LoadUI = GetWorld()->SpawnActor<CUI>(GetMainCamera());
 	LoadUI->GetTransform()->SetPosition(Vector3(500.0f, 300.0f, 0.0f));
 	LoadUI->InitalizeBasicButtonUI(L"resources/image/UI/Title/LoadImageUI_Normal.png", L"resources/image/UI/Title/LoadImageUI_Hover.png"
 		, L"resources/image/UI/Title/LoadImageUI_Clicked.png"
-		, [MousePointer, WindowIOManager]()->void
+		, [MousePointer]()->void
 		{
-			MousePointer->SetMouseImageFromDialog(*WindowIOManager);
+			MousePointer->SetMouseImageFromDialog(CWindowManager::GetInst());
 		});
 
 	//CUIToolPanel* UIToolPanel = GetWorld()->SpawnActor<CUIToolPanel>(this);

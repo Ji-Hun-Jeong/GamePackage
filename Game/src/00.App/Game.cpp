@@ -25,6 +25,7 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	: Core::CApplication(InScreenWidth, InScreenHeight)
 	, GraphicInfra(std::make_unique<Graphics::DX::CDXInfra>(Window.GetWindowHandle(), Window.GetScreenWidth(), Window.GetScreenHeight()))
 	, SpriteRenderer(*GraphicInfra.get(), Window.GetScreenWidth(), Window.GetScreenHeight())
+	, ImGuiManager(CImGuiManager::GetInst())
 	, PixelCollisionManager(GraphicInfra->GetDevice(), SpriteRenderer.GetRenderResourceLoader(), 1000)
 	, InputActionManager(InputManager)
 	, MouseInteractionManager()
@@ -51,6 +52,8 @@ bool CGame::Process()
 {
 	CCoreSystem::GetInst().ArrangeObjects();
 
+	ImGuiManager.StartFrame();
+
 	InputManager.Update();
 	CMouseManager::GetInst().SetStateByInputManager(InputManager);
 
@@ -58,7 +61,10 @@ bool CGame::Process()
 	World.Ready();
 
 	World.PerformInputAction(InputActionManager);
-	World.DetectMouseInteraction(MouseInteractionManager);
+
+	World.CollectMouseInteraction(MouseInteractionManager);
+	MouseInteractionManager.FindFocusInteracter();
+
 	World.ProgressCollisionCheck(CollisionManager);
 
 	World.Update();
@@ -68,7 +74,30 @@ bool CGame::Process()
 	//PixelCollisionManager.ProgressCollisionCheck(GraphicInfra->GetContext(), Window.GetScreenWidth(), Window.GetScreenHeight());
 	World.RenderWorld(SpriteRenderer);
 
-	MouseInteractionManager.ClearState();
+
+	// --- 2. UI 코드 작성 ---
+	// (이 부분이 실제 ImGui 사용법입니다)
+	{
+		// "My Tool"이라는 이름의 창을 엽니다
+		ImGui::Begin("My Tool");
+
+		ImGui::Text("Hello, world!"); // 텍스트 출력
+
+		static float my_float = 0.5f;
+		ImGui::SliderFloat("Value", &my_float, 0.0f, 1.0f); // 슬라이더
+
+		// "Save" 버튼. 클릭되면 if문 안쪽이 실행됩니다.
+		if (ImGui::Button("Save"))
+		{
+			// (저장 로직 호출)
+			// MyTool->SaveFile(); 
+		}
+	}
+	ImGuiManager.DeliverMouseInteraction(MouseInteractionManager, Window.GetScreenWidth(), Window.GetScreenHeight());
+	ImGuiManager.EndFrame();
+	ImGuiManager.Render();
+
+	SpriteRenderer.Present();
 	return true;
 }
 

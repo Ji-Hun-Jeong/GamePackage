@@ -77,8 +77,6 @@ public:
 		for (auto& RenderStateObject : RenderStateObjects)
 			DDraw(*RenderStateObject);
 
-		SwapChain.Present();
-
 		RenderStateObjects.clear();
 	}
 	void DDraw(const CRenderStateObject& InRenderStateObject)
@@ -133,6 +131,10 @@ public:
 			Context.IASetVertexBuffer(nullptr, &Stride, &Offset);
 			Context.IASetIndexBuffer(nullptr, Graphics::EGIFormat(0), 0);
 		}
+	}
+	void Present()
+	{
+		SwapChain.Present();
 	}
 
 	const CPSOManager& GetPSOManager() const { return PSOManager; }

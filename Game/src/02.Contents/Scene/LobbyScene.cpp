@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "LobbyScene.h"
 #include "GameCore.h"
-#include "01.Base/Actor/Character.h"
+
 #include "01.Base/Actor/UI.h"
 #include "02.Contents/Actor/Base/BackGround.h"
 #include "02.Contents/Actor/Base/MousePointer.h"

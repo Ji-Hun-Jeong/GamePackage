@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "DXInfra.h"
+#include <iostream>
 
 namespace Graphics::DX
 {
@@ -49,5 +50,29 @@ namespace Graphics::DX
 		Device = std::unique_ptr<CDXDevice>(new CDXDevice(RawDevice, DXResourceStorage));
 		Context = std::unique_ptr<CDXContext>(new CDXContext(RawContext, DXResourceStorage));
 		SwapChain = std::unique_ptr<CDXSwapChain>(new CDXSwapChain(RawSwapChain, NumOfMultiSamplingLevel, DXResourceStorage));
+
+
+
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGui::StyleColorsDark();
+
+		if (!ImGui_ImplWin32_Init(InWindowHandle))
+		{
+			std::cout << "IMGUI Win32 Init Failed" << std::endl;
+			assert(0);
+		}
+
+		if (!ImGui_ImplDX11_Init(RawDevice.Get(), RawContext.Get()))
+		{
+			std::cout << "IMGUI Dx11 Init Failed" << std::endl;
+			assert(0);
+		}
+	}
+	CDXInfra::~CDXInfra()
+	{
+		ImGui_ImplDX11_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
 	}
 }

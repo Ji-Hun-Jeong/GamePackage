@@ -17,7 +17,4 @@ void CTestScene::BeginPlay()
 
 	CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");
-	BackGround->GetTransform()->SetScale(Vector3(0.5f, 0.5f, 1.0f));
-	CRectCollider* RectCollider = BackGround->AddComponent<CRectCollider>();
-	RectCollider->SetRectScale(Vector2(690.0f, 480.0f));
 }

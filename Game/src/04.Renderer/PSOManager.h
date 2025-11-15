@@ -49,6 +49,7 @@ enum class EPSOType
 	Mark,
 	Transparent,
 	Color,
+	Rect,
 	End,
 };
 
@@ -66,14 +67,17 @@ public:
 
 private:
 	std::unique_ptr<Graphics::CInputLayout> BasicInputLayout;
+	std::unique_ptr<Graphics::CInputLayout> RectInputLayout;
 
 	std::unique_ptr<Graphics::CVertexShader> BasicVertexShader;
+	std::unique_ptr<Graphics::CVertexShader> RectVertexShader;
 
 	std::unique_ptr<Graphics::CRasterizerState> BasicRasterizerState;
 
 	std::unique_ptr<Graphics::CPixelShader> BasicPixelShader;
 	std::unique_ptr<Graphics::CPixelShader> EdgePixelShader;
 	std::unique_ptr<Graphics::CPixelShader> ColorPixelShader;
+	std::unique_ptr<Graphics::CPixelShader> RectPixelShader;
 
 	std::unique_ptr<Graphics::CSamplerState> LinearSamplerState;
 

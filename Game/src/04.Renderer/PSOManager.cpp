@@ -14,6 +14,15 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 	BasicVertexShader = std::move(VSIA.first);
 	BasicInputLayout = std::move(VSIA.second);
 
+	std::vector<Graphics::TInputElementDesc> RectInputElementDescs =
+	{
+		{Graphics::ESementicName::Position, Graphics::EFormat::Vector3, 0, Graphics::EInputClass::VertexData},
+		{Graphics::ESementicName::Color, Graphics::EFormat::Vector3, 12, Graphics::EInputClass::VertexData}
+	};
+	VSIA = InDevice.CreateVertexShaderAndInputLayout(L"resources/shader/RectVertexShader.hlsl", RectInputElementDescs);
+	RectVertexShader = std::move(VSIA.first);
+	RectInputLayout = std::move(VSIA.second);
+
 	Graphics::TRasterizerDesc RasterizerDesc;
 	RasterizerDesc.FillMode = Graphics::EFillMode::FillSolid;
 	RasterizerDesc.CullMode = Graphics::ECullMode::CullBack;
@@ -25,6 +34,7 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 	BasicPixelShader = InDevice.CreatePixelShader(L"resources/shader/BasicPixelShader.hlsl");
 	EdgePixelShader = InDevice.CreatePixelShader(L"resources/shader/EdgePixelShader.hlsl");
 	ColorPixelShader = InDevice.CreatePixelShader(L"resources/shader/ColorPixelShader.hlsl");
+	RectPixelShader = InDevice.CreatePixelShader(L"resources/shader/RectPixelShader.hlsl");
 
 	Graphics::TSamplerDesc SamplerDesc;
 	SamplerDesc.Filter = Graphics::EFilter::FILTER_MIN_MAG_MIP_POINT;
@@ -85,4 +95,7 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 		, BasicRasterizerState.get(), ColorPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
 	PSOs[size_t(EPSOType::Color)] = std::unique_ptr<CPSO>(ColorPSO);
 
+	CPSO* RectPSO = new CPSO(Graphics::ETopology::PrimitiveTopologyLINELIST, RectInputLayout.get(), RectVertexShader.get()
+		, BasicRasterizerState.get(), RectPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
+	PSOs[size_t(EPSOType::Rect)] = std::unique_ptr<CPSO>(RectPSO);
 }

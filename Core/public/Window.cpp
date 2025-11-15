@@ -1,9 +1,13 @@
 #include "pch.h"
 #include "Window.h"
 #include <windowsx.h>
+#include "imgui.h"
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam))
+		return true;
 	// GWLP_USERDATA에서 CWindow 포인터를 가져옴
 	Core::CWindow* Window = reinterpret_cast<Core::CWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 	

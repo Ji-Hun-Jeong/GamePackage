@@ -35,7 +35,7 @@ CPlayer::~CPlayer()
 
 void CPlayer::BeginPlay()
 {
-	Body = GetWorld()->SpawnActor<CCharacter>(this);
+	Body = GetWorld()->SpawnActor<CDynamicActor>(this);
 	CAnimation* Animation = new CAnimation(true);
 	TFrame Frame;
 	Frame.ImagePath = L"resources/image/Character/stand/Body0.png";

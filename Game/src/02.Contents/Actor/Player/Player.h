@@ -1,6 +1,6 @@
 #pragma once
 #include "01.Base/Actor/Actor.h"
-#include "01.Base/Actor/Character.h"
+#include "01.Base/Actor/DynamicActor.h"
 #include "02.Contents/Actor/Base/BackGround.h"
 
 class CPlayer : public CActor
@@ -26,10 +26,10 @@ public:
 	}
 
 private:
-	CCharacter* Head;
-	CCharacter* Body;
-	CCharacter* Arm;
-	CCharacter* Hand;
+	CDynamicActor* Head;
+	CDynamicActor* Body;
+	CDynamicActor* Arm;
+	CDynamicActor* Hand;
 
 private:
 	void InitalizeInputActionValue();

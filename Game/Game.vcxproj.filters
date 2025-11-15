@@ -69,7 +69,7 @@
     <ClCompile Include="src\02.Contents\Actor\Player\Player.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Actor\Character.cpp">
+    <ClCompile Include="src\01.Base\Actor\DynamicActor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\05.Input\InputActionManager.cpp">
@@ -115,9 +115,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\Base\MousePointer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\Base\WindowIOManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.cpp">
@@ -189,6 +186,18 @@
     <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\02.Contents\Scene\MapEditorScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\Tile\TileManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\Tile\Tile.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\04.Renderer\ImGuiManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -245,7 +254,7 @@
     <ClInclude Include="src\02.Contents\Actor\Player\Player.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Actor\Character.h">
+    <ClInclude Include="src\01.Base\Actor\DynamicActor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\05.Input\InputActionManager.h">
@@ -288,9 +297,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Base\MousePointer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\Base\WindowIOManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.h">
@@ -365,6 +371,18 @@
     <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\02.Contents\Scene\MapEditorScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\Tile\TileManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\Tile\Tile.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\04.Renderer\ImGuiManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicVertexShader.hlsl" />
@@ -372,6 +390,8 @@
     <FxCompile Include="resources\shader\EdgePixelShader.hlsl" />
     <FxCompile Include="resources\shader\ColorPixelShader.hlsl" />
     <FxCompile Include="resources\shader\PixelCollisionComputeShader.hlsl" />
+    <FxCompile Include="resources\shader\RectVertexShader.hlsl" />
+    <FxCompile Include="resources\shader\RectPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shader\Common.hlsli" />

@@ -10,7 +10,7 @@ namespace Graphics::DX
 	{
 	public:
 		CDXInfra(HWND InWindowHandle, uint32_t InScreenWidth, uint32_t InScreenHeight);
-		~CDXInfra() = default;
+		~CDXInfra();
 
 	public:
 		CRenderDevice& GetDevice() override { return *Device.get(); }

@@ -30,6 +30,7 @@ private:
 	std::vector<CMouseInteracter*> FocusInteracterCandidates;
 
 };
+
 class CMouseInteractionManager
 {
 public:
@@ -39,18 +40,26 @@ public:
 	~CMouseInteractionManager() = default;
 
 public:
-	void FindFocusInteracter(std::vector<CMouseInteracter*>&& InMouseInteracters, const Vector2& InMousePosition)
+	void PushFocusInteracter(CMouseInteracter* InMouseInteracter)
 	{
-		CurrentFrameDetectInteracters = std::move(InMouseInteracters);
-
-		CMouseInteracter::MouseX = int32_t(InMousePosition.x);
-		CMouseInteracter::MouseY = int32_t(InMousePosition.y);
+		CurrentFrameDetectInteracters.push_back(InMouseInteracter);
+	}
+	void SetMouseWorldPosition(const Vector2& InMouseWorldPosition)
+	{
+		MouseWorldPosition = InMouseWorldPosition;
+		CMouseInteracter::MouseWorldX = int32_t(InMouseWorldPosition.x);
+		CMouseInteracter::MouseWorldY = int32_t(InMouseWorldPosition.y);
+	}
+	void FindFocusInteracter()
+	{
+		for (auto& CurrentFrameDetectInteracter : CurrentFrameDetectInteracters)
+			CurrentFrameDetectInteracter->ClearState();
 
 		CFoucsInteracterCandidate FocusInteracterCandidates;
 
 		for (auto& MouseInteracter : CurrentFrameDetectInteracters)
 		{
-			CFoucsInteracterCandidate Candidates= TryFindFocusInteracters(*MouseInteracter, InMousePosition);
+			CFoucsInteracterCandidate Candidates= TryFindFocusInteracters(*MouseInteracter, MouseWorldPosition);
 			if (Candidates.IsEmpty())
 				continue;
 			FocusInteracterCandidates.Merge(Candidates);
@@ -71,11 +80,8 @@ public:
 			CurrentFocusInteracter->bMouseFocus = true;
 
 		CurrentFocusInteracter = NewFocusInteracter;
-	}
-	void ClearState()
-	{
-		for (auto& CurrentFrameDetectInteracter : CurrentFrameDetectInteracters)
-			CurrentFrameDetectInteracter->ClearState();
+
+		CurrentFrameDetectInteracters.clear();
 	}
 
 private:
@@ -130,6 +136,7 @@ private:
 private:
 	std::vector<CMouseInteracter*> CurrentFrameDetectInteracters;
 	CMouseInteracter* CurrentFocusInteracter;
+	Vector2 MouseWorldPosition;
 
 };
 

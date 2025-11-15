@@ -29,9 +29,8 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 	InRenderer.Draw();
 }
 
-void CWorld::DetectMouseInteraction(CMouseInteractionManager& InMouseInteractionManager)
+void CWorld::CollectMouseInteraction(CMouseInteractionManager& InMouseInteractionManager)
 {
-	std::vector<CMouseInteracter*> MouseInteracters;
 	Vector2 MousePosition = CMouseManager::GetInst().GetMousePosition();
 
 	const CCamera* Camera = nullptr;
@@ -47,15 +46,14 @@ void CWorld::DetectMouseInteraction(CMouseInteractionManager& InMouseInteraction
 		MousePosition.x += int32_t(Camera->GetTransform()->GetFinalPosition().x);
 		MousePosition.y += int32_t(Camera->GetTransform()->GetFinalPosition().y);
 	}
+	InMouseInteractionManager.SetMouseWorldPosition(MousePosition);
 
 	for (auto& WorldActor : WorldActors)
 	{
 		CInteractionComponent* InteractionComponent = WorldActor->GetInteractionComponent();
 		if (InteractionComponent)
-			MouseInteracters.push_back(InteractionComponent->GetMouseInteracter());
+			InMouseInteractionManager.PushFocusInteracter(InteractionComponent->GetMouseInteracter());
 	}
-
-	InMouseInteractionManager.FindFocusInteracter(std::move(MouseInteracters), MousePosition);
 }
 
 void CWorld::CollectCollisionObjects(CPixelCollisionManager& InPixelCollisionManager)

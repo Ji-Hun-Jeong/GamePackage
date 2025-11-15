@@ -97,7 +97,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir);$(SolutionDir)Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir);$(SolutionDir)Renderer;$(SolutionDir)Game\vcpkg_installed\x64-windows\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -121,7 +121,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir);$(SolutionDir)Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir);$(SolutionDir)Renderer;$(SolutionDir)Game\vcpkg_installed\x64-windows\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -145,7 +145,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir);$(SolutionDir)Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir);$(SolutionDir)Renderer;$(SolutionDir)Game\vcpkg_installed\x64-windows\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -169,7 +169,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir);$(SolutionDir)Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir);$(SolutionDir)Renderer;$(SolutionDir)Game\vcpkg_installed\x64-windows\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -186,6 +186,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\04.Renderer\ImGuiManager.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\MapEditorScene.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Collider\Collider.cpp" />
@@ -202,7 +204,6 @@
     <ClCompile Include="src\00.App\ObjectPtr.cpp" />
     <ClCompile Include="src\01.Base\World\WorldThirdParty.cpp" />
     <ClCompile Include="src\03.Utils\InstancePool.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\Base\WindowIOManager.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\MousePointer.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\BackGround.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\InteractionComponent.cpp" />
@@ -216,7 +217,7 @@
     <ClCompile Include="src\01.Base\Actor\Camera.cpp" />
     <ClCompile Include="src\04.Renderer\SpriteRendererProvide.cpp" />
     <ClCompile Include="src\05.Input\InputActionManager.cpp" />
-    <ClCompile Include="src\01.Base\Actor\Character.cpp" />
+    <ClCompile Include="src\01.Base\Actor\DynamicActor.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Player\Player.cpp" />
     <ClCompile Include="src\04.Renderer\Image.cpp" />
     <ClCompile Include="src\03.Utils\GeometryGenerator.cpp" />
@@ -249,8 +250,12 @@
     <ClCompile Include="src\00.App\CoreSystem.cpp" />
     <ClCompile Include="src\01.Base\Actor\StaticActor.cpp" />
     <ClCompile Include="src\00.App\WindowManager.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\Tile\TileManager.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\Tile\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\04.Renderer\ImGuiManager.h" />
+    <ClInclude Include="src\02.Contents\Scene\MapEditorScene.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Collider\Collider.h" />
@@ -267,7 +272,6 @@
     <ClInclude Include="src\00.App\Class.h" />
     <ClInclude Include="src\00.App\ObjectPtr.h" />
     <ClInclude Include="src\03.Utils\InstancePool.h" />
-    <ClInclude Include="src\02.Contents\Actor\Base\WindowIOManager.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\MousePointer.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\BackGround.h" />
     <ClInclude Include="src\01.Base\Actor\Component\InteractionComponent.h" />
@@ -280,7 +284,7 @@
     <ClInclude Include="src\01.Base\Actor\Component\Animation\Animator.h" />
     <ClInclude Include="src\01.Base\Actor\Camera.h" />
     <ClInclude Include="src\05.Input\InputActionManager.h" />
-    <ClInclude Include="src\01.Base\Actor\Character.h" />
+    <ClInclude Include="src\01.Base\Actor\DynamicActor.h" />
     <ClInclude Include="src\02.Contents\Actor\Player\Player.h" />
     <ClInclude Include="src\04.Renderer\Image.h" />
     <ClInclude Include="src\03.Utils\GeometryGenerator.h" />
@@ -309,6 +313,8 @@
     <ClInclude Include="src\00.App\CoreSystem.h" />
     <ClInclude Include="src\01.Base\Actor\StaticActor.h" />
     <ClInclude Include="src\00.App\WindowManager.h" />
+    <ClInclude Include="src\02.Contents\Actor\Tile\TileManager.h" />
+    <ClInclude Include="src\02.Contents\Actor\Tile\Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">
@@ -352,6 +358,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="resources\shader\RectPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="resources\shader\RectVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

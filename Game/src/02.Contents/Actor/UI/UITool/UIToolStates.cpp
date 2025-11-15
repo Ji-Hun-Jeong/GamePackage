@@ -2,7 +2,6 @@
 #include "UIToolStates.h"
 
 #include "02.Contents/Actor/Base/MousePointer.h"
-#include "02.Contents/Actor/Base/WindowIOManager.h"
 
 
 CUIToolInputState::CUIToolInputState(CUI& InLoadDialogUI, CWindowIOManager& InWindowIOManager, CMousePointer& InMousePointer)

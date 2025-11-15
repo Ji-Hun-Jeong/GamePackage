@@ -6,6 +6,7 @@
 #include "02.Contents/Scene/EditUIScene.h"
 #include "02.Contents/Scene/TestScene.h"
 #include "02.Contents/Scene/LoginScene.h"
+#include "02.Contents/Scene/MapEditorScene.h"
 
 CWorld* g_World = nullptr;
 
@@ -21,7 +22,7 @@ CWorld::~CWorld()
 
 void CWorld::Start()
 {
-	LoadScene<CLoginScene>();
+	LoadScene<CMapEditorScene>();
 }
 
 

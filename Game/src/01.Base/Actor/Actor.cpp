@@ -26,6 +26,24 @@ public:
 		MeshData.Key = 0;
 
 		CAssetLoader::GetInst().LoadMeshData("ImageMesh", MeshData);
+
+		TColorGeometryData ColorGeometryData = CGeometryGenerator::GenerateRect();
+		
+		VertexBufferByteWidth = sizeof(TColorVertex) * ColorGeometryData.Vertices.size();
+		MeshData.Vertices.resize(VertexBufferByteWidth);
+		memcpy(MeshData.Vertices.data(), ColorGeometryData.Vertices.data(), VertexBufferByteWidth);
+		
+		IndexBufferByteWidth = sizeof(uint32_t) * ColorGeometryData.Indices.size();
+		MeshData.Indices.resize(IndexBufferByteWidth);
+		memcpy(MeshData.Indices.data(), ColorGeometryData.Indices.data(), IndexBufferByteWidth);
+		
+		MeshData.IndexFormat = Graphics::EGIFormat::GI_FORMAT_R32_UINT;
+		MeshData.IndexCount = uint32_t(ColorGeometryData.Indices.size());
+		MeshData.Stride = sizeof(TColorVertex);
+		MeshData.Offset = 0;
+		MeshData.Key = 1;
+		
+		CAssetLoader::GetInst().LoadMeshData("RectMesh", MeshData);
 	}
 };
 

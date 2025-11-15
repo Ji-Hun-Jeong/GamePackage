@@ -4,6 +4,7 @@
 #include "CoreSystem.h"
 #include "01.Base/World/World.h"
 #include "04.Renderer/SpriteRenderer.h"
+#include "04.Renderer/ImGuiManager.h"
 #include "05.Input/InputActionManager.h"
 #include "06.Interaction/MouseInteractionManager.h"
 #include "07.Collision/PixelCollisionManager.h"
@@ -33,6 +34,7 @@ public:
 private:
 	std::unique_ptr<Graphics::IGraphicInfra> GraphicInfra;
 	CSpriteRenderer SpriteRenderer;
+	CImGuiManager& ImGuiManager;
 	CPixelCollisionManager PixelCollisionManager;
 	CCollisionManager CollisionManager;
 

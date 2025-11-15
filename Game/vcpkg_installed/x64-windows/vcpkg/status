@@ -58,3 +58,26 @@ Abi: f680b5f870ad22ef899b55aa45f57a45d91bc44253ec8a8b926907b6dbdfcd3f
 Description: JSON for Modern C++
 Status: install ok installed
 
+Package: imgui
+Version: 1.91.9
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: a6e54199e189d50d6a0e6fe01637c2782c022fef441f8a68d9a5f9206a258622
+Description: Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.
+Status: install ok installed
+
+Package: imgui
+Feature: dx11-binding
+Architecture: x64-windows
+Multi-Arch: same
+Description: Make available DirectX11 binding
+Status: install ok installed
+
+Package: imgui
+Feature: win32-binding
+Architecture: x64-windows
+Multi-Arch: same
+Description: Make available Win32 binding
+Status: install ok installed
+

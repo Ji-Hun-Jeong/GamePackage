@@ -1,6 +1,10 @@
 {
   "dependencies": [
     "directxtk",
-    "nlohmann-json"
+    "nlohmann-json",
+    {
+      "name": "imgui",
+      "features": [ "dx11-binding", "win32-binding" ]
+    }
   ]
 }
