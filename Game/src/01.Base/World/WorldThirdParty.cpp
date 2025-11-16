@@ -17,9 +17,6 @@ void CWorld::PerformInputAction(CInputActionManager& InInputActionManager)
 }
 void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 {
-	std::vector<CRenderStateObject*> RenderStateObjects;
-	RenderStateObjects.reserve(WorldActors.size());
-
 	for (auto& WorldActor : WorldActors)
 	{
 		CRenderComponent* RenderComponent = WorldActor->GetRenderComponent();

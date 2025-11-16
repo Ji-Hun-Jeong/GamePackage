@@ -2,6 +2,7 @@
 #include <Renderer/Base/GraphicInfra.h>
 #include "RenderResourceLoader.h"
 #include "RenderStateObject.h"
+#include "06.Interaction/MouseManager.h"
 
 namespace Core
 {
@@ -66,12 +67,12 @@ public:
 	}
 	void Draw()
 	{
-		std::sort(RenderStateObjects.begin(), RenderStateObjects.end(), [](CRenderStateObject* InA, CRenderStateObject* InB)->bool
+		std::stable_sort(RenderStateObjects.begin(), RenderStateObjects.end(), [](CRenderStateObject* InA, CRenderStateObject* InB)->bool
 			{
 				return InA->GetRenderLayer() < InB->GetRenderLayer();
 			});
 
-		static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		static float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Context.ClearRenderTarget(RenderTargetView.get(), ClearColor);
 
 		for (auto& RenderStateObject : RenderStateObjects)

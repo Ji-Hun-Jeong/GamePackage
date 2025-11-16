@@ -52,7 +52,7 @@ bool CGame::Process()
 {
 	CCoreSystem::GetInst().ArrangeObjects();
 
-	ImGuiManager.StartFrame();
+	ImGuiManager.StartFrame("ImGui");
 
 	InputManager.Update();
 	CMouseManager::GetInst().SetStateByInputManager(InputManager);
@@ -74,25 +74,6 @@ bool CGame::Process()
 	//PixelCollisionManager.ProgressCollisionCheck(GraphicInfra->GetContext(), Window.GetScreenWidth(), Window.GetScreenHeight());
 	World.RenderWorld(SpriteRenderer);
 
-
-	// --- 2. UI 코드 작성 ---
-	// (이 부분이 실제 ImGui 사용법입니다)
-	{
-		// "My Tool"이라는 이름의 창을 엽니다
-		ImGui::Begin("My Tool");
-
-		ImGui::Text("Hello, world!"); // 텍스트 출력
-
-		static float my_float = 0.5f;
-		ImGui::SliderFloat("Value", &my_float, 0.0f, 1.0f); // 슬라이더
-
-		// "Save" 버튼. 클릭되면 if문 안쪽이 실행됩니다.
-		if (ImGui::Button("Save"))
-		{
-			// (저장 로직 호출)
-			// MyTool->SaveFile(); 
-		}
-	}
 	ImGuiManager.DeliverMouseInteraction(MouseInteractionManager, Window.GetScreenWidth(), Window.GetScreenHeight());
 	ImGuiManager.EndFrame();
 	ImGuiManager.Render();

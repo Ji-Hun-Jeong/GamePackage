@@ -6,13 +6,12 @@
 
 class CRenderResourceLoader
 {
+	SINGLE(CRenderResourceLoader)
 public:
-	CRenderResourceLoader(Graphics::CRenderDevice& InDevice)
-		: Device(InDevice)
-	{}
-	~CRenderResourceLoader() = default;
-
-public:
+	void Initalize(Graphics::CRenderDevice& InDevice)
+	{
+		Device = &InDevice;
+	}
 	Graphics::CMesh* LoadMesh(const Graphics::TMeshData& InMeshData)
 	{
 		auto Iter = Meshes.find(InMeshData.Key);
@@ -22,7 +21,7 @@ public:
 
 		Graphics::TBufferDesc VertexBufferDesc;
 		VertexBufferDesc.BindFlags = Graphics::EBindFlags::BindVertexBuffer;
-		VertexBufferDesc.ByteWidth = uint32_t(sizeof(TVertex) * InMeshData.Vertices.size());
+		VertexBufferDesc.ByteWidth = uint32_t(InMeshData.Vertices.size());
 		VertexBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
 		VertexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
 
@@ -31,15 +30,15 @@ public:
 		
 		Graphics::TBufferDesc IndexBufferDesc;
 		IndexBufferDesc.BindFlags = Graphics::EBindFlags::BindIndexBuffer;
-		IndexBufferDesc.ByteWidth = uint32_t(sizeof(uint32_t) * InMeshData.Indices.size());
+		IndexBufferDesc.ByteWidth = uint32_t(InMeshData.Indices.size());
 		IndexBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessImpossible;
 		IndexBufferDesc.Usage = Graphics::EUsage::UsageImmutable;
 
 		Graphics::TBufferInitalizeData IndexBufferInitData;
 		IndexBufferInitData.CopyStartPoint = InMeshData.Indices.data();
 
-		auto VertexBuffer = Device.CreateBuffer(VertexBufferDesc, &VertexBufferInitData);
-		auto IndexBuffer = Device.CreateBuffer(IndexBufferDesc, &IndexBufferInitData);
+		auto VertexBuffer = Device->CreateBuffer(VertexBufferDesc, &VertexBufferInitData);
+		auto IndexBuffer = Device->CreateBuffer(IndexBufferDesc, &IndexBufferInitData);
 
 		Graphics::CMesh* Mesh = new Graphics::CMesh(std::move(VertexBuffer), std::move(IndexBuffer)
 			, InMeshData.IndexFormat, InMeshData.IndexCount, InMeshData.Stride, InMeshData.Offset);
@@ -55,7 +54,7 @@ public:
 		if (Iter != Images.end())
 			return Iter->second.get();
 
-		auto SRV_Texture2D = Device.CreateImage(InPath);
+		auto SRV_Texture2D = Device->CreateImage(InPath);
 
 		CImage* RawImage = new CImage(std::move(SRV_Texture2D.first), std::move(SRV_Texture2D.second));
 		Images.emplace(InPath, RawImage);
@@ -72,7 +71,7 @@ public:
 		ConstBufferDesc.Usage = Graphics::EUsage::UsageDynamic;
 		ConstBufferDesc.BindFlags = Graphics::EBindFlags::BindConstantBuffer;
 		ConstBufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessWrite;
-		return Device.CreateBuffer(ConstBufferDesc, nullptr);
+		return Device->CreateBuffer(ConstBufferDesc, nullptr);
 	}
 
 	std::unique_ptr<Graphics::CBuffer> CreateUAVBuffer(size_t InStructSize, size_t InNumOfElement) const
@@ -85,7 +84,7 @@ public:
 		UAVBufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 		UAVBufferDesc.StructureByteStride = uint32_t(InStructSize);
 
-		return Device.CreateBuffer(UAVBufferDesc, nullptr);
+		return Device->CreateBuffer(UAVBufferDesc, nullptr);
 	}
 
 	std::unique_ptr<Graphics::CBuffer> CreateStagingBuffer(size_t InStructSize, size_t InNumOfElement) const
@@ -99,7 +98,7 @@ public:
 		StagingBufferDesc.MiscFlags = 0;
 		StagingBufferDesc.StructureByteStride = 0;
 
-		return Device.CreateBuffer(StagingBufferDesc, nullptr);
+		return Device->CreateBuffer(StagingBufferDesc, nullptr);
 	}
 
 	std::unique_ptr<Graphics::CUnorderedAccessView> CreateUAV(const Graphics::CBuffer& InUAVBuffer, size_t InNumOfElement) const
@@ -111,11 +110,11 @@ public:
 		UAVDesc.Buffer.NumElements = UINT(InNumOfElement);
 		UAVDesc.Buffer.Flags = 0;
 
-		return Device.CreateUnorderedAccessView(InUAVBuffer, UAVDesc);
+		return Device->CreateUnorderedAccessView(InUAVBuffer, UAVDesc);
 	}
 
 private:
-	Graphics::CRenderDevice& Device;
+	Graphics::CRenderDevice* Device;
 
 	std::map<Graphics::MeshKey, std::unique_ptr<Graphics::CMesh>> Meshes;
 	std::map<std::wstring, std::unique_ptr<CImage>> Images;

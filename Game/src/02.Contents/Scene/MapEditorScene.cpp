@@ -2,12 +2,36 @@
 #include "MapEditorScene.h"
 
 #include "GameCore.h"
-#include "02.Contents/Actor/Tile/TileManager.h"
 
 void CMapEditorScene::BeginPlay()
 {
 	CScene::BeginPlay();
 	GetFader()->FadeIn(0.0f);
-	CTileManager* TileManager = GetWorld()->SpawnActor<CTileManager>();
-	TileManager->LayTiles(60, 60, 5, 5);
+
+	TileManager = GetWorld()->SpawnActor<CTileManager>();
+}
+
+void CMapEditorScene::Update(float InDeltaTime)
+{
+	CScene::Update(InDeltaTime);
+
+	TileManager->FindFocusTile();
+	CTile* FocusTile = TileManager->GetFocusTile();
+	if (FocusTile && LHold() && CurrentObjectImagePath.empty() == false)
+		FocusTile->PutOnActor(CurrentObjectImagePath, TilePutMode);
+	if (FocusTile && RHold())
+		FocusTile->RevertPutOn();
+
+	if (bLayTiles)
+	{
+		TileManager->LayTiles(TileWidth, TileHeight, TileRow, TileCol);
+		bLayTiles = false;
+	}
+
+	if (bOpenWindowDialog)
+	{
+		if (CWindowManager::GetInst().TryOpenFileDialog())
+			CurrentObjectImagePath = CWindowManager::GetInst().GetOpenFilePath();
+		bOpenWindowDialog = false;
+	}
 }

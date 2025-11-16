@@ -2,8 +2,14 @@
 #include "TileManager.h"
 #include "GameCore.h"
 
+#include "04.Renderer/ImGuiManager.h"
+
 void CTileManager::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol)
 {
+	for (CTile* Tile : Tiles)
+		Tile->Destroy();
+	Tiles.clear();
+
 	float FirstX = (-(InCol - 1.0f) / 2.0f) * InWidth;
 	float FirstY = ((InRow - 1.0f) / 2.0f) * InHeight;
 	float Z = 1.0f;

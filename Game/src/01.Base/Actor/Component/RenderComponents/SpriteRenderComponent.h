@@ -95,6 +95,7 @@ public:
 	}
 	bool IsImageType() const { return ImagePath.empty() == false; }
 	Vector2 GetImageScale() const { return Vector2(ImageScale.x, ImageScale.y); }
+	const std::wstring& GetImagePath() const { return ImagePath; }
 
 private:
 	void ClearState()

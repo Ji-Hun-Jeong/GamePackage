@@ -10,13 +10,9 @@ public:
 	~CTileManager() = default;
 
 public:
-	void Update(float InDeltaTime) override
+	void FindFocusTile()
 	{
-		CActor::Update(InDeltaTime);
-		if (LClicked() == false)
-			return;
-
-		CTile* FocusTile = nullptr;
+		FocusTile = nullptr;
 		for (CTile* Tile : Tiles)
 		{
 			if (Tile->GetInteractionComponent()->IsMouseFocus())
@@ -25,13 +21,12 @@ public:
 				break;
 			}
 		}
-		
-		std::cout << FocusTile << std::endl;
 	}
 	void LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol);
+	CTile* GetFocusTile() const { return FocusTile; }
 
 private:
 	std::vector<CTile*> Tiles;
-
+	CTile* FocusTile = nullptr;
 };
 

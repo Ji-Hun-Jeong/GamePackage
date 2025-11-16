@@ -23,10 +23,10 @@ TColorGeometryData CGeometryGenerator::GenerateRect()
 {
 	std::vector<TColorVertex> Vertices =
 	{
-		{Vector3(-1.0f, -1.0f, 0.0f), Vector3(1.0f,1.0f,1.0f)},
-		{Vector3(-1.0f, 1.0f, 0.0f), Vector3(1.0f,1.0f,1.0f)},
-		{Vector3(1.0f, 1.0f, 0.0f), Vector3(1.0f,1.0f,1.0f)},
-		{Vector3(1.0f, -1.0f, 0.0f), Vector3(1.0f,1.0f,1.0f)}
+		{Vector3(-1.0f, -1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f)},
+		{Vector3(-1.0f, 1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f)},
+		{Vector3(1.0f, 1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f)},
+		{Vector3(1.0f, -1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f)}
 	};
 
 	std::vector<uint32_t> Indices =
