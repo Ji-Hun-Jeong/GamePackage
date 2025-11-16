@@ -2,6 +2,7 @@
 #include "RenderResourceLoader.h"
 
 CRenderResourceLoader::CRenderResourceLoader()
+	: Device(nullptr)
 {
 
 }

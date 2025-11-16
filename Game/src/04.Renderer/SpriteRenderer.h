@@ -1,6 +1,5 @@
 #pragma once
 #include <Renderer/Base/GraphicInfra.h>
-#include "RenderResourceLoader.h"
 #include "RenderStateObject.h"
 #include "06.Interaction/MouseManager.h"
 
@@ -13,7 +12,7 @@ class CSpriteRenderer
 {
 public:
 	CSpriteRenderer(Graphics::IGraphicInfra& InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight);
-	~CSpriteRenderer() = default;
+	~CSpriteRenderer();
 
 public:
 	void InitalizeFromWindow(Core::CWindow& InWindow);
@@ -24,11 +23,6 @@ public:
 		, const void* InMappingPoint, size_t InByteWidth)
 	{
 		Graphics::CBuffer* Buffer = nullptr;
-		if (InRenderStateObject.IsExistConstBufferInSlot(InShaderType, InSlot) == false)
-		{
-			InRenderStateObject.MountConstBuffer(InShaderType, InSlot
-				, RenderResourceLoader.CreateConstBuffer(InByteWidth));
-		}
 
 		switch (InShaderType)
 		{
@@ -44,22 +38,6 @@ public:
 
 		assert(Buffer);
 		Context.UpLoadBuffer(*Buffer, InMappingPoint, InByteWidth, Graphics::EMapType::MAP_WRITE_DISCARD);
-	}
-	void SetMeshToRSO(CRenderStateObject& InRenderStateObject, const Graphics::TMeshData& InMeshData)
-	{
-		Graphics::CMesh* Mesh = RenderResourceLoader.LoadMesh(InMeshData);
-		InRenderStateObject.MountMesh(Mesh);
-	}
-	CImage* SetShaderResourceToRSOByImagePath(CRenderStateObject& InRenderStateObject, const std::wstring& InImagePath)
-	{
-		CImage* Image = RenderResourceLoader.LoadImageFromFile(InImagePath);
-		InRenderStateObject.MountShaderResource(EShaderType::PixelShader, 0, &Image->GetSRV());
-		return Image;
-	}
-	void SetPSOToRSO(CRenderStateObject& InRenderStateObject, EPSOType InPSOType)
-	{
-		CPSO* PSO = PSOManager.GetPSO(InPSOType);
-		InRenderStateObject.MountPSO(PSO);
 	}
 	void RenderObject(CRenderStateObject& InRenderStateObject)
 	{
@@ -138,16 +116,10 @@ public:
 		SwapChain.Present();
 	}
 
-	const CPSOManager& GetPSOManager() const { return PSOManager; }
-	CRenderResourceLoader& GetRenderResourceLoader() { return RenderResourceLoader; }
-
 private:
 	Graphics::CRenderDevice& Device;
 	Graphics::CRenderContext& Context;
 	Graphics::CRenderSwapChain& SwapChain;
-
-	CPSOManager PSOManager;
-	CRenderResourceLoader RenderResourceLoader;
 
 	std::unique_ptr<Graphics::CRenderTargetView> RenderTargetView;
 

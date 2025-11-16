@@ -11,19 +11,22 @@ class CImage
 {
 public:
 	CImage(std::unique_ptr<Graphics::CShaderResourceView> InShaderResourceView, std::unique_ptr<Graphics::CTexture2D> InTexture2D
-		, uint32_t InStartSlot = 0)
+	, const std::wstring& InImagePath)
 		: ShaderResourceView(std::move(InShaderResourceView))
 		, Texture2D(std::move(InTexture2D))
+		, ImagePath(InImagePath)
 	{}
 	~CImage() {}
 
 public:
 	const Graphics::CShaderResourceView& GetSRV() const { return *ShaderResourceView.get(); }
 	const Graphics::CTexture2D& GetTexture2D() const { return *Texture2D.get(); }
+	const std::wstring& GetImagePath() const { return ImagePath; }
 
 private:
 	std::unique_ptr<Graphics::CShaderResourceView> ShaderResourceView;
 	std::unique_ptr<Graphics::CTexture2D> Texture2D;
+	std::wstring ImagePath;
 
 };
 

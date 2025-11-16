@@ -2,6 +2,8 @@
 #include "MapEditorScene.h"
 
 #include "GameCore.h"
+#include <codecvt> // for wstring_convert
+#include <locale>  // for codecvt_utf8
 
 void CMapEditorScene::BeginPlay()
 {
@@ -17,8 +19,8 @@ void CMapEditorScene::Update(float InDeltaTime)
 
 	TileManager->FindFocusTile();
 	CTile* FocusTile = TileManager->GetFocusTile();
-	if (FocusTile && LHold() && CurrentObjectImagePath.empty() == false)
-		FocusTile->PutOnActor(CurrentObjectImagePath, TilePutMode);
+	if (FocusTile && LHold() && CurrentActorImagePath.empty() == false)
+		FocusTile->PutOnActor(CurrentActorImagePath, TilePutMode);
 	if (FocusTile && RHold())
 		FocusTile->RevertPutOn();
 
@@ -30,8 +32,18 @@ void CMapEditorScene::Update(float InDeltaTime)
 
 	if (bOpenWindowDialog)
 	{
-		if (CWindowManager::GetInst().TryOpenFileDialog())
-			CurrentObjectImagePath = CWindowManager::GetInst().GetOpenFilePath();
+		std::wstring ImagePath;
+		if (CWindowManager::GetInst().TryGetFilePathByDialog(&ImagePath))
+		{
+			std::string ImagePath_TF = std::string().assign(ImagePath.begin(), ImagePath.end());
+			size_t SlashIndex = ImagePath_TF.rfind('\\');
+			if (SlashIndex == std::string::npos)
+				assert(0);
+
+			std::string ImageName = ImagePath_TF.substr(SlashIndex + 1);
+			LoadedImagePaths.emplace(ImageName, ImagePath);
+		}
 		bOpenWindowDialog = false;
 	}
+
 }

@@ -55,11 +55,26 @@ enum class EPSOType
 
 class CPSOManager
 {
+	SINGLE(CPSOManager)
 public:
-	CPSOManager(Graphics::CRenderDevice& InDevice);
-	~CPSOManager() = default;
-
-public:
+	void Initalize(Graphics::CRenderDevice& InDevice);
+	void Finalize()
+	{
+		BasicInputLayout.reset();
+		RectInputLayout.reset();
+		BasicVertexShader.reset();
+		RectVertexShader.reset();
+		BasicRasterizerState.reset();
+		BasicPixelShader.reset();
+		EdgePixelShader.reset();
+		ColorPixelShader.reset();
+		RectPixelShader.reset();
+		LinearSamplerState.reset();
+		BasicBlendState.reset();
+		TransparentBlendState.reset();
+		for (auto& PSO : PSOs)
+			PSO.reset();
+	}
 	CPSO* GetPSO(EPSOType InPSOType) const
 	{
 		return PSOs[(size_t)InPSOType].get();

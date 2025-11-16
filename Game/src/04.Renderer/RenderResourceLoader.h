@@ -12,6 +12,11 @@ public:
 	{
 		Device = &InDevice;
 	}
+	void Finalize()
+	{
+		Meshes.clear();
+		Images.clear();
+	}
 	Graphics::CMesh* LoadMesh(const Graphics::TMeshData& InMeshData)
 	{
 		auto Iter = Meshes.find(InMeshData.Key);
@@ -56,7 +61,7 @@ public:
 
 		auto SRV_Texture2D = Device->CreateImage(InPath);
 
-		CImage* RawImage = new CImage(std::move(SRV_Texture2D.first), std::move(SRV_Texture2D.second));
+		CImage* RawImage = new CImage(std::move(SRV_Texture2D.first), std::move(SRV_Texture2D.second), InPath);
 		Images.emplace(InPath, RawImage);
 
 		assert(RawImage);

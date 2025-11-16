@@ -1,5 +1,5 @@
 #pragma once
-#include "04.Renderer/RenderStateObject.h"
+#include <Renderer/Rendering/Mesh.h>
 
 class CAssetLoader
 {

@@ -18,8 +18,6 @@ namespace Graphics
 		MeshKey Key = 0;
 	};
 
-
-
 	class CMesh
 	{
 	public:

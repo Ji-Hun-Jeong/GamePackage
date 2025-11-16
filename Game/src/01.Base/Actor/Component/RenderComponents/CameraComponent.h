@@ -14,14 +14,12 @@ class CCameraComponent : public CRenderComponent
 {
 	GENERATE_OBJECT(CCameraComponent)
 public:
-	CCameraComponent()
-		: CameraConst{}
-		, bUpdateCameraConst(false)
-	{
-	}
+	CCameraComponent();
 	~CCameraComponent() = default;
 
 public:
+	void Render(class CSpriteRenderer& InRenderer) override;
+
 	void UpdateViewToNDC(const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale
 		, uint32_t InScreenWidth, uint32_t InScreenHeight)
 	{
@@ -42,16 +40,6 @@ public:
 		CameraConst.ScreenHeight = InScreenHeight;
 
 		bUpdateCameraConst = true;
-	}
-
-	void Render(CSpriteRenderer& InRenderer) override
-	{
-		if (bUpdateCameraConst)
-			InRenderer.UpdateConstBuffer(RenderStateObject, EShaderType::VertexShader, 1, &CameraConst, sizeof(CameraConst));
-
-		InRenderer.RenderObject(RenderStateObject);
-
-		bUpdateCameraConst = false;
 	}
 
 private:

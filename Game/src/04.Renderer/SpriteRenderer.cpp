@@ -1,16 +1,26 @@
 #include "pch.h"
 #include "SpriteRenderer.h"
 
+#include "RenderResourceLoader.h"
+#include "PSOManager.h"
+
 CSpriteRenderer::CSpriteRenderer(Graphics::IGraphicInfra& InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight)
 	: Device(InGraphicInfra.GetDevice())
 	, Context(InGraphicInfra.GetContext())
 	, SwapChain(InGraphicInfra.GetSwapChain())
 	, RenderTargetView(Device.CreateRenderTargetView(*SwapChain.GetWindowTextureBuffer()))
-	, PSOManager(Device)
-	, RenderResourceLoader(Device)
 {
+	CRenderResourceLoader::GetInst().Initalize(Device);
+	CPSOManager::GetInst().Initalize(Device);
+
 	SetViewPort(InScreenWidth, InScreenHeight);
 	Context.OMSetRenderTargets(1, RenderTargetView.get(), nullptr);
+}
+
+CSpriteRenderer::~CSpriteRenderer()
+{
+	CRenderResourceLoader::GetInst().Finalize();
+	CPSOManager::GetInst().Finalize();
 }
 
 void CSpriteRenderer::SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight)

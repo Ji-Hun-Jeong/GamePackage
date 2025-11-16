@@ -1,6 +1,7 @@
 #pragma once
 #include "01.Base/Actor/Scene.h"
 #include "02.Contents/Actor/Tile/TileManager.h"
+#include "04.Renderer/ImGuiManager.h"
 
 class CMapEditorScene : public CScene
 {
@@ -24,18 +25,32 @@ public:
 			bLayTiles = true;
 		if (ImGui::Button("OpenWindowDialog"))
 			bOpenWindowDialog = true;
+
+		ImGui::RadioButton("CenterMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Center));
+		ImGui::SameLine();
+		ImGui::RadioButton("DownMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Down));
+		ImGui::SameLine();
+		ImGui::RadioButton("UpMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Up));
+		ImGui::SameLine();
+		ImGui::RadioButton("LeftMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Left));
+		ImGui::SameLine();
+		ImGui::RadioButton("RightMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Right));
+
+		ImGui::BeginChild("TileList", ImVec2(0, 0), true);
+		for (auto& Pair : LoadedImagePaths)
 		{
-			ImGui::RadioButton("CenterMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Center));
-			ImGui::SameLine();
-			ImGui::RadioButton("DownMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Down));
-			ImGui::SameLine();
-			ImGui::RadioButton("UpMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Up));
-			ImGui::SameLine();
-			ImGui::RadioButton("LeftMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Left));
-			ImGui::SameLine();
-			ImGui::RadioButton("RightMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Right));
-			ImGui::SameLine();
+			const std::string& ImageName = Pair.first;
+			const std::wstring& ImagePath = Pair.second;
+
+			bool bSelected = (CurrentActorImagePath == ImagePath);
+
+			if (ImGui::Selectable(ImageName.c_str()))
+				CurrentActorImagePath = ImagePath;
+
+			if (bSelected)
+				ImGui::SetItemDefaultFocus();
 		}
+		ImGui::EndChild();
 	}
 private:
 	// 원래는 모드를 두는게 좋을것같은데 그냥 일단 씬에 때려박자 나중에 ㄱㄱ
@@ -47,7 +62,8 @@ private:
 	bool bLayTiles = false;
 	ETilePutMode TilePutMode = ETilePutMode::Center;
 
-	std::wstring CurrentObjectImagePath = L"";
+	std::map<std::string, std::wstring> LoadedImagePaths;
+	std::wstring CurrentActorImagePath = L"";
 	bool bOpenWindowDialog = false;
 
 };

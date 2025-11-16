@@ -1,7 +1,6 @@
 #pragma once
 #include "../Component.h"
 #include "04.Renderer/RenderStateObject.h"
-#include "04.Renderer/SpriteRenderer.h"
 
 class CRenderComponent : public CComponent
 {
@@ -10,7 +9,7 @@ public:
 	virtual ~CRenderComponent() = 0 {}
 
 public:
-	virtual void Render(CSpriteRenderer& InRenderer) = 0;
+	virtual void Render(class CSpriteRenderer& InRenderer) = 0;
 public:
 	/*void Serialize(CSerializer& InSerializer) const override
 	{

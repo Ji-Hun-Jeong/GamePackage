@@ -3,7 +3,12 @@
 #include "Base/RenderDevice.h"
 #include "Base/RenderContext.h"
 
-CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
+CPSOManager::CPSOManager()
+{
+	
+}
+
+void CPSOManager::Initalize(Graphics::CRenderDevice& InDevice)
 {
 	std::vector<Graphics::TInputElementDesc> InputElementDescs =
 	{
@@ -44,7 +49,7 @@ CPSOManager::CPSOManager(Graphics::CRenderDevice& InDevice)
 	SamplerDesc.ComparisonFunc = Graphics::EComparisonFunc::COMPARISON_NEVER;
 	SamplerDesc.MinLOD = 0;
 	SamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	
+
 	LinearSamplerState = InDevice.CreateSamplerState(SamplerDesc);
 
 	Graphics::TBlendDesc BasicBlendStateDesc;
