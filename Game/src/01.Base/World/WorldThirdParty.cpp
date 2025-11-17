@@ -3,6 +3,7 @@
 #include "01.Base/Actor/Camera.h"
 #include "04.Renderer/SpriteRenderer.h"
 #include "04.Renderer/RenderSorter.h"
+#include "04.Renderer/ImGuiManager.h"
 #include "05.Input/InputActionManager.h"
 #include "06.Interaction/MouseInteractionManager.h"
 #include "07.Collision/PixelCollisionManager.h"
@@ -42,6 +43,7 @@ void CWorld::CollectMouseInteraction(CMouseInteractionManager& InMouseInteractio
 	{
 		MousePosition.x += int32_t(Camera->GetTransform()->GetFinalPosition().x);
 		MousePosition.y += int32_t(Camera->GetTransform()->GetFinalPosition().y);
+		CImGuiManager::GetInst().SetOffSet(Camera->GetTransform()->Get2DFinalPosition());
 	}
 	InMouseInteractionManager.SetMouseWorldPosition(MousePosition);
 

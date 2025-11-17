@@ -7,17 +7,15 @@
 enum class EEditMode
 {
 	Free,
-	Tile,
+	ChooseTile,
+	Attach,
+	End,
 };
 class CMapEditorScene : public CScene
 {
 	GENERATE_OBJECT(CMapEditorScene)
 public:
-	CMapEditorScene()
-	{
-		InteractionComponent = AddComponent<CInteractionComponent>();
-		InteractionComponent->SetRectScale(1.0f, 1.0f); // 00이면 계속 로그떠서
-	}
+	CMapEditorScene();
 	~CMapEditorScene() = default;
 
 public:
@@ -27,7 +25,7 @@ public:
 
 private:
 	// 원래는 모드를 두는게 좋을것같은데 그냥 일단 씬에 때려박자 나중에 ㄱㄱ
-	EEditMode EditMode = EEditMode::Free;
+	EEditMode EditMode = EEditMode::ChooseTile;
 
 	CActorGenerator* ActorGenerator = nullptr;
 	bool bOpenWindowDialog = false;

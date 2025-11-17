@@ -4,6 +4,12 @@
 #include "GameCore.h"
 #include "00.App/WindowManager.h"
 
+CMapEditorScene::CMapEditorScene()
+{
+	InteractionComponent = AddComponent<CInteractionComponent>();
+	InteractionComponent->SetRectScale(5000.0f, 5000.0f); 
+}
+
 void CMapEditorScene::BeginPlay()
 {
 	CScene::BeginPlay();
@@ -16,7 +22,7 @@ void CMapEditorScene::BeginPlay()
 void CMapEditorScene::Update(float InDeltaTime)
 {
 	CScene::Update(InDeltaTime);
-
+	
 	if (bOpenWindowDialog)
 	{
 		ActorGenerator->SetGeneratedActorImagePathByWindowManager(CWindowManager::GetInst());
@@ -25,10 +31,12 @@ void CMapEditorScene::Update(float InDeltaTime)
 
 	if (bLayTiles)
 	{
-		TileManager->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
-		EditMode = EEditMode::Tile;
+		TileManager->LayTiles(*ActorGenerator, TileWidth, TileHeight, TileMapRow, TileMapCol);
 		bLayTiles = false;
 	}
+
+	if (InteractionComponent->IsMouseFocus() == false)
+		return;
 
 	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
 	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
@@ -40,33 +48,18 @@ void CMapEditorScene::Update(float InDeltaTime)
 		if (LClicked())
 			ActorGenerator->GenerateStaticActor(World2DPosition);
 		break;
-	case EEditMode::Tile:
+	case EEditMode::ChooseTile:
 	{
-		CTile* ProximateTile = TileManager->GetProximateTile(World2DPosition);
-		if (ProximateTile == nullptr)
-			break;
-
-		Vector2 ProximateTileWorldPosition = ProximateTile->GetTransform()->Get2DFinalPosition();
-
-		if (ProximateTile && LHold())
-		{
-			const CStaticActor* TilePutOnActor = ProximateTile->GetPutOnActor();
-			if (TilePutOnActor)
-			{
-				const std::wstring& TilePutOnActorImagePath = TilePutOnActor->GetSpriteRenderComponent()->GetImagePath();
-				const std::wstring& GeneratedActorImagePath = ActorGenerator->GetGeneratedActorImagePath();
-				if (TilePutOnActorImagePath == GeneratedActorImagePath)
-					break;
-			}
-			CStaticActor* GeneratedActor = ActorGenerator->GenerateStaticActor(ProximateTileWorldPosition);
-			ProximateTile->SetPutOnActor(GeneratedActor);
-		}
-
-		if (ProximateTile && RHold())
-		{
-			ActorGenerator->EraseActor(ProximateTileWorldPosition);
-			ProximateTile->SetPutOnActor(nullptr);
-		}
+		if (LHold())
+			TileManager->PutOnActorToProximateTile(*ActorGenerator, World2DPosition);
+		if (RHold())
+			TileManager->PutOffActorToProximateTile(*ActorGenerator, World2DPosition);
+	}
+	break;
+	case EEditMode::Attach:
+	{
+		if(LHold())
+			TileManager->SnapActorOnProximateTile(World2DPosition);
 	}
 	break;
 	default:
@@ -79,40 +72,34 @@ void CMapEditorScene::CaptureSnapShot()
 {
 	CScene::CaptureSnapShot();
 
-	if (ImGui::Button("OpenWindowDialog"))
-		bOpenWindowDialog = true;
+	const char* ModeNames[] = { "Free", "ChooseTile", "Attach" };
+	int CurrentIndex = static_cast<int>(EditMode);
+	if (ImGui::Combo("Game Mode", &CurrentIndex, ModeNames, static_cast<int>(EEditMode::End)))
+		EditMode = static_cast<EEditMode>(CurrentIndex);
 
+	if (ImGui::Button("LayTiles"))
+		bLayTiles = true;
 	ImGui::InputScalar("TileWidth", ImGuiDataType_U64, &TileWidth);
 	ImGui::InputScalar("TileHeight", ImGuiDataType_U64, &TileHeight);
 	ImGui::InputScalar("TileMapRow", ImGuiDataType_U64, &TileMapRow);
 	ImGui::InputScalar("TileMapCol", ImGuiDataType_U64, &TileMapCol);
-	if (ImGui::Button("LayTiles"))
-		bLayTiles = true;
-
-	/*ImGui::RadioButton("CenterMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Center));
-	ImGui::SameLine();
-	ImGui::RadioButton("DownMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Down));
-	ImGui::SameLine();
-	ImGui::RadioButton("UpMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Up));
-	ImGui::RadioButton("LeftMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Left));
-	ImGui::SameLine();
-	ImGui::RadioButton("RightMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Right));
-	ImGui::SameLine();
-	ImGui::RadioButton("RightBottomMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::RightBottom));*/
-
-	/*ImGui::BeginChild("TileList", ImVec2(0, 0), true);
-	for (auto& Pair : LoadedImagePaths)
+	
+	if (ImGui::Button("OpenWindowDialog"))
+		bOpenWindowDialog = true;
+	ImGui::BeginChild("TileList", ImVec2(0, 0), true);
+	const std::wstring& GeneratedActorImagePath = ActorGenerator->GetGeneratedActorImagePath();
+	for (auto& Pair : ActorGenerator->GetLoadedImagePaths())
 	{
 		const std::string& ImageName = Pair.first;
 		const std::wstring& ImagePath = Pair.second;
 
-		bool bSelected = (CurrentActorImagePath == ImagePath);
+		bool bSelected = (GeneratedActorImagePath == ImagePath);
 
 		if (ImGui::Selectable(ImageName.c_str(), bSelected))
 		{
-			CurrentActorImagePath = ImagePath;
+			ActorGenerator->SetGeneratedActorImagePath(ImagePath);
 			ImGui::SetItemDefaultFocus();
 		}
 	}
-	ImGui::EndChild();*/
+	ImGui::EndChild();
 }

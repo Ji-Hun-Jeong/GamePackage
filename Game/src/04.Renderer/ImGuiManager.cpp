@@ -14,6 +14,7 @@ void CImGuiManager::DeliverMouseInteraction(CMouseInteractionManager& InMouseInt
 	Vector2 ImGuiCurrentPosition = Vector2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y) + ImGuiCurrentSize / 2.0f;
 	ImGuiCurrentPosition.x -= float(InScreenWidth) / 2.0f;
 	ImGuiCurrentPosition.y = -ImGuiCurrentPosition.y + float(InScreenHeight) / 2.0f;
+	ImGuiCurrentPosition += Offset;
 
 	if ((ImGuiCurrentPosition.x != Position.x) || (ImGuiCurrentPosition.y != Position.y)
 		|| (ImGuiCurrentSize.x != Size.x) || (ImGuiCurrentSize.y != Size.y))

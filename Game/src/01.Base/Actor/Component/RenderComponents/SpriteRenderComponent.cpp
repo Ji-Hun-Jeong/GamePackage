@@ -58,7 +58,7 @@ CSpriteRenderComponent::CSpriteRenderComponent()
 	, bUpdatedModel(false)
 	, bUpdatedColor(false)
 	, Scale(Vector3(1.0f))
-	, bRender(false)
+	, bRender(true)
 {
 	RenderStateObject.MountConstBuffer(EShaderType::VertexShader, 0
 		, CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(Matrix)));

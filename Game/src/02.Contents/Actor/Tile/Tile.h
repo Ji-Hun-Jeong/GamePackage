@@ -37,7 +37,7 @@ public:
 	{
 		PutOnActor = InPutOnActor;
 	}
-	const CStaticActor* GetPutOnActor() const { return PutOnActor; }
+	CStaticActor* GetPutOnActor() const { return PutOnActor; }
 
 private:
 	CStaticActor* PutOnActor = nullptr;

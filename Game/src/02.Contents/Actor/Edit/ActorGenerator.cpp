@@ -32,7 +32,7 @@ CStaticActor* CActorGenerator::GenerateStaticActor(const Vector2& InPosition)
 	return StaticActor;
 }
 
-void CActorGenerator::EraseActor(const Vector2& InWorldPosition)
+void CActorGenerator::EraseActor(CStaticActor& InErasedActor)
 {
 	if (GeneratedActors.empty())
 		return;
@@ -40,8 +40,7 @@ void CActorGenerator::EraseActor(const Vector2& InWorldPosition)
 	for (auto Iter = GeneratedActors.begin(); Iter != GeneratedActors.end(); ++Iter)
 	{
 		CActor* Actor = *Iter;
-		Vector2 FinalPosition = Actor->GetTransform()->Get2DFinalPosition();
-		if (FinalPosition.x == InWorldPosition.x && FinalPosition.y == InWorldPosition.y)
+		if (Actor == &InErasedActor)
 		{
 			Actor->Destroy();
 			GeneratedActors.erase(Iter);

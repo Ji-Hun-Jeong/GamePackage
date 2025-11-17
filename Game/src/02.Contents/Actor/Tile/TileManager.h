@@ -42,6 +42,10 @@ public:
 		return ProximateTile;
 	}
 	void LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol);
+	void LayTiles(class CActorGenerator& InActorGenerator, size_t InWidth, size_t InHeight, size_t InRow, size_t InCol);
+	void PutOnActorToProximateTile(class CActorGenerator& InActorGenerator, const Vector2& InWorld2DPosition);
+	void PutOffActorToProximateTile(class CActorGenerator& InActorGenerator, const Vector2& InWorld2DPosition);
+	void SnapActorOnProximateTile(const Vector2& InWorld2DPosition);
 	void RenderTiles(bool bInRender)
 	{
 		for (auto Tile : Tiles)

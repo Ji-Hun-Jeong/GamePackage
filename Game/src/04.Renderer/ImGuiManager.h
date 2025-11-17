@@ -33,10 +33,12 @@ public:
 	
 	void DeliverMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager, uint32_t InScreenWidth, uint32_t InScreenHeight);
 	const std::string& GetMainPanelName() const { return MainPanelName; }
+	void SetOffSet(const Vector2& InOffset) { Offset = InOffset; }
 
 private:
 	Vector2 Position;
 	Vector2 Size;
+	Vector2 Offset;
 
 	CMouseInteracter MouseInteracter;
 
