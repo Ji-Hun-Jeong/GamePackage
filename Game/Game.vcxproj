@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\Actor\Edit\ActorGenerator.cpp" />
     <ClCompile Include="src\04.Renderer\ImGuiManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\MapEditorScene.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.cpp" />
@@ -254,6 +255,7 @@
     <ClCompile Include="src\02.Contents\Actor\Tile\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\Actor\Edit\ActorGenerator.h" />
     <ClInclude Include="src\04.Renderer\ImGuiManager.h" />
     <ClInclude Include="src\02.Contents\Scene\MapEditorScene.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.h" />

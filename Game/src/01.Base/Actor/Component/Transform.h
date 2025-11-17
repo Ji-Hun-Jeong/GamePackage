@@ -50,6 +50,9 @@ public:
     const Vector3& GetRotation() const { return Rotation; }
     const Vector3& GetScale() const { return Scale; }
     float GetSpeed() const { return Speed; }
+    Vector2 Get2DFinalPosition() const { return Vector2(FinalPosition.x, FinalPosition.y); }
+    Vector2 Get2DPosition() const { return Vector2(Position.x, Position.y); }
+    Vector2 Get2DScale() const { return Vector2(Scale.x, Scale.y); }
 
     // =================================================================
     // Setters

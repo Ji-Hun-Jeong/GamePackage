@@ -9,13 +9,14 @@ public:
 	~CSpriteRenderComponent() = default;
 
 public:
-	void Render(class CSpriteRenderer& InRenderer) override;
+	void Render(CSpriteRenderer& InRenderer) override;
 
 	void SetMesh(const Graphics::TMeshData& InMeshData);
 	void SetDiffuseImage(const std::wstring& InImagePath);
 	void SetPSO(EPSOType InPSOType);
 
 	void SetLayer(uint32_t InLayer) { RenderStateObject.SetRenderLayer(InLayer); }
+	void SetRender(bool bInRender) { bRender = bInRender; }
 
 	void UpdateModelToNDC(const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale
 		, uint32_t InScreenWidth, uint32_t InScreenHeight)
@@ -69,5 +70,7 @@ private:
 		float Transparency = 0.0f;
 	} ColorData;
 	bool bUpdatedColor;
+
+	bool bRender;
 };
 

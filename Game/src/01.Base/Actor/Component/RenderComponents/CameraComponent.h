@@ -18,7 +18,7 @@ public:
 	~CCameraComponent() = default;
 
 public:
-	void Render(class CSpriteRenderer& InRenderer) override;
+	void Render(CSpriteRenderer& InRenderer) override;
 
 	void UpdateViewToNDC(const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale
 		, uint32_t InScreenWidth, uint32_t InScreenHeight)

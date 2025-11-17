@@ -10,6 +10,11 @@ void CTileManager::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_
 		Tile->Destroy();
 	Tiles.clear();
 
+	TileWidth = InWidth;
+	TileHeight = InHeight;
+	TileMapRow = InRow;
+	TileMapCol = InCol;
+
 	float FirstX = (-(InCol - 1.0f) / 2.0f) * InWidth;
 	float FirstY = ((InRow - 1.0f) / 2.0f) * InHeight;
 	float Z = 1.0f;

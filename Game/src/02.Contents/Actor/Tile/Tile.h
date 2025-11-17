@@ -8,6 +8,7 @@ enum class ETilePutMode
 	Down,
 	Left,
 	Right,
+	RightBottom,
 };
 class CTile : public CStaticActor
 {
@@ -32,11 +33,14 @@ public:
 		InteractionComponent->SetRectPosition(FinalPosition.x, FinalPosition.y);
 		InteractionComponent->SetRectScale(Scale.x, Scale.y);
 	}
-	void PutOnActor(const std::wstring& InActorImagePath, ETilePutMode InTilePutMode = ETilePutMode::Center);
-	void RevertPutOn();
+	void SetPutOnActor(CStaticActor* InPutOnActor)
+	{
+		PutOnActor = InPutOnActor;
+	}
+	const CStaticActor* GetPutOnActor() const { return PutOnActor; }
 
 private:
-	CStaticActor* ManagingActor = nullptr;
+	CStaticActor* PutOnActor = nullptr;
 
 };
 

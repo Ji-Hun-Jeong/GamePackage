@@ -1,70 +1,44 @@
 #pragma once
 #include "01.Base/Actor/Scene.h"
+#include "02.Contents/Actor/Edit/ActorGenerator.h"
 #include "02.Contents/Actor/Tile/TileManager.h"
 #include "04.Renderer/ImGuiManager.h"
 
+enum class EEditMode
+{
+	Free,
+	Tile,
+};
 class CMapEditorScene : public CScene
 {
 	GENERATE_OBJECT(CMapEditorScene)
 public:
-	CMapEditorScene() = default;
+	CMapEditorScene()
+	{
+		InteractionComponent = AddComponent<CInteractionComponent>();
+		InteractionComponent->SetRectScale(1.0f, 1.0f); // 00이면 계속 로그떠서
+	}
 	~CMapEditorScene() = default;
 
 public:
 	void BeginPlay() override;
 	void Update(float InDeltaTime) override;
-	void CaptureSnapShot() override
-	{
-		CScene::CaptureSnapShot();
+	void CaptureSnapShot() override;
 
-		ImGui::InputScalar("TileWidth", ImGuiDataType_U64, &TileWidth);
-		ImGui::InputScalar("TileHeight", ImGuiDataType_U64, &TileHeight);
-		ImGui::InputScalar("TileRow", ImGuiDataType_U64, &TileRow);
-		ImGui::InputScalar("TileCol", ImGuiDataType_U64, &TileCol);
-		if (ImGui::Button("LayTiles"))
-			bLayTiles = true;
-		if (ImGui::Button("OpenWindowDialog"))
-			bOpenWindowDialog = true;
-
-		ImGui::RadioButton("CenterMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Center));
-		ImGui::SameLine();
-		ImGui::RadioButton("DownMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Down));
-		ImGui::SameLine();
-		ImGui::RadioButton("UpMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Up));
-		ImGui::SameLine();
-		ImGui::RadioButton("LeftMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Left));
-		ImGui::SameLine();
-		ImGui::RadioButton("RightMode", (int*)&TilePutMode, static_cast<int>(ETilePutMode::Right));
-
-		ImGui::BeginChild("TileList", ImVec2(0, 0), true);
-		for (auto& Pair : LoadedImagePaths)
-		{
-			const std::string& ImageName = Pair.first;
-			const std::wstring& ImagePath = Pair.second;
-
-			bool bSelected = (CurrentActorImagePath == ImagePath);
-
-			if (ImGui::Selectable(ImageName.c_str()))
-				CurrentActorImagePath = ImagePath;
-
-			if (bSelected)
-				ImGui::SetItemDefaultFocus();
-		}
-		ImGui::EndChild();
-	}
 private:
 	// 원래는 모드를 두는게 좋을것같은데 그냥 일단 씬에 때려박자 나중에 ㄱㄱ
+	EEditMode EditMode = EEditMode::Free;
+
+	CActorGenerator* ActorGenerator = nullptr;
+	bool bOpenWindowDialog = false;
+
 	CTileManager* TileManager = nullptr;
 	size_t TileWidth = 90;
 	size_t TileHeight = 60;
-	size_t TileRow = 30;
-	size_t TileCol = 30;
-	bool bLayTiles = false;
+	size_t TileMapRow = 30;
+	size_t TileMapCol = 30;
 	ETilePutMode TilePutMode = ETilePutMode::Center;
-
-	std::map<std::string, std::wstring> LoadedImagePaths;
-	std::wstring CurrentActorImagePath = L"";
-	bool bOpenWindowDialog = false;
+	bool bLayTiles = false;
 
 };
 

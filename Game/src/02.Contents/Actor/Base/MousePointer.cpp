@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "MousePointer.h"
 
+#include "00.App/WindowManager.h"
+
 void CMousePointer::SetMouseImageFromDialog(CWindowManager& InWindowManager)
 {
 	std::wstring ImagePath;

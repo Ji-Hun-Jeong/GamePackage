@@ -58,6 +58,7 @@ CSpriteRenderComponent::CSpriteRenderComponent()
 	, bUpdatedModel(false)
 	, bUpdatedColor(false)
 	, Scale(Vector3(1.0f))
+	, bRender(false)
 {
 	RenderStateObject.MountConstBuffer(EShaderType::VertexShader, 0
 		, CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(Matrix)));
@@ -102,6 +103,9 @@ void CSpriteRenderComponent::UpdateColor(const Vector3& InColor, float InAlpha)
 
 void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer)
 {
+	if (bRender == false)
+		return;
+
 	if (bUpdatedModel || bUpdatedImage)
 	{
 		Vector3 FinalScale = Scale;
