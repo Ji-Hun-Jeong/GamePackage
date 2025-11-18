@@ -40,6 +40,14 @@ public:
 	CStaticActor* GetPutOnActor() const { return PutOnActor; }
 
 private:
+	void MoveActor(const Vector2& InOffset)
+	{
+		if (PutOnActor == nullptr)
+			return;
+
+	}
+
+private:
 	CStaticActor* PutOnActor = nullptr;
 
 };

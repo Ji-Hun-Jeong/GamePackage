@@ -43,7 +43,7 @@ void CWorld::CollectMouseInteraction(CMouseInteractionManager& InMouseInteractio
 	{
 		MousePosition.x += int32_t(Camera->GetTransform()->GetFinalPosition().x);
 		MousePosition.y += int32_t(Camera->GetTransform()->GetFinalPosition().y);
-		CImGuiManager::GetInst().SetOffSet(Camera->GetTransform()->Get2DFinalPosition());
+		CImGuiManager::GetInst().SetOffSet(Camera->GetTransform()->GetFinalPosition2D());
 	}
 	InMouseInteractionManager.SetMouseWorldPosition(MousePosition);
 

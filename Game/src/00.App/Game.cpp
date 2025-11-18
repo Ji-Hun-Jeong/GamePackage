@@ -70,8 +70,6 @@ bool CGame::Process()
 	World.Update();
 	World.CaptureSnapShot();
 
-	//World.CollectCollisionObjects(PixelCollisionManager);
-	//PixelCollisionManager.ProgressCollisionCheck(GraphicInfra->GetContext(), Window.GetScreenWidth(), Window.GetScreenHeight());
 	World.RenderWorld(SpriteRenderer);
 
 	ImGuiManager.DeliverMouseInteraction(MouseInteractionManager, Window.GetScreenWidth(), Window.GetScreenHeight());

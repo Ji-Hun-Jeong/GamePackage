@@ -49,6 +49,14 @@ void CActorGenerator::EraseActor(CStaticActor& InErasedActor)
 	}
 }
 
+void CActorGenerator::ErasePrevGeneratedActor()
+{
+	if (GeneratedActors.empty())
+		return;
+	auto Iter = --GeneratedActors.end();
+	GeneratedActors.erase(Iter);
+}
+
 void CActorGenerator::SetGeneratedActorImagePathByWindowManager(CWindowManager& InWindowManager)
 {
 	std::wstring ImagePath;

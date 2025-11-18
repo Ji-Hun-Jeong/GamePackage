@@ -13,6 +13,7 @@ public:
 	CStaticActor* GenerateStaticActor(const std::wstring& InImagePath, const Vector2& InPosition);
 	CStaticActor* GenerateStaticActor(const Vector2& InPosition);
 	void EraseActor(CStaticActor& InErasedActor);
+	void ErasePrevGeneratedActor();
 	void ClearActor()
 	{
 		for (auto GeneratedActor : GeneratedActors)

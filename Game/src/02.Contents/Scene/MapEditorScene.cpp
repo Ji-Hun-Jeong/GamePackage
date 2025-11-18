@@ -40,26 +40,40 @@ void CMapEditorScene::Update(float InDeltaTime)
 
 	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
 	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
-	Vector2 World2DPosition = Vector2(float(MouseX), float(MouseY));
+	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
 
 	switch (EditMode)
 	{
 	case EEditMode::Free:
 		if (LClicked())
-			ActorGenerator->GenerateStaticActor(World2DPosition);
+			ActorGenerator->GenerateStaticActor(MouseWorld2DPosition);
+		if (RClicked())
+			ActorGenerator->ErasePrevGeneratedActor();
 		break;
 	case EEditMode::ChooseTile:
 	{
 		if (LHold())
-			TileManager->PutOnActorToProximateTile(*ActorGenerator, World2DPosition);
+			TileManager->PutOnActorToProximateTile(*ActorGenerator, MouseWorld2DPosition);
 		if (RHold())
-			TileManager->PutOffActorToProximateTile(*ActorGenerator, World2DPosition);
+			TileManager->PutOffActorToProximateTile(*ActorGenerator, MouseWorld2DPosition);
 	}
 	break;
 	case EEditMode::Attach:
 	{
-		if(LHold())
-			TileManager->SnapActorOnProximateTile(World2DPosition);
+		if (LClicked())
+		{
+			CTile* ProximateTile = TileManager->GetProximateTile(MouseWorld2DPosition);
+			if (ProximateTile == nullptr)
+				break;
+			TileManager->SnapOnTileActor(*ProximateTile, MouseWorld2DPosition);
+		}
+		if (RHold())
+		{
+			CTile* ProximateTile = TileManager->GetProximateTile(MouseWorld2DPosition);
+			if (ProximateTile == nullptr)
+				break;
+			TileManager->ChooseTile(*ProximateTile);
+		}
 	}
 	break;
 	default:

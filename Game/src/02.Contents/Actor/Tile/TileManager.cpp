@@ -48,14 +48,7 @@ void CTileManager::PutOnActorToProximateTile(CActorGenerator& InActorGenerator, 
 	if (ProximateTile == nullptr)
 		return;
 
-	CStaticActor* PutOnActor = ProximateTile->GetPutOnActor();
-	if (PutOnActor)
-	{
-		InActorGenerator.EraseActor(*ProximateTile->GetPutOnActor());
-		ProximateTile->SetPutOnActor(nullptr);
-	}
-
-	Vector2 ProximateTileWorldPosition = ProximateTile->GetTransform()->Get2DFinalPosition();
+	Vector2 ProximateTileWorldPosition = ProximateTile->GetTransform()->GetFinalPosition2D();
 	const CStaticActor* TilePutOnActor = ProximateTile->GetPutOnActor();
 	if (TilePutOnActor)
 	{
@@ -64,6 +57,14 @@ void CTileManager::PutOnActorToProximateTile(CActorGenerator& InActorGenerator, 
 		if (TilePutOnActorImagePath == GeneratedActorImagePath)
 			return;
 	}
+
+	CStaticActor* PutOnActor = ProximateTile->GetPutOnActor();
+	if (PutOnActor)
+	{
+		InActorGenerator.EraseActor(*ProximateTile->GetPutOnActor());
+		ProximateTile->SetPutOnActor(nullptr);
+	}
+
 	CStaticActor* GeneratedActor = InActorGenerator.GenerateStaticActor(ProximateTileWorldPosition);
 	ProximateTile->SetPutOnActor(GeneratedActor);
 }
@@ -78,17 +79,14 @@ void CTileManager::PutOffActorToProximateTile(CActorGenerator& InActorGenerator,
 	ProximateTile->SetPutOnActor(nullptr);
 }
 
-void CTileManager::SnapActorOnProximateTile(const Vector2& InWorld2DPosition)
+void CTileManager::SnapOnTileActor(const CTile& InTile, const Vector2& InWorld2DPosition)
 {
-	CTile* ProximateTile = GetProximateTile(InWorld2DPosition);
-	if (ProximateTile == nullptr)
-		return;
-	CStaticActor* PutOnActor = ProximateTile->GetPutOnActor();
+	CStaticActor* PutOnActor = InTile.GetPutOnActor();
 	if (PutOnActor == nullptr)
 		return;
 
-	const Vector2 ProximateTileWorldPosition = ProximateTile->GetTransform()->Get2DFinalPosition();
-	const Vector2 ProximateTileScale = ProximateTile->GetTransform()->Get2DScale();
+	const Vector2 ProximateTileWorldPosition = InTile.GetTransform()->GetFinalPosition2D();
+	const Vector2 ProximateTileScale = InTile.GetTransform()->GetScale2D();
 
 	float MinDist = ProximateTileScale.x < ProximateTileScale.y ? ProximateTileScale.y : ProximateTileScale.x;
 
@@ -120,22 +118,40 @@ void CTileManager::SnapActorOnProximateTile(const Vector2& InWorld2DPosition)
 	const Vector2& ImageScale = PutOnActor->GetSpriteRenderComponent()->GetImageScale();
 	Vector2 OffsetScale = ProximateTileScale - ImageScale;
 
+	Vector2 StartPosition = PutOnActor->GetTransform()->GetFinalPosition2D();
+	Vector2 EndPosition = Vector2(0.0f, 0.0f);
 	if (MinDist == TopSnapDist)
-		PutOnActor->GetTransform()->SetPosition(Vector3(ProximateTileWorldPosition.x, ProximateTileWorldPosition.y + OffsetScale.y / 2.0f, 0.0f));
+		EndPosition = Vector2(ProximateTileWorldPosition.x, ProximateTileWorldPosition.y + OffsetScale.y / 2.0f);
 	else if (MinDist == BottomSnapDist)
-		PutOnActor->GetTransform()->SetPosition(Vector3(ProximateTileWorldPosition.x, ProximateTileWorldPosition.y - OffsetScale.y / 2.0f, 0.0f));
+		EndPosition = Vector2(ProximateTileWorldPosition.x, ProximateTileWorldPosition.y - OffsetScale.y / 2.0f);
 	else if (MinDist == LeftSnapDist)
-		PutOnActor->GetTransform()->SetPosition(Vector3(ProximateTileWorldPosition.x - OffsetScale.x / 2.0f, ProximateTileWorldPosition.y, 0.0f));
+		EndPosition = Vector2(ProximateTileWorldPosition.x - OffsetScale.x / 2.0f, ProximateTileWorldPosition.y);
 	else if (MinDist == RightSnapDist)
-		PutOnActor->GetTransform()->SetPosition(Vector3(ProximateTileWorldPosition.x + OffsetScale.x / 2.0f, ProximateTileWorldPosition.y, 0.0f));
-	else if(MinDist == CenterDist)
-		PutOnActor->GetTransform()->SetPosition(Vector3(ProximateTileWorldPosition.x, ProximateTileWorldPosition.y, 0.0f));
+		EndPosition = Vector2(ProximateTileWorldPosition.x + OffsetScale.x / 2.0f, ProximateTileWorldPosition.y);
+	else if (MinDist == CenterDist)
+		EndPosition = Vector2(ProximateTileWorldPosition.x, ProximateTileWorldPosition.y);
 	else if (MinDist == LeftTopDist)
-		PutOnActor->GetTransform()->SetPosition(Vector3(Left, ProximateTileWorldPosition.y + OffsetScale.y / 2.0f, 0.0f));
+		EndPosition = Vector2(Left, ProximateTileWorldPosition.y + OffsetScale.y / 2.0f);
 	else if (MinDist == LeftBottomDist)
-		PutOnActor->GetTransform()->SetPosition(Vector3(Left, ProximateTileWorldPosition.y - OffsetScale.y / 2.0f, 0.0f));
+		EndPosition = Vector2(Left, ProximateTileWorldPosition.y - OffsetScale.y / 2.0f);
 	else if (MinDist == RightTopDist)
-		PutOnActor->GetTransform()->SetPosition(Vector3(Right, ProximateTileWorldPosition.y + OffsetScale.y / 2.0f, 0.0f));
+		EndPosition = Vector2(Right, ProximateTileWorldPosition.y + OffsetScale.y / 2.0f);
 	else if (MinDist == RightBottomDist)
-		PutOnActor->GetTransform()->SetPosition(Vector3(Right, ProximateTileWorldPosition.y - OffsetScale.y / 2.0f, 0.0f));
+		EndPosition = Vector2(Right, ProximateTileWorldPosition.y - OffsetScale.y / 2.0f);
+
+	Vector2 Offset = CTransform::GetOffset2D(StartPosition, EndPosition);
+
+	if (ChoosedTiles.empty())
+		PutOnActor->GetTransform()->MoveTo(Offset);
+	else
+	{
+		for (auto ChoosedTile : ChoosedTiles)
+		{
+			CStaticActor* ChoosedPutOnActor = ChoosedTile->GetPutOnActor();
+			if (ChoosedPutOnActor)
+				ChoosedPutOnActor->GetTransform()->MoveTo(Offset);
+		}
+	}
 }
+
+

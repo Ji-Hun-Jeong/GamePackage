@@ -50,9 +50,9 @@ public:
     const Vector3& GetRotation() const { return Rotation; }
     const Vector3& GetScale() const { return Scale; }
     float GetSpeed() const { return Speed; }
-    Vector2 Get2DFinalPosition() const { return Vector2(FinalPosition.x, FinalPosition.y); }
-    Vector2 Get2DPosition() const { return Vector2(Position.x, Position.y); }
-    Vector2 Get2DScale() const { return Vector2(Scale.x, Scale.y); }
+    Vector2 GetFinalPosition2D() const { return Vector2(FinalPosition.x, FinalPosition.y); }
+    Vector2 GetPosition2D() const { return Vector2(Position.x, Position.y); }
+    Vector2 GetScale2D() const { return Vector2(Scale.x, Scale.y); }
 
     // =================================================================
     // Setters
@@ -92,6 +92,18 @@ public:
         if (Speed == 0.0f)
             std::cout << "Speed Is Zero\n";
         SetPosition(Position + InDirection * Speed);
+    }
+    void MoveTo(const Vector2& InOffset)
+    {
+        SetPosition(Position + InOffset);
+    }
+    static Vector3 GetOffset3D(const Vector3& InStart, const Vector3& InEnd)
+    {
+        return InEnd - InStart;
+    }
+    static Vector2 GetOffset2D(const Vector2& InStart, const Vector2& InEnd)
+    {
+        return InEnd - InStart;
     }
 
     bool OnVariation() const { return bVariationFlag; }
