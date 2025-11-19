@@ -37,6 +37,17 @@ public:
 				}
 			});
 	}
+	void SetActiveUI(bool bInActive)
+	{
+		SpriteRenderComponent->SetRender(bInActive);
+		InteractionComponent->SetInteraction(bInActive);
+	}
+	void SetRectUI(uint32_t InLayer)
+	{
+		SpriteRenderComponent->SetMesh(CAssetLoader::GetInst().GetMeshData("RectMesh"));
+		SpriteRenderComponent->SetPSO(EPSOType::Rect);
+		SpriteRenderComponent->SetLayer(InLayer);
+	}
 
 private:
 	

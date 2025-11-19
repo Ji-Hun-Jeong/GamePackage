@@ -8,6 +8,7 @@ enum class EButtonState : uint16_t
 	Hold,
 	Released,
 };
+
 enum class EKeyType : uint16_t
 {
 	Tab, Shift, Ctrl, Alt, Esc, Space, Left, Up, Right, Down,
@@ -21,11 +22,7 @@ namespace Core
 {
 	class CInputManager
 	{
-		friend class CSetMousePosition;
-	public:
-		CInputManager() = default;
-		~CInputManager() = default;
-
+		SINGLE(CInputManager)
 	public:
 		void Update();
 		bool CorrectKeyState(EKeyType InKeyType, EButtonState InButtonState) const { return KeyStates[(UINT)InKeyType] == InButtonState; }
@@ -35,3 +32,5 @@ namespace Core
 	
 	};
 }
+
+#define GetKey(KeyType, ButtonState) Core::CInputManager::GetInst().CorrectKeyState(KeyType, ButtonState)

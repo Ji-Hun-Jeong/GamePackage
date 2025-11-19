@@ -27,7 +27,6 @@ CGame::CGame(UINT InScreenWidth, UINT InScreenHeight)
 	, SpriteRenderer(*GraphicInfra.get(), Window.GetScreenWidth(), Window.GetScreenHeight())
 	, ImGuiManager(CImGuiManager::GetInst())
 	, PixelCollisionManager(GraphicInfra->GetDevice(), CRenderResourceLoader::GetInst(), 1000)
-	, InputActionManager(InputManager)
 	, MouseInteractionManager()
 	, World()
 {
@@ -54,13 +53,11 @@ bool CGame::Process()
 
 	ImGuiManager.StartFrame("ImGui");
 
-	InputManager.Update();
-	CMouseManager::GetInst().SetStateByInputManager(InputManager);
+	Core::CInputManager::GetInst().Update();
+	CMouseManager::GetInst().SetStateByInputManager(Core::CInputManager::GetInst());
 
 	World.Arrange();
 	World.Ready();
-
-	World.PerformInputAction(InputActionManager);
 
 	World.CollectMouseInteraction(MouseInteractionManager);
 	MouseInteractionManager.FindFocusInteracter();

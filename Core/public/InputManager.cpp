@@ -1,9 +1,13 @@
 #include "pch.h"
 #include "InputManager.h"
-#include "Window.h"
 
 namespace Core
 {
+	CInputManager::CInputManager()
+		: KeyStates{}
+	{
+
+	}
 	const char KeyMapping[] =
 	{
 		VK_TAB, VK_SHIFT, VK_CONTROL, VK_MENU, VK_ESCAPE, VK_SPACE, VK_LEFT, VK_UP, VK_RIGHT, VK_DOWN,

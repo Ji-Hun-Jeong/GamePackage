@@ -1,15 +1,19 @@
 #pragma once
 #include "01.Base/Actor/StaticActor.h"
 
-enum class ETilePutMode
+enum class ETilePositionType
 {
 	Center,
-	Up,
-	Down,
 	Left,
 	Right,
+	Top,
+	Bottom,
+	LeftTop,
+	LeftBottom,
+	RightTop,
 	RightBottom,
 };
+
 class CTile : public CStaticActor
 {
 	GENERATE_OBJECT(CTile)
@@ -38,14 +42,7 @@ public:
 		PutOnActor = InPutOnActor;
 	}
 	CStaticActor* GetPutOnActor() const { return PutOnActor; }
-
-private:
-	void MoveActor(const Vector2& InOffset)
-	{
-		if (PutOnActor == nullptr)
-			return;
-
-	}
+	void MoveActor(ETilePositionType InTilePositionType);
 
 private:
 	CStaticActor* PutOnActor = nullptr;

@@ -1,4 +1,5 @@
 #pragma once
+#include <Core/public/InputManager.h>
 #include "00.App/CoreSystem.h"
 #include "00.App/WindowManager.h"
 #include "03.Utils/AssetLoader.h"
@@ -205,10 +206,6 @@ public:
 		for (auto Collider : Colliders)
 			Collider->SetCenterPosition(Vector2(FinalPosition.x, FinalPosition.y));
 		
-	}
-
-	virtual void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector)
-	{
 	}
 
 public:

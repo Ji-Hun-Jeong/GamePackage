@@ -17,6 +17,7 @@ void CMapEditorScene::BeginPlay()
 
 	ActorGenerator = GetWorld()->SpawnActor<CActorGenerator>(this);
 	TileManager = GetWorld()->SpawnActor<CTileManager>(this);
+	TileSnapUI = GetWorld()->SpawnActor<CTileSnapUI>(this);
 }
 
 void CMapEditorScene::Update(float InDeltaTime)
@@ -50,16 +51,17 @@ void CMapEditorScene::Update(float InDeltaTime)
 		if (RClicked())
 			ActorGenerator->ErasePrevGeneratedActor();
 		break;
-	case EEditMode::ChooseTile:
+	case EEditMode::Tile:
 	{
 		if (LHold())
 			TileManager->PutOnActorToProximateTile(*ActorGenerator, MouseWorld2DPosition);
-		if (RHold())
+		else if (RHold())
 			TileManager->PutOffActorToProximateTile(*ActorGenerator, MouseWorld2DPosition);
 	}
 	break;
 	case EEditMode::Attach:
 	{
+		// 왼클릭으로 타일을 쭉 선택하고 선택한 타일들을 위치를 바꿀 수 있는 ui띄우고 그 ui를 누른쪽으로 Move
 		if (LClicked())
 		{
 			CTile* ProximateTile = TileManager->GetProximateTile(MouseWorld2DPosition);
@@ -67,13 +69,15 @@ void CMapEditorScene::Update(float InDeltaTime)
 				break;
 			TileManager->SnapOnTileActor(*ProximateTile, MouseWorld2DPosition);
 		}
-		if (RHold())
+		if (LHold() && GetKey(EKeyType::Q, EButtonState::Hold))
 		{
 			CTile* ProximateTile = TileManager->GetProximateTile(MouseWorld2DPosition);
 			if (ProximateTile == nullptr)
 				break;
 			TileManager->ChooseTile(*ProximateTile);
 		}
+		if (RClicked())
+			TileManager->ClearChooseTiles();
 	}
 	break;
 	default:
@@ -86,7 +90,7 @@ void CMapEditorScene::CaptureSnapShot()
 {
 	CScene::CaptureSnapShot();
 
-	const char* ModeNames[] = { "Free", "ChooseTile", "Attach" };
+	const char* ModeNames[] = { "Free", "Tile", "Attach" };
 	int CurrentIndex = static_cast<int>(EditMode);
 	if (ImGui::Combo("Game Mode", &CurrentIndex, ModeNames, static_cast<int>(EEditMode::End)))
 		EditMode = static_cast<EEditMode>(CurrentIndex);

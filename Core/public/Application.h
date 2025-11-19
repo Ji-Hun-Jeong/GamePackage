@@ -18,7 +18,6 @@ namespace Core
 
 	protected:
 		CWindow Window;
-		CInputManager InputManager;
 
 	};
 }

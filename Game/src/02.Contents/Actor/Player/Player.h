@@ -14,7 +14,6 @@ public:
 public:
 	void BeginPlay() override;
 	void CaptureSnapShot() override;
-	void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) override;
 	void OnCollisionEnter(CCollider& InTargetCollider) override
 	{
 		if (IsSame<CBackGround>(*InTargetCollider.GetOwner()) == false)
@@ -32,12 +31,12 @@ private:
 	CDynamicActor* Hand;
 
 private:
-	void InitalizeInputActionValue();
+	/*void InitalizeInputActionValue();*/
 
-	std::unique_ptr<class CInputActionValue> LeftMoveActionValue;
+	/*std::unique_ptr<class CInputActionValue> LeftMoveActionValue;
 	std::unique_ptr<class CInputActionValue> RightMoveActionValue;
 	std::unique_ptr<class CInputActionValue> UpMoveActionValue;
-	std::unique_ptr<class CInputActionValue> DownMoveActionValue;
+	std::unique_ptr<class CInputActionValue> DownMoveActionValue;*/
 
 	CRectCollider* Collider;
 };

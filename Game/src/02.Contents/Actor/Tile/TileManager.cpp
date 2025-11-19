@@ -5,6 +5,11 @@
 #include "02.Contents/Actor/Edit/ActorGenerator.h"
 #include "04.Renderer/ImGuiManager.h"
 
+CTileManager::CTileManager()
+{
+	
+}
+
 void CTileManager::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol)
 {
 	for (CTile* Tile : Tiles)
@@ -79,7 +84,7 @@ void CTileManager::PutOffActorToProximateTile(CActorGenerator& InActorGenerator,
 	ProximateTile->SetPutOnActor(nullptr);
 }
 
-void CTileManager::SnapOnTileActor(const CTile& InTile, const Vector2& InWorld2DPosition)
+void CTileManager::SnapOnTileActor(CTile& InTile, const Vector2& InWorld2DPosition)
 {
 	CStaticActor* PutOnActor = InTile.GetPutOnActor();
 	if (PutOnActor == nullptr)
@@ -118,39 +123,33 @@ void CTileManager::SnapOnTileActor(const CTile& InTile, const Vector2& InWorld2D
 	const Vector2& ImageScale = PutOnActor->GetSpriteRenderComponent()->GetImageScale();
 	Vector2 OffsetScale = ProximateTileScale - ImageScale;
 
-	Vector2 StartPosition = PutOnActor->GetTransform()->GetFinalPosition2D();
-	Vector2 EndPosition = Vector2(0.0f, 0.0f);
+	ETilePositionType TilePositionType = ETilePositionType::Center;
 	if (MinDist == TopSnapDist)
-		EndPosition = Vector2(ProximateTileWorldPosition.x, ProximateTileWorldPosition.y + OffsetScale.y / 2.0f);
+		TilePositionType = ETilePositionType::Top;
 	else if (MinDist == BottomSnapDist)
-		EndPosition = Vector2(ProximateTileWorldPosition.x, ProximateTileWorldPosition.y - OffsetScale.y / 2.0f);
+		TilePositionType = ETilePositionType::Bottom;
 	else if (MinDist == LeftSnapDist)
-		EndPosition = Vector2(ProximateTileWorldPosition.x - OffsetScale.x / 2.0f, ProximateTileWorldPosition.y);
+		TilePositionType = ETilePositionType::Left;
 	else if (MinDist == RightSnapDist)
-		EndPosition = Vector2(ProximateTileWorldPosition.x + OffsetScale.x / 2.0f, ProximateTileWorldPosition.y);
+		TilePositionType = ETilePositionType::Right;
 	else if (MinDist == CenterDist)
-		EndPosition = Vector2(ProximateTileWorldPosition.x, ProximateTileWorldPosition.y);
+		TilePositionType = ETilePositionType::Center;
 	else if (MinDist == LeftTopDist)
-		EndPosition = Vector2(Left, ProximateTileWorldPosition.y + OffsetScale.y / 2.0f);
+		TilePositionType = ETilePositionType::LeftTop;
 	else if (MinDist == LeftBottomDist)
-		EndPosition = Vector2(Left, ProximateTileWorldPosition.y - OffsetScale.y / 2.0f);
+		TilePositionType = ETilePositionType::LeftBottom;
 	else if (MinDist == RightTopDist)
-		EndPosition = Vector2(Right, ProximateTileWorldPosition.y + OffsetScale.y / 2.0f);
+		TilePositionType = ETilePositionType::RightTop;
 	else if (MinDist == RightBottomDist)
-		EndPosition = Vector2(Right, ProximateTileWorldPosition.y - OffsetScale.y / 2.0f);
+		TilePositionType = ETilePositionType::RightBottom;
 
-	Vector2 Offset = CTransform::GetOffset2D(StartPosition, EndPosition);
 
 	if (ChoosedTiles.empty())
-		PutOnActor->GetTransform()->MoveTo(Offset);
+		InTile.MoveActor(TilePositionType);
 	else
 	{
 		for (auto ChoosedTile : ChoosedTiles)
-		{
-			CStaticActor* ChoosedPutOnActor = ChoosedTile->GetPutOnActor();
-			if (ChoosedPutOnActor)
-				ChoosedPutOnActor->GetTransform()->MoveTo(Offset);
-		}
+			ChoosedTile->MoveActor(TilePositionType);
 	}
 }
 

@@ -11,6 +11,18 @@ public:
 	~CCamera() = default;
 
 public:
+	void Update(float InDeltaTime) override
+	{
+		CActor::Update(InDeltaTime);
+		if (GetKey(EKeyType::Left, EButtonState::Hold))
+			Transform->Move(Vector3(-1.0f, 0.0f, 0.0f));
+		if (GetKey(EKeyType::Right, EButtonState::Hold))
+			Transform->Move(Vector3(1.0f, 0.0f, 0.0f));
+		if (GetKey(EKeyType::Up, EButtonState::Hold))
+			Transform->Move(Vector3(0.0f, 1.0f, 0.0f));
+		if (GetKey(EKeyType::Down, EButtonState::Hold))
+			Transform->Move(Vector3(0.0f, -1.0f, 0.0f));
+	}
 	void FinalUpdate() override
 	{
 		CActor::FinalUpdate();
@@ -20,14 +32,9 @@ public:
 		Transform->SetScale(Vector3(float(ScreenWidth), float(ScreenHeight), 1.0f));
 	}
 	void CaptureSnapShot() override;
-	void SetupInputActionValue(class CInputActionValueCollector& InInputActionValueCollector) override;
 
 private:
-	std::unique_ptr<class CInputActionValue> LeftMoveActionValue;
-	std::unique_ptr<class CInputActionValue> RightMoveActionValue;
-	std::unique_ptr<class CInputActionValue> UpMoveActionValue;
-	std::unique_ptr<class CInputActionValue> DownMoveActionValue;
-
 	CCameraComponent* CameraComponent;
+
 };
 

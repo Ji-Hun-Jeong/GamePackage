@@ -7,7 +7,7 @@ class CTileManager : public CActor
 {
 	GENERATE_OBJECT(CTileManager)
 public:
-	CTileManager() = default;
+	CTileManager();
 	~CTileManager() = default;
 
 public:
@@ -46,7 +46,7 @@ public:
 	void LayTiles(class CActorGenerator& InActorGenerator, size_t InWidth, size_t InHeight, size_t InRow, size_t InCol);
 	void PutOnActorToProximateTile(class CActorGenerator& InActorGenerator, const Vector2& InWorld2DPosition);
 	void PutOffActorToProximateTile(class CActorGenerator& InActorGenerator, const Vector2& InWorld2DPosition);
-	void SnapOnTileActor(const CTile& InTile, const Vector2& InWorld2DPosition);
+	void SnapOnTileActor(CTile& InTile, const Vector2& InWorld2DPosition);
 
 	void ChooseTile(CTile& InTile)
 	{
@@ -55,6 +55,10 @@ public:
 				return;
 
 		ChoosedTiles.push_back(&InTile);
+	}
+	void ClearChooseTiles()
+	{
+		ChoosedTiles.clear();
 	}
 	void RenderTiles(bool bInRender)
 	{
@@ -70,9 +74,7 @@ private:
 	size_t TileHeight = 0;
 	size_t TileMapRow = 0;
 	size_t TileMapCol = 0;
-	ETilePutMode TilePutMode = ETilePutMode::Center;
 
 	std::vector<CTile*> ChoosedTiles;
-
 };
 

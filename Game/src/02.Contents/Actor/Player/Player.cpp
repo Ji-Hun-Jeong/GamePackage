@@ -1,20 +1,19 @@
 #include "pch.h"
 #include "Player.h"
 #include "GameCore.h"
-#include "05.Input/InputActionManager.h"
 
 CPlayer::CPlayer()
 	: Head(nullptr)
 	, Body(nullptr)
 	, Arm(nullptr)
 	, Hand(nullptr)
-	, LeftMoveActionValue(nullptr)
-	, RightMoveActionValue(nullptr)
-	, UpMoveActionValue(nullptr)
-	, DownMoveActionValue(nullptr)
+	//, LeftMoveActionValue(nullptr)
+	//, RightMoveActionValue(nullptr)
+	//, UpMoveActionValue(nullptr)
+	//, DownMoveActionValue(nullptr)
 	, Collider(AddComponent<CRectCollider>())
 {
-	InitalizeInputActionValue();
+	// InitalizeInputActionValue();
 
 	/*Head = GetWorld()->SpawnActor<CCharacter>(this);
 	Head->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/Head_Front.png");
@@ -62,25 +61,25 @@ void CPlayer::CaptureSnapShot()
 	Collider->SetRectScale(Vector2(Scale.x, Scale.y));
 }
 
-void CPlayer::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)
-{
-	InInputActionValueCollector.PushInputActionValue(*LeftMoveActionValue);
-	InInputActionValueCollector.PushInputActionValue(*RightMoveActionValue);
-	InInputActionValueCollector.PushInputActionValue(*UpMoveActionValue);
-	InInputActionValueCollector.PushInputActionValue(*DownMoveActionValue);
-}
+//void CPlayer::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)
+//{
+//	InInputActionValueCollector.PushInputActionValue(*LeftMoveActionValue);
+//	InInputActionValueCollector.PushInputActionValue(*RightMoveActionValue);
+//	InInputActionValueCollector.PushInputActionValue(*UpMoveActionValue);
+//	InInputActionValueCollector.PushInputActionValue(*DownMoveActionValue);
+//}
 
-void CPlayer::InitalizeInputActionValue()
-{
-	LeftMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f)); });
-	LeftMoveActionValue->AddKeyCondition({EKeyType::A, EButtonState::Hold});
-
-	RightMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(1.0f, 0.0f, 0.0f)); });
-	RightMoveActionValue->AddKeyCondition({ EKeyType::D, EButtonState::Hold });
-
-	UpMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(0.0f, 1.0f, 0.0f)); });
-	UpMoveActionValue->AddKeyCondition({ EKeyType::W, EButtonState::Hold });
-
-	DownMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(0.0f, -1.0f, 0.0f)); });
-	DownMoveActionValue->AddKeyCondition({ EKeyType::S, EButtonState::Hold });
-}
+//void CPlayer::InitalizeInputActionValue()
+//{
+//	LeftMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f)); });
+//	LeftMoveActionValue->AddKeyCondition({EKeyType::A, EButtonState::Hold});
+//
+//	RightMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(1.0f, 0.0f, 0.0f)); });
+//	RightMoveActionValue->AddKeyCondition({ EKeyType::D, EButtonState::Hold });
+//
+//	UpMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(0.0f, 1.0f, 0.0f)); });
+//	UpMoveActionValue->AddKeyCondition({ EKeyType::W, EButtonState::Hold });
+//
+//	DownMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(0.0f, -1.0f, 0.0f)); });
+//	DownMoveActionValue->AddKeyCondition({ EKeyType::S, EButtonState::Hold });
+//}

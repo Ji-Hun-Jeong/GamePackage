@@ -72,7 +72,7 @@
     <ClCompile Include="src\01.Base\Actor\DynamicActor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\05.Input\InputActionManager.cpp">
+    <ClCompile Include="src\02.Contents\Actor\Base\InputActionManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\01.Base\Actor\Camera.cpp">
@@ -201,6 +201,9 @@
     <ClCompile Include="src\02.Contents\Actor\Edit\ActorGenerator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\Tile\TileSnapUI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -260,7 +263,7 @@
     <ClInclude Include="src\01.Base\Actor\DynamicActor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\05.Input\InputActionManager.h">
+    <ClInclude Include="src\02.Contents\Actor\Base\InputActionManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Actor\Camera.h">
@@ -387,6 +390,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Edit\ActorGenerator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\Tile\TileSnapUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

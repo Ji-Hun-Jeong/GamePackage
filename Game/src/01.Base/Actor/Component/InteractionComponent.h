@@ -8,11 +8,9 @@ class CInteractionComponent : public CComponent
 		GENERATE_OBJECT(CInteractionComponent)
 public:
 	CInteractionComponent()
+		: bInteraction(true)
 	{}
-	~CInteractionComponent()
-	{
-
-	}
+	~CInteractionComponent() = default;
 
 public:
 	CMouseInteracter* GetMouseInteracter() { return &MouseInteracter; }
@@ -25,6 +23,7 @@ public:
 	{
 		MouseInteracter.SetSize(Vector2(InScaleX, InScaleY));
 	}
+	void SetInteraction(bool bInInteraction) { bInteraction = bInInteraction; }
 
 	void PerformEvent()
 	{
@@ -47,6 +46,8 @@ public:
 	void SetMouseExitEvent(std::function<void()> InMouseExitEvent) { MouseExitEvent = InMouseExitEvent; }
 	void SetMouseOnEvent(std::function<void()> InMouseOnEvent) { MouseOnEvent = InMouseOnEvent; }
 	void SetMouseFocusEvent(std::function<void()> InMouseFocusEvent) { MouseFocusEvent = InMouseFocusEvent; }
+
+	void InteractionCheck(class CMouseInteractionManager& InMouseInteractionManager);
 
 private:
 	void ActivateMouseEnterEvent() const
@@ -78,5 +79,6 @@ private:
 	std::function<void()> MouseOnEvent = nullptr;
 	std::function<void()> MouseFocusEvent = nullptr;
 
+	bool bInteraction;
 };
 

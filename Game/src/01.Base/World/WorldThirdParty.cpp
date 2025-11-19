@@ -4,18 +4,9 @@
 #include "04.Renderer/SpriteRenderer.h"
 #include "04.Renderer/RenderSorter.h"
 #include "04.Renderer/ImGuiManager.h"
-#include "05.Input/InputActionManager.h"
 #include "06.Interaction/MouseInteractionManager.h"
 #include "07.Collision/PixelCollisionManager.h"
 
-void CWorld::PerformInputAction(CInputActionManager& InInputActionManager)
-{
-	CInputActionValueCollector Collector;
-	for (auto& WorldActor : WorldActors)
-		WorldActor->SetupInputActionValue(Collector);
-
-	InInputActionManager.PerformAction(Collector);
-}
 void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 {
 	for (auto& WorldActor : WorldActors)
@@ -51,7 +42,7 @@ void CWorld::CollectMouseInteraction(CMouseInteractionManager& InMouseInteractio
 	{
 		CInteractionComponent* InteractionComponent = WorldActor->GetInteractionComponent();
 		if (InteractionComponent)
-			InMouseInteractionManager.PushFocusInteracter(InteractionComponent->GetMouseInteracter());
+			InteractionComponent->InteractionCheck(InMouseInteractionManager);
 	}
 }
 

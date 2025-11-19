@@ -126,7 +126,6 @@ public:
 
 	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
 
-	void PerformInputAction(class CInputActionManager& InInputActionManager);
 	void RenderWorld(class CSpriteRenderer& InRenderer);
 	void CollectMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager);
 	void CollectCollisionObjects(class CPixelCollisionManager& InPixelCollisionManager);
