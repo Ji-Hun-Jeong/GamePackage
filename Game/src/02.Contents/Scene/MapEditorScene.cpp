@@ -36,9 +36,6 @@ void CMapEditorScene::Update(float InDeltaTime)
 		bLayTiles = false;
 	}
 
-	if (InteractionComponent->IsMouseFocus() == false)
-		return;
-
 	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
 	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
@@ -46,6 +43,8 @@ void CMapEditorScene::Update(float InDeltaTime)
 	switch (EditMode)
 	{
 	case EEditMode::Free:
+		if (InteractionComponent->IsMouseFocus() == false)
+			return;
 		if (LClicked())
 			ActorGenerator->GenerateStaticActor(MouseWorld2DPosition);
 		if (RClicked())
@@ -53,31 +52,46 @@ void CMapEditorScene::Update(float InDeltaTime)
 		break;
 	case EEditMode::Tile:
 	{
-		if (LHold())
-			TileManager->PutOnActorToProximateTile(*ActorGenerator, MouseWorld2DPosition);
+		if (InteractionComponent->IsMouseFocus() == false)
+			return;
+		if (LClicked())
+			TileCollector.ClearTile();
+		else if (LHold())
+		{
+			CTile* Tile = TileManager->PutOnActorToProximateTile(*ActorGenerator, MouseWorld2DPosition);
+			if (Tile)
+				TileCollector.AddTile(*Tile);
+		}
+		else if (LReleased())
+		{
+			if (TileCollector.IsEmpty())
+				break;
+			const Vector2 CenterPosition = TileCollector.GetCenterPosition();
+			TileSnapUI->GetTransform()->SetPosition(Vector3(CenterPosition.x, CenterPosition.y, 0.0f));
+			TileSnapUI->AppearUI();
+			EditMode = EEditMode::Attach;
+		}
 		else if (RHold())
 			TileManager->PutOffActorToProximateTile(*ActorGenerator, MouseWorld2DPosition);
 	}
 	break;
 	case EEditMode::Attach:
 	{
-		// 왼클릭으로 타일을 쭉 선택하고 선택한 타일들을 위치를 바꿀 수 있는 ui띄우고 그 ui를 누른쪽으로 Move
 		if (LClicked())
 		{
-			CTile* ProximateTile = TileManager->GetProximateTile(MouseWorld2DPosition);
-			if (ProximateTile == nullptr)
+			ETilePositionType TilePositionType = TileSnapUI->GetFocusedUIPosition();
+			if (TilePositionType == ETilePositionType::None)
 				break;
-			TileManager->SnapOnTileActor(*ProximateTile, MouseWorld2DPosition);
+			auto& Tiles = TileCollector.GetTiles();
+			for (CTile* Tile : Tiles)
+				Tile->MoveActor(TilePositionType);
 		}
-		if (LHold() && GetKey(EKeyType::Q, EButtonState::Hold))
+		else if (RReleased())
 		{
-			CTile* ProximateTile = TileManager->GetProximateTile(MouseWorld2DPosition);
-			if (ProximateTile == nullptr)
-				break;
-			TileManager->ChooseTile(*ProximateTile);
+			TileSnapUI->DisappearUI();
+			TileCollector.ClearTile();
+			EditMode = EEditMode::Tile;
 		}
-		if (RClicked())
-			TileManager->ClearChooseTiles();
 	}
 	break;
 	default:

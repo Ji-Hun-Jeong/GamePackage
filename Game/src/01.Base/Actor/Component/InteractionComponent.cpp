@@ -5,6 +5,10 @@
 
 void CInteractionComponent::InteractionCheck(CMouseInteractionManager& InMouseInteractionManager)
 {
-	if (bInteraction)
+	if (bInteraction == false)
+		return;
+	if(bEndInteractionCheck)
+		InMouseInteractionManager.PushFocusInteracterToEnd(&MouseInteracter);
+	else
 		InMouseInteractionManager.PushFocusInteracter(&MouseInteracter);
 }

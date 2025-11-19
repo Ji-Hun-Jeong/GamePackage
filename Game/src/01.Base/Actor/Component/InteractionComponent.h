@@ -9,6 +9,7 @@ class CInteractionComponent : public CComponent
 public:
 	CInteractionComponent()
 		: bInteraction(true)
+		, bEndInteractionCheck(false)
 	{}
 	~CInteractionComponent() = default;
 
@@ -24,6 +25,7 @@ public:
 		MouseInteracter.SetSize(Vector2(InScaleX, InScaleY));
 	}
 	void SetInteraction(bool bInInteraction) { bInteraction = bInInteraction; }
+	void SetEndInteractionCheck(bool bInEndInteractionCheck) { bEndInteractionCheck = bInEndInteractionCheck; }
 
 	void PerformEvent()
 	{
@@ -80,5 +82,6 @@ private:
 	std::function<void()> MouseFocusEvent = nullptr;
 
 	bool bInteraction;
+	bool bEndInteractionCheck;
 };
 

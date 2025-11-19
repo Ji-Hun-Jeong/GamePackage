@@ -14,7 +14,7 @@ public:
 	bool IsEmpty() const { return FocusInteracterCandidates.empty(); }
 	void Merge(const CFoucsInteracterCandidate& InOther)
 	{
-		FocusInteracterCandidates.insert(FocusInteracterCandidates.begin()
+		FocusInteracterCandidates.insert(FocusInteracterCandidates.end()
 			, InOther.FocusInteracterCandidates.begin(), InOther.FocusInteracterCandidates.end());
 	}
 	CMouseInteracter* GetOneFocusInteracter() const
@@ -44,6 +44,10 @@ public:
 	{
 		CurrentFrameDetectInteracters.push_back(InMouseInteracter);
 	}
+	void PushFocusInteracterToEnd(CMouseInteracter* InMouseInteracter)
+	{
+		AddToEndInteracters.push_back(InMouseInteracter);
+	}
 	void SetMouseWorldPosition(const Vector2& InMouseWorldPosition)
 	{
 		MouseWorldPosition = InMouseWorldPosition;
@@ -52,6 +56,8 @@ public:
 	}
 	void FindFocusInteracter()
 	{
+		CurrentFrameDetectInteracters.insert(CurrentFrameDetectInteracters.end(), AddToEndInteracters.begin(), AddToEndInteracters.end());
+
 		for (auto& CurrentFrameDetectInteracter : CurrentFrameDetectInteracters)
 			CurrentFrameDetectInteracter->ClearState();
 
@@ -59,7 +65,7 @@ public:
 
 		for (auto& MouseInteracter : CurrentFrameDetectInteracters)
 		{
-			CFoucsInteracterCandidate Candidates= TryFindFocusInteracters(*MouseInteracter, MouseWorldPosition);
+			CFoucsInteracterCandidate Candidates = TryFindFocusInteracters(*MouseInteracter, MouseWorldPosition);
 			if (Candidates.IsEmpty())
 				continue;
 			FocusInteracterCandidates.Merge(Candidates);
@@ -82,6 +88,7 @@ public:
 		CurrentFocusInteracter = NewFocusInteracter;
 
 		CurrentFrameDetectInteracters.clear();
+		AddToEndInteracters.clear();
 	}
 
 private:
@@ -121,7 +128,7 @@ private:
 		float centerY = InMouseInteracter.Position.y;
 		float halfWidth = InMouseInteracter.Size.x * 0.5f;
 		float halfHeight = InMouseInteracter.Size.y * 0.5f;
-		
+
 		// 사각형의 경계
 		float left = centerX - halfWidth;
 		float right = centerX + halfWidth;
@@ -135,6 +142,7 @@ private:
 
 private:
 	std::vector<CMouseInteracter*> CurrentFrameDetectInteracters;
+	std::vector<CMouseInteracter*> AddToEndInteracters;
 	CMouseInteracter* CurrentFocusInteracter;
 	Vector2 MouseWorldPosition;
 

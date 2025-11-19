@@ -27,5 +27,5 @@ void CImGuiManager::DeliverMouseInteraction(CMouseInteractionManager& InMouseInt
 		MouseInteracter.SetPosition(Position);
 		MouseInteracter.SetSize(Size);
 	}
-	InMouseInteractionManager.PushFocusInteracter(&MouseInteracter);
+	InMouseInteractionManager.PushFocusInteracterToEnd(&MouseInteracter);
 }

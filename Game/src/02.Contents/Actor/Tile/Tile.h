@@ -12,6 +12,7 @@ enum class ETilePositionType
 	LeftBottom,
 	RightTop,
 	RightBottom,
+	None,
 };
 
 class CTile : public CStaticActor
@@ -20,7 +21,6 @@ class CTile : public CStaticActor
 public:
 	CTile()
 	{
-		InteractionComponent = AddComponent<CInteractionComponent>();
 		SpriteRenderComponent->SetMesh(CAssetLoader::GetInst().GetMeshData("RectMesh"));
 		SpriteRenderComponent->SetPSO(EPSOType::Rect);
 		SpriteRenderComponent->SetLayer(1);
@@ -28,15 +28,6 @@ public:
 	~CTile() = default;
 
 public:
-	void CaptureSnapShot() override
-	{
-		CStaticActor::CaptureSnapShot();
-
-		const Vector3& FinalPosition = Transform->GetFinalPosition();
-		const Vector3& Scale = Transform->GetScale();
-		InteractionComponent->SetRectPosition(FinalPosition.x, FinalPosition.y);
-		InteractionComponent->SetRectScale(Scale.x, Scale.y);
-	}
 	void SetPutOnActor(CStaticActor* InPutOnActor)
 	{
 		PutOnActor = InPutOnActor;

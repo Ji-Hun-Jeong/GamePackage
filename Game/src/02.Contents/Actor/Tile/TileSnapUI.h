@@ -11,6 +11,29 @@ public:
 	~CTileSnapUI() = default;
 
 public:
+	ETilePositionType GetFocusedUIPosition()
+	{
+		if (LeftMoveUI->GetInteractionComponent()->IsMouseFocus())
+			return ETilePositionType::Left;
+		if (RightMoveUI->GetInteractionComponent()->IsMouseFocus())
+			return ETilePositionType::Right;
+		if (TopMoveUI->GetInteractionComponent()->IsMouseFocus())
+			return ETilePositionType::Top;
+		if (BottomMoveUI->GetInteractionComponent()->IsMouseFocus())
+			return ETilePositionType::Bottom;
+		if (CenterMoveUI->GetInteractionComponent()->IsMouseFocus())
+			return ETilePositionType::Center;
+		if (LeftTopMoveUI->GetInteractionComponent()->IsMouseFocus())
+			return ETilePositionType::LeftTop;
+		if (LeftBottomMoveUI->GetInteractionComponent()->IsMouseFocus())
+			return ETilePositionType::LeftBottom;
+		if (RightTopMoveUI->GetInteractionComponent()->IsMouseFocus())
+			return ETilePositionType::RightTop;
+		if (RightBottomMoveUI->GetInteractionComponent()->IsMouseFocus())
+			return ETilePositionType::RightBottom;
+		return ETilePositionType::None;
+	}
+
 	void AppearUI()
 	{
 		LeftMoveUI->GetSpriteRenderComponent()->SetRender(true);
@@ -32,6 +55,16 @@ public:
 		LeftBottomMoveUI->GetInteractionComponent()->SetInteraction(true);
 		RightTopMoveUI->GetInteractionComponent()->SetInteraction(true);
 		RightBottomMoveUI->GetInteractionComponent()->SetInteraction(true);
+
+		LeftMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
+		RightMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
+		TopMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
+		BottomMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
+		CenterMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
+		LeftTopMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
+		LeftBottomMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
+		RightTopMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
+		RightBottomMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
 	}
 
 	void DisappearUI()

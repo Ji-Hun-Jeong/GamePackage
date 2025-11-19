@@ -46,4 +46,5 @@ void CTileSnapUI::InitalizeMoveUI(CUI* InMoveUI)
 	InMoveUI->SetActiveUI(false);
 	InMoveUI->SetRectUI(2);
 	InMoveUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 1.0f));
+	InMoveUI->GetInteractionComponent()->SetRectScale(20.0f, 20.0f);
 }

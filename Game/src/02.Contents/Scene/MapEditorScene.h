@@ -12,6 +12,31 @@ enum class EEditMode
 	Attach,
 	End,
 };
+
+class CTileCollector
+{
+public:
+	CTileCollector() = default;
+	~CTileCollector() = default;
+
+public:
+	void AddTile(CTile& InTile) { Tiles.push_back(&InTile); }
+	void ClearTile() { Tiles.clear(); }
+	Vector2 GetCenterPosition()
+	{
+		Vector2 CenterPosition(0.0f);
+		for (CTile* Tile : Tiles)
+			CenterPosition += Tile->GetTransform()->GetFinalPosition2D();
+		CenterPosition /= float(Tiles.size());
+		return CenterPosition;
+	}
+	bool IsEmpty() const { return Tiles.empty(); }
+	const std::vector<CTile*>& GetTiles() const { return Tiles; }
+
+private:
+	std::vector<CTile*> Tiles;
+};
+
 class CMapEditorScene : public CScene
 {
 	GENERATE_OBJECT(CMapEditorScene)
@@ -39,6 +64,6 @@ private:
 	bool bLayTiles = false;
 
 	CTileSnapUI* TileSnapUI = nullptr;
-
+	CTileCollector TileCollector;
 };
 

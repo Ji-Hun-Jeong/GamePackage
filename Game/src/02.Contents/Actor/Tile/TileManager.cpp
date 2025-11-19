@@ -7,7 +7,7 @@
 
 CTileManager::CTileManager()
 {
-	
+
 }
 
 void CTileManager::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol)
@@ -47,11 +47,11 @@ void CTileManager::LayTiles(CActorGenerator& InActorGenerator, size_t InWidth, s
 	LayTiles(InWidth, InHeight, InRow, InCol);
 }
 
-void CTileManager::PutOnActorToProximateTile(CActorGenerator& InActorGenerator, const Vector2& InWorld2DPosition)
+CTile* CTileManager::PutOnActorToProximateTile(CActorGenerator& InActorGenerator, const Vector2& InWorld2DPosition)
 {
 	CTile* ProximateTile = GetProximateTile(InWorld2DPosition);
 	if (ProximateTile == nullptr)
-		return;
+		return nullptr;
 
 	Vector2 ProximateTileWorldPosition = ProximateTile->GetTransform()->GetFinalPosition2D();
 	const CStaticActor* TilePutOnActor = ProximateTile->GetPutOnActor();
@@ -60,7 +60,7 @@ void CTileManager::PutOnActorToProximateTile(CActorGenerator& InActorGenerator, 
 		const std::wstring& TilePutOnActorImagePath = TilePutOnActor->GetSpriteRenderComponent()->GetImagePath();
 		const std::wstring& GeneratedActorImagePath = InActorGenerator.GetGeneratedActorImagePath();
 		if (TilePutOnActorImagePath == GeneratedActorImagePath)
-			return;
+			return ProximateTile;
 	}
 
 	CStaticActor* PutOnActor = ProximateTile->GetPutOnActor();
@@ -72,16 +72,20 @@ void CTileManager::PutOnActorToProximateTile(CActorGenerator& InActorGenerator, 
 
 	CStaticActor* GeneratedActor = InActorGenerator.GenerateStaticActor(ProximateTileWorldPosition);
 	ProximateTile->SetPutOnActor(GeneratedActor);
+
+	return ProximateTile;
 }
 
-void CTileManager::PutOffActorToProximateTile(CActorGenerator& InActorGenerator, const Vector2& InWorld2DPosition)
+CTile* CTileManager::PutOffActorToProximateTile(CActorGenerator& InActorGenerator, const Vector2& InWorld2DPosition)
 {
 	CTile* ProximateTile = GetProximateTile(InWorld2DPosition);
 	if (ProximateTile == nullptr)
-		return;
+		return nullptr;
 
 	InActorGenerator.EraseActor(*ProximateTile->GetPutOnActor());
 	ProximateTile->SetPutOnActor(nullptr);
+
+	return ProximateTile;
 }
 
 void CTileManager::SnapOnTileActor(CTile& InTile, const Vector2& InWorld2DPosition)
@@ -144,13 +148,7 @@ void CTileManager::SnapOnTileActor(CTile& InTile, const Vector2& InWorld2DPositi
 		TilePositionType = ETilePositionType::RightBottom;
 
 
-	if (ChoosedTiles.empty())
-		InTile.MoveActor(TilePositionType);
-	else
-	{
-		for (auto ChoosedTile : ChoosedTiles)
-			ChoosedTile->MoveActor(TilePositionType);
-	}
+	InTile.MoveActor(TilePositionType);
 }
 
 
