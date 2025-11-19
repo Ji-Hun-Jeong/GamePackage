@@ -3,38 +3,14 @@
 #include "02.Contents/Actor/Edit/ActorGenerator.h"
 #include "02.Contents/Actor/Tile/TileManager.h"
 #include "02.Contents/Actor/Tile/TileSnapUI.h"
+#include "02.Contents/Actor/Tile/TileInteractionHandler.h"
 #include "04.Renderer/ImGuiManager.h"
 
 enum class EEditMode
 {
 	Free,
 	Tile,
-	Attach,
 	End,
-};
-
-class CTileCollector
-{
-public:
-	CTileCollector() = default;
-	~CTileCollector() = default;
-
-public:
-	void AddTile(CTile& InTile) { Tiles.push_back(&InTile); }
-	void ClearTile() { Tiles.clear(); }
-	Vector2 GetCenterPosition()
-	{
-		Vector2 CenterPosition(0.0f);
-		for (CTile* Tile : Tiles)
-			CenterPosition += Tile->GetTransform()->GetFinalPosition2D();
-		CenterPosition /= float(Tiles.size());
-		return CenterPosition;
-	}
-	bool IsEmpty() const { return Tiles.empty(); }
-	const std::vector<CTile*>& GetTiles() const { return Tiles; }
-
-private:
-	std::vector<CTile*> Tiles;
 };
 
 class CMapEditorScene : public CScene
@@ -48,6 +24,11 @@ public:
 	void BeginPlay() override;
 	void Update(float InDeltaTime) override;
 	void CaptureSnapShot() override;
+
+	void FreeMode();
+	void TileMode();
+
+	void ChangeMode(EEditMode InEditMode);
 
 private:
 	// 원래는 모드를 두는게 좋을것같은데 그냥 일단 씬에 때려박자 나중에 ㄱㄱ
@@ -64,6 +45,8 @@ private:
 	bool bLayTiles = false;
 
 	CTileSnapUI* TileSnapUI = nullptr;
-	CTileCollector TileCollector;
+
+	CTileInteractionHandler TileInteractionHandler;
+
 };
 

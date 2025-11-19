@@ -11,27 +11,41 @@ public:
 	~CTileSnapUI() = default;
 
 public:
-	ETilePositionType GetFocusedUIPosition()
+	void SetUIEvent(ETilePositionType InTilePositionType, std::function<void()> InEvent)
 	{
-		if (LeftMoveUI->GetInteractionComponent()->IsMouseFocus())
-			return ETilePositionType::Left;
-		if (RightMoveUI->GetInteractionComponent()->IsMouseFocus())
-			return ETilePositionType::Right;
-		if (TopMoveUI->GetInteractionComponent()->IsMouseFocus())
-			return ETilePositionType::Top;
-		if (BottomMoveUI->GetInteractionComponent()->IsMouseFocus())
-			return ETilePositionType::Bottom;
-		if (CenterMoveUI->GetInteractionComponent()->IsMouseFocus())
-			return ETilePositionType::Center;
-		if (LeftTopMoveUI->GetInteractionComponent()->IsMouseFocus())
-			return ETilePositionType::LeftTop;
-		if (LeftBottomMoveUI->GetInteractionComponent()->IsMouseFocus())
-			return ETilePositionType::LeftBottom;
-		if (RightTopMoveUI->GetInteractionComponent()->IsMouseFocus())
-			return ETilePositionType::RightTop;
-		if (RightBottomMoveUI->GetInteractionComponent()->IsMouseFocus())
-			return ETilePositionType::RightBottom;
-		return ETilePositionType::None;
+		switch (InTilePositionType)
+		{
+		case ETilePositionType::Center:
+			CenterMoveUI->GetInteractionComponent()->SetMouseFocusEvent(InEvent);
+			break;
+		case ETilePositionType::Left:
+			LeftMoveUI->GetInteractionComponent()->SetMouseFocusEvent(InEvent);
+			break;
+		case ETilePositionType::Right:
+			RightMoveUI->GetInteractionComponent()->SetMouseFocusEvent(InEvent);
+			break;
+		case ETilePositionType::Top:
+			TopMoveUI->GetInteractionComponent()->SetMouseFocusEvent(InEvent);
+			break;
+		case ETilePositionType::Bottom:
+			BottomMoveUI->GetInteractionComponent()->SetMouseFocusEvent(InEvent);
+			break;
+		case ETilePositionType::LeftTop:
+			LeftTopMoveUI->GetInteractionComponent()->SetMouseFocusEvent(InEvent);
+			break;
+		case ETilePositionType::LeftBottom:
+			LeftBottomMoveUI->GetInteractionComponent()->SetMouseFocusEvent(InEvent);
+			break;
+		case ETilePositionType::RightTop:
+			RightTopMoveUI->GetInteractionComponent()->SetMouseFocusEvent(InEvent);
+			break;
+		case ETilePositionType::RightBottom:
+			RightBottomMoveUI->GetInteractionComponent()->SetMouseFocusEvent(InEvent);
+			break;
+		default:
+			assert(0);
+			break;
+		}
 	}
 
 	void AppearUI()
@@ -89,6 +103,7 @@ public:
 		RightTopMoveUI->GetInteractionComponent()->SetInteraction(false);
 		RightBottomMoveUI->GetInteractionComponent()->SetInteraction(false);
 	}
+
 private:
 	void InitalizeMoveUI(CUI* InMoveUI);
 
