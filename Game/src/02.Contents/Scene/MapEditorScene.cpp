@@ -47,7 +47,7 @@ void CMapEditorScene::Update(float InDeltaTime)
 			return;
 		if (LClicked())
 			ActorGenerator->GenerateStaticActor(MouseWorld2DPosition);
-		if (RClicked())
+		else if (RClicked())
 			ActorGenerator->ErasePrevGeneratedActor();
 		break;
 	case EEditMode::Tile:
