@@ -46,7 +46,7 @@ private:
 enum class EPSOType
 {
 	Basic,
-	Mark,
+	Edge,
 	Transparent,
 	Color,
 	Rect,

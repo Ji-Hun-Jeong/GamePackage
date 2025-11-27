@@ -8,7 +8,7 @@ public:
 	CUIToolPanel() 
 		: CurrentFocusUI(nullptr) 
 	{
-		SpriteRenderComponent->SetPSO(EPSOType::Mark);
+		SpriteRenderComponent->SetPSO(EPSOType::Edge);
 		PlacedUIs.push_back(this);
 	}
 	~CUIToolPanel() = default;

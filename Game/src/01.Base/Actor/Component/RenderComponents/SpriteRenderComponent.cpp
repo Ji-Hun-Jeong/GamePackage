@@ -56,8 +56,9 @@ CSpriteRenderComponent::CSpriteRenderComponent()
 	, Image(nullptr)
 	, bUpdatedImage(false)
 	, bUpdatedModel(false)
-	, bUpdatedColor(false)
 	, Scale(Vector3(1.0f))
+	, bUpdatedColor(false)
+	, bUpdatedEdge(false)
 	, bRender(true)
 {
 	RenderStateObject.MountConstBuffer(EShaderType::VertexShader, 0
@@ -78,6 +79,8 @@ void CSpriteRenderComponent::SetDiffuseImage(const std::wstring& InImagePath)
 	const auto& Texture2DDesc = Image->GetTexture2D().GetTexture2DDesc();
 	ImageScale = Vector3(float(Texture2DDesc.Width), float(Texture2DDesc.Height), 1.0f);
 	bUpdatedImage = true;
+
+	EdgeData.UseImage = true;
 }
 
 void CSpriteRenderComponent::SetPSO(EPSOType InPSOType)
@@ -88,10 +91,10 @@ void CSpriteRenderComponent::SetPSO(EPSOType InPSOType)
 	PSOType = InPSOType;
 }
 
-void CSpriteRenderComponent::UpdateColor(const Vector3& InColor, float InAlpha)
+void CSpriteRenderComponent::SetColor(const Vector3& InColor, float InAlpha)
 {
 	ColorData.Color = InColor;
-	ColorData.Transparency = InAlpha;
+	ColorData.Alpha = InAlpha;
 	bUpdatedColor = true;
 
 	if (RenderStateObject.IsExistConstBufferInSlot(EShaderType::PixelShader, 0) == false)
@@ -101,9 +104,27 @@ void CSpriteRenderComponent::UpdateColor(const Vector3& InColor, float InAlpha)
 	}
 }
 
+void CSpriteRenderComponent::SetEdge(const Vector3& InEdgeColor, uint32_t InEdgeRange, float InWidth, float InHeight)
+{
+	EdgeData.EdgeColor = InEdgeColor;
+	EdgeData.EdgeRange = InEdgeRange;
+	EdgeData.Width = InWidth;
+	EdgeData.Height = InHeight;
+	bUpdatedEdge = true;
+
+	if (RenderStateObject.IsExistConstBufferInSlot(EShaderType::PixelShader, 1) == false)
+	{
+		RenderStateObject.MountConstBuffer(EShaderType::PixelShader, 1
+			, CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(EdgeData)));
+	}
+}
+
 void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer)
 {
 	if (bRender == false)
+		return;
+
+	if (InRenderer.IsInsideNDC(Vector2(Position.x, Position.y), Vector2(Scale.x, Scale.y)) == false)
 		return;
 
 	if (bUpdatedModel || bUpdatedImage)
@@ -120,8 +141,10 @@ void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer)
 		InRenderer.UpdateConstBuffer(RenderStateObject, EShaderType::VertexShader, 0, &ModelMatrix, sizeof(ModelMatrix));
 	}
 
-	if (bUpdatedColor)
+	if(bUpdatedColor)
 		InRenderer.UpdateConstBuffer(RenderStateObject, EShaderType::PixelShader, 0, &ColorData, sizeof(ColorData));
+	if(bUpdatedEdge)
+		InRenderer.UpdateConstBuffer(RenderStateObject, EShaderType::PixelShader, 1, &EdgeData, sizeof(EdgeData));
 
 	InRenderer.RenderObject(RenderStateObject);
 

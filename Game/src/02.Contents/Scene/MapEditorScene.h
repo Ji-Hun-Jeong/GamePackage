@@ -1,7 +1,7 @@
 #pragma once
 #include "01.Base/Actor/Scene.h"
 #include "02.Contents/Actor/Edit/ActorGenerator.h"
-#include "02.Contents/Actor/Tile/TileManager.h"
+#include "02.Contents/Actor/Tile/TileMap.h"
 #include "02.Contents/Actor/Tile/TileSnapUI.h"
 #include "02.Contents/Actor/Tile/TileInteractionHandler.h"
 #include "04.Renderer/ImGuiManager.h"
@@ -10,6 +10,7 @@ enum class EEditMode
 {
 	Free,
 	Tile,
+	Collider,
 	End,
 };
 
@@ -27,6 +28,7 @@ public:
 
 	void FreeMode();
 	void TileMode();
+	void ColliderMode();
 
 	void ChangeMode(EEditMode InEditMode);
 
@@ -37,7 +39,7 @@ private:
 	CActorGenerator* ActorGenerator = nullptr;
 	bool bOpenWindowDialog = false;
 
-	CTileManager* TileManager = nullptr;
+	CTileMap* TileMap = nullptr;
 	size_t TileWidth = 90;
 	size_t TileHeight = 60;
 	size_t TileMapRow = 30;
@@ -46,7 +48,7 @@ private:
 
 	CTileSnapUI* TileSnapUI = nullptr;
 
-	CTileInteractionHandler TileInteractionHandler;
+	std::unique_ptr<CTileInteractionHandler> TileInteractionHandler;
 
 };
 

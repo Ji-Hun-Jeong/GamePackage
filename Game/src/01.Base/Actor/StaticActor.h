@@ -36,6 +36,8 @@ public:
 
 			SpriteRenderComponent->UpdateModelToNDC(Position, Rotation, Scale, ScreenWidth, ScreenHeight);
 
+			OnTransformVariation();
+
 			Transform->ClearVariation();
 		}
 		if (InteractionComponent && SpriteRenderComponent->IsImageType())
@@ -44,6 +46,7 @@ public:
 			InteractionComponent->SetRectScale(ImageScale.x, ImageScale.y);
 		}
 	}
+	virtual void OnTransformVariation() {}
 	CSpriteRenderComponent* GetSpriteRenderComponent() const { return SpriteRenderComponent; }
 
 protected:

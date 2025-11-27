@@ -35,7 +35,8 @@ public:
 
 		bUpdatedModel = true;
 	}
-	void UpdateColor(const Vector3& InColor, float InAlpha);
+	void SetColor(const Vector3& InColor, float InAlpha);
+	void SetEdge(const Vector3& InEdgeColor, uint32_t InEdgeRange, float InWidth, float InHeight);
 
 	bool IsImageType() const { return Image; }
 	Vector2 GetImageScale() const { return Vector2(ImageScale.x, ImageScale.y); }
@@ -47,6 +48,7 @@ private:
 		bUpdatedImage = false;
 		bUpdatedModel = false;
 		bUpdatedColor = false;
+		bUpdatedEdge = false;
 	}
 
 private:
@@ -66,10 +68,24 @@ private:
 
 	struct TColorData
 	{
-		Vector3 Color{ 0.0f,0.0f,0.0f };
-		float Transparency = 0.0f;
+		Vector3 Color = { 0.0f,0.0f,0.0f };
+		float Alpha = 1.0f;
 	} ColorData;
+	static_assert(sizeof(TColorData) % 16 == 0);
 	bool bUpdatedColor;
+
+	struct TEdgeData
+	{
+		Vector3 EdgeColor = { 0.0f,0.0f,0.0f };
+		uint32_t EdgeRange = 0;
+
+		float Width = 0.0f;
+		float Height = 0.0f;
+		uint32_t UseImage = 0;
+		uint32_t Dummy = 0;
+	} EdgeData;
+	static_assert(sizeof(TEdgeData) % 16 == 0);
+	bool bUpdatedEdge;
 
 	bool bRender;
 };

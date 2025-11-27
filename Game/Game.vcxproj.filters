@@ -189,7 +189,7 @@
     <ClCompile Include="src\02.Contents\Scene\MapEditorScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\Tile\TileManager.cpp">
+    <ClCompile Include="src\02.Contents\Actor\Tile\TileMap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\Tile\Tile.cpp">
@@ -383,7 +383,7 @@
     <ClInclude Include="src\02.Contents\Scene\MapEditorScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\Tile\TileManager.h">
+    <ClInclude Include="src\02.Contents\Actor\Tile\TileMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Tile\Tile.h">

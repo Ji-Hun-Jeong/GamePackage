@@ -11,7 +11,7 @@ public:
 		, FaderState(EFaderState::None)
 		, Alpha(1.0f)
 	{
-		SpriteRenderComponent->SetPSO(EPSOType::Color);
+		SpriteRenderComponent->SetPSO(EPSOType::Edge);
 	}
 	~CFader() = default;
 
@@ -63,7 +63,7 @@ public:
 	void CaptureSnapShot() override
 	{
 		CStaticActor::CaptureSnapShot();
-		SpriteRenderComponent->UpdateColor(Vector3(0.0f,0.0f,0.0f), Alpha);
+		SpriteRenderComponent->SetColor(Vector3(0.0f,0.0f,0.0f), Alpha);
 	}
 
 private:

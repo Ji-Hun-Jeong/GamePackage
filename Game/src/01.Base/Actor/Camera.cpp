@@ -7,7 +7,7 @@ CCamera::CCamera()
 	CameraComponent = AddComponent<CCameraComponent>();
 	RenderComponent = CameraComponent;
 
-	Transform->SetSpeed(2.0f);
+	Transform->SetSpeed(5.0f);
 }
 
 void CCamera::CaptureSnapShot()

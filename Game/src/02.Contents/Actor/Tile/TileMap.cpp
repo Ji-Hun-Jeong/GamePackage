@@ -1,20 +1,19 @@
 #include "pch.h"
-#include "TileManager.h"
+#include "TileMap.h"
 #include "GameCore.h"
 
-#include "02.Contents/Actor/Edit/ActorGenerator.h"
 #include "04.Renderer/ImGuiManager.h"
 
-CTileManager::CTileManager()
+CTileMap::CTileMap()
 {
 
 }
 
-void CTileManager::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol)
+void CTileMap::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol)
 {
-	for (CTile* Tile : Tiles)
-		Tile->Destroy();
-	Tiles.clear();
+	for (const TTileGridData& TileGridData : TileGridDatas)
+		TileGridData.Tile->Destroy();
+	TileGridDatas.clear();
 
 	TileWidth = InWidth;
 	TileHeight = InHeight;
@@ -27,12 +26,12 @@ void CTileManager::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_
 	Vector3 FirstPosition = Vector3(FirstX, FirstY, Z);
 	Vector3 Scale = Vector3(float(InWidth), float(InHeight), 1.0f);
 
-	Tiles.resize(InRow * InCol, nullptr);
+	TileGridDatas.resize(InRow * InCol, {nullptr, nullptr});
 	for (size_t i = 0; i < InRow; ++i)
 	{
 		for (size_t j = 0; j < InCol; ++j)
 		{
-			CTile*& Tile = Tiles[i * InCol + j];
+			CTile*& Tile = TileGridDatas[i * InCol + j].Tile;
 			Tile = GetWorld()->SpawnActor<CTile>();
 			Vector3 Position = FirstPosition + Vector3(float(InWidth * j), -float(InHeight * i), 0.0f);
 			Tile->GetTransform()->SetPosition(Position);
@@ -41,12 +40,20 @@ void CTileManager::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_
 	}
 }
 
-void CTileManager::LayTiles(CActorGenerator& InActorGenerator, size_t InWidth, size_t InHeight, size_t InRow, size_t InCol)
+void CTileMap::PutActorOnTile(CStaticActor& InActor, TileKey InTileKey)
 {
-	InActorGenerator.ClearActor();
-	LayTiles(InWidth, InHeight, InRow, InCol);
-}
+	TTileGridData& TileGridData = TileGridDatas[InTileKey];
 
+	TileGridData.PutOnActor = &InActor;
+
+}
+void CTileMap::CutActorOnTile(TileKey InTileKey)
+{
+	TTileGridData& TileGridData = TileGridDatas[InTileKey];
+	const CTile* Tile = TileGridData.Tile;
+
+	TileGridData.PutOnActor = nullptr;
+}
 //void CTileManager::SnapOnTileActor(CTile& InTile, const Vector2& InWorld2DPosition)
 //{
 //	CStaticActor* PutOnActor = InTile.GetPutOnActor();

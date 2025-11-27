@@ -1,30 +1,48 @@
 #pragma once
-#include "Tile.h"
+#include "TileMap.h"
 
 class CTileInteractionHandler
 {
 public:
-	CTileInteractionHandler() = default;
+	CTileInteractionHandler(CTileMap& InTileMap)
+		: TileMap(InTileMap)
+	{}
 	~CTileInteractionHandler() = default;
 
 public:
-	CTile* PutActorOnProximateTile(class CActorGenerator& InActorGenerator, class CTileManager& InTileManager, const Vector2& InWorldPosition);
-	CTile* CutActorOnProximateTile(class CActorGenerator& InActorGenerator, class CTileManager& InTileManager, const Vector2& InWorldPosition);
+	/*bool PutActorOnProximateTile(class CActorGenerator& InActorGenerator, class CTileMap& InTileManager, const Vector2& InWorldPosition);
+	bool CutActorOnProximateTile(class CActorGenerator& InActorGenerator, class CTileMap& InTileManager, const Vector2& InWorldPosition);*/
 	void MoveHandledTiles(ETilePositionType InTilePositionType);
 	bool AdjustTileSnapUIPosition(class CTileSnapUI& InTileSnapUI);
 	void ClearHandledTiles();
-
-private:
-	void AddTile(CTile& InTile)
+	bool AddHandledTile(TileKey InTileKey)
 	{
-		for (CTile* Tile : HandledTiles)
-			if (Tile == &InTile)
-				return;
-		HandledTiles.push_back(&InTile);
+		for (TileKey TileKey : HandledTiles)
+			if (TileKey == InTileKey)
+				return false;
+
+		CTile* Tile = TileMap.GetTile(InTileKey);
+		Tile->ChangeEdge(Vector3(0.0f, 1.0f, 0.0f));
+		HandledTiles.push_back(InTileKey);
+		return true;
+	}
+	bool RemoveHandledTile(TileKey InTileKey)
+	{
+		for (auto Iter = HandledTiles.begin(); Iter != HandledTiles.end(); ++Iter)
+		{
+			if (*Iter == InTileKey)
+			{
+				HandledTiles.erase(Iter);
+				TileMap.GetTile(InTileKey)->RevertEdge();
+				return true;
+			}
+		}
+		return false;
 	}
 
 private:
-	std::vector<CTile*> HandledTiles;
+	std::vector<TileKey> HandledTiles;
+	CTileMap& TileMap;
 
 };
 

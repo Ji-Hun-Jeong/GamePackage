@@ -21,22 +21,27 @@ class CTile : public CStaticActor
 public:
 	CTile()
 	{
-		SpriteRenderComponent->SetMesh(CAssetLoader::GetInst().GetMeshData("RectMesh"));
-		SpriteRenderComponent->SetPSO(EPSOType::Rect);
+		SpriteRenderComponent->SetMesh(CAssetLoader::GetInst().GetMeshData("ImageMesh"));
+		SpriteRenderComponent->SetPSO(EPSOType::Edge);
 		SpriteRenderComponent->SetLayer(1);
 	}
 	~CTile() = default;
 
 public:
-	void SetPutOnActor(CStaticActor* InPutOnActor)
+	void OnTransformVariation() override
 	{
-		PutOnActor = InPutOnActor;
+		SpriteRenderComponent->SetEdge(Vector3(0.0f, 0.0f, 0.0f), 2, Transform->GetScale().x, Transform->GetScale().y);
 	}
-	CStaticActor* GetPutOnActor() const { return PutOnActor; }
-	void MoveActor(ETilePositionType InTilePositionType);
-
-private:
-	CStaticActor* PutOnActor = nullptr;
+	void MoveActor(CStaticActor& InMovedActor, ETilePositionType InTilePositionType);
+	void ChangeEdge(const Vector3& InEdgeColor)
+	{
+		SpriteRenderComponent->SetEdge(InEdgeColor, 2
+			, Transform->GetScale().x, Transform->GetScale().y);
+	}
+	void RevertEdge()
+	{
+		SpriteRenderComponent->SetEdge(Vector3(0.0f, 0.0f, 0.0f), 2, Transform->GetScale().x, Transform->GetScale().y);
+	}
 
 };
 

@@ -31,11 +31,15 @@ public:
 		float NormalizedX = (InPosition.x / (InScreenWidth * 0.5f));
 		float NormalizedY = (InPosition.y / (InScreenHeight * 0.5f));
 
+		Position = Vector3(NormalizedX, NormalizedY, InPosition.z);
+		Rotation = InRotation;
+		Scale = NormalizedScale;
+
 		CameraConst.ViewProj= Matrix::CreateScale(NormalizedScale)
 			* Matrix::CreateRotationX(InRotation.x)
 			* Matrix::CreateRotationY(InRotation.y)
 			* Matrix::CreateRotationZ(InRotation.z)
-			* Matrix::CreateTranslation(Vector3(NormalizedX, NormalizedY, InPosition.z)).Invert().Transpose();
+			* Matrix::CreateTranslation(Position).Invert().Transpose();
 		CameraConst.ScreenWidth = InScreenWidth;
 		CameraConst.ScreenHeight = InScreenHeight;
 
@@ -45,6 +49,10 @@ public:
 private:
 	TCameraConst CameraConst;
 	bool bUpdateCameraConst;
+
+	Vector3 Position;
+	Vector3 Rotation;
+	Vector3 Scale;
 
 };
 

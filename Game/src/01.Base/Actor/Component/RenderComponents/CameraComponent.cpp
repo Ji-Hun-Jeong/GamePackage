@@ -17,6 +17,7 @@ void CCameraComponent::Render(CSpriteRenderer& InRenderer)
 	if (bUpdateCameraConst)
 		InRenderer.UpdateConstBuffer(RenderStateObject, EShaderType::VertexShader, 1, &CameraConst, sizeof(CameraConst));
 
+	InRenderer.SetCameraOffset(Vector2(Position.x, Position.y));
 	InRenderer.RenderObject(RenderStateObject);
 
 	bUpdateCameraConst = false;

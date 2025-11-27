@@ -251,7 +251,7 @@
     <ClCompile Include="src\00.App\CoreSystem.cpp" />
     <ClCompile Include="src\01.Base\Actor\StaticActor.cpp" />
     <ClCompile Include="src\00.App\WindowManager.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\Tile\TileManager.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\Tile\TileMap.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Tile\Tile.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Tile\TileSnapUI.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Tile\TileInteractionHandler.cpp" />
@@ -317,7 +317,7 @@
     <ClInclude Include="src\00.App\CoreSystem.h" />
     <ClInclude Include="src\01.Base\Actor\StaticActor.h" />
     <ClInclude Include="src\00.App\WindowManager.h" />
-    <ClInclude Include="src\02.Contents\Actor\Tile\TileManager.h" />
+    <ClInclude Include="src\02.Contents\Actor\Tile\TileMap.h" />
     <ClInclude Include="src\02.Contents\Actor\Tile\Tile.h" />
     <ClInclude Include="src\02.Contents\Actor\Tile\TileSnapUI.h" />
     <ClInclude Include="src\02.Contents\Actor\Tile\TileInteractionHandler.h" />

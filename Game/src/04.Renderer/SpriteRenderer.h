@@ -8,6 +8,20 @@ namespace Core
 	class CWindow;
 }
 
+class CCulling
+{
+public:
+	CCulling(Graphics::IGraphicInfra& InGraphicInfra);
+	~CCulling() = default;
+
+public:
+
+
+private:
+	Graphics::CRenderContext& Context;
+
+};
+
 class CSpriteRenderer
 {
 public:
@@ -18,6 +32,8 @@ public:
 	void InitalizeFromWindow(Core::CWindow& InWindow);
 	void SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight);
 	void SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight);
+	void SetCameraOffset(const Vector2& InCameraOffset) { CameraOffset = InCameraOffset; }
+	bool IsInsideNDC(const Vector2& InPosition, const Vector2& InScale);
 
 	void UpdateConstBuffer(CRenderStateObject& InRenderStateObject, EShaderType InShaderType, size_t InSlot
 		, const void* InMappingPoint, size_t InByteWidth)
@@ -124,4 +140,9 @@ private:
 	std::unique_ptr<Graphics::CRenderTargetView> RenderTargetView;
 
 	std::vector<CRenderStateObject*> RenderStateObjects;
+
+	uint32_t ScreenWidth = 0;
+	uint32_t ScreenHeight = 0;
+
+	Vector2 CameraOffset;
 };

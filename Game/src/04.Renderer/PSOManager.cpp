@@ -86,11 +86,9 @@ void CPSOManager::Initalize(Graphics::CRenderDevice& InDevice)
 		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
 	PSOs[size_t(EPSOType::Basic)] = std::unique_ptr<CPSO>(ImagePSO);
 
-
 	CPSO* EdgePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
 		, BasicRasterizerState.get(), EdgePixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
-	PSOs[size_t(EPSOType::Mark)] = std::unique_ptr<CPSO>(EdgePSO);
-
+	PSOs[size_t(EPSOType::Edge)] = std::unique_ptr<CPSO>(EdgePSO);
 
 	CPSO* TransparentPSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
 		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get(), TransparentBlendState.get());
