@@ -109,6 +109,9 @@ void CMapEditorScene::TileMode()
 			TileSnapUI->DisappearUI();
 			return;
 		}
+		const std::wstring& GeneratedActorImagePath = ActorGenerator->GetGeneratedActorImagePath();
+		if (GeneratedActorImagePath.empty())
+			return;
 
 		CTile* ProximateTile = TileMap->GetTile(ProximateTileKey);
 		CStaticActor* TilePutOnActor = TileMap->GetPutOnActor(ProximateTileKey);
@@ -117,7 +120,6 @@ void CMapEditorScene::TileMode()
 		if (TilePutOnActor)
 		{
 			const std::wstring& TilePutOnActorImagePath = TilePutOnActor->GetSpriteRenderComponent()->GetImagePath();
-			const std::wstring& GeneratedActorImagePath = ActorGenerator->GetGeneratedActorImagePath();
 			if (TilePutOnActorImagePath == GeneratedActorImagePath)
 				FinalPutOnActor = TilePutOnActor;
 			else
