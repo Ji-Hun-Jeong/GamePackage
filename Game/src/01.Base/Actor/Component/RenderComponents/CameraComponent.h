@@ -54,5 +54,7 @@ private:
 	Vector3 Rotation;
 	Vector3 Scale;
 
+	std::unique_ptr<Graphics::CBuffer> ViewBuffer = nullptr;
+
 };
 

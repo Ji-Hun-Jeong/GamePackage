@@ -15,7 +15,7 @@ public:
 	void SetDiffuseImage(const std::wstring& InImagePath);
 	void SetPSO(EPSOType InPSOType);
 
-	void SetLayer(uint32_t InLayer) { RenderStateObject.SetRenderLayer(InLayer); }
+	void SetLayer(uint32_t InLayer) { RenderLayer = InLayer; }
 	void SetRender(bool bInRender) { bRender = bInRender; }
 
 	void UpdateModelToNDC(const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale
@@ -53,19 +53,25 @@ private:
 
 private:
 	Graphics::TMeshData MeshData;
+	Graphics::CMesh* Mesh = nullptr;
 
 	EPSOType PSOType;
+	CPSO* PSO = nullptr;
 
-	CImage* Image;
+	CImage* Image = nullptr;
 	Matrix ImageMatrix;
 	bool bUpdatedImage;
 
+	uint32_t RenderLayer = 0;
+
+	std::unique_ptr<Graphics::CBuffer> ModelBuffer = nullptr;
 	Vector3 Position;
 	Vector3 Rotation;
 	Vector3 Scale;
 	Vector3 ImageScale;
 	bool bUpdatedModel;
 
+	std::unique_ptr<Graphics::CBuffer> ColorBuffer = nullptr;
 	struct TColorData
 	{
 		Vector3 Color = { 0.0f,0.0f,0.0f };
@@ -74,6 +80,7 @@ private:
 	static_assert(sizeof(TColorData) % 16 == 0);
 	bool bUpdatedColor;
 
+	std::unique_ptr<Graphics::CBuffer> EdgeBuffer = nullptr;
 	struct TEdgeData
 	{
 		Vector3 EdgeColor = { 0.0f,0.0f,0.0f };

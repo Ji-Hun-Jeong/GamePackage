@@ -4,12 +4,6 @@
 #include "RenderResourceLoader.h"
 #include "PSOManager.h"
 
-
-CCulling::CCulling(Graphics::IGraphicInfra& InGraphicInfra)
-	: Context(InGraphicInfra.GetContext())
-{
-}
-
 CSpriteRenderer::CSpriteRenderer(Graphics::IGraphicInfra& InGraphicInfra, uint32_t InScreenWidth, uint32_t InScreenHeight)
 	: Device(InGraphicInfra.GetDevice())
 	, Context(InGraphicInfra.GetContext())
@@ -21,6 +15,8 @@ CSpriteRenderer::CSpriteRenderer(Graphics::IGraphicInfra& InGraphicInfra, uint32
 
 	SetViewPort(InScreenWidth, InScreenHeight);
 	Context.OMSetRenderTargets(1, RenderTargetView.get(), nullptr);
+
+	RenderStates.resize(100, { 0 });
 }
 
 CSpriteRenderer::~CSpriteRenderer()

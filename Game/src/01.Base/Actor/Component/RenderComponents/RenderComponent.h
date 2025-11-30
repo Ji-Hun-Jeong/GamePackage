@@ -1,6 +1,6 @@
 #pragma once
 #include "../Component.h"
-#include "04.Renderer/RenderStateObject.h"
+#include "04.Renderer/RenderState.h"
 
 class CRenderComponent : public CComponent
 {
@@ -27,9 +27,6 @@ public:
 		const std::string& Path = InDeserializer["ImagePath"];
 		SetDiffuseImage(std::wstring(Path.begin(), Path.end()));
 	}*/
-
-protected:
-	CRenderStateObject RenderStateObject;
 
 };
 

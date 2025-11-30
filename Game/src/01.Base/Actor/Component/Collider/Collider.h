@@ -1,6 +1,5 @@
 #pragma once
 #include "../Component.h"
-#include "04.Renderer/RenderStateObject.h"
 
 enum class EColliderType
 {
@@ -64,7 +63,6 @@ private:
 	Vector2 Offset;
 
 protected:
-	CRenderStateObject RenderStateObject;
 	bool bDebugRender;
 
 };

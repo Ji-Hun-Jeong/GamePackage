@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\04.Renderer\RenderState.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Edit\ActorGenerator.cpp" />
     <ClCompile Include="src\04.Renderer\ImGuiManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\MapEditorScene.cpp" />
@@ -227,7 +228,6 @@
     <ClCompile Include="src\01.Base\Actor\Component\Component.cpp" />
     <ClCompile Include="src\01.Base\World\WorldEvent.cpp" />
     <ClCompile Include="src\04.Renderer\PSOManager.cpp" />
-    <ClCompile Include="src\04.Renderer\RenderStateObject.cpp" />
     <ClCompile Include="src\04.Renderer\SpriteRenderer.cpp" />
     <ClCompile Include="src\00.App\Object.cpp" />
     <ClCompile Include="src\03.Utils\NumberGenerator\NumberGenerator.cpp" />
@@ -257,6 +257,7 @@
     <ClCompile Include="src\02.Contents\Actor\Tile\TileInteractionHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\04.Renderer\RenderState.h" />
     <ClInclude Include="src\02.Contents\Actor\Edit\ActorGenerator.h" />
     <ClInclude Include="src\04.Renderer\ImGuiManager.h" />
     <ClInclude Include="src\02.Contents\Scene\MapEditorScene.h" />
@@ -297,7 +298,6 @@
     <ClInclude Include="src\01.Base\Actor\Component\Component.h" />
     <ClInclude Include="src\01.Base\World\WorldEvent.h" />
     <ClInclude Include="src\04.Renderer\PSOManager.h" />
-    <ClInclude Include="src\04.Renderer\RenderStateObject.h" />
     <ClInclude Include="src\04.Renderer\SpriteRenderer.h" />
     <ClInclude Include="src\00.App\Object.h" />
     <ClInclude Include="src\03.Utils\NumberGenerator\NumberGenerator.h" />

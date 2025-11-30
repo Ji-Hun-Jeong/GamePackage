@@ -8,17 +8,16 @@ CCameraComponent::CCameraComponent()
 	: CameraConst{}
 	, bUpdateCameraConst(false)
 {
-	RenderStateObject.MountConstBuffer(EShaderType::VertexShader, 1
-		, CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(CameraConst)));
+	ViewBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(CameraConst));
 }
 
 void CCameraComponent::Render(CSpriteRenderer& InRenderer)
 {
 	if (bUpdateCameraConst)
-		InRenderer.UpdateConstBuffer(RenderStateObject, EShaderType::VertexShader, 1, &CameraConst, sizeof(CameraConst));
+		InRenderer.UpdateBuffer(*ViewBuffer.get(), &CameraConst, sizeof(CameraConst));
 
 	InRenderer.SetCameraOffset(Vector2(Position.x, Position.y));
-	InRenderer.RenderObject(RenderStateObject);
+	InRenderer.SetConstBuffer(EShaderType::VertexShader, 1, *ViewBuffer.get());
 
 	bUpdateCameraConst = false;
 }
