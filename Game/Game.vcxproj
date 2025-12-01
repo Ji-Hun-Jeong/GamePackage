@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\00.App\Screen.cpp" />
     <ClCompile Include="src\04.Renderer\RenderState.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Edit\ActorGenerator.cpp" />
     <ClCompile Include="src\04.Renderer\ImGuiManager.cpp" />
@@ -257,6 +258,7 @@
     <ClCompile Include="src\02.Contents\Actor\Tile\TileInteractionHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\00.App\Screen.h" />
     <ClInclude Include="src\04.Renderer\RenderState.h" />
     <ClInclude Include="src\02.Contents\Actor\Edit\ActorGenerator.h" />
     <ClInclude Include="src\04.Renderer\ImGuiManager.h" />

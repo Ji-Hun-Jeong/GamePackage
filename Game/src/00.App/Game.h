@@ -2,6 +2,7 @@
 #include <Core/public/Application.h>
 
 #include "CoreSystem.h"
+#include "Screen.h"
 #include "01.Base/World/World.h"
 #include "04.Renderer/SpriteRenderer.h"
 #include "04.Renderer/ImGuiManager.h"
@@ -36,6 +37,7 @@ private:
 	CImGuiManager& ImGuiManager;
 	CPixelCollisionManager PixelCollisionManager;
 	CCollisionManager CollisionManager;
+	CScreen Screen;
 
 	CMouseInteractionManager MouseInteractionManager;
 

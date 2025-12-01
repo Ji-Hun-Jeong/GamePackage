@@ -2,6 +2,7 @@
 #include <Renderer/Base/GraphicInfra.h>
 #include "PSOManager.h"
 #include "RenderState.h"
+#include "RenderResourceLoader.h"
 
 namespace Core
 {
@@ -104,7 +105,6 @@ public:
 			{
 				return InA.RenderLayer < InB.RenderLayer;
 			});
-
 		static float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Context.ClearRenderTarget(RenderTargetView.get(), ClearColor);
 

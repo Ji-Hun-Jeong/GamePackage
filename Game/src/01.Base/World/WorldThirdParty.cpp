@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "World.h"
+#include "00.App/Screen.h"
 #include "01.Base/Actor/Camera.h"
 #include "04.Renderer/SpriteRenderer.h"
 #include "04.Renderer/RenderSorter.h"
@@ -65,4 +66,18 @@ void CWorld::ProgressCollisionCheck(CCollisionManager& InCollisionManager)
 			InCollisionManager.RequestCollision(*Collider);
 	}
 	InCollisionManager.CheckCollisionProcess();
+}
+
+void CWorld::SetScreen(CScreen& InScreen)
+{
+	const CCamera* Camera = nullptr;
+	for (auto WorldActor : WorldActors)
+	{
+		if (WorldActor->GetType() == CCamera::GetStaticType())
+		{
+			Camera = static_cast<const CCamera*>(WorldActor);
+			InScreen.SetScreenPosition(Camera->GetTransform()->GetFinalPosition2D());
+			break;
+		}
+	}
 }

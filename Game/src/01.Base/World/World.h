@@ -130,6 +130,7 @@ public:
 	void CollectMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager);
 	void CollectCollisionObjects(class CPixelCollisionManager& InPixelCollisionManager);
 	void ProgressCollisionCheck(class CCollisionManager& InCollisionManager);
+	void SetScreen(class CScreen& InScreen);
 
 public:
 	const std::vector<CActor*>& GetWorldActors() const { return WorldActors; }
