@@ -13,6 +13,7 @@ void CTestScene::BeginPlay()
 	CScene::BeginPlay();
 
 	GetFader()->FadeIn(1.0f);
+	//GetFader()->GetSpriteRenderComponent()->SetRender(false);
 	// CActor* Actor = GetWorld()->SpawnActor<CPlayer>(this);
 
 	CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);

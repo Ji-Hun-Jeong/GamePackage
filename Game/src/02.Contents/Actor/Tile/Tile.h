@@ -30,17 +30,17 @@ public:
 	void CaptureSnapShot() override
 	{
 		CStaticActor::CaptureSnapShot();
-		SpriteRenderComponent->SetEdge(Vector3(0.0f, 0.0f, 0.0f), 2, Transform->GetScale().x, Transform->GetScale().y);
+		//SpriteRenderComponent->SetEdge(Vector3(0.0f, 0.0f, 0.0f), 2, Transform->GetScale().x, Transform->GetScale().y);
 	}
 	void MoveActor(CStaticActor& InMovedActor, ETilePositionType InTilePositionType);
 	void ChangeEdge(const Vector3& InEdgeColor)
 	{
-		SpriteRenderComponent->SetEdge(InEdgeColor, 2
-			, Transform->GetScale().x, Transform->GetScale().y);
+		//SpriteRenderComponent->SetEdge(InEdgeColor, 2
+		//	, Transform->GetScale().x, Transform->GetScale().y);
 	}
 	void RevertEdge()
 	{
-		SpriteRenderComponent->SetEdge(Vector3(0.0f, 0.0f, 0.0f), 2, Transform->GetScale().x, Transform->GetScale().y);
+		//SpriteRenderComponent->SetEdge(Vector3(0.0f, 0.0f, 0.0f), 2, Transform->GetScale().x, Transform->GetScale().y);
 	}
 
 };

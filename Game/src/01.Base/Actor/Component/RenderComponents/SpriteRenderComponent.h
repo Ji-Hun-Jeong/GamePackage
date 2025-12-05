@@ -19,7 +19,7 @@ public:
 	void SetRender(bool bInRender) { bRender = bInRender; }
 
 	void SetColor(const Vector3& InColor, float InAlpha);
-	void SetEdge(const Vector3& InEdgeColor, uint32_t InEdgeRange, float InWidth, float InHeight);
+	// void SetEdge(const Vector3& InEdgeColor, uint32_t InEdgeRange, float InWidth, float InHeight);
 
 	bool IsImageType() const { return !MaterialData.ImagePaths[0].empty(); }
 	Vector2 GetImageScale() const { return Vector2(ImageScale.x, ImageScale.y); }
@@ -29,8 +29,8 @@ private:
 	void ClearState()
 	{
 		bUpdatedImage = false;
-		bUpdatedColor = false;
-		bUpdatedEdge = false;
+		bUpdatedSpriteData = false;
+		/*bUpdatedEdge = false;*/
 	}
 
 private:
@@ -45,28 +45,31 @@ private:
 
 	uint32_t RenderLayer = 0;
 
-	std::unique_ptr<Graphics::CBuffer> ColorBuffer = nullptr;
-	struct TColorData
+	std::unique_ptr<Graphics::CBuffer> SpriteBuffer = nullptr;
+	struct TSpriteData
 	{
-		Vector3 Color = { 0.0f,0.0f,0.0f };
+		Vector3 Color = { 1.0f,1.0f,1.0f };
 		float Alpha = 1.0f;
-	} ColorData;
-	static_assert(sizeof(TColorData) % 16 == 0);
-	bool bUpdatedColor;
 
-	std::unique_ptr<Graphics::CBuffer> EdgeBuffer = nullptr;
-	struct TEdgeData
-	{
-		Vector3 EdgeColor = { 0.0f,0.0f,0.0f };
-		uint32_t EdgeRange = 0;
+		uint32_t bUseImage = false;
+		uint32_t Dummy[3];
+	} SpriteData;
+	static_assert(sizeof(TSpriteData) % 16 == 0);
+	bool bUpdatedSpriteData;
 
-		float Width = 0.0f;
-		float Height = 0.0f;
-		uint32_t UseImage = 0;
-		uint32_t Dummy = 0;
-	} EdgeData;
-	static_assert(sizeof(TEdgeData) % 16 == 0);
-	bool bUpdatedEdge;
+	//std::unique_ptr<Graphics::CBuffer> EdgeBuffer = nullptr;
+	//struct TEdgeData
+	//{
+	//	Vector3 EdgeColor = { 0.0f,0.0f,0.0f };
+	//	uint32_t EdgeRange = 0;
+
+	//	float Width = 0.0f;
+	//	float Height = 0.0f;
+	//	uint32_t UseImage = 0;
+	//	uint32_t Dummy = 0;
+	//} EdgeData;
+	//static_assert(sizeof(TEdgeData) % 16 == 0);
+	//bool bUpdatedEdge;
 
 	bool bRender;
 };

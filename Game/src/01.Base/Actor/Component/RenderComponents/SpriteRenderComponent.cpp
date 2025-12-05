@@ -54,13 +54,15 @@ public:
 
 CSpriteRenderComponent::CSpriteRenderComponent()
 	: bUpdatedImage(false)
-	, bUpdatedColor(false)
-	, bUpdatedEdge(false)
+	, bUpdatedSpriteData(false)
 	, bRender(true)
 {
 	static CImageMeshDataLoader ImageMeshDataLoader;
 	MaterialData.PixelShaderPath = L"resources/shader/BasicPixelShader.hlsl";
 	Material = CRenderResourceLoader::GetInst().LoadMaterial(MaterialData);
+
+	SpriteBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(SpriteData));
+
 }
 void CSpriteRenderComponent::SetMesh(const Graphics::TMeshData& InMeshData)
 {
@@ -77,7 +79,8 @@ void CSpriteRenderComponent::SetDiffuseImage(const std::wstring& InImagePath)
 	ImageScale = Vector3(float(Texture2DDesc.Width), float(Texture2DDesc.Height), 1.0f);
 	bUpdatedImage = true;
 
-	EdgeData.UseImage = true;
+	SpriteData.bUseImage = true;
+	bUpdatedSpriteData = true;
 }
 
 //void CSpriteRenderComponent::SetPSO(EPSOType InPSOType)
@@ -88,25 +91,22 @@ void CSpriteRenderComponent::SetDiffuseImage(const std::wstring& InImagePath)
 
 void CSpriteRenderComponent::SetColor(const Vector3& InColor, float InAlpha)
 {
-	ColorData.Color = InColor;
-	ColorData.Alpha = InAlpha;
-	bUpdatedColor = true;
-
-	if (ColorBuffer == nullptr)
-		ColorBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(ColorData));
+	SpriteData.Color = InColor;
+	SpriteData.Alpha = InAlpha;
+	bUpdatedSpriteData = true;
 }
 
-void CSpriteRenderComponent::SetEdge(const Vector3& InEdgeColor, uint32_t InEdgeRange, float InWidth, float InHeight)
-{
-	EdgeData.EdgeColor = InEdgeColor;
-	EdgeData.EdgeRange = InEdgeRange;
-	EdgeData.Width = InWidth;
-	EdgeData.Height = InHeight;
-	bUpdatedEdge = true;
-
-	if(EdgeBuffer == nullptr)
-		EdgeBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(EdgeData));
-}
+//void CSpriteRenderComponent::SetEdge(const Vector3& InEdgeColor, uint32_t InEdgeRange, float InWidth, float InHeight)
+//{
+//	EdgeData.EdgeColor = InEdgeColor;
+//	EdgeData.EdgeRange = InEdgeRange;
+//	EdgeData.Width = InWidth;
+//	EdgeData.Height = InHeight;
+//	bUpdatedEdge = true;
+//
+//	if(EdgeBuffer == nullptr)
+//		EdgeBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(EdgeData));
+//}
 
 void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer, const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale)
 {
@@ -117,19 +117,18 @@ void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer, const Vector3& 
 	if (IsImageType())
 		FinalScale *= ImageScale;
 
-	if(bUpdatedColor)
-		InRenderer.UpdateBuffer(*ColorBuffer.get(), &ColorData, sizeof(ColorData));
-	if(bUpdatedEdge)
-		InRenderer.UpdateBuffer(*EdgeBuffer.get(), &EdgeData, sizeof(EdgeData));
-	
+	if(bUpdatedSpriteData)
+		InRenderer.UpdateBuffer(*SpriteBuffer.get(), &SpriteData, sizeof(SpriteData));
+	/*if(bUpdatedEdge)
+		InRenderer.UpdateBuffer(*EdgeBuffer.get(), &EdgeData, sizeof(EdgeData));*/
+
 	InRenderer.StartState();
 
 	InRenderer.DrawMesh(*Mesh, InPosition, InRotation, FinalScale, *Material, RenderLayer);
 
-	if (ColorBuffer)
-		InRenderer.SetInstanceData(EShaderType::PixelShader, 0, *ColorBuffer.get());
-	if (EdgeBuffer)
-		InRenderer.SetInstanceData(EShaderType::PixelShader, 1, *EdgeBuffer.get());
+	InRenderer.SetInstanceData(EShaderType::PixelShader, 0, *SpriteBuffer.get());
+	/*if (EdgeBuffer)
+		InRenderer.SetInstanceData(EShaderType::PixelShader, 1, *EdgeBuffer.get());*/
 
 	InRenderer.EndState();
 
