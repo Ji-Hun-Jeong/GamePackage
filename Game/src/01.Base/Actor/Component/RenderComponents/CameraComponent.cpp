@@ -5,19 +5,10 @@
 #include "04.Renderer/RenderResourceLoader.h"
 
 CCameraComponent::CCameraComponent()
-	: CameraConst{}
-	, bUpdateCameraConst(false)
 {
-	ViewBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(CameraConst));
 }
 
-void CCameraComponent::Render(CSpriteRenderer& InRenderer)
+void CCameraComponent::Render(CSpriteRenderer& InRenderer, const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale)
 {
-	if (bUpdateCameraConst)
-		InRenderer.UpdateBuffer(*ViewBuffer.get(), &CameraConst, sizeof(CameraConst));
-
-	InRenderer.SetCameraOffset(Vector2(Position.x, Position.y));
-	InRenderer.SetConstBuffer(EShaderType::VertexShader, 1, *ViewBuffer.get());
-
-	bUpdateCameraConst = false;
+	InRenderer.SetViewInfo(InPosition, InRotation, InScale, false);
 }

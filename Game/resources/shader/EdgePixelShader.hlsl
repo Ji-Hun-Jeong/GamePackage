@@ -23,7 +23,7 @@ cbuffer EdgeConst : register(b1)
 float4 main(PixelShaderInput InInput) : SV_TARGET
 {
     float2 uv = InInput.UV;
-
+    
     // 픽셀 단위 테두리를 UV 기준으로 변환
     float edgeThresholdX = (float) EdgeRange / Width;
     float edgeThresholdY = (float) EdgeRange / Height;

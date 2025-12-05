@@ -288,4 +288,23 @@ namespace Graphics::DX
 		size_t ComputeShaderHandle = DXResourceStorage.InsertResource(ComputeShader);
 		return std::make_unique<CComputeShader>(ComputeShaderHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
 	}
+	std::unique_ptr<CShaderResourceView> CDXDevice::CreateShaderResourceView(const CBuffer& InBuffer, const TShaderResourceViewDesc& InSRVDesc)
+	{
+		// 1. 리소스 스토리지에서 실제 ID3D11Buffer 가져오기
+		ComPtr<ID3D11Buffer> SRVBuffer = DXResourceStorage.GetResource<ID3D11Buffer>(InBuffer.GetResourceHandle());
+
+		ComPtr<ID3D11ShaderResourceView> SRV;
+
+		// 2. DX11 SRV Descriptor 설정
+		D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = {};
+		memcpy(&SRVDesc, &InSRVDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+
+		// 3. SRV 생성
+		HRESULT HR = Device->CreateShaderResourceView(SRVBuffer.Get(), &SRVDesc, SRV.GetAddressOf());
+		if (FAILED(HR)) assert(0);
+
+		// 4. 리소스 등록 및 래퍼 객체 반환
+		size_t SRVHandle = DXResourceStorage.InsertResource(SRV);
+		return std::make_unique<CShaderResourceView>(SRVHandle, std::bind(&CDXDevice::ReleaseResource, this, std::placeholders::_1));
+	}
 }

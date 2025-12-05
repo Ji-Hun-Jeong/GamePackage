@@ -51,19 +51,16 @@ public:
 	}
 };
 
+
 CSpriteRenderComponent::CSpriteRenderComponent()
-	: PSOType(EPSOType::Basic)
-	, Image(nullptr)
-	, bUpdatedImage(false)
-	, bUpdatedModel(false)
-	, Scale(Vector3(1.0f))
+	: bUpdatedImage(false)
 	, bUpdatedColor(false)
 	, bUpdatedEdge(false)
 	, bRender(true)
 {
-	ModelBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(Matrix));
-
 	static CImageMeshDataLoader ImageMeshDataLoader;
+	MaterialData.PixelShaderPath = L"resources/shader/BasicPixelShader.hlsl";
+	Material = CRenderResourceLoader::GetInst().LoadMaterial(MaterialData);
 }
 void CSpriteRenderComponent::SetMesh(const Graphics::TMeshData& InMeshData)
 {
@@ -72,20 +69,22 @@ void CSpriteRenderComponent::SetMesh(const Graphics::TMeshData& InMeshData)
 }
 void CSpriteRenderComponent::SetDiffuseImage(const std::wstring& InImagePath)
 {
-	Image = CRenderResourceLoader::GetInst().LoadImageFromFile(InImagePath);
+	MaterialData.PixelShaderPath = L"resources/shader/BasicPixelShader.hlsl";
+	MaterialData.ImagePaths[0] = InImagePath;
+	Material = CRenderResourceLoader::GetInst().LoadMaterial(MaterialData);
 
-	const auto& Texture2DDesc = Image->GetTexture2D().GetTexture2DDesc();
+	const auto& Texture2DDesc = Material->GetTexture2D(0).GetTexture2DDesc();
 	ImageScale = Vector3(float(Texture2DDesc.Width), float(Texture2DDesc.Height), 1.0f);
 	bUpdatedImage = true;
 
 	EdgeData.UseImage = true;
 }
 
-void CSpriteRenderComponent::SetPSO(EPSOType InPSOType)
-{
-	PSO = CPSOManager::GetInst().GetPSO(InPSOType);
-	PSOType = InPSOType;
-}
+//void CSpriteRenderComponent::SetPSO(EPSOType InPSOType)
+//{
+//	PSO = CPSOManager::GetInst().GetPSO(InPSOType);
+//	PSOType = InPSOType;
+//}
 
 void CSpriteRenderComponent::SetColor(const Vector3& InColor, float InAlpha)
 {
@@ -109,27 +108,14 @@ void CSpriteRenderComponent::SetEdge(const Vector3& InEdgeColor, uint32_t InEdge
 		EdgeBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(EdgeData));
 }
 
-void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer)
+void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer, const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale)
 {
 	if (bRender == false)
 		return;
 
-	if (InRenderer.IsInsideNDC(Vector2(Position.x, Position.y), Vector2(Scale.x, Scale.y)) == false)
-		return;
-
-	if (bUpdatedModel || bUpdatedImage)
-	{
-		Vector3 FinalScale = Scale;
-		if (IsImageType())
-			FinalScale *= ImageScale;
-		Matrix ModelMatrix = (Matrix::CreateScale(FinalScale)
-			* Matrix::CreateRotationX(Rotation.x)
-			* Matrix::CreateRotationY(Rotation.y)
-			* Matrix::CreateRotationZ(Rotation.z)
-			* Matrix::CreateTranslation(Position)).Transpose();
-
-		InRenderer.UpdateBuffer(*ModelBuffer.get(), &ModelMatrix, sizeof(ModelMatrix));
-	}
+	Vector3 FinalScale = InScale;
+	if (IsImageType())
+		FinalScale *= ImageScale;
 
 	if(bUpdatedColor)
 		InRenderer.UpdateBuffer(*ColorBuffer.get(), &ColorData, sizeof(ColorData));
@@ -138,18 +124,12 @@ void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer)
 	
 	InRenderer.StartState();
 
-	InRenderer.SetMesh(*Mesh);
-	InRenderer.SetPipeline(*PSO);
-	if (Image)
-		InRenderer.SetShaderResourceView(EShaderType::PixelShader, 0, Image->GetSRV());
+	InRenderer.DrawMesh(*Mesh, InPosition, InRotation, FinalScale, *Material, RenderLayer);
 
-	InRenderer.SetConstBuffer(EShaderType::VertexShader, 0, *ModelBuffer.get());
 	if (ColorBuffer)
-		InRenderer.SetConstBuffer(EShaderType::PixelShader, 0, *ColorBuffer.get());
+		InRenderer.SetInstanceData(EShaderType::PixelShader, 0, *ColorBuffer.get());
 	if (EdgeBuffer)
-		InRenderer.SetConstBuffer(EShaderType::PixelShader, 1, *EdgeBuffer.get());
-
-	InRenderer.SetLayer(RenderLayer);
+		InRenderer.SetInstanceData(EShaderType::PixelShader, 1, *EdgeBuffer.get());
 
 	InRenderer.EndState();
 

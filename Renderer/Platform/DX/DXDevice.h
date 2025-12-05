@@ -33,6 +33,7 @@ namespace Graphics::DX
 		std::unique_ptr<CBlendState> CreateBlendState(const TBlendDesc& InBlendDesc) override;
 		std::unique_ptr<CUnorderedAccessView> CreateUnorderedAccessView(const CBuffer& InUAVBuffer, const TUnorderedAccessViewDesc& InUAVDesc) override;
 		std::unique_ptr<CComputeShader> CreateComputeShader(const std::wstring& InShaderPath) override;
+		std::unique_ptr<CShaderResourceView> CreateShaderResourceView(const CBuffer& InBuffer, const TShaderResourceViewDesc& InSRVDesc) override;
 
 	private:
 		void ReleaseResource(size_t InRHIHandle)

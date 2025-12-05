@@ -20,14 +20,12 @@ class CPSO
 	friend class CSpriteRenderer;
 public:
 	CPSO(Graphics::ETopology InPrimitiveTopology, Graphics::CInputLayout* InInputLayout
-		, Graphics::CVertexShader* InVertexShader, Graphics::CRasterizerState* InRasterizerState
-		, Graphics::CPixelShader* InPixelShader, Graphics::CSamplerState* InSamplerState
+		, Graphics::CVertexShader* InVertexShader, Graphics::CRasterizerState* InRasterizerState, Graphics::CSamplerState* InSamplerState
 		, Graphics::CBlendState* InBlendState)
 		: PrimitiveTopology(InPrimitiveTopology)
 		, InputLayout(InInputLayout)
 		, VertexShader(InVertexShader)
 		, RasterizerState(InRasterizerState)
-		, PixelShader(InPixelShader)
 		, SamplerState(InSamplerState)
 		, BlendState(InBlendState)
 	{}
@@ -37,7 +35,6 @@ private:
 	Graphics::CInputLayout* InputLayout;
 	Graphics::CVertexShader* VertexShader;
 	Graphics::CRasterizerState* RasterizerState;
-	Graphics::CPixelShader* PixelShader;
 	Graphics::CSamplerState* SamplerState;
 	Graphics::CBlendState* BlendState;
 
@@ -65,10 +62,6 @@ public:
 		BasicVertexShader.reset();
 		RectVertexShader.reset();
 		BasicRasterizerState.reset();
-		BasicPixelShader.reset();
-		EdgePixelShader.reset();
-		ColorPixelShader.reset();
-		RectPixelShader.reset();
 		LinearSamplerState.reset();
 		BasicBlendState.reset();
 		TransparentBlendState.reset();
@@ -88,11 +81,6 @@ private:
 	std::unique_ptr<Graphics::CVertexShader> RectVertexShader;
 
 	std::unique_ptr<Graphics::CRasterizerState> BasicRasterizerState;
-
-	std::unique_ptr<Graphics::CPixelShader> BasicPixelShader;
-	std::unique_ptr<Graphics::CPixelShader> EdgePixelShader;
-	std::unique_ptr<Graphics::CPixelShader> ColorPixelShader;
-	std::unique_ptr<Graphics::CPixelShader> RectPixelShader;
 
 	std::unique_ptr<Graphics::CSamplerState> LinearSamplerState;
 

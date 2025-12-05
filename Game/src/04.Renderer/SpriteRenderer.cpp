@@ -17,6 +17,11 @@ CSpriteRenderer::CSpriteRenderer(Graphics::IGraphicInfra& InGraphicInfra, uint32
 	Context.OMSetRenderTargets(1, RenderTargetView.get(), nullptr);
 
 	RenderStates.resize(100, { 0 });
+
+	ModelBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(Matrix));
+	ViewBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(TViewData));
+
+	
 }
 
 CSpriteRenderer::~CSpriteRenderer()
@@ -42,42 +47,46 @@ void CSpriteRenderer::SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHei
 
 void CSpriteRenderer::SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight)
 {
-	ScreenWidth = InScreenWidth;
-	ScreenHeight = InScreenHeight;
+	ViewData.ScreenWidth = InScreenWidth;
+	ViewData.ScreenHeight = InScreenHeight;
 
 	Graphics::TViewPort ViewPort;
 	ViewPort.TopLeftX = 0;
 	ViewPort.TopLeftY = 0;
-	ViewPort.Width = static_cast<float>(ScreenWidth);
-	ViewPort.Height = static_cast<float>(ScreenHeight);
+	ViewPort.Width = static_cast<float>(InScreenWidth);
+	ViewPort.Height = static_cast<float>(InScreenHeight);
 	ViewPort.MinDepth = 0.0f;
 	ViewPort.MaxDepth = 1.0f;
 
 	Context.RSSetViewPort(&ViewPort);
 }
 
-bool CSpriteRenderer::IsInsideNDC(const Vector2& InNDCPosition, const Vector2& InNDCScale)
+void CSpriteRenderer::SetViewInfo(const Vector3& InWorldPosition, const Vector3& InRotation, const Vector3& InScale, bool bInUseScreenSize)
 {
-	// NDC 좌표는 이미 -1.0 ~ 1.0 범위라고 가정
-	Vector2 Position = InNDCPosition - CameraOffset;
+	RendererPosition = InWorldPosition;
+	RendererRotation = InRotation;
+	RendererScale = InScale;
+	if (bInUseScreenSize)
+		RendererScale *= Vector3(ViewData.ScreenWidth, ViewData.ScreenHeight, 1.0f);
+}
 
-	// 스케일도 NDC 단위로 들어온다고 가정 (예: 화면 크기 대비 비율)
-	float halfW = InNDCScale.x * 0.5f;
-	float halfH = InNDCScale.y * 0.5f;
+bool CSpriteRenderer::IsInsideRenderer(const Vector3& InWorldPosition, const Vector3& InScale) const
+{
+	Vector3 RelativePosition = InWorldPosition - RendererPosition;
 
-	// 사각형 경계 (NDC 기준)
-	float left = Position.x - halfW;
-	float right = Position.x + halfW;
-	float top = Position.y - halfH;
-	float bottom = Position.y + halfH;
+	float halfW = InScale.x * 0.5f;
+	float halfH = InScale.y * 0.5f;
 
-	// 화면 경계 (NDC는 -1 ~ 1)
-	float screenLeft = -1.0f;
-	float screenRight = 1.0f;
-	float screenTop = -1.0f;
-	float screenBottom = 1.0f;
+	float left = RelativePosition.x - halfW;
+	float right = RelativePosition.x + halfW;
+	float top = RelativePosition.y - halfH;
+	float bottom = RelativePosition.y + halfH;
 
-	// 사각형이 화면 안에 있는지 확인 (겹치기만 해도 true)
+	float screenLeft = -float(ViewData.ScreenWidth) * 0.5f;
+	float screenRight = float(ViewData.ScreenWidth) * 0.5f;
+	float screenTop = -float(ViewData.ScreenHeight) * 0.5f;
+	float screenBottom = float(ViewData.ScreenHeight) * 0.5f;
+
 	bool isInside =
 		right >= screenLeft &&
 		left <= screenRight &&
@@ -85,4 +94,11 @@ bool CSpriteRenderer::IsInsideNDC(const Vector2& InNDCPosition, const Vector2& I
 		top <= screenBottom;
 
 	return isInside;
+}
+
+void CSpriteRenderer::TransformNDC(TRenderState* InOutRenderState) const
+{
+	assert(InOutRenderState);
+	InOutRenderState->Scale *= Vector3(1.0f / ViewData.ScreenWidth, 1.0f / ViewData.ScreenHeight, 1.0);
+	InOutRenderState->Position *= Vector3(1.0f / (ViewData.ScreenWidth * 0.5f), 1.0f / (ViewData.ScreenHeight * 0.5f), 1.0);
 }

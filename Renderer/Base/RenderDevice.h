@@ -24,5 +24,6 @@ namespace Graphics
 		virtual std::unique_ptr<CBlendState> CreateBlendState(const TBlendDesc& InBlendDesc) = 0;
 		virtual std::unique_ptr<CUnorderedAccessView> CreateUnorderedAccessView(const CBuffer& InUAVBuffer, const TUnorderedAccessViewDesc& InUAVDesc) = 0;
 		virtual std::unique_ptr<CComputeShader> CreateComputeShader(const std::wstring& InShaderPath) = 0;
+		virtual std::unique_ptr<CShaderResourceView> CreateShaderResourceView(const CBuffer& InBuffer, const TShaderResourceViewDesc& InSRVDesc) = 0;
 	};
 }

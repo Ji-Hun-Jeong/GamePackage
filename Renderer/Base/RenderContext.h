@@ -32,6 +32,7 @@ namespace Graphics
 		virtual void VSSetShader(const CVertexShader* InVertexShader) = 0;
 		virtual void VSSetConstantBuffers(uint32_t InStartSlot, uint32_t InNumBuffers, const std::vector<std::unique_ptr<CBuffer>>& InBuffers) = 0;
 		virtual void VSSetConstantBuffer(uint32_t InStartSlot, const CBuffer* InBuffer) = 0;
+		virtual void VSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView* InShaderResourceView) = 0;
 		virtual void RSSetViewPort(const TViewPort* InViewPort) = 0;
 		virtual void RSSetState(const CRasterizerState* InRasterizerState) = 0;
 		virtual void PSSetShader(const CPixelShader* InPixelShader) = 0;
@@ -39,6 +40,8 @@ namespace Graphics
 		virtual void PSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView* InShaderResourceView) = 0;
 		virtual void PSSetConstantBuffer(uint32_t InStartSlot, const CBuffer* InBuffer) = 0;
 		virtual void DrawIndexed(uint32_t InIndexCount) = 0;
+		virtual void DrawIndexedInstanced(uint32_t InIndexCountPerInstance, uint32_t InInstanceCount, uint32_t InStartIndexLocation, uint32_t InBaseVertexLocation
+			, uint32_t InStartInstanceLocation) = 0;
 		virtual void UpLoadBuffer(CBuffer& InBuffer, const void* InMapDataPoint, size_t InDataSize, EMapType InMapType) = 0;
 		virtual void PSSetSampler(uint32_t InStartSlot, uint32_t InNumSamplers, const CSamplerState* InSamplers) = 0;
 		virtual void OMSetBlendState(const CBlendState* InBlendState, const float* InBlendFactor, uint32_t InSampleMask) = 0;

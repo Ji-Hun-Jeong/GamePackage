@@ -36,7 +36,7 @@ public:
 			const auto& PixelMapPath = PixelMapPaths[i];
 			if (PixelMapPath.empty())
 				continue;
-			InPixelCollisionManager.SetPixelMap(EPixelMapType(i), PixelMapPath);
+			//InPixelCollisionManager.SetPixelMap(EPixelMapType(i), PixelMapPath);
 		}
 
 		if (PixelCollisionObject)

@@ -96,11 +96,11 @@ public:
 	~CPixelCollisionManager() = default;
 
 public:
-	void SetPixelMap(EPixelMapType InPixelMapType, const std::wstring& InPixelMapPath)
+	/*void SetPixelMap(EPixelMapType InPixelMapType, const std::wstring& InPixelMapPath)
 	{
-		CImage* Image = RenderResourceLoader.LoadImageFromFile(InPixelMapPath);
+		CImage* Image = RenderResourceLoader.LoadMaterial(InPixelMapPath);
 		PixelMaps[size_t(InPixelMapType)] = &Image->GetSRV();
-	}
+	}*/
 	void RequestCollisionCheck(CPixelCollisionObject& InPixelCollisionObject)
 	{
 		InPixelCollisionObject.ClearState();

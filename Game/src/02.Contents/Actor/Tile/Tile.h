@@ -22,14 +22,14 @@ public:
 	CTile()
 	{
 		SpriteRenderComponent->SetMesh(CAssetLoader::GetInst().GetMeshData("ImageMesh"));
-		SpriteRenderComponent->SetPSO(EPSOType::Edge);
 		SpriteRenderComponent->SetLayer(1);
 	}
 	~CTile() = default;
 
 public:
-	void OnTransformVariation() override
+	void CaptureSnapShot() override
 	{
+		CStaticActor::CaptureSnapShot();
 		SpriteRenderComponent->SetEdge(Vector3(0.0f, 0.0f, 0.0f), 2, Transform->GetScale().x, Transform->GetScale().y);
 	}
 	void MoveActor(CStaticActor& InMovedActor, ETilePositionType InTilePositionType);

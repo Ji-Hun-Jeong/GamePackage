@@ -12,9 +12,7 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 {
 	for (auto& WorldActor : WorldActors)
 	{
-		CRenderComponent* RenderComponent = WorldActor->GetRenderComponent();
-		if (RenderComponent)
-			RenderComponent->Render(InRenderer);
+		WorldActor->RenderActor(InRenderer);
 	}
 	InRenderer.Draw();
 }

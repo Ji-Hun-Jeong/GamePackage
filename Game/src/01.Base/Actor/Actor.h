@@ -205,8 +205,9 @@ public:
 
 		for (auto Collider : Colliders)
 			Collider->SetCenterPosition(Vector2(FinalPosition.x, FinalPosition.y));
-		
+
 	}
+	void RenderActor(class CSpriteRenderer& InRenderer);
 
 public:
 	virtual void Serialize(CSerializer& InSerializer) const override

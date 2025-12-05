@@ -1,8 +1,9 @@
 #pragma once
 #include <Renderer/Base/RenderDevice.h>
 #include <Renderer/Rendering/Mesh.h>
+#include <Renderer/Rendering/Material.h>
 #include "03.Utils/GeometryGenerator.h"
-#include "Image.h"
+#include "04.Renderer/Image.h"
 
 class CRenderResourceLoader
 {
@@ -15,6 +16,8 @@ public:
 	void Finalize()
 	{
 		Meshes.clear();
+		Materials.clear();
+		PixelShaders.clear();
 		Images.clear();
 	}
 	Graphics::CMesh* LoadMesh(const Graphics::TMeshData& InMeshData)
@@ -53,20 +56,44 @@ public:
 		return Mesh;
 	}
 
-	CImage* LoadImageFromFile(const std::wstring& InPath)
+	Graphics::CMaterial* LoadMaterial(const Graphics::TMaterialData& InMaterialData)
 	{
-		auto Iter = Images.find(InPath);
-		if (Iter != Images.end())
-			return Iter->second.get();
+		auto MaterialIter = Materials.find(InMaterialData);
+		if (MaterialIter != Materials.end())
+			return MaterialIter->second.get();
 
-		auto SRV_Texture2D = Device->CreateImage(InPath);
+		if (PixelShaders.contains(InMaterialData.PixelShaderPath) == false)
+		{
+			auto PixelShader = Device->CreatePixelShader(InMaterialData.PixelShaderPath);
+			PixelShaders.emplace(InMaterialData.PixelShaderPath, std::move(PixelShader));
+		}
 
-		CImage* RawImage = new CImage(std::move(SRV_Texture2D.first), std::move(SRV_Texture2D.second), InPath);
-		Images.emplace(InPath, RawImage);
+		for (auto& ImagePath : InMaterialData.ImagePaths)
+		{
+			if (ImagePath.empty())
+				continue;
+			if (Images.contains(ImagePath))
+				continue;
+			auto SRV_Texture2D = Device->CreateImage(ImagePath);
+			Images.emplace( ImagePath, std::make_unique<CImage>(std::move(SRV_Texture2D.first), std::move(SRV_Texture2D.second), ImagePath) );
+		}
 
-		assert(RawImage);
+		auto& PixelShader = PixelShaders.find(InMaterialData.PixelShaderPath)->second;
+		Graphics::CMaterial* Material = new Graphics::CMaterial(*PixelShader.get());
+		for (size_t i = 0; i < InMaterialData.ImagePaths.size(); ++i)
+		{
+			auto& ImagePath = InMaterialData.ImagePaths[i];
+			if (ImagePath.empty())
+				continue;
+			auto& Image = Images.find(ImagePath)->second;
+			Material->SetImageResource(i, &Image->GetSRV(), &Image->GetTexture2D());
+		}
 
-		return RawImage;
+		Materials.emplace(InMaterialData, Material);
+
+		assert(Material);
+
+		return Material;
 	}
 
 	std::unique_ptr<Graphics::CBuffer> CreateConstBuffer(size_t InByteWidth) const
@@ -106,6 +133,37 @@ public:
 		return Device->CreateBuffer(StagingBufferDesc, nullptr);
 	}
 
+	std::unique_ptr<Graphics::CBuffer> CreateStructuredBuffer(size_t InStructSize, size_t InNumOfElement) const
+	{
+		Graphics::TBufferDesc BufferDesc;
+
+		BufferDesc.Usage = Graphics::EUsage::UsageDynamic;
+		BufferDesc.ByteWidth = uint32_t(InStructSize * InNumOfElement);
+		BufferDesc.BindFlags = Graphics::EBindFlags::BindShaderResource;
+		BufferDesc.CPUAccessFlags = Graphics::ECPUAccessFlags::CpuAccessWrite;
+		BufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+		BufferDesc.StructureByteStride = uint32_t(InStructSize);
+
+		return Device->CreateBuffer(BufferDesc, nullptr);
+	}
+	std::unique_ptr<Graphics::CShaderResourceView> CreateStructuredBufferSRV(Graphics::CBuffer& InBuffer, size_t InNumOfElement) const
+	{
+		Graphics::TShaderResourceViewDesc SRVDesc;
+
+		// 1. [중요] StructuredBuffer는 포맷을 모름 (Unknown)
+		SRVDesc.Format = Graphics::EGIFormat::GI_FORMAT_UNKNOWN;
+
+		// 2. 버퍼 뷰
+		SRVDesc.ViewDimension = Graphics::EResourceDimension::RESOURCE_DIMENSION_BUFFER;
+
+		// 3. 요소 개수 설정
+		SRVDesc.Buffer.FirstElement = 0;
+		SRVDesc.Buffer.NumElements = uint32_t(InNumOfElement);
+
+		// 래퍼 클래스에 맞게 생성 호출 (내부적으로 ID3D11Device::CreateShaderResourceView 호출)
+		return Device->CreateShaderResourceView(InBuffer, SRVDesc);
+	}
+
 	std::unique_ptr<Graphics::CUnorderedAccessView> CreateUAV(const Graphics::CBuffer& InUAVBuffer, size_t InNumOfElement) const
 	{
 		Graphics::TUnorderedAccessViewDesc UAVDesc;
@@ -122,6 +180,9 @@ private:
 	Graphics::CRenderDevice* Device;
 
 	std::map<Graphics::MeshKey, std::unique_ptr<Graphics::CMesh>> Meshes;
+	std::map<Graphics::TMaterialData, std::unique_ptr<Graphics::CMaterial>> Materials;
+
+	std::map<std::wstring, std::unique_ptr<Graphics::CPixelShader>> PixelShaders;
 	std::map<std::wstring, std::unique_ptr<CImage>> Images;
 
 };

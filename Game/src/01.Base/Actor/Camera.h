@@ -31,7 +31,6 @@ public:
 		uint32_t ScreenHeight = CWindowManager::GetInst().GetScreenHeight();
 		Transform->SetScale(Vector3(float(ScreenWidth), float(ScreenHeight), 1.0f));
 	}
-	void CaptureSnapShot() override;
 
 private:
 	CCameraComponent* CameraComponent;

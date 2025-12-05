@@ -9,44 +9,26 @@ public:
 	~CSpriteRenderComponent() = default;
 
 public:
-	void Render(CSpriteRenderer& InRenderer) override;
+	void Render(CSpriteRenderer& InRenderer, const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale) override;
 
 	void SetMesh(const Graphics::TMeshData& InMeshData);
 	void SetDiffuseImage(const std::wstring& InImagePath);
-	void SetPSO(EPSOType InPSOType);
+	/*void SetPSO(EPSOType InPSOType);*/
 
 	void SetLayer(uint32_t InLayer) { RenderLayer = InLayer; }
 	void SetRender(bool bInRender) { bRender = bInRender; }
 
-	void UpdateModelToNDC(const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale
-		, uint32_t InScreenWidth, uint32_t InScreenHeight)
-	{
-		Vector3 NormalizedScale = Vector3(
-			InScale.x / InScreenWidth,
-			InScale.y / InScreenHeight,
-			InScale.z // Z축은 보통 그대로 둠
-		);
-		float NormalizedX = (InPosition.x / (InScreenWidth * 0.5f));
-		float NormalizedY = (InPosition.y / (InScreenHeight * 0.5f));
-
-		Scale = NormalizedScale;
-		Rotation = InRotation;
-		Position = Vector3(NormalizedX, NormalizedY, InPosition.z);
-
-		bUpdatedModel = true;
-	}
 	void SetColor(const Vector3& InColor, float InAlpha);
 	void SetEdge(const Vector3& InEdgeColor, uint32_t InEdgeRange, float InWidth, float InHeight);
 
-	bool IsImageType() const { return Image; }
+	bool IsImageType() const { return !MaterialData.ImagePaths[0].empty(); }
 	Vector2 GetImageScale() const { return Vector2(ImageScale.x, ImageScale.y); }
-	const std::wstring& GetImagePath() const { return Image->GetImagePath(); }
+	const std::wstring& GetImagePath() const { return ImagePath; }
 
 private:
 	void ClearState()
 	{
 		bUpdatedImage = false;
-		bUpdatedModel = false;
 		bUpdatedColor = false;
 		bUpdatedEdge = false;
 	}
@@ -55,21 +37,13 @@ private:
 	Graphics::TMeshData MeshData;
 	Graphics::CMesh* Mesh = nullptr;
 
-	EPSOType PSOType;
-	CPSO* PSO = nullptr;
-
-	CImage* Image = nullptr;
-	Matrix ImageMatrix;
+	Graphics::TMaterialData MaterialData;
+	Graphics::CMaterial* Material = nullptr;
+	Vector3 ImageScale;
+	std::wstring ImagePath;
 	bool bUpdatedImage;
 
 	uint32_t RenderLayer = 0;
-
-	std::unique_ptr<Graphics::CBuffer> ModelBuffer = nullptr;
-	Vector3 Position;
-	Vector3 Rotation;
-	Vector3 Scale;
-	Vector3 ImageScale;
-	bool bUpdatedModel;
 
 	std::unique_ptr<Graphics::CBuffer> ColorBuffer = nullptr;
 	struct TColorData

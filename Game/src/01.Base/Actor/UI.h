@@ -45,7 +45,7 @@ public:
 	void SetRectUI(uint32_t InLayer)
 	{
 		SpriteRenderComponent->SetMesh(CAssetLoader::GetInst().GetMeshData("RectMesh"));
-		SpriteRenderComponent->SetPSO(EPSOType::Rect);
+		/*SpriteRenderComponent->SetPSO(EPSOType::Rect);*/
 		SpriteRenderComponent->SetLayer(InLayer);
 	}
 

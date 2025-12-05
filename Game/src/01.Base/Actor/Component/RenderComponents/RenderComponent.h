@@ -9,7 +9,7 @@ public:
 	virtual ~CRenderComponent() = 0 {}
 
 public:
-	virtual void Render(class CSpriteRenderer& InRenderer) = 0;
+	virtual void Render(class CSpriteRenderer& InRenderer, const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale) = 0;
 public:
 	/*void Serialize(CSerializer& InSerializer) const override
 	{

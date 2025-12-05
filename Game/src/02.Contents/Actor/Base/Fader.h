@@ -11,7 +11,6 @@ public:
 		, FaderState(EFaderState::None)
 		, Alpha(1.0f)
 	{
-		SpriteRenderComponent->SetPSO(EPSOType::Color);
 	}
 	~CFader() = default;
 

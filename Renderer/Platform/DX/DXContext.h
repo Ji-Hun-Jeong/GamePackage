@@ -27,6 +27,13 @@ namespace Graphics::DX
 		void VSSetShader(const CVertexShader* InVertexShader) override;
 		void VSSetConstantBuffers(uint32_t InStartSlot, uint32_t InNumBuffers, const std::vector<std::unique_ptr<CBuffer>>& InBuffers) override;
 		void VSSetConstantBuffer(uint32_t InStartSlot, const CBuffer* InBuffer) override;
+		void VSSetShaderResource(uint32_t InStartSlot, const CShaderResourceView* InShaderResourceView) override
+		{
+			ID3D11ShaderResourceView* ShaderResourceView = nullptr;
+			if (InShaderResourceView)
+				ShaderResourceView = DXResourceStorage.GetResource<ID3D11ShaderResourceView>(InShaderResourceView->GetResourceHandle());
+			Context->VSSetShaderResources(InStartSlot, 1, &ShaderResourceView);
+		}
 		void RSSetViewPort(const TViewPort* InViewPort) override;
 		void RSSetState(const CRasterizerState* InRasterizerState) override;
 		void PSSetShader(const CPixelShader* InPixelShader) override;
@@ -38,6 +45,11 @@ namespace Graphics::DX
 		void DrawIndexed(uint32_t InIndexCount) override
 		{
 			Context->DrawIndexed(InIndexCount, 0, 0);
+		}
+		void DrawIndexedInstanced(uint32_t InIndexCountPerInstance, uint32_t InInstanceCount, uint32_t InStartIndexLocation, uint32_t InBaseVertexLocation
+			, uint32_t InStartInstanceLocation) override
+		{
+			Context->DrawIndexedInstanced(InIndexCountPerInstance, InInstanceCount, InStartIndexLocation, InBaseVertexLocation, InStartInstanceLocation);
 		}
 		void UpLoadBuffer(CBuffer& InBuffer, const void* InMapDataPoint, size_t InDataSize, EMapType InMapType) override;
 		void DownLoadBuffer(void* InMappingPoint, size_t InByteWidth, const CBuffer& InBuffer, EMapType InMapType) override;

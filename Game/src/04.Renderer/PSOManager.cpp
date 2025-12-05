@@ -36,11 +36,6 @@ void CPSOManager::Initalize(Graphics::CRenderDevice& InDevice)
 	RasterizerDesc.MultisampleEnable = true;
 	BasicRasterizerState = InDevice.CreateRasterizerState(RasterizerDesc);
 
-	BasicPixelShader = InDevice.CreatePixelShader(L"resources/shader/BasicPixelShader.hlsl");
-	EdgePixelShader = InDevice.CreatePixelShader(L"resources/shader/EdgePixelShader.hlsl");
-	ColorPixelShader = InDevice.CreatePixelShader(L"resources/shader/ColorPixelShader.hlsl");
-	RectPixelShader = InDevice.CreatePixelShader(L"resources/shader/RectPixelShader.hlsl");
-
 	Graphics::TSamplerDesc SamplerDesc;
 	SamplerDesc.Filter = Graphics::EFilter::FILTER_MIN_MAG_MIP_POINT;
 	SamplerDesc.AddressU = Graphics::ETextureAddressMode::TEXTURE_ADDRESS_CLAMP;
@@ -83,22 +78,22 @@ void CPSOManager::Initalize(Graphics::CRenderDevice& InDevice)
 	std::cout << TransparentBlendState << std::endl;
 
 	CPSO* ImagePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
-		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
+		, BasicRasterizerState.get(), LinearSamplerState.get(), BasicBlendState.get());
 	PSOs[size_t(EPSOType::Basic)] = std::unique_ptr<CPSO>(ImagePSO);
 
 	CPSO* EdgePSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
-		, BasicRasterizerState.get(), EdgePixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
+		, BasicRasterizerState.get(), LinearSamplerState.get(), BasicBlendState.get());
 	PSOs[size_t(EPSOType::Edge)] = std::unique_ptr<CPSO>(EdgePSO);
 
 	CPSO* TransparentPSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
-		, BasicRasterizerState.get(), BasicPixelShader.get(), LinearSamplerState.get(), TransparentBlendState.get());
+		, BasicRasterizerState.get(), LinearSamplerState.get(), TransparentBlendState.get());
 	PSOs[size_t(EPSOType::Transparent)] = std::unique_ptr<CPSO>(TransparentPSO);
 
 	CPSO* ColorPSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
-		, BasicRasterizerState.get(), ColorPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
+		, BasicRasterizerState.get(), LinearSamplerState.get(), BasicBlendState.get());
 	PSOs[size_t(EPSOType::Color)] = std::unique_ptr<CPSO>(ColorPSO);
 
 	CPSO* RectPSO = new CPSO(Graphics::ETopology::PrimitiveTopologyLINELIST, RectInputLayout.get(), RectVertexShader.get()
-		, BasicRasterizerState.get(), RectPixelShader.get(), LinearSamplerState.get(), BasicBlendState.get());
+		, BasicRasterizerState.get(), LinearSamplerState.get(), BasicBlendState.get());
 	PSOs[size_t(EPSOType::Rect)] = std::unique_ptr<CPSO>(RectPSO);
 }
