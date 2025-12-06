@@ -31,19 +31,19 @@ public:
 
 		CAssetLoader::GetInst().LoadMeshData("ImageMesh", MeshData);
 
-		TColorGeometryData ColorGeometryData = CGeometryGenerator::GenerateRect();
+		TGeometryData RectGeometryData = CGeometryGenerator::GenerateRect();
 
-		VertexBufferByteWidth = sizeof(TColorVertex) * ColorGeometryData.Vertices.size();
+		VertexBufferByteWidth = sizeof(TVertex) * RectGeometryData.Vertices.size();
 		MeshData.Vertices.resize(VertexBufferByteWidth);
-		memcpy(MeshData.Vertices.data(), ColorGeometryData.Vertices.data(), VertexBufferByteWidth);
+		memcpy(MeshData.Vertices.data(), RectGeometryData.Vertices.data(), VertexBufferByteWidth);
 
-		IndexBufferByteWidth = sizeof(uint32_t) * ColorGeometryData.Indices.size();
+		IndexBufferByteWidth = sizeof(uint32_t) * RectGeometryData.Indices.size();
 		MeshData.Indices.resize(IndexBufferByteWidth);
-		memcpy(MeshData.Indices.data(), ColorGeometryData.Indices.data(), IndexBufferByteWidth);
+		memcpy(MeshData.Indices.data(), RectGeometryData.Indices.data(), IndexBufferByteWidth);
 
 		MeshData.IndexFormat = Graphics::EGIFormat::GI_FORMAT_R32_UINT;
-		MeshData.IndexCount = uint32_t(ColorGeometryData.Indices.size());
-		MeshData.Stride = sizeof(TColorVertex);
+		MeshData.IndexCount = uint32_t(RectGeometryData.Indices.size());
+		MeshData.Stride = sizeof(TVertex);
 		MeshData.Offset = 0;
 		MeshData.Key = 1;
 
@@ -62,6 +62,8 @@ CSpriteRenderComponent::CSpriteRenderComponent()
 	Material = CRenderResourceLoader::GetInst().LoadMaterial(MaterialData);
 
 	SpriteBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(SpriteData));
+
+	PSO = CPSOManager::GetInst().GetPSO(EPSOType::Basic);
 
 }
 void CSpriteRenderComponent::SetMesh(const Graphics::TMeshData& InMeshData)
@@ -83,11 +85,11 @@ void CSpriteRenderComponent::SetDiffuseImage(const std::wstring& InImagePath)
 	bUpdatedSpriteData = true;
 }
 
-//void CSpriteRenderComponent::SetPSO(EPSOType InPSOType)
-//{
-//	PSO = CPSOManager::GetInst().GetPSO(InPSOType);
-//	PSOType = InPSOType;
-//}
+void CSpriteRenderComponent::SetPSO(EPSOType InPSOType)
+{
+	PSO = CPSOManager::GetInst().GetPSO(InPSOType);
+	PSOType = InPSOType;
+}
 
 void CSpriteRenderComponent::SetColor(const Vector3& InColor, float InAlpha)
 {
@@ -117,18 +119,19 @@ void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer, const Vector3& 
 	if (IsImageType())
 		FinalScale *= ImageScale;
 
-	if(bUpdatedSpriteData)
+	if (bUpdatedSpriteData)
+	{
 		InRenderer.UpdateBuffer(*SpriteBuffer.get(), &SpriteData, sizeof(SpriteData));
+		bUpdatedSpriteData = false;
+	}
 	/*if(bUpdatedEdge)
 		InRenderer.UpdateBuffer(*EdgeBuffer.get(), &EdgeData, sizeof(EdgeData));*/
 
 	InRenderer.StartState();
 
-	InRenderer.DrawMesh(*Mesh, InPosition, InRotation, FinalScale, *Material, RenderLayer);
+	InRenderer.DrawMesh(*Mesh, InPosition, InRotation, FinalScale, PSO, *Material, RenderLayer);
 
 	InRenderer.SetInstanceData(EShaderType::PixelShader, 0, *SpriteBuffer.get());
-	/*if (EdgeBuffer)
-		InRenderer.SetInstanceData(EShaderType::PixelShader, 1, *EdgeBuffer.get());*/
 
 	InRenderer.EndState();
 

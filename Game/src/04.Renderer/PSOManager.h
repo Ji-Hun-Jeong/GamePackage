@@ -43,10 +43,7 @@ private:
 enum class EPSOType
 {
 	Basic,
-	Edge,
-	Transparent,
-	Color,
-	Rect,
+	Line,
 	End,
 };
 
@@ -58,9 +55,7 @@ public:
 	void Finalize()
 	{
 		BasicInputLayout.reset();
-		RectInputLayout.reset();
 		BasicVertexShader.reset();
-		RectVertexShader.reset();
 		BasicRasterizerState.reset();
 		LinearSamplerState.reset();
 		BasicBlendState.reset();
@@ -75,10 +70,8 @@ public:
 
 private:
 	std::unique_ptr<Graphics::CInputLayout> BasicInputLayout;
-	std::unique_ptr<Graphics::CInputLayout> RectInputLayout;
 
 	std::unique_ptr<Graphics::CVertexShader> BasicVertexShader;
-	std::unique_ptr<Graphics::CVertexShader> RectVertexShader;
 
 	std::unique_ptr<Graphics::CRasterizerState> BasicRasterizerState;
 

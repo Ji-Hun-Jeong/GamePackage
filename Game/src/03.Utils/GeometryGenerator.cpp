@@ -19,14 +19,14 @@ TGeometryData CGeometryGenerator::GenerateSquare()
 	return TGeometryData{ Vertices, Indices };
 }
 
-TColorGeometryData CGeometryGenerator::GenerateRect()
+TGeometryData CGeometryGenerator::GenerateRect()
 {
-	std::vector<TColorVertex> Vertices =
+	std::vector<TVertex> Vertices =
 	{
-		{Vector3(-1.0f, -1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f)},
-		{Vector3(-1.0f, 1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f)},
-		{Vector3(1.0f, 1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f)},
-		{Vector3(1.0f, -1.0f, 0.0f), Vector3(0.0f,0.0f,0.0f)}
+		{Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f,0.0f)},
+		{Vector3(-1.0f, 1.0f, 0.0f), Vector2(0.0f,0.0f)},
+		{Vector3(1.0f, 1.0f, 0.0f), Vector2(0.0f,0.0f)},
+		{Vector3(1.0f, -1.0f, 0.0f), Vector2(0.0f,0.0f)}
 	};
 
 	std::vector<uint32_t> Indices =
@@ -37,5 +37,5 @@ TColorGeometryData CGeometryGenerator::GenerateRect()
 		3, 0
 	};
 
-	return TColorGeometryData{ Vertices, Indices };
+	return TGeometryData{ Vertices, Indices };
 }

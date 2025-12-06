@@ -13,7 +13,7 @@ public:
 
 	void SetMesh(const Graphics::TMeshData& InMeshData);
 	void SetDiffuseImage(const std::wstring& InImagePath);
-	/*void SetPSO(EPSOType InPSOType);*/
+	void SetPSO(EPSOType InPSOType);
 
 	void SetLayer(uint32_t InLayer) { RenderLayer = InLayer; }
 	void SetRender(bool bInRender) { bRender = bInRender; }
@@ -43,6 +43,9 @@ private:
 	std::wstring ImagePath;
 	bool bUpdatedImage;
 
+	EPSOType PSOType;
+	CPSO* PSO = nullptr;
+
 	uint32_t RenderLayer = 0;
 
 	std::unique_ptr<Graphics::CBuffer> SpriteBuffer = nullptr;
@@ -56,20 +59,6 @@ private:
 	} SpriteData;
 	static_assert(sizeof(TSpriteData) % 16 == 0);
 	bool bUpdatedSpriteData;
-
-	//std::unique_ptr<Graphics::CBuffer> EdgeBuffer = nullptr;
-	//struct TEdgeData
-	//{
-	//	Vector3 EdgeColor = { 0.0f,0.0f,0.0f };
-	//	uint32_t EdgeRange = 0;
-
-	//	float Width = 0.0f;
-	//	float Height = 0.0f;
-	//	uint32_t UseImage = 0;
-	//	uint32_t Dummy = 0;
-	//} EdgeData;
-	//static_assert(sizeof(TEdgeData) % 16 == 0);
-	//bool bUpdatedEdge;
 
 	bool bRender;
 };

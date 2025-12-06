@@ -22,14 +22,14 @@ public:
 	void SetViewInfo(const Vector3& InWorldPosition, const Vector3& InRotation, const Vector3& InScale, bool bInUseScreenSize = true);
 
 	void DrawMesh(Graphics::CMesh& InMesh, const Vector3& InWorldPosition, const Vector3& InRotation, const Vector3& InScale
-		, Graphics::CMaterial& InMaterial, uint32_t InRenderLayer = 0)
+		, CPSO* InPSO, Graphics::CMaterial& InMaterial, uint32_t InRenderLayer = 0)
 	{
 		RenderStates[CurrentRenderState].Mesh = &InMesh;
 		RenderStates[CurrentRenderState].Position = InWorldPosition;
 		RenderStates[CurrentRenderState].Rotation = InRotation;
 		RenderStates[CurrentRenderState].Scale = InScale;
 
-		RenderStates[CurrentRenderState].PSO = CPSOManager::GetInst().GetPSO(EPSOType::Basic);
+		RenderStates[CurrentRenderState].PSO = InPSO;
 		RenderStates[CurrentRenderState].Material = &InMaterial;
 		RenderStates[CurrentRenderState].RenderLayer = InRenderLayer;
 
