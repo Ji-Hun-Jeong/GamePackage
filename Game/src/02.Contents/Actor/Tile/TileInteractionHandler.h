@@ -23,6 +23,7 @@ public:
 
 		CTile* Tile = TileMap.GetTile(InTileKey);
 		Tile->ChangeEdge(Vector3(0.0f, 1.0f, 0.0f));
+		Tile->GetSpriteRenderComponent()->SetLayer(2);
 		HandledTiles.push_back(InTileKey);
 		return true;
 	}
@@ -34,6 +35,7 @@ public:
 			{
 				HandledTiles.erase(Iter);
 				TileMap.GetTile(InTileKey)->RevertEdge();
+				TileMap.GetTile(InTileKey)->GetSpriteRenderComponent()->SetLayer(1);
 				return true;
 			}
 		}

@@ -18,6 +18,9 @@ void CMapEditorScene::BeginPlay()
 	ActorGenerator = GetWorld()->SpawnActor<CActorGenerator>(this);
 	TileMap = GetWorld()->SpawnActor<CTileMap>(this);
 	TileSnapUI = GetWorld()->SpawnActor<CTileSnapUI>(this);
+	CRectCollider* Collider = TileSnapUI->AddComponent<CRectCollider>();
+	Collider->SetRectScale(Vector2(50.0f, 50.0f));
+	Collider->SetDebugRender(true);
 
 	TileInteractionHandler = std::make_unique<CTileInteractionHandler>(*TileMap);
 

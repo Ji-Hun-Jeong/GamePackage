@@ -21,8 +21,11 @@ class CTile : public CStaticActor
 public:
 	CTile()
 	{
-		SpriteRenderComponent->SetMesh(CAssetLoader::GetInst().GetMeshData("ImageMesh"));
+		static const Graphics::TMeshData& LineSquareMeshData = CAssetLoader::GetInst().GetMeshData("LineSquareMesh");
 		SpriteRenderComponent->SetLayer(1);
+		SpriteRenderComponent->SetMesh(LineSquareMeshData);
+		SpriteRenderComponent->SetPSO(EPSOType::Line);
+		SpriteRenderComponent->SetColor(Vector3(0.0f, 0.0f, 0.0f), 1.0f);
 	}
 	~CTile() = default;
 
@@ -35,12 +38,11 @@ public:
 	void MoveActor(CStaticActor& InMovedActor, ETilePositionType InTilePositionType);
 	void ChangeEdge(const Vector3& InEdgeColor)
 	{
-		//SpriteRenderComponent->SetEdge(InEdgeColor, 2
-		//	, Transform->GetScale().x, Transform->GetScale().y);
+		SpriteRenderComponent->SetColor(InEdgeColor, 1.0f);
 	}
 	void RevertEdge()
 	{
-		//SpriteRenderComponent->SetEdge(Vector3(0.0f, 0.0f, 0.0f), 2, Transform->GetScale().x, Transform->GetScale().y);
+		SpriteRenderComponent->SetColor(Vector3(0.0f, 0.0f, 0.0f), 1.0f);
 	}
 
 };

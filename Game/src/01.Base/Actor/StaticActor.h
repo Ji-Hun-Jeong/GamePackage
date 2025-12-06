@@ -13,7 +13,7 @@ public:
 		SpriteRenderComponent = AddComponent<CSpriteRenderComponent>();
 		RenderComponent = SpriteRenderComponent;
 
-		const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("ImageMesh");
+		const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("SquareMesh");
 		SpriteRenderComponent->SetMesh(MeshData);
 	}
 

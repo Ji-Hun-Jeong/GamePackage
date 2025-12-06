@@ -22,7 +22,7 @@ CWorld::~CWorld()
 
 void CWorld::Start()
 {
-	LoadScene<CTestScene>();
+	LoadScene<CMapEditorScene>();
 }
 
 

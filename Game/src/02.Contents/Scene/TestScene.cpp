@@ -13,8 +13,7 @@ void CTestScene::BeginPlay()
 	CScene::BeginPlay();
 
 	GetFader()->FadeIn(1.0f);
-	//GetFader()->GetSpriteRenderComponent()->SetRender(false);
-	// CActor* Actor = GetWorld()->SpawnActor<CPlayer>(this);
+	CActor* Actor = GetWorld()->SpawnActor<CPlayer>(this);
 
 	CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");

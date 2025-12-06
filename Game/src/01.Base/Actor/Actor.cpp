@@ -22,4 +22,6 @@ void CActor::RenderActor(CSpriteRenderer& InRenderer)
 
 		RenderComponent->Render(InRenderer, Position, Rotation, Scale);
 	}
+	for (auto Collider : Colliders)
+		Collider->DebugRender(InRenderer);
 }

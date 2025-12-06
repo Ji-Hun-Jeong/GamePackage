@@ -29,7 +29,7 @@ public:
 		MeshData.Offset = 0;
 		MeshData.Key = 0;
 
-		CAssetLoader::GetInst().LoadMeshData("ImageMesh", MeshData);
+		CAssetLoader::GetInst().LoadMeshData("SquareMesh", MeshData);
 
 		TGeometryData RectGeometryData = CGeometryGenerator::GenerateRect();
 
@@ -47,7 +47,7 @@ public:
 		MeshData.Offset = 0;
 		MeshData.Key = 1;
 
-		CAssetLoader::GetInst().LoadMeshData("RectMesh", MeshData);
+		CAssetLoader::GetInst().LoadMeshData("LineSquareMesh", MeshData);
 	}
 };
 
@@ -56,6 +56,7 @@ CSpriteRenderComponent::CSpriteRenderComponent()
 	: bUpdatedImage(false)
 	, bUpdatedSpriteData(false)
 	, bRender(true)
+	, PSOType(EPSOType::Basic)
 {
 	static CImageMeshDataLoader ImageMeshDataLoader;
 	MaterialData.PixelShaderPath = L"resources/shader/BasicPixelShader.hlsl";
@@ -63,7 +64,7 @@ CSpriteRenderComponent::CSpriteRenderComponent()
 
 	SpriteBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(SpriteData));
 
-	PSO = CPSOManager::GetInst().GetPSO(EPSOType::Basic);
+	PSO = CPSOManager::GetInst().GetPSO(PSOType);
 
 }
 void CSpriteRenderComponent::SetMesh(const Graphics::TMeshData& InMeshData)

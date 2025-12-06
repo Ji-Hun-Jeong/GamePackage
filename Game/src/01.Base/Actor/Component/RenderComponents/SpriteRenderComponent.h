@@ -1,6 +1,16 @@
 #pragma once
 #include "RenderComponent.h"
 
+struct TSpriteData
+{
+	Vector3 Color = { 1.0f,1.0f,1.0f };
+	float Alpha = 1.0f;
+
+	uint32_t bUseImage = false;
+	uint32_t Dummy[3];
+};
+static_assert(sizeof(TSpriteData) % 16 == 0);
+
 class CSpriteRenderComponent : public CRenderComponent
 {
 	GENERATE_OBJECT(CSpriteRenderComponent)
@@ -49,15 +59,7 @@ private:
 	uint32_t RenderLayer = 0;
 
 	std::unique_ptr<Graphics::CBuffer> SpriteBuffer = nullptr;
-	struct TSpriteData
-	{
-		Vector3 Color = { 1.0f,1.0f,1.0f };
-		float Alpha = 1.0f;
-
-		uint32_t bUseImage = false;
-		uint32_t Dummy[3];
-	} SpriteData;
-	static_assert(sizeof(TSpriteData) % 16 == 0);
+	TSpriteData SpriteData;
 	bool bUpdatedSpriteData;
 
 	bool bRender;

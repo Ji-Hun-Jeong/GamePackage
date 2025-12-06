@@ -66,6 +66,15 @@ public:
 	{
 		Context.UpLoadBuffer(InBuffer, InMappingPoint, InByteWidth, Graphics::EMapType::MAP_WRITE_DISCARD);
 	}
+	Graphics::CBuffer& EntrustBuffer(const void* InMappingPoint, size_t InByteWidth)
+	{
+		std::unique_ptr<Graphics::CBuffer> Buffer = CRenderResourceLoader::GetInst().CreateConstBuffer(InByteWidth);
+		Graphics::CBuffer& RawBuffer = *Buffer.get();
+		UpdateBuffer(*Buffer.get(), InMappingPoint, InByteWidth);
+		DisposableBuffers.push_back(std::move(Buffer));
+
+		return RawBuffer;
+	}
 	void Draw()
 	{
 		std::vector<TRenderState> CulledRenderStates;
@@ -160,6 +169,8 @@ public:
 
 		CurrentRenderState = 0;
 		memset(RenderStates.data(), 0, sizeof(TRenderState) * RenderStates.size());
+
+		DisposableBuffers.clear();
 	}
 
 private:
@@ -201,4 +212,7 @@ private:
 		uint32_t Dummy[2];
 	} ViewData;
 	static_assert(sizeof(ViewData) % 16 == 0);
+
+	std::vector<std::unique_ptr<Graphics::CBuffer>> DisposableBuffers;
+
 };
