@@ -31,7 +31,7 @@ public:
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	}
 	
-	void DeliverMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager, uint32_t InScreenWidth, uint32_t InScreenHeight);
+	void DeliverMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager, class CSpriteRenderer& InRenderer);
 	const std::string& GetMainPanelName() const { return MainPanelName; }
 	void SetOffSet(const Vector2& InOffset) { Offset = InOffset; }
 

@@ -16,7 +16,7 @@ public:
 	void CaptureSnapShot() override;
 	void OnCollisionEnter(CCollider& InTargetCollider) override
 	{
-		if (IsSame<CBackGround>(*InTargetCollider.GetOwner()) == false)
+		if (IsSame<CBackGround>(*InTargetCollider.GetOwnerActor()) == false)
 			std::cout << "Hi\n";
 	}
 	void OnCollisionExit(CCollider& InTargetCollider) override

@@ -70,6 +70,7 @@ public:
 		RightTopMoveUI->GetInteractionComponent()->SetInteraction(true);
 		RightBottomMoveUI->GetInteractionComponent()->SetInteraction(true);
 
+		// 나중에 Layer추가
 		LeftMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
 		RightMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);
 		TopMoveUI->GetInteractionComponent()->SetEndInteractionCheck(true);

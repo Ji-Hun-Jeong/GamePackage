@@ -15,55 +15,25 @@ public:
 	virtual ~CCollider() = default;
 
 public:
-	enum class ECollisionState
-	{
-		Enter,
-		Stay,
-		Exit
-	};
-	struct TCollisionInfo
-	{
-		CCollider* TargetCollider;
-		ECollisionState CollisionState;
-	};
-
-public:
 	virtual void DebugRender(class CSpriteRenderer& InRenderer) {}
+	virtual bool IsInside(const Vector2& InPosition) = 0;
 	void SetDebugRender(bool bInDebugRender) { bDebugRender = bInDebugRender; }
 
+	void SetOffset(const Vector2& InOffset) { Offset = InOffset; }
 	void SetCenterPosition(const Vector2& InCenterPosition) { CenterPosition = InCenterPosition; }
 	Vector2 GetFinalPosition() const { return CenterPosition + Offset; }
 	EColliderType GetColliderType() const { return ColliderType; }
 
-	void ReadyToCollisionCheck()
-	{
-		while (CollisionInfos.empty() == false)
-			CollisionInfos.pop();
-	}
-
-	void ReceiveCollisionInfo(CCollider& InCollisionTarget, ECollisionState InCollisionState)
-	{
-		CollisionInfos.push({ &InCollisionTarget, InCollisionState });
-	}
-
-	bool IsEmptyCollisionInfo() const { return CollisionInfos.empty(); }
-	TCollisionInfo GetCollisionInfo()
-	{
-		TCollisionInfo CollisionInfo = CollisionInfos.front();
-		CollisionInfos.pop();
-		return CollisionInfo;
-	}
-
 private:
 	EColliderType ColliderType;
-
-	std::queue<TCollisionInfo> CollisionInfos;
 
 	Vector2 CenterPosition;
 	Vector2 Offset;
 
 protected:
 	bool bDebugRender;
+	Vector3 Color = Vector3(1.0f, 0.0f, 0.0f);
+	uint32_t Layer = 3;
 
 };
 
@@ -76,6 +46,7 @@ public:
 
 public:
 	void DebugRender(class CSpriteRenderer& InRenderer) override;
+	bool IsInside(const Vector2& InPosition) override;
 	void SetRectScale(const Vector2& InRectScale) { RectScale = InRectScale; }
 	const Vector2& GetRectScale() const { return RectScale; }
 
@@ -92,6 +63,7 @@ public:
 	~CCircleCollider() = default;
 
 public:
+	bool IsInside(const Vector2& InPosition) override;
 	void SetRadius(float InRadius) { Radius = InRadius; }
 	float GetRadius() const { return Radius; }
 

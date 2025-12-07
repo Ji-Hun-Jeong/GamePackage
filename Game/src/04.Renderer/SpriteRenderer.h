@@ -20,6 +20,9 @@ public:
 	void SetWindowSize(uint32_t InScreenWidth, uint32_t InScreenHeight);
 	void SetViewPort(uint32_t InScreenWidth, uint32_t InScreenHeight);
 	void SetViewInfo(const Vector3& InWorldPosition, const Vector3& InRotation, const Vector3& InScale, bool bInUseScreenSize = true);
+	uint32_t GetScreenWidth() const { return ViewData.ScreenWidth; }
+	uint32_t GetScreenHeight() const { return ViewData.ScreenHeight; }
+	const Vector3& GetRendererWorldPosition() const { return RendererPosition; }
 
 	void DrawMesh(Graphics::CMesh& InMesh, const Vector3& InWorldPosition, const Vector3& InRotation, const Vector3& InScale
 		, CPSO* InPSO, Graphics::CMaterial& InMaterial, uint32_t InRenderLayer = 0)
@@ -96,16 +99,16 @@ public:
 		Context.ClearRenderTarget(RenderTargetView.get(), ClearColor);
 
 		//// copy buffer
-		//std::vector<Matrix> CpuModelBuffer;
-		//CpuModelBuffer.reserve(RenderStates.size());
-		//for (auto& RenderState : RenderStates)
-		//	CpuModelBuffer.push_back(RenderState.Model);
+		/*std::vector<Matrix> CpuModelBuffer;
+		CpuModelBuffer.reserve(CulledRenderStates.size());
+		for (auto& RenderState : CulledRenderStates)
+			CpuModelBuffer.push_back(RenderState.Model);
 
-		//std::unique_ptr<Graphics::CBuffer> GpuModelBuffer = CRenderResourceLoader::GetInst().CreateStructuredBuffer(sizeof(Matrix), CpuModelBuffer.size());
-		//std::unique_ptr<Graphics::CShaderResourceView> ModelBufferSRV = CRenderResourceLoader::GetInst().CreateStructuredBufferSRV(*GpuModelBuffer.get(), CpuModelBuffer.size());
-		//UpdateBuffer(*GpuModelBuffer.get(), CpuModelBuffer.data(), sizeof(Matrix) * CpuModelBuffer.size());
+		std::unique_ptr<Graphics::CBuffer> GpuModelBuffer = CRenderResourceLoader::GetInst().CreateStructuredBuffer(sizeof(Matrix), CpuModelBuffer.size());
+		std::unique_ptr<Graphics::CShaderResourceView> ModelBufferSRV = CRenderResourceLoader::GetInst().CreateStructuredBufferSRV(*GpuModelBuffer.get(), CpuModelBuffer.size());
+		UpdateBuffer(*GpuModelBuffer.get(), CpuModelBuffer.data(), sizeof(Matrix) * CpuModelBuffer.size());
 
-		//Context.VSSetShaderResource(0, ModelBufferSRV.get());
+		Context.VSSetShaderResource(0, ModelBufferSRV.get());*/
 
 		ViewData.View = GetNDCMatrix(RendererPosition, RendererRotation, RendererScale).Invert().Transpose();
 		UpdateBuffer(*ViewBuffer.get(), &ViewData, sizeof(ViewData));

@@ -19,24 +19,6 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 
 void CWorld::CollectMouseInteraction(CMouseInteractionManager& InMouseInteractionManager)
 {
-	Vector2 MousePosition = CMouseManager::GetInst().GetMousePosition();
-
-	const CCamera* Camera = nullptr;
-	for (auto WorldActor : WorldActors)
-	{
-		if (WorldActor->GetType() != CCamera::GetStaticType())
-			continue;
-		Camera = static_cast<const CCamera*>(WorldActor);
-	}
-
-	if (Camera)
-	{
-		MousePosition.x += int32_t(Camera->GetTransform()->GetFinalPosition().x);
-		MousePosition.y += int32_t(Camera->GetTransform()->GetFinalPosition().y);
-		CImGuiManager::GetInst().SetOffSet(Camera->GetTransform()->GetFinalPosition2D());
-	}
-	InMouseInteractionManager.SetMouseWorldPosition(MousePosition);
-
 	for (auto& WorldActor : WorldActors)
 	{
 		CInteractionComponent* InteractionComponent = WorldActor->GetInteractionComponent();
@@ -53,17 +35,6 @@ void CWorld::CollectCollisionObjects(CPixelCollisionManager& InPixelCollisionMan
 		if (PixelCollider)
 			PixelCollider->CollisionProcess(InPixelCollisionManager);
 	}*/
-}
-
-void CWorld::ProgressCollisionCheck(CCollisionManager& InCollisionManager)
-{
-	for (auto WorldActor : WorldActors)
-	{
-		std::vector<CCollider*> Colliders = WorldActor->GetComponents<CCollider>();
-		for (auto Collider : Colliders)
-			InCollisionManager.RequestCollision(*Collider);
-	}
-	InCollisionManager.CheckCollisionProcess();
 }
 
 void CWorld::SetScreen(CScreen& InScreen)

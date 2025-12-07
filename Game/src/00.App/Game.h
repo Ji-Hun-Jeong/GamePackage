@@ -36,7 +36,6 @@ private:
 	CSpriteRenderer SpriteRenderer;
 	CImGuiManager& ImGuiManager;
 	CPixelCollisionManager PixelCollisionManager;
-	CCollisionManager CollisionManager;
 	CScreen Screen;
 
 	CMouseInteractionManager MouseInteractionManager;

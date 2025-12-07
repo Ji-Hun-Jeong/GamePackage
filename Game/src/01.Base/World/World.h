@@ -1,6 +1,7 @@
 #pragma once
 #include "WorldEvent.h"
 #include "01.Base/Actor/Actor.h"
+#include "01.Base/Actor/Component/Collider/CollisionManager.h"
 
 class CWorld : public CObject
 {
@@ -51,7 +52,15 @@ public:
 	void Update()
 	{
 		for (auto& WorldActor : WorldActors)
+		{
 			WorldActor->Update(1.0f / 60.0f);
+
+			std::vector<CCollider*> Colliders = WorldActor->GetComponents<CCollider>();
+			for (auto Collider : Colliders) 
+				CollisionManager.RequestCollision(*Collider);
+		}
+
+		CollisionManager.CheckCollisionProcess();
 	}
 
 	void CaptureSnapShot()
@@ -129,7 +138,6 @@ public:
 	void RenderWorld(class CSpriteRenderer& InRenderer);
 	void CollectMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager);
 	void CollectCollisionObjects(class CPixelCollisionManager& InPixelCollisionManager);
-	void ProgressCollisionCheck(class CCollisionManager& InCollisionManager);
 	void SetScreen(class CScreen& InScreen);
 
 public:
@@ -159,5 +167,7 @@ private:
 	std::vector<std::unique_ptr<INewObjectEvent>> NewObjectEvents;
 
 	std::queue<std::function<void()>> WorldSynchronizeEvents;
+
+	CCollisionManager CollisionManager;
 
 };

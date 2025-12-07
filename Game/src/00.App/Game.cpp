@@ -59,17 +59,18 @@ bool CGame::Process()
 	World.Arrange();
 	World.Ready();
 
+	Vector2 MouseWorldPosition = CMouseManager::GetInst().GetMousePosition();
+	MouseWorldPosition += Vector2(SpriteRenderer.GetRendererWorldPosition().x, SpriteRenderer.GetRendererWorldPosition().y);
+	MouseInteractionManager.SetMouseWorldPosition(MouseWorldPosition);
 	World.CollectMouseInteraction(MouseInteractionManager);
 	MouseInteractionManager.FindFocusInteracter();
-
-	World.ProgressCollisionCheck(CollisionManager);
 
 	World.Update();
 	World.CaptureSnapShot();
 
 	World.RenderWorld(SpriteRenderer);
 
-	ImGuiManager.DeliverMouseInteraction(MouseInteractionManager, Window.GetScreenWidth(), Window.GetScreenHeight());
+	ImGuiManager.DeliverMouseInteraction(MouseInteractionManager, SpriteRenderer);
 	ImGuiManager.EndFrame();
 	ImGuiManager.Render();
 

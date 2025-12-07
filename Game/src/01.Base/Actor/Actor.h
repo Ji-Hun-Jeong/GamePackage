@@ -9,7 +9,7 @@
 #include "Component/InteractionComponent.h"
 #include "Component/Animation/Animator.h"
 #include "Component/PixelCollider.h"
-#include "Component/Collider/CollisionManager.h"
+#include "Component/Collider/Collider.h"
 
 extern class CWorld* g_World;
 
@@ -42,9 +42,10 @@ public:
 	{
 		InComponent->OwnerActor = this;
 		Components.push_back(InComponent);
-		CCollider* Collider = dynamic_cast<CCollider*>(InComponent);
-		if (Collider)
+		if (CCollider* Collider = dynamic_cast<CCollider*>(InComponent))
 			Colliders.push_back(Collider);
+		else if (CRenderComponent* RenderComponent = dynamic_cast<CRenderComponent*>(InComponent))
+			RenderComponents.push_back(RenderComponent);
 	}
 	void Detach(CActor* InChild)
 	{
@@ -65,16 +66,31 @@ public:
 		{
 			if (*Iter == InComponent)
 			{
+				DestroyObject(*Iter);
 				Components.erase(Iter);
 				break;
 			}
 		}
-		for (auto Iter = Colliders.begin(); Iter != Colliders.end(); ++Iter)
+		if (CCollider* Collider = dynamic_cast<CCollider*>(InComponent))
 		{
-			if (*Iter == InComponent)
+			for (auto Iter = Colliders.begin(); Iter != Colliders.end(); ++Iter)
 			{
-				Colliders.erase(Iter);
-				break;
+				if (*Iter == Collider)
+				{
+					Colliders.erase(Iter);
+					break;
+				}
+			}
+		}
+		else if (CRenderComponent* RenderComponent = dynamic_cast<CRenderComponent*>(InComponent))
+		{
+			for (auto Iter = RenderComponents.begin(); Iter != RenderComponents.end(); ++Iter)
+			{
+				if (*Iter == RenderComponent)
+				{
+					RenderComponents.erase(Iter);
+					break;
+				}
 			}
 		}
 	}
@@ -85,15 +101,15 @@ public:
 
 	CTransform* GetTransform() const { return Transform; }
 	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent; }
-	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+	//CRenderComponent* GetRenderComponent() const { return RenderComponent; }
 
 protected:
 	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
 	CTransform* Transform;
-	CRenderComponent* RenderComponent;
 	CInteractionComponent* InteractionComponent;
 	std::vector<CComponent*> Components;
 	std::vector<CCollider*> Colliders;
+	std::vector<CRenderComponent*> RenderComponents;
 
 public:
 	template <typename T>
@@ -163,28 +179,6 @@ public:
 	virtual void OnCollisionExit(CCollider& InTargetCollider) {}
 	virtual void Update(float InDeltaTime)
 	{
-		for (auto Collider : Colliders)
-		{
-			while (Collider->IsEmptyCollisionInfo() == false)
-			{
-				CCollider::TCollisionInfo CollisionInfo = Collider->GetCollisionInfo();
-				switch (CollisionInfo.CollisionState)
-				{
-				case CCollider::ECollisionState::Enter:
-					OnCollisionEnter(*CollisionInfo.TargetCollider);
-					break;
-				case CCollider::ECollisionState::Stay:
-					OnCollisionStay(*CollisionInfo.TargetCollider);
-					break;
-				case CCollider::ECollisionState::Exit:
-					OnCollisionExit(*CollisionInfo.TargetCollider);
-					break;
-				default:
-					assert(0);
-					break;
-				}
-			}
-		}
 		if (InteractionComponent)
 			InteractionComponent->PerformEvent();
 	}

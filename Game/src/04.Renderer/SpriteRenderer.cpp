@@ -67,7 +67,7 @@ void CSpriteRenderer::SetViewInfo(const Vector3& InWorldPosition, const Vector3&
 	RendererRotation = InRotation;
 	RendererScale = InScale;
 	if (bInUseScreenSize)
-		RendererScale *= Vector3(ViewData.ScreenWidth, ViewData.ScreenHeight, 1.0f);
+		RendererScale *= Vector3(float(ViewData.ScreenWidth), float(ViewData.ScreenHeight), 1.0f);
 }
 
 bool CSpriteRenderer::IsInsideRenderer(const Vector3& InWorldPosition, const Vector3& InScale) const

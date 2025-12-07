@@ -1,5 +1,6 @@
 #pragma once
 #include "Collider.h"
+#include "01.Base/Actor/Actor.h"
 
 union UCollisionKey
 {
@@ -10,6 +11,7 @@ union UCollisionKey
 	} BlendKey;
 	size_t RealKey;
 };
+
 class CCollisionManager
 {
 public:
@@ -19,7 +21,6 @@ public:
 public:
 	void RequestCollision(CCollider& InCollider)
 	{
-		InCollider.ReadyToCollisionCheck();
 		Colliders.push_back(&InCollider);
 	}
 	void CheckCollisionProcess()
@@ -39,8 +40,8 @@ public:
 					if (Collider1.IsDestroy() || Collider2.IsDestroy())
 					{
 						// Exit
-						Collider1.ReceiveCollisionInfo(Collider2, CCollider::ECollisionState::Exit);
-						Collider2.ReceiveCollisionInfo(Collider1, CCollider::ECollisionState::Exit);
+						Collider1.GetOwnerActor()->OnCollisionExit(Collider2);
+						Collider2.GetOwnerActor()->OnCollisionExit(Collider1);
 						UnRegistCollisionState(Collider1, Collider2);
 						continue;
 					}
@@ -51,14 +52,14 @@ public:
 					if (bPrevCollision)
 					{
 						// Stay
-						Collider1.ReceiveCollisionInfo(Collider2, CCollider::ECollisionState::Stay);
-						Collider2.ReceiveCollisionInfo(Collider1, CCollider::ECollisionState::Stay);
+						Collider1.GetOwnerActor()->OnCollisionStay(Collider2);
+						Collider2.GetOwnerActor()->OnCollisionStay(Collider1);
 					}
 					else
 					{
 						// Enter
-						Collider1.ReceiveCollisionInfo(Collider2, CCollider::ECollisionState::Enter);
-						Collider2.ReceiveCollisionInfo(Collider1, CCollider::ECollisionState::Enter);
+						Collider1.GetOwnerActor()->OnCollisionEnter(Collider2);
+						Collider2.GetOwnerActor()->OnCollisionEnter(Collider1);
 						RegistCollisionState(Collider1, Collider2);
 					}
 				}
@@ -67,8 +68,8 @@ public:
 					if (bPrevCollision)
 					{
 						// Exit
-						Collider1.ReceiveCollisionInfo(Collider2, CCollider::ECollisionState::Exit);
-						Collider2.ReceiveCollisionInfo(Collider1, CCollider::ECollisionState::Exit);
+						Collider1.GetOwnerActor()->OnCollisionExit(Collider2);
+						Collider2.GetOwnerActor()->OnCollisionExit(Collider1);
 						UnRegistCollisionState(Collider1, Collider2);
 					}
 				}

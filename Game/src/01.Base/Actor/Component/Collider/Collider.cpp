@@ -33,20 +33,45 @@ void CRectCollider::DebugRender(CSpriteRenderer& InRenderer)
 	Vector2 FinalPosition = GetFinalPosition();
 
 	TSpriteData SpriteData;
-	SpriteData.Color = Vector3(1.0f, 0.0f, 0.0f);
+	SpriteData.Color = Color;
 	SpriteData.Alpha = 1.0f;
 	Graphics::CBuffer& ColorBuffer = InRenderer.EntrustBuffer(&SpriteData, sizeof(SpriteData));
 
 	InRenderer.StartState();
 
 	InRenderer.DrawMesh(*Mesh, Vector3(FinalPosition.x, FinalPosition.y, 1.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(RectScale.x, RectScale.y, 1.0f)
-		, PSO, *Material, 1);
+		, PSO, *Material, Layer);
 	InRenderer.SetInstanceData(EShaderType::PixelShader, 0, ColorBuffer);
 
 	InRenderer.EndState();
+}
+
+bool CRectCollider::IsInside(const Vector2& InPosition)
+{
+	float HalfWidth = RectScale.x * 0.5f;
+	float HalfHeight = RectScale.y * 0.5f;
+
+	Vector2 FinalPosition = GetFinalPosition();
+
+	float Left = FinalPosition.x - HalfWidth;
+	float Right = FinalPosition.x + HalfWidth;
+	float Top = FinalPosition.y - HalfHeight;
+	float Bottom = FinalPosition.y + HalfHeight;
+
+	if (InPosition.x >= Left && InPosition.x <= Right &&
+		InPosition.y >= Top && InPosition.y <= Bottom)
+	{
+		return true;
+	}
+	return false;
 }
 
 CCircleCollider::CCircleCollider()
 	: CCollider(EColliderType::Circle)
 	, Radius(0.0f)
 {}
+
+bool CCircleCollider::IsInside(const Vector2 & InPosition)
+{
+	return false;
+}

@@ -4,12 +4,14 @@
 #include "02.Contents/Actor/Tile/TileMap.h"
 #include "02.Contents/Actor/Tile/TileSnapUI.h"
 #include "02.Contents/Actor/Tile/TileInteractionHandler.h"
+#include "02.Contents/Actor/Collision/GroundManager.h"
 #include "04.Renderer/ImGuiManager.h"
 
 enum class EEditMode
 {
 	Free,
 	Tile,
+	Ladder,
 	Collider,
 	End,
 };
@@ -28,6 +30,7 @@ public:
 
 	void FreeMode();
 	void TileMode();
+	void LadderMode();
 	void ColliderMode();
 
 	void ChangeMode(EEditMode InEditMode);
@@ -49,6 +52,9 @@ private:
 	CTileSnapUI* TileSnapUI = nullptr;
 
 	std::unique_ptr<CTileInteractionHandler> TileInteractionHandler;
+
+	CGroundManager* GroundManager = nullptr;
+	bool bPlaceGround = false;
 
 };
 

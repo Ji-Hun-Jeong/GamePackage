@@ -2,70 +2,10 @@
 #include "TileInteractionHandler.h"
 #include "GameCore.h"
 
+#include "02.Contents/Actor/Collision/GroundManager.h"
 #include "02.Contents/Actor/Edit/ActorGenerator.h"
 #include "TileMap.h"
 #include "TileSnapUI.h"
-
-//bool CTileInteractionHandler::PutActorOnProximateTile(CActorGenerator& InActorGenerator, CTileMap& InTileManager, const Vector2& InWorldPosition)
-//{
-//	TileKey ProximateTileKey = InTileManager.GetProximateTile(InWorldPosition);
-//	if (InTileManager.IsValidateKey(ProximateTileKey))
-//		return false;
-//
-//	CTile* ProximateTile = InTileManager.GetTile(ProximateTileKey);
-//	CStaticActor* TilePutOnActor = InTileManager.GetPutOnActor(ProximateTileKey);
-//	if (TilePutOnActor)
-//	{
-//		const std::wstring& TilePutOnActorImagePath = TilePutOnActor->GetSpriteRenderComponent()->GetImagePath();
-//		const std::wstring& GeneratedActorImagePath = InActorGenerator.GetGeneratedActorImagePath();
-//		if (TilePutOnActorImagePath == GeneratedActorImagePath)
-//		{
-//			AddTile(*ProximateTile);
-//			return ProximateTile;
-//		}
-//	}
-//
-//	if (TilePutOnActor)
-//	{
-//		InActorGenerator.EraseActor(*TilePutOnActor);
-//		InTileManager.CutActorOnTile(ProximateTileKey);
-//	}
-//
-//	// Todo: Generate nullptr
-//	Vector2 ProximateTileWorldPosition = ProximateTile->GetTransform()->GetFinalPosition2D();
-//	CStaticActor* GeneratedActor = InActorGenerator.GenerateStaticActor(ProximateTileWorldPosition);
-//	if (GeneratedActor)
-//	{
-//		AddTile(*ProximateTile);
-//		InTileManager.PutActorOnTile(*GeneratedActor, ProximateTileKey);
-//	}
-//
-//	return ProximateTile;
-//}
-//
-//bool CTileInteractionHandler::CutActorOnProximateTile(CActorGenerator& InActorGenerator, CTileMap& InTileManager, const Vector2& InWorldPosition)
-//{
-//	TileKey ProximateTileKey = InTileManager.GetProximateTile(InWorldPosition);
-//	if (InTileManager.IsValidateKey(ProximateTileKey))
-//		return false;
-//
-//	CTile* ProximateTile = InTileManager.GetTile(ProximateTileKey);
-//	CStaticActor* TilePutOnActor = InTileManager.GetPutOnActor(ProximateTileKey);
-//
-//	InActorGenerator.EraseActor(*TilePutOnActor);
-//	InTileManager.CutActorOnTile(ProximateTileKey);
-//
-//	for (auto Iter = HandledTiles.begin(); Iter != HandledTiles.end(); ++Iter)
-//	{
-//		if (*Iter == ProximateTile)
-//		{
-//			HandledTiles.erase(Iter);
-//			break;
-//		}
-//	}
-//
-//	return ProximateTile;
-//}
 
 void CTileInteractionHandler::MoveHandledTiles(ETilePositionType InTilePositionType)
 {
@@ -74,26 +14,83 @@ void CTileInteractionHandler::MoveHandledTiles(ETilePositionType InTilePositionT
 		CTile* Tile = TileMap.GetTile(TileKey);
 		CStaticActor* PutOnActor = TileMap.GetPutOnActor(TileKey);
 		Tile->MoveActor(*PutOnActor, InTilePositionType);
-	}		
+	}
 }
 
 bool CTileInteractionHandler::AdjustTileSnapUIPosition(CTileSnapUI& InTileSnapUI)
 {
+	if (IsHandledTileEmpty())
+		return false;
 	if (HandledTiles.empty())
 		return false;
 
-	Vector2 CenterPosition(0.0f);
-	for (TileKey TileKey : HandledTiles)
-	{
-		CTile* Tile = TileMap.GetTile(TileKey);
-		CenterPosition += Tile->GetTransform()->GetFinalPosition2D();
-	}		
-	
-	CenterPosition /= float(HandledTiles.size());
+	Vector2 CenterPosition = GetCenterPositionByHandledTiles();
 
 	InTileSnapUI.GetTransform()->SetPosition(Vector3(CenterPosition.x, CenterPosition.y, 0.0f));
 
 	return true;
+}
+
+void CTileInteractionHandler::SetGroundByHandledTiles(CGroundManager& InGroundManager)
+{
+	std::sort(HandledTiles.begin(), HandledTiles.end());
+	size_t TileMapRow = TileMap.GetTileMapRow();
+	size_t TileMapCol = TileMap.GetTileMapCol();
+
+	bool bSquare = true;
+	TileKey RowFirstValue = 0;
+	size_t PrevColCount = 0;
+	size_t ColCount = 0;
+	for (size_t i = 0; i < HandledTiles.size(); ++i)
+	{
+		TileKey Key = HandledTiles[i];
+		ColCount += 1;
+		// 맨 끝인 상황
+		if (HandledTiles.size() - 1 == i || HandledTiles[i - ColCount + 1] + TileMapCol == HandledTiles[i + 1])
+		{
+			if (PrevColCount == 0)
+				PrevColCount = ColCount;
+			if (PrevColCount != ColCount)
+			{
+				bSquare = false;
+				break;
+			}
+			ColCount = 0;
+		}
+	}
+
+	if (bSquare)
+	{
+		size_t Row = HandledTiles.size() / PrevColCount;
+		size_t Col = PrevColCount;
+		size_t TileWidth = TileMap.GetTileWidth();
+		size_t TileHeight = TileMap.GetTileHeight();
+
+		Vector2 CenterPosition = GetCenterPositionByHandledTiles();
+		size_t ColliderWidth = TileWidth * Col;
+		size_t ColliderHeight = TileHeight * Row;
+
+		InGroundManager.AddGroundCollider(Vector3(CenterPosition.x, CenterPosition.y, 1.0f), Vector3(ColliderWidth, ColliderHeight, 1.0f));
+	}
+	else
+	{
+		for (TileKey TileKey : HandledTiles)
+		{
+			CTile* Tile = TileMap.GetTile(TileKey);
+			const Vector3& TileFinalPosition = Tile->GetTransform()->GetFinalPosition();
+			const Vector3& TileScale = Tile->GetTransform()->GetScale();
+
+			InGroundManager.AddGroundCollider(TileFinalPosition, TileScale);
+		}
+	}
+
+	for (TileKey TileKey : HandledTiles)
+	{
+		CTile* Tile = TileMap.GetTile(TileKey);
+		Tile->RevertEdge();
+	}
+
+	HandledTiles.clear();
 }
 
 void CTileInteractionHandler::ClearHandledTiles()

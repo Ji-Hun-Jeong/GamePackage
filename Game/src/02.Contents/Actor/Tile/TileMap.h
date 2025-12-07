@@ -59,6 +59,10 @@ public:
 		for (auto TileGridData : TileGridDatas)
 			TileGridData.Tile->GetSpriteRenderComponent()->SetRender(bInRender);
 	}
+	size_t GetTileMapRow() const { return TileMapRow; }
+	size_t GetTileMapCol() const { return TileMapCol; }
+	size_t GetTileWidth() const { return TileWidth; }
+	size_t GetTileHeight() const { return TileHeight; }
 
 private:
 	std::vector<TTileGridData> TileGridDatas;

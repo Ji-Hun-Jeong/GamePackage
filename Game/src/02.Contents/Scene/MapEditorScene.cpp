@@ -13,14 +13,11 @@ CMapEditorScene::CMapEditorScene()
 void CMapEditorScene::BeginPlay()
 {
 	CScene::BeginPlay();
-	GetFader()->FadeIn(0.0f);
+	GetFader()->FadeIn(1.0f);
 
 	ActorGenerator = GetWorld()->SpawnActor<CActorGenerator>(this);
 	TileMap = GetWorld()->SpawnActor<CTileMap>(this);
 	TileSnapUI = GetWorld()->SpawnActor<CTileSnapUI>(this);
-	CRectCollider* Collider = TileSnapUI->AddComponent<CRectCollider>();
-	Collider->SetRectScale(Vector2(50.0f, 50.0f));
-	Collider->SetDebugRender(true);
 
 	TileInteractionHandler = std::make_unique<CTileInteractionHandler>(*TileMap);
 
@@ -34,29 +31,13 @@ void CMapEditorScene::BeginPlay()
 	TileSnapUI->SetUIEvent(ETilePositionType::RightTop, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::RightTop); });
 	TileSnapUI->SetUIEvent(ETilePositionType::RightBottom, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::RightBottom); });
 
-	/*CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
-	Actor->GetTransform()->SetScale(Vector3(90.0f, 60.0f, 0.0f));
-	Actor->GetSpriteRenderComponent()->SetPSO(EPSOType::Edge);
-	Actor->GetSpriteRenderComponent()->SetColor(Vector3(0.0f, 0.0f, 0.0f), 1.0f);
-	Actor->GetSpriteRenderComponent()->SetEdge(Vector3(1.0f, 0.0f, 0.0f), 2, Actor->GetTransform()->GetScale().x, Actor->GetTransform()->GetScale().y);*/
+	GroundManager = GetWorld()->SpawnActor<CGroundManager>(this);
+
 }
 
 void CMapEditorScene::Update(float InDeltaTime)
 {
 	CScene::Update(InDeltaTime);
-
-	if (bOpenWindowDialog)
-	{
-		ActorGenerator->SetGeneratedActorImagePathByWindowManager(CWindowManager::GetInst());
-		bOpenWindowDialog = false;
-	}
-
-	if (bLayTiles)
-	{
-		ActorGenerator->ClearActor();
-		TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
-		bLayTiles = false;
-	}
 
 	switch (EditMode)
 	{
@@ -65,6 +46,9 @@ void CMapEditorScene::Update(float InDeltaTime)
 		break;
 	case EEditMode::Tile:
 		TileMode();
+		break;
+	case EEditMode::Ladder:
+		LadderMode();
 		break;
 	case EEditMode::Collider:
 		ColliderMode();
@@ -91,6 +75,19 @@ void CMapEditorScene::FreeMode()
 
 void CMapEditorScene::TileMode()
 {
+	if (bOpenWindowDialog)
+	{
+		ActorGenerator->SetGeneratedActorImagePathByWindowManager(CWindowManager::GetInst());
+		bOpenWindowDialog = false;
+	}
+
+	if (bLayTiles)
+	{
+		ActorGenerator->ClearActor();
+		TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
+		bLayTiles = false;
+	}
+
 	if (InteractionComponent->IsMouseFocus() == false)
 		return;
 
@@ -166,22 +163,50 @@ void CMapEditorScene::TileMode()
 	}
 }
 
+void CMapEditorScene::LadderMode()
+{
+}
+
 void CMapEditorScene::ColliderMode()
 {
+	if (bPlaceGround)
+	{
+		TileInteractionHandler->SetGroundByHandledTiles(*GroundManager);
+		bPlaceGround = false;
+	}
+
 	if (InteractionComponent->IsMouseFocus() == false)
 		return;
 	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
 	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
+
+	if (LHold())
+	{
+		TileKey ProximateTileKey = TileMap->GetProximateTile(MouseWorld2DPosition);
+		if (TileMap->IsValidateKey(ProximateTileKey))
+			TileInteractionHandler->AddHandledTile(ProximateTileKey);
+	}
+	else if (RHold())
+	{
+		TileKey ProximateTileKey = TileMap->GetProximateTile(MouseWorld2DPosition);
+		if (TileMap->IsValidateKey(ProximateTileKey))
+			TileInteractionHandler->RemoveHandledTile(ProximateTileKey);
+		GroundManager->RemoveProximateCollider(MouseWorld2DPosition);
+	}
 }
 
 void CMapEditorScene::ChangeMode(EEditMode InEditMode)
 {
+	TileInteractionHandler->ClearHandledTiles();
+	TileSnapUI->DisappearUI();
 	switch (InEditMode)
 	{
 	case EEditMode::Free:
 		break;
 	case EEditMode::Tile:
+		break;
+	case EEditMode::Ladder:
 		break;
 	case EEditMode::Collider:
 		break;
@@ -196,7 +221,7 @@ void CMapEditorScene::CaptureSnapShot()
 {
 	CScene::CaptureSnapShot();
 
-	const char* ModeNames[] = { "Free", "Tile", "Collider" };
+	const char* ModeNames[] = { "Free", "Tile", "Ladder", "Collider"};
 	int CurrentIndex = static_cast<int>(EditMode);
 	if (ImGui::Combo("Game Mode", &CurrentIndex, ModeNames, static_cast<int>(EEditMode::End)))
 	{
@@ -204,7 +229,11 @@ void CMapEditorScene::CaptureSnapShot()
 			ChangeMode(static_cast<EEditMode>(CurrentIndex));
 	}
 
-	if (EditMode == EEditMode::Tile)
+	switch (EditMode)
+	{
+	case EEditMode::Free:
+		break;
+	case EEditMode::Tile:
 	{
 		if (ImGui::Button("LayTiles"))
 			bLayTiles = true;
@@ -212,24 +241,36 @@ void CMapEditorScene::CaptureSnapShot()
 		ImGui::InputScalar("TileHeight", ImGuiDataType_U64, &TileHeight);
 		ImGui::InputScalar("TileMapRow", ImGuiDataType_U64, &TileMapRow);
 		ImGui::InputScalar("TileMapCol", ImGuiDataType_U64, &TileMapCol);
-	}
 
-	if (ImGui::Button("OpenWindowDialog"))
-		bOpenWindowDialog = true;
-	ImGui::BeginChild("TileList", ImVec2(0, 0), true);
-	const std::wstring& GeneratedActorImagePath = ActorGenerator->GetGeneratedActorImagePath();
-	for (auto& Pair : ActorGenerator->GetLoadedImagePaths())
-	{
-		const std::string& ImageName = Pair.first;
-		const std::wstring& ImagePath = Pair.second;
-
-		bool bSelected = (GeneratedActorImagePath == ImagePath);
-
-		if (ImGui::Selectable(ImageName.c_str(), bSelected))
+		if (ImGui::Button("OpenWindowDialog"))
+			bOpenWindowDialog = true;
+		ImGui::BeginChild("TileList", ImVec2(0, 0), true);
+		const std::wstring& GeneratedActorImagePath = ActorGenerator->GetGeneratedActorImagePath();
+		for (auto& Pair : ActorGenerator->GetLoadedImagePaths())
 		{
-			ActorGenerator->SetGeneratedActorImagePath(ImagePath);
-			ImGui::SetItemDefaultFocus();
+			const std::string& ImageName = Pair.first;
+			const std::wstring& ImagePath = Pair.second;
+
+			bool bSelected = (GeneratedActorImagePath == ImagePath);
+
+			if (ImGui::Selectable(ImageName.c_str(), bSelected))
+			{
+				ActorGenerator->SetGeneratedActorImagePath(ImagePath);
+				ImGui::SetItemDefaultFocus();
+			}
 		}
+		ImGui::EndChild();
 	}
-	ImGui::EndChild();
+	break;
+	case EEditMode::Collider:
+	{
+		if (ImGui::Button("PlaceGround"))
+			bPlaceGround = true;
+	}
+	break;
+	case EEditMode::End:
+		break;
+	default:
+		break;
+	}
 }

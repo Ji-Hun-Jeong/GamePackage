@@ -14,7 +14,7 @@ CActor::CActor()
 
 void CActor::RenderActor(CSpriteRenderer& InRenderer)
 {
-	if (RenderComponent)
+	for(auto RenderComponent : RenderComponents)
 	{
 		const Vector3& Position = Transform->GetFinalPosition();
 		const Vector3& Rotation = Transform->GetRotation();

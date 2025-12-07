@@ -13,7 +13,21 @@ public:
 	/*bool PutActorOnProximateTile(class CActorGenerator& InActorGenerator, class CTileMap& InTileManager, const Vector2& InWorldPosition);
 	bool CutActorOnProximateTile(class CActorGenerator& InActorGenerator, class CTileMap& InTileManager, const Vector2& InWorldPosition);*/
 	void MoveHandledTiles(ETilePositionType InTilePositionType);
+	bool IsHandledTileEmpty() const { return HandledTiles.empty(); }
+	Vector2 GetCenterPositionByHandledTiles()
+	{
+		Vector2 CenterPosition(0.0f);
+		for (TileKey TileKey : HandledTiles)
+		{
+			CTile* Tile = TileMap.GetTile(TileKey);
+			CenterPosition += Tile->GetTransform()->GetFinalPosition2D();
+		}
+
+		CenterPosition /= float(HandledTiles.size());
+		return CenterPosition;
+	}
 	bool AdjustTileSnapUIPosition(class CTileSnapUI& InTileSnapUI);
+	void SetGroundByHandledTiles(class CGroundManager& InGroundManager);
 	void ClearHandledTiles();
 	bool AddHandledTile(TileKey InTileKey)
 	{

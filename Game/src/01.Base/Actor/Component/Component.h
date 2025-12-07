@@ -11,7 +11,7 @@ public:
 	virtual ~CComponent();
 
 public:
-	class CActor* GetOwner() const { return OwnerActor; }
+	class CActor* GetOwnerActor() const { return OwnerActor; }
 
 	virtual void Serialize(CSerializer& InSerializer) const override {}
 	virtual void Deserialize(const CSerializer& InDeserializer) override {}
