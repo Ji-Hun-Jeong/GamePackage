@@ -6,6 +6,7 @@
 #include "04.Renderer/SpriteRenderer.h"
 #include "04.Renderer/RenderResourceLoader.h"
 #include "04.Renderer/PSOManager.h"
+
 class CImageMeshDataLoader
 {
 public:
@@ -99,18 +100,6 @@ void CSpriteRenderComponent::SetColor(const Vector3& InColor, float InAlpha)
 	bUpdatedSpriteData = true;
 }
 
-//void CSpriteRenderComponent::SetEdge(const Vector3& InEdgeColor, uint32_t InEdgeRange, float InWidth, float InHeight)
-//{
-//	EdgeData.EdgeColor = InEdgeColor;
-//	EdgeData.EdgeRange = InEdgeRange;
-//	EdgeData.Width = InWidth;
-//	EdgeData.Height = InHeight;
-//	bUpdatedEdge = true;
-//
-//	if(EdgeBuffer == nullptr)
-//		EdgeBuffer = CRenderResourceLoader::GetInst().CreateConstBuffer(sizeof(EdgeData));
-//}
-
 void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer, const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale)
 {
 	if (bRender == false)
@@ -125,8 +114,6 @@ void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer, const Vector3& 
 		InRenderer.UpdateBuffer(*SpriteBuffer.get(), &SpriteData, sizeof(SpriteData));
 		bUpdatedSpriteData = false;
 	}
-	/*if(bUpdatedEdge)
-		InRenderer.UpdateBuffer(*EdgeBuffer.get(), &EdgeData, sizeof(EdgeData));*/
 
 	InRenderer.StartState();
 

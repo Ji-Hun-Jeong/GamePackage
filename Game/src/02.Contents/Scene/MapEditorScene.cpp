@@ -15,11 +15,12 @@ void CMapEditorScene::BeginPlay()
 	CScene::BeginPlay();
 	GetFader()->FadeIn(1.0f);
 
-	ActorGenerator = GetWorld()->SpawnActor<CActorGenerator>(this);
 	TileMap = GetWorld()->SpawnActor<CTileMap>(this);
 	TileSnapUI = GetWorld()->SpawnActor<CTileSnapUI>(this);
 
 	TileInteractionHandler = std::make_unique<CTileInteractionHandler>(*TileMap);
+	ActorGenerator = std::make_unique<CActorGenerator>();
+	ImageImporter = std::make_unique<CImageImporter>();
 
 	TileSnapUI->SetUIEvent(ETilePositionType::Center, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Center); });
 	TileSnapUI->SetUIEvent(ETilePositionType::Left, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Left); });
@@ -68,22 +69,24 @@ void CMapEditorScene::FreeMode()
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
 
 	if (LClicked())
-		ActorGenerator->GenerateStaticActor(MouseWorld2DPosition);
-	else if (RClicked())
-		ActorGenerator->ErasePrevGeneratedActor();
+		ActorGenerator->GenerateStaticActor(*ImageImporter.get(), MouseWorld2DPosition);
+	//else if (RClicked())
+	//{
+	//	// Test
+	//	ActorGenerator->ErasePrevGeneratedActor();
+	//}
 }
 
 void CMapEditorScene::TileMode()
 {
 	if (bOpenWindowDialog)
 	{
-		ActorGenerator->SetGeneratedActorImagePathByWindowManager(CWindowManager::GetInst());
+		ImageImporter->AddImagePathByWindowManager(CWindowManager::GetInst());
 		bOpenWindowDialog = false;
 	}
 
 	if (bLayTiles)
 	{
-		ActorGenerator->ClearActor();
 		TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
 		bLayTiles = false;
 	}
@@ -109,9 +112,10 @@ void CMapEditorScene::TileMode()
 			TileSnapUI->DisappearUI();
 			return;
 		}
-		const std::wstring& GeneratedActorImagePath = ActorGenerator->GetGeneratedActorImagePath();
-		if (GeneratedActorImagePath.empty())
+		if (ImageImporter->IsExistCurrentImagePath() == false)
 			return;
+
+		const std::wstring& GeneratedActorImagePath = ImageImporter->GetCurrentImagePath();
 
 		CTile* ProximateTile = TileMap->GetTile(ProximateTileKey);
 		CStaticActor* TilePutOnActor = TileMap->GetPutOnActor(ProximateTileKey);
@@ -124,7 +128,7 @@ void CMapEditorScene::TileMode()
 				FinalPutOnActor = TilePutOnActor;
 			else
 			{
-				ActorGenerator->EraseActor(*TilePutOnActor);
+				TilePutOnActor->Destroy();
 				TileMap->CutActorOnTile(ProximateTileKey);
 				FinalPutOnActor = TileMap->GetPutOnActor(ProximateTileKey);
 			}
@@ -134,7 +138,7 @@ void CMapEditorScene::TileMode()
 		{
 			// Todo: Generate nullptr
 			Vector2 ProximateTileWorldPosition = ProximateTile->GetTransform()->GetFinalPosition2D();
-			FinalPutOnActor = ActorGenerator->GenerateStaticActor(ProximateTileWorldPosition);
+			FinalPutOnActor = ActorGenerator->GenerateStaticActor(*ImageImporter.get(), ProximateTileWorldPosition);
 			TileMap->PutActorOnTile(*FinalPutOnActor, ProximateTileKey);
 		}
 
@@ -157,7 +161,8 @@ void CMapEditorScene::TileMode()
 		CTile* ProximateTile = TileMap->GetTile(ProximateTileKey);
 		CStaticActor* TilePutOnActor = TileMap->GetPutOnActor(ProximateTileKey);
 
-		ActorGenerator->EraseActor(*TilePutOnActor);
+		if (TilePutOnActor)
+			TilePutOnActor->Destroy();
 		TileMap->CutActorOnTile(ProximateTileKey);
 		TileInteractionHandler->RemoveHandledTile(ProximateTileKey);
 	}
@@ -244,9 +249,11 @@ void CMapEditorScene::CaptureSnapShot()
 
 		if (ImGui::Button("OpenWindowDialog"))
 			bOpenWindowDialog = true;
+
 		ImGui::BeginChild("TileList", ImVec2(0, 0), true);
-		const std::wstring& GeneratedActorImagePath = ActorGenerator->GetGeneratedActorImagePath();
-		for (auto& Pair : ActorGenerator->GetLoadedImagePaths())
+
+		const std::wstring& GeneratedActorImagePath = ImageImporter->GetCurrentImagePath();
+		for (auto& Pair : ImageImporter->GetLoadedImagePaths())
 		{
 			const std::string& ImageName = Pair.first;
 			const std::wstring& ImagePath = Pair.second;
@@ -255,10 +262,11 @@ void CMapEditorScene::CaptureSnapShot()
 
 			if (ImGui::Selectable(ImageName.c_str(), bSelected))
 			{
-				ActorGenerator->SetGeneratedActorImagePath(ImagePath);
+				ImageImporter->SetCurrentImagePath(ImageName);
 				ImGui::SetItemDefaultFocus();
 			}
 		}
+
 		ImGui::EndChild();
 	}
 	break;

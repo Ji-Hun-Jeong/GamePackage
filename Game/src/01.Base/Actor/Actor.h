@@ -44,8 +44,6 @@ public:
 		Components.push_back(InComponent);
 		if (CCollider* Collider = dynamic_cast<CCollider*>(InComponent))
 			Colliders.push_back(Collider);
-		else if (CRenderComponent* RenderComponent = dynamic_cast<CRenderComponent*>(InComponent))
-			RenderComponents.push_back(RenderComponent);
 	}
 	void Detach(CActor* InChild)
 	{
@@ -82,17 +80,6 @@ public:
 				}
 			}
 		}
-		else if (CRenderComponent* RenderComponent = dynamic_cast<CRenderComponent*>(InComponent))
-		{
-			for (auto Iter = RenderComponents.begin(); Iter != RenderComponents.end(); ++Iter)
-			{
-				if (*Iter == RenderComponent)
-				{
-					RenderComponents.erase(Iter);
-					break;
-				}
-			}
-		}
 	}
 
 public:
@@ -101,15 +88,15 @@ public:
 
 	CTransform* GetTransform() const { return Transform; }
 	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent; }
-	//CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
 
 protected:
 	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
 	CTransform* Transform;
 	CInteractionComponent* InteractionComponent;
-	std::vector<CComponent*> Components;
+	CRenderComponent* RenderComponent;
 	std::vector<CCollider*> Colliders;
-	std::vector<CRenderComponent*> RenderComponents;
+	std::vector<CComponent*> Components;
 
 public:
 	template <typename T>

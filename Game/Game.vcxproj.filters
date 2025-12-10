@@ -195,9 +195,6 @@
     <ClCompile Include="src\04.Renderer\ImGuiManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\Edit\ActorGenerator.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\Tile\TileSnapUI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -211,6 +208,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\Collision\GroundManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\Edit\LadderEditor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\Edit\EditHelper.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -395,9 +398,6 @@
     <ClInclude Include="src\04.Renderer\ImGuiManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\Edit\ActorGenerator.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Tile\TileSnapUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -411,6 +411,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Collision\GroundManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\Edit\LadderEditor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\Edit\EditHelper.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

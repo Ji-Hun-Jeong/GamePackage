@@ -11,6 +11,7 @@ public:
 		, SpriteRenderComponent(nullptr)
 	{
 		SpriteRenderComponent = AddComponent<CSpriteRenderComponent>();
+		RenderComponent = SpriteRenderComponent;
 
 		const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("SquareMesh");
 		SpriteRenderComponent->SetMesh(MeshData);

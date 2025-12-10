@@ -29,7 +29,6 @@ public:
 	void SetRender(bool bInRender) { bRender = bInRender; }
 
 	void SetColor(const Vector3& InColor, float InAlpha);
-	// void SetEdge(const Vector3& InEdgeColor, uint32_t InEdgeRange, float InWidth, float InHeight);
 
 	bool IsImageType() const { return !MaterialData.ImagePaths[0].empty(); }
 	Vector2 GetImageScale() const { return Vector2(ImageScale.x, ImageScale.y); }
