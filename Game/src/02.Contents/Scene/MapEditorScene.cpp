@@ -189,6 +189,46 @@ void CMapEditorScene::LadderMode()
 			LadderEditor.SetFootImagePath(LadderFootImagePath);
 		bSetLadderFoot = false;
 	}
+
+	CLadder* FocusLadder = LadderEditor.GetFocusLadder();
+	if (FocusLadder)
+	{
+		static CStaticActor* FocusActorRenderer = GetWorld()->SpawnActor<CStaticActor>(this);
+		FocusActorRenderer->SetLineActor();
+		FocusActorRenderer->GetTransform()->SetPosition(FocusLadder->GetTransform()->GetFinalPosition());
+		FocusActorRenderer->GetTransform()->SetScale(FocusLadder->GetTransform()->GetScale());
+		FocusActorRenderer->GetSpriteRenderComponent()->SetColor(Vector3(1.0f, 0.0f, 0.0f), 1.0f);
+
+		static CUI* StretchUpUI = GetWorld()->SpawnActor<CUI>(this);
+		StretchUpUI->SetRectUI(1);
+		StretchUpUI->GetInteractionComponent()->SetRectScale(20.0f, 20.0f);
+		StretchUpUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 0.0f));
+		StretchUpUI->GetTransform()->SetPosition(FocusActorRenderer->GetTransform()->GetPosition() + Vector3(0.0f, 20.0f, 0.0f));
+		StretchUpUI->GetInteractionComponent()->SetMouseFocusEvent([this]()->void
+			{
+				if (LClicked())
+				{
+					CLadder* FocusLadder = LadderEditor.GetFocusLadder();
+					if (FocusLadder)
+						FocusLadder->StretchToUp();
+				}
+			});
+		static CUI* StretchDownUI = GetWorld()->SpawnActor<CUI>(this);
+		StretchDownUI->SetRectUI(1);
+		StretchDownUI->GetInteractionComponent()->SetRectScale(20.0f, 20.0f);
+		StretchDownUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 0.0f));
+		StretchDownUI->GetTransform()->SetPosition(FocusActorRenderer->GetTransform()->GetPosition() + Vector3(0.0f, -20.0f, 0.0f));
+		StretchDownUI->GetInteractionComponent()->SetMouseFocusEvent([this]()->void
+			{
+				if (LClicked())
+				{
+					CLadder* FocusLadder = LadderEditor.GetFocusLadder();
+					if (FocusLadder)
+						FocusLadder->StretchToDown();
+				}
+			});
+	}
+
 	if (InteractionComponent->IsMouseFocus() == false)
 		return;
 	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
@@ -206,25 +246,9 @@ void CMapEditorScene::LadderMode()
 				return;
 			CLadder* Ladder = GetWorld()->SpawnActor<CLadder>(this);
 			LadderEditor.SetLadder(*Ladder, Vector3(MouseWorld2DPosition.x, MouseWorld2DPosition.y, 1.0f));
+			LadderEditor.SetFocusLadder(Ladder);
 		}
-	}
-	else if (RClicked())
-	{
-		CLadder* FocusLadder = LadderEditor.GetFocusLadder();
-		if (FocusLadder)
-			FocusLadder->StretchToDown();
-	}
-
-	CLadder* FocusLadder = LadderEditor.GetFocusLadder();
-	if (FocusLadder)
-	{
-		static CStaticActor* FocusActorRenderer = GetWorld()->SpawnActor<CStaticActor>(this);
-		FocusActorRenderer->SetLineActor();
-		FocusActorRenderer->GetTransform()->SetPosition(FocusLadder->GetTransform()->GetFinalPosition());
-		FocusActorRenderer->GetTransform()->SetScale(FocusLadder->GetTransform()->GetScale());
-		FocusActorRenderer->GetSpriteRenderComponent()->SetColor(Vector3(1.0f, 0.0f, 0.0f), 1.0f);
-	}
-	
+	}	
 }
 
 void CMapEditorScene::ColliderMode()
