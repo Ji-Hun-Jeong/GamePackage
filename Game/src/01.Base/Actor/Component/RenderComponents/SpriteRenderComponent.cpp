@@ -95,9 +95,16 @@ void CSpriteRenderComponent::SetPSO(EPSOType InPSOType)
 
 void CSpriteRenderComponent::SetColor(const Vector3& InColor, float InAlpha)
 {
-	SpriteData.Color = InColor;
-	SpriteData.Alpha = InAlpha;
-	bUpdatedSpriteData = true;
+	if (SpriteData.Color != InColor)
+	{
+		SpriteData.Color = InColor;
+		bUpdatedSpriteData = true;
+	}
+	if (SpriteData.Alpha != InAlpha)
+	{
+		SpriteData.Alpha = InAlpha;
+		bUpdatedSpriteData = true;
+	}
 }
 
 void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer, const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale)

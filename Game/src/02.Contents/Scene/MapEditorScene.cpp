@@ -19,8 +19,6 @@ void CMapEditorScene::BeginPlay()
 	TileSnapUI = GetWorld()->SpawnActor<CTileSnapUI>(this);
 
 	TileInteractionHandler = std::make_unique<CTileInteractionHandler>(*TileMap);
-	ActorGenerator = std::make_unique<CActorGenerator>();
-	ImageImporter = std::make_unique<CImageImporter>();
 
 	TileSnapUI->SetUIEvent(ETilePositionType::Center, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Center); });
 	TileSnapUI->SetUIEvent(ETilePositionType::Left, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Left); });
@@ -69,7 +67,7 @@ void CMapEditorScene::FreeMode()
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
 
 	if (LClicked())
-		ActorGenerator->GenerateStaticActor(*ImageImporter.get(), MouseWorld2DPosition);
+		ActorGenerator.GenerateStaticActor(ImageImporter, MouseWorld2DPosition);
 	//else if (RClicked())
 	//{
 	//	// Test
@@ -81,7 +79,7 @@ void CMapEditorScene::TileMode()
 {
 	if (bOpenWindowDialog)
 	{
-		ImageImporter->AddImagePathByWindowManager(CWindowManager::GetInst());
+		ImageImporter.AddImagePathByWindowManager(CWindowManager::GetInst());
 		bOpenWindowDialog = false;
 	}
 
@@ -112,10 +110,10 @@ void CMapEditorScene::TileMode()
 			TileSnapUI->DisappearUI();
 			return;
 		}
-		if (ImageImporter->IsExistCurrentImagePath() == false)
+		if (ImageImporter.IsExistCurrentImagePath() == false)
 			return;
 
-		const std::wstring& GeneratedActorImagePath = ImageImporter->GetCurrentImagePath();
+		const std::wstring& GeneratedActorImagePath = ImageImporter.GetCurrentImagePath();
 
 		CTile* ProximateTile = TileMap->GetTile(ProximateTileKey);
 		CStaticActor* TilePutOnActor = TileMap->GetPutOnActor(ProximateTileKey);
@@ -138,7 +136,7 @@ void CMapEditorScene::TileMode()
 		{
 			// Todo: Generate nullptr
 			Vector2 ProximateTileWorldPosition = ProximateTile->GetTransform()->GetFinalPosition2D();
-			FinalPutOnActor = ActorGenerator->GenerateStaticActor(*ImageImporter.get(), ProximateTileWorldPosition);
+			FinalPutOnActor = ActorGenerator.GenerateStaticActor(ImageImporter, ProximateTileWorldPosition);
 			TileMap->PutActorOnTile(*FinalPutOnActor, ProximateTileKey);
 		}
 
@@ -170,6 +168,63 @@ void CMapEditorScene::TileMode()
 
 void CMapEditorScene::LadderMode()
 {
+	if (bSetLadderHead)
+	{
+		std::wstring LadderHeadImagePath;
+		if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderHeadImagePath))
+			LadderEditor.SetHeadImagePath(LadderHeadImagePath);
+		bSetLadderHead = false;
+	}
+	if (bSetLadderBody)
+	{
+		std::wstring LadderBodyImagePath;
+		if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderBodyImagePath))
+			LadderEditor.AddBodyImagePath(LadderBodyImagePath);
+		bSetLadderBody = false;
+	}
+	if (bSetLadderFoot)
+	{
+		std::wstring LadderFootImagePath;
+		if(CWindowManager::GetInst().TryGetFilePathByDialog(&LadderFootImagePath))
+			LadderEditor.SetFootImagePath(LadderFootImagePath);
+		bSetLadderFoot = false;
+	}
+	if (InteractionComponent->IsMouseFocus() == false)
+		return;
+	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
+	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
+	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
+
+	if (LClicked())
+	{
+		CLadder* ProximateLadder = LadderEditor.GetLadder(MouseWorld2DPosition);
+		if (ProximateLadder)
+			LadderEditor.SetFocusLadder(ProximateLadder);
+		else
+		{
+			if (LadderEditor.IsEditReady() == false)
+				return;
+			CLadder* Ladder = GetWorld()->SpawnActor<CLadder>(this);
+			LadderEditor.SetLadder(*Ladder, Vector3(MouseWorld2DPosition.x, MouseWorld2DPosition.y, 1.0f));
+		}
+	}
+	else if (RClicked())
+	{
+		CLadder* FocusLadder = LadderEditor.GetFocusLadder();
+		if (FocusLadder)
+			FocusLadder->StretchToDown();
+	}
+
+	CLadder* FocusLadder = LadderEditor.GetFocusLadder();
+	if (FocusLadder)
+	{
+		static CStaticActor* FocusActorRenderer = GetWorld()->SpawnActor<CStaticActor>(this);
+		FocusActorRenderer->SetLineActor();
+		FocusActorRenderer->GetTransform()->SetPosition(FocusLadder->GetTransform()->GetFinalPosition());
+		FocusActorRenderer->GetTransform()->SetScale(FocusLadder->GetTransform()->GetScale());
+		FocusActorRenderer->GetSpriteRenderComponent()->SetColor(Vector3(1.0f, 0.0f, 0.0f), 1.0f);
+	}
+	
 }
 
 void CMapEditorScene::ColliderMode()
@@ -226,7 +281,7 @@ void CMapEditorScene::CaptureSnapShot()
 {
 	CScene::CaptureSnapShot();
 
-	const char* ModeNames[] = { "Free", "Tile", "Ladder", "Collider"};
+	const char* ModeNames[] = { "Free", "Tile", "Ladder", "Collider" };
 	int CurrentIndex = static_cast<int>(EditMode);
 	if (ImGui::Combo("Game Mode", &CurrentIndex, ModeNames, static_cast<int>(EEditMode::End)))
 	{
@@ -252,8 +307,8 @@ void CMapEditorScene::CaptureSnapShot()
 
 		ImGui::BeginChild("TileList", ImVec2(0, 0), true);
 
-		const std::wstring& GeneratedActorImagePath = ImageImporter->GetCurrentImagePath();
-		for (auto& Pair : ImageImporter->GetLoadedImagePaths())
+		const std::wstring& GeneratedActorImagePath = ImageImporter.GetCurrentImagePath();
+		for (auto& Pair : ImageImporter.GetLoadedImagePaths())
 		{
 			const std::string& ImageName = Pair.first;
 			const std::wstring& ImagePath = Pair.second;
@@ -262,12 +317,22 @@ void CMapEditorScene::CaptureSnapShot()
 
 			if (ImGui::Selectable(ImageName.c_str(), bSelected))
 			{
-				ImageImporter->SetCurrentImagePath(ImageName);
+				ImageImporter.SetCurrentImagePath(ImageName);
 				ImGui::SetItemDefaultFocus();
 			}
 		}
 
 		ImGui::EndChild();
+	}
+	break;
+	case EEditMode::Ladder:
+	{
+		if (ImGui::Button("SetLadderHead"))
+			bSetLadderHead = true;
+		if (ImGui::Button("SetLadderBody"))
+			bSetLadderBody = true;
+		if (ImGui::Button("SetLadderFoot"))
+			bSetLadderFoot = true;
 	}
 	break;
 	case EEditMode::Collider:

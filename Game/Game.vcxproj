@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\03.Utils\CTransformUtils.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Edit\EditHelper.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Edit\LadderEditor.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Collision\GroundManager.cpp" />
@@ -260,6 +261,7 @@
     <ClCompile Include="src\02.Contents\Actor\Tile\TileInteractionHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\03.Utils\CTransformUtils.h" />
     <ClInclude Include="src\02.Contents\Actor\Edit\EditHelper.h" />
     <ClInclude Include="src\02.Contents\Actor\Edit\LadderEditor.h" />
     <ClInclude Include="src\02.Contents\Actor\Collision\GroundManager.h" />

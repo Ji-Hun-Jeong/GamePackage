@@ -1,5 +1,6 @@
 #pragma once
 #include "01.Base/Actor/Actor.h"
+#include "03.Utils/CTransformUtils.h"
 #include "04.Renderer/ImGuiManager.h"
 #include "Tile.h"
 
@@ -24,22 +25,8 @@ public:
 		for (size_t i = 0; i < TileGridDatas.size(); ++i)
 		{
 			CTile* Tile = TileGridDatas[i].Tile;
-			Vector2 TileCenter = Vector2(Tile->GetTransform()->GetFinalPosition().x, Tile->GetTransform()->GetFinalPosition().y);
-			Vector2 TileScale = Vector2(Tile->GetTransform()->GetScale().x, Tile->GetTransform()->GetScale().y);
-
-			float HalfWidth = TileScale.x * 0.5f;
-			float HalfHeight = TileScale.y * 0.5f;
-
-			float Left = TileCenter.x - HalfWidth;
-			float Right = TileCenter.x + HalfWidth;
-			float Top = TileCenter.y - HalfHeight;
-			float Bottom = TileCenter.y + HalfHeight;
-
-			if (InWorldPosition.x >= Left && InWorldPosition.x <= Right &&
-				InWorldPosition.y >= Top && InWorldPosition.y <= Bottom)
-			{
+			if (CTransformUtils::IsPositionInsideActor(InWorldPosition, *Tile))
 				return i;
-			}
 		}
 
 		return TileNone;

@@ -32,6 +32,12 @@ public:
 			InteractionComponent->SetRectScale(ImageScale.x, ImageScale.y);
 		}
 	}
+	void SetLineActor()
+	{
+		const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("LineSquareMesh");
+		SpriteRenderComponent->SetMesh(MeshData);
+		SpriteRenderComponent->SetPSO(EPSOType::Line);
+	}
 	CSpriteRenderComponent* GetSpriteRenderComponent() const { return SpriteRenderComponent; }
 
 protected:

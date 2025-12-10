@@ -216,6 +216,9 @@
     <ClCompile Include="src\02.Contents\Actor\Edit\EditHelper.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\03.Utils\CTransformUtils.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -417,6 +420,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Edit\EditHelper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\03.Utils\CTransformUtils.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
