@@ -4,29 +4,39 @@
 class CTransformUtils
 {
 public:
-	static bool GetTopPosition(CStaticActor& InPivotActor, CStaticActor& InOffsetActor, Vector3* OutResultPosition)
+	static Vector3 GetTopPosition(CStaticActor& InPivotActor, CStaticActor& InOffsetActor)
 	{
-		if (InPivotActor.GetSpriteRenderComponent()->IsImageType() == false || InOffsetActor.GetSpriteRenderComponent()->IsImageType() == false)
-			return false;
+		Vector2 PivotScale;
+		if (InPivotActor.GetSpriteRenderComponent()->IsImageType())
+			PivotScale = InPivotActor.GetSpriteRenderComponent()->GetImageScale();
+		else
+			PivotScale = InPivotActor.GetTransform()->GetScale2D();
+		Vector2 OffsetScale;
+		if (InOffsetActor.GetSpriteRenderComponent()->IsImageType())
+			OffsetScale = InOffsetActor.GetSpriteRenderComponent()->GetImageScale();
+		else
+			OffsetScale = InOffsetActor.GetTransform()->GetScale2D();
 
-		Vector2 PivotImageScale = InPivotActor.GetSpriteRenderComponent()->GetImageScale();
-		Vector2 OffsetImageScale = InOffsetActor.GetSpriteRenderComponent()->GetImageScale();
 		const Vector3& PivotActorOriginPosition = InPivotActor.GetTransform()->GetPosition();
-		*OutResultPosition = Vector3(PivotActorOriginPosition.x
-			, PivotActorOriginPosition.y + PivotImageScale.y / 2.0f + OffsetImageScale.y / 2.0f, PivotActorOriginPosition.z);
-		return true;
+		return Vector3(PivotActorOriginPosition.x
+			, PivotActorOriginPosition.y + PivotScale.y / 2.0f + OffsetScale.y / 2.0f, PivotActorOriginPosition.z);
 	}
-	static bool GetBottomPosition(CStaticActor& InPivotActor, CStaticActor& InOffsetActor, Vector3* OutResultPosition)
+	static Vector3 GetBottomPosition(CStaticActor& InPivotActor, CStaticActor& InOffsetActor)
 	{
-		if (InPivotActor.GetSpriteRenderComponent()->IsImageType() == false || InOffsetActor.GetSpriteRenderComponent()->IsImageType() == false)
-			return false;
+		Vector2 PivotScale;
+		if (InPivotActor.GetSpriteRenderComponent()->IsImageType())
+			PivotScale = InPivotActor.GetSpriteRenderComponent()->GetImageScale();
+		else
+			PivotScale = InPivotActor.GetTransform()->GetScale2D();
+		Vector2 OffsetScale;
+		if (InOffsetActor.GetSpriteRenderComponent()->IsImageType())
+			OffsetScale = InOffsetActor.GetSpriteRenderComponent()->GetImageScale();
+		else
+			OffsetScale = InOffsetActor.GetTransform()->GetScale2D();
 
-		Vector2 PivotImageScale = InPivotActor.GetSpriteRenderComponent()->GetImageScale();
-		Vector2 OffsetImageScale = InOffsetActor.GetSpriteRenderComponent()->GetImageScale();
 		const Vector3& PivotActorOriginPosition = InPivotActor.GetTransform()->GetPosition();
-		*OutResultPosition = Vector3(PivotActorOriginPosition.x
-			, PivotActorOriginPosition.y - (PivotImageScale.y / 2.0f + OffsetImageScale.y / 2.0f), PivotActorOriginPosition.z);
-		return true;
+		return Vector3(PivotActorOriginPosition.x
+			, PivotActorOriginPosition.y - (PivotScale.y / 2.0f + OffsetScale.y / 2.0f), PivotActorOriginPosition.z);
 	}
 	static bool IsPositionInsideActor(const Vector2& InPosition, CActor& InActor)
 	{

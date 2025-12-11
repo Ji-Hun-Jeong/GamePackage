@@ -3,6 +3,7 @@
 
 #include "GameCore.h"
 #include "00.App/WindowManager.h"
+#include "06.Interaction/MouseManager.h"
 
 void CImageImporter::AddImagePathByWindowManager(CWindowManager& InWindowManager)
 {
@@ -25,4 +26,18 @@ CStaticActor* CActorGenerator::GenerateStaticActor(const Vector2& InPosition)
 	CStaticActor* StaticActor = GetWorld()->SpawnActor<CStaticActor>(this);
 	StaticActor->GetTransform()->SetPosition(Vector3(InPosition.x, InPosition.y, 1.0f));
 	return StaticActor;
+}
+
+void CActorTranslator::SetFirstDiff(CMouseManager& InMouseManager, CActor& InTranslatedActor)
+{
+	const Vector2& Mouse2dPosition = InMouseManager.GetMousePosition();
+	Vector3 Mouse3dPosition = Vector3(Mouse2dPosition.x, Mouse2dPosition.y, 1.0f);
+	FirstDiff = Mouse3dPosition - InTranslatedActor.GetTransform()->GetFinalPosition();
+}
+
+void CActorTranslator::TranslateActor(CMouseManager& InMouseManager, CActor& InTranslatedActor)
+{
+	const Vector2& Mouse2dPosition = InMouseManager.GetMousePosition();
+	Vector3 Mouse3dPosition = Vector3(Mouse2dPosition.x, Mouse2dPosition.y, 1.0f);
+	InTranslatedActor.GetTransform()->SetPosition(Mouse3dPosition - FirstDiff);
 }

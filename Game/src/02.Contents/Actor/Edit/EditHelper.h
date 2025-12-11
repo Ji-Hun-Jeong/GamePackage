@@ -60,3 +60,17 @@ public:
 private:
 
 };
+
+class CActorTranslator
+{
+public:
+	CActorTranslator() = default;
+	~CActorTranslator() = default;
+
+public:
+	void SetFirstDiff(class CMouseManager& InMouseManager, CActor& InTranslatedActor);
+	void TranslateActor(class CMouseManager& InMouseManager, CActor& InTranslatedActor);
+
+private:
+	Vector3 FirstDiff;
+};

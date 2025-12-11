@@ -259,6 +259,7 @@
     <ClCompile Include="src\02.Contents\Actor\Tile\Tile.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Tile\TileSnapUI.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Tile\TileInteractionHandler.cpp" />
+    <ClCompile Include="src\01.Base\Actor\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\03.Utils\CTransformUtils.h" />
@@ -329,6 +330,7 @@
     <ClInclude Include="src\02.Contents\Actor\Tile\Tile.h" />
     <ClInclude Include="src\02.Contents\Actor\Tile\TileSnapUI.h" />
     <ClInclude Include="src\02.Contents\Actor\Tile\TileInteractionHandler.h" />
+    <ClInclude Include="src\01.Base\Actor\UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

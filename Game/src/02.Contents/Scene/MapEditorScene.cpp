@@ -32,6 +32,10 @@ void CMapEditorScene::BeginPlay()
 
 	GroundManager = GetWorld()->SpawnActor<CGroundManager>(this);
 
+	LadderEditor.SetHeadImagePath(L"resources/image/Tile/ladder/ladder0.png");
+	LadderEditor.AddBodyImagePath(L"resources/image/Tile/ladder/ladder1.png");
+	LadderEditor.AddBodyImagePath(L"resources/image/Tile/ladder/ladder2.png");
+	LadderEditor.SetFootImagePath(L"resources/image/Tile/ladder/ladder3.png");
 }
 
 void CMapEditorScene::Update(float InDeltaTime)
@@ -203,7 +207,8 @@ void CMapEditorScene::LadderMode()
 		StretchUpUI->SetRectUI(1);
 		StretchUpUI->GetInteractionComponent()->SetRectScale(20.0f, 20.0f);
 		StretchUpUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 0.0f));
-		StretchUpUI->GetTransform()->SetPosition(FocusActorRenderer->GetTransform()->GetPosition() + Vector3(0.0f, 20.0f, 0.0f));
+		Vector3 UIPosition = CTransformUtils::GetTopPosition(*FocusActorRenderer, *StretchUpUI);
+		StretchUpUI->GetTransform()->SetPosition(UIPosition);
 		StretchUpUI->GetInteractionComponent()->SetMouseFocusEvent([this]()->void
 			{
 				if (LClicked())
@@ -217,7 +222,8 @@ void CMapEditorScene::LadderMode()
 		StretchDownUI->SetRectUI(1);
 		StretchDownUI->GetInteractionComponent()->SetRectScale(20.0f, 20.0f);
 		StretchDownUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 0.0f));
-		StretchDownUI->GetTransform()->SetPosition(FocusActorRenderer->GetTransform()->GetPosition() + Vector3(0.0f, -20.0f, 0.0f));
+		UIPosition = CTransformUtils::GetBottomPosition(*FocusActorRenderer, *StretchDownUI);
+		StretchDownUI->GetTransform()->SetPosition(UIPosition);
 		StretchDownUI->GetInteractionComponent()->SetMouseFocusEvent([this]()->void
 			{
 				if (LClicked())
@@ -231,6 +237,8 @@ void CMapEditorScene::LadderMode()
 
 	if (InteractionComponent->IsMouseFocus() == false)
 		return;
+	if (LadderEditor.IsEditReady() == false)
+		return;
 	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
 	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
@@ -239,16 +247,22 @@ void CMapEditorScene::LadderMode()
 	{
 		CLadder* ProximateLadder = LadderEditor.GetLadder(MouseWorld2DPosition);
 		if (ProximateLadder)
+		{
 			LadderEditor.SetFocusLadder(ProximateLadder);
+			ActorTranslator.SetFirstDiff(CMouseManager::GetInst(), *ProximateLadder);
+		}
 		else
 		{
-			if (LadderEditor.IsEditReady() == false)
-				return;
 			CLadder* Ladder = GetWorld()->SpawnActor<CLadder>(this);
 			LadderEditor.SetLadder(*Ladder, Vector3(MouseWorld2DPosition.x, MouseWorld2DPosition.y, 1.0f));
 			LadderEditor.SetFocusLadder(Ladder);
 		}
 	}	
+	else if (LHold())
+	{
+		CLadder* Ladder = LadderEditor.GetFocusLadder();
+		ActorTranslator.TranslateActor(CMouseManager::GetInst(), *Ladder);
+	}
 }
 
 void CMapEditorScene::ColliderMode()

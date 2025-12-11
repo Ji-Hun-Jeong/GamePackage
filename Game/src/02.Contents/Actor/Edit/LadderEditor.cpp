@@ -17,14 +17,12 @@ void CLadder::InitalizeLadder(const std::wstring& InHeadImagePath, const std::ve
 
 	Head = GetWorld()->SpawnActor<CStaticActor>(this);
 	Head->GetSpriteRenderComponent()->SetDiffuseImage(InHeadImagePath);
-	Vector3 HeadPosition;
-	CTransformUtils::GetTopPosition(*Body, *Head, &HeadPosition);
+	Vector3 HeadPosition = CTransformUtils::GetTopPosition(*Body, *Head);
 	Head->GetTransform()->SetPosition(HeadPosition);
 
 	Foot = GetWorld()->SpawnActor<CStaticActor>(this);
 	Foot->GetSpriteRenderComponent()->SetDiffuseImage(InFootImagePath);
-	Vector3 FootPosition;
-	CTransformUtils::GetBottomPosition(*Body, *Foot, &FootPosition);
+	Vector3 FootPosition = CTransformUtils::GetBottomPosition(*Body, *Foot);
 	Foot->GetTransform()->SetPosition(FootPosition);
 
 	Vector2 HeadScale = Head->GetSpriteRenderComponent()->GetImageScale();
@@ -50,12 +48,10 @@ void CLadder::StretchToUp()
 	Vector2 NewBodyImageScale = NewBody->GetSpriteRenderComponent()->GetImageScale();
 	Bodys.push_front(NewBody);
 
-	Vector3 NewBodyPosition;
-	CTransformUtils::GetTopPosition(*TopBody, *NewBody, &NewBodyPosition);
+	Vector3 NewBodyPosition = CTransformUtils::GetTopPosition(*TopBody, *NewBody);
 	NewBody->GetTransform()->SetPosition(NewBodyPosition);
 	
-	Vector3 HeadPosition;
-	CTransformUtils::GetTopPosition(*NewBody, *Head, &HeadPosition);
+	Vector3 HeadPosition = CTransformUtils::GetTopPosition(*NewBody, *Head);
 	Head->GetTransform()->SetPosition(HeadPosition);
 
 	ReBuild(*NewBody);
@@ -78,12 +74,10 @@ void CLadder::StretchToDown()
 	Vector2 NewBodyImageScale = NewBody->GetSpriteRenderComponent()->GetImageScale();
 	Bodys.push_back(NewBody);
 
-	Vector3 NewBodyPosition;
-	CTransformUtils::GetBottomPosition(*BottomBody, *NewBody, &NewBodyPosition);
+	Vector3 NewBodyPosition = CTransformUtils::GetBottomPosition(*BottomBody, *NewBody);
 	NewBody->GetTransform()->SetPosition(NewBodyPosition);
 
-	Vector3 FootPosition;
-	CTransformUtils::GetBottomPosition(*NewBody, *Foot, &FootPosition);
+	Vector3 FootPosition = CTransformUtils::GetBottomPosition(*NewBody, *Foot);
 	Foot->GetTransform()->SetPosition(FootPosition);
 
 	ReBuild(*NewBody);
