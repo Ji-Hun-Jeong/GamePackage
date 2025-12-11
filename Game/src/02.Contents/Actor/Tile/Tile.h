@@ -1,5 +1,5 @@
 #pragma once
-#include "01.Base/Actor/StaticActor.h"
+#include "01.Base/Actor/UI.h"
 
 enum class ETilePositionType
 {
@@ -15,11 +15,12 @@ enum class ETilePositionType
 	None,
 };
 
-class CTile : public CStaticActor
+class CTile : public CUI
 {
 	GENERATE_OBJECT(CTile)
 public:
 	CTile()
+		: CUI()
 	{
 		static const Graphics::TMeshData& LineSquareMeshData = CAssetLoader::GetInst().GetMeshData("LineSquareMesh");
 		SpriteRenderComponent->SetLayer(1);

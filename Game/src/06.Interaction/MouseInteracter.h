@@ -1,6 +1,5 @@
 #pragma once
 #include <Core/public/InputManager.h>
-#include "MouseManager.h"
 
 class CMouseInteracter
 {

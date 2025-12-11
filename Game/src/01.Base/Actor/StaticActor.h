@@ -26,11 +26,6 @@ public:
 	{
 		CActor::CaptureSnapShot();
 
-		if (InteractionComponent && SpriteRenderComponent->IsImageType())
-		{
-			const Vector2& ImageScale = SpriteRenderComponent->GetImageScale();
-			InteractionComponent->SetRectScale(ImageScale.x, ImageScale.y);
-		}
 	}
 	void SetLineActor()
 	{

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Game.h"
 #include <Renderer/Platform/DX/DXInfra.h>
-#include "06.Interaction/MouseManager.h"
+#include "00.App/MouseManager.h"
 
 class CSetMousePositionToMouseManager : public Core::IMouseMove
 {
@@ -58,12 +58,6 @@ bool CGame::Process()
 
 	World.Arrange();
 	World.Ready();
-
-	Vector2 MouseWorldPosition = CMouseManager::GetInst().GetMousePosition();
-	MouseWorldPosition += Vector2(SpriteRenderer.GetRendererWorldPosition().x, SpriteRenderer.GetRendererWorldPosition().y);
-	MouseInteractionManager.SetMouseWorldPosition(MouseWorldPosition);
-	World.CollectMouseInteraction(MouseInteractionManager);
-	MouseInteractionManager.FindFocusInteracter();
 
 	World.Update();
 	World.CaptureSnapShot();

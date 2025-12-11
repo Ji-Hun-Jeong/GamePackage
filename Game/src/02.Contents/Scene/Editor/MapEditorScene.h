@@ -5,8 +5,8 @@
 #include "02.Contents/Actor/Tile/TileSnapUI.h"
 #include "02.Contents/Actor/Tile/TileInteractionHandler.h"
 #include "02.Contents/Actor/Collision/GroundManager.h"
-#include "02.Contents/Actor/Edit/LadderEditor.h"
-#include "04.Renderer/ImGuiManager.h"
+
+#include "State/LadderEditState.h"
 
 enum class EEditMode
 {
@@ -39,6 +39,8 @@ public:
 private:
 	// 원래는 모드를 두는게 좋을것같은데 그냥 일단 씬에 때려박자 나중에 ㄱㄱ
 	EEditMode EditMode = EEditMode::Ladder;
+	IEditState* CurrentEditState = nullptr;
+	CUI* MainPanel = nullptr;
 
 	CActorTranslator ActorTranslator;
 	CImageImporter ImageImporter;
@@ -54,10 +56,7 @@ private:
 
 	CTileSnapUI* TileSnapUI = nullptr;
 
-	CLadderEditor LadderEditor;
-	bool bSetLadderHead = false;
-	bool bSetLadderBody = false;
-	bool bSetLadderFoot = false;
+	CLadderEditState* LadderEditState = nullptr;
 
 	std::unique_ptr<CTileInteractionHandler> TileInteractionHandler;
 

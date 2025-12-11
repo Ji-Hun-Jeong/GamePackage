@@ -4,81 +4,98 @@
 #include "GameCore.h"
 #include <random>
 
-void CLadder::InitalizeLadder(const std::wstring& InHeadImagePath, const std::vector<std::wstring>& InBodyImagePath, const std::wstring& InFootImagePath)
+void CLadderEditor::StretchToUp(CLadderForm& InLadder)
 {
-	HeadImagePath = InHeadImagePath;
-	BodyImagePaths = InBodyImagePath;
-	FootImagePath = InFootImagePath;
-
-	const std::wstring& FirstBodyImage = InBodyImagePath[0];
-	CStaticActor* Body = GetWorld()->SpawnActor<CStaticActor>(this);
-	Body->GetSpriteRenderComponent()->SetDiffuseImage(FirstBodyImage);
-	Bodys.push_back(Body);
-
-	Head = GetWorld()->SpawnActor<CStaticActor>(this);
-	Head->GetSpriteRenderComponent()->SetDiffuseImage(InHeadImagePath);
-	Vector3 HeadPosition = CTransformUtils::GetTopPosition(*Body, *Head);
-	Head->GetTransform()->SetPosition(HeadPosition);
-
-	Foot = GetWorld()->SpawnActor<CStaticActor>(this);
-	Foot->GetSpriteRenderComponent()->SetDiffuseImage(InFootImagePath);
-	Vector3 FootPosition = CTransformUtils::GetBottomPosition(*Body, *Foot);
-	Foot->GetTransform()->SetPosition(FootPosition);
-
-	Vector2 HeadScale = Head->GetSpriteRenderComponent()->GetImageScale();
-	Vector2 BodyScale = Body->GetSpriteRenderComponent()->GetImageScale();
-	Vector2 FootScale = Foot->GetSpriteRenderComponent()->GetImageScale();
-	Transform->SetScale(Vector3(BodyScale.x, HeadScale.y + BodyScale.y + FootScale.y, 1.0f));
-}
-
-void CLadder::StretchToUp()
-{
-	if (BodyImagePaths.empty()) return; 
-	std::random_device rd;                          
-	std::mt19937 gen(rd());                         
-	std::uniform_int_distribution<int> dist(0, (int)BodyImagePaths.size() - 1);
-
-	int r = dist(gen);
-	
-	CStaticActor* TopBody = Bodys.front();
-
-	const std::wstring& BodyImage = BodyImagePaths[r];
-	CStaticActor* NewBody = GetWorld()->SpawnActor<CStaticActor>(this);
-	NewBody->GetSpriteRenderComponent()->SetDiffuseImage(BodyImage);
-	Vector2 NewBodyImageScale = NewBody->GetSpriteRenderComponent()->GetImageScale();
-	Bodys.push_front(NewBody);
-
-	Vector3 NewBodyPosition = CTransformUtils::GetTopPosition(*TopBody, *NewBody);
-	NewBody->GetTransform()->SetPosition(NewBodyPosition);
-	
-	Vector3 HeadPosition = CTransformUtils::GetTopPosition(*NewBody, *Head);
-	Head->GetTransform()->SetPosition(HeadPosition);
-
-	ReBuild(*NewBody);
-}
-
-void CLadder::StretchToDown()
-{
-	if (BodyImagePaths.empty()) return; // 예외처리
+	if (IsEditReady() == false)
+		return;
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<int> dist(0, (int)BodyImagePaths.size() - 1);
 
 	int r = dist(gen);
 
-	CStaticActor* BottomBody = Bodys.back();
+	CStaticActor* TopBody = InLadder.Bodys.front();
 
 	const std::wstring& BodyImage = BodyImagePaths[r];
-	CStaticActor* NewBody = GetWorld()->SpawnActor<CStaticActor>(this);
+	CStaticActor* NewBody = GetWorld()->SpawnActor<CStaticActor>(&InLadder);
 	NewBody->GetSpriteRenderComponent()->SetDiffuseImage(BodyImage);
 	Vector2 NewBodyImageScale = NewBody->GetSpriteRenderComponent()->GetImageScale();
-	Bodys.push_back(NewBody);
+	InLadder.Bodys.push_front(NewBody);
+
+	Vector3 NewBodyPosition = CTransformUtils::GetTopPosition(*TopBody, *NewBody);
+	NewBody->GetTransform()->SetPosition(NewBodyPosition);
+
+	Vector3 HeadPosition = CTransformUtils::GetTopPosition(*NewBody, *InLadder.Head);
+	InLadder.Head->GetTransform()->SetPosition(HeadPosition);
+
+	ReBuild(InLadder, *NewBody);
+}
+
+void CLadderEditor::StretchToDown(CLadderForm& InLadder)
+{
+	if (IsEditReady() == false)
+		return;
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dist(0, (int)BodyImagePaths.size() - 1);
+
+	int r = dist(gen);
+
+	CStaticActor* BottomBody = InLadder.Bodys.back();
+
+	const std::wstring& BodyImage = BodyImagePaths[r];
+	CStaticActor* NewBody = GetWorld()->SpawnActor<CStaticActor>(&InLadder);
+	NewBody->GetSpriteRenderComponent()->SetDiffuseImage(BodyImage);
+	Vector2 NewBodyImageScale = NewBody->GetSpriteRenderComponent()->GetImageScale();
+	InLadder.Bodys.push_back(NewBody);
 
 	Vector3 NewBodyPosition = CTransformUtils::GetBottomPosition(*BottomBody, *NewBody);
 	NewBody->GetTransform()->SetPosition(NewBodyPosition);
 
-	Vector3 FootPosition = CTransformUtils::GetBottomPosition(*NewBody, *Foot);
-	Foot->GetTransform()->SetPosition(FootPosition);
+	Vector3 FootPosition = CTransformUtils::GetBottomPosition(*NewBody, *InLadder.Foot);
+	InLadder.Foot->GetTransform()->SetPosition(FootPosition);
 
-	ReBuild(*NewBody);
+	ReBuild(InLadder, *NewBody);
+}
+
+CLadderForm* CLadderEditor::CreateLadder(const Vector3& InPosition)
+{
+	CLadderForm* Ladder = GetWorld()->SpawnActor<CLadderForm>(nullptr);
+	Ladder->GetTransform()->SetPosition(InPosition);
+
+	const std::wstring& FirstBodyImage = BodyImagePaths[0];
+	CStaticActor* Body = GetWorld()->SpawnActor<CStaticActor>(Ladder);
+	Body->GetSpriteRenderComponent()->SetDiffuseImage(FirstBodyImage);
+	Ladder->AddBody(*Body);
+
+	CStaticActor* Head = GetWorld()->SpawnActor<CStaticActor>(Ladder);
+	Head->GetSpriteRenderComponent()->SetDiffuseImage(HeadImagePath);
+	Vector3 HeadPosition = CTransformUtils::GetTopPosition(*Body, *Head);
+	Head->GetTransform()->SetPosition(HeadPosition);
+	Ladder->SetHead(*Head);
+
+	CStaticActor* Foot = GetWorld()->SpawnActor<CStaticActor>(Ladder);
+	Foot->GetSpriteRenderComponent()->SetDiffuseImage(FootImagePath);
+	Vector3 FootPosition = CTransformUtils::GetBottomPosition(*Body, *Foot);
+	Foot->GetTransform()->SetPosition(FootPosition);
+	Ladder->SetFoot(*Foot);
+
+	Vector2 HeadScale = Head->GetSpriteRenderComponent()->GetImageScale();
+	Vector2 BodyScale = Body->GetSpriteRenderComponent()->GetImageScale();
+	Vector2 FootScale = Foot->GetSpriteRenderComponent()->GetImageScale();
+	Ladder->GetTransform()->SetScale(Vector3(BodyScale.x, HeadScale.y + BodyScale.y + FootScale.y, 1.0f));
+
+	ManagingLadders.push_back(Ladder);
+	return Ladder;
+}
+
+void CLadderEditor::InteractionToScreen(CUI& InOwnerUI, std::function<void()> InCallBack)
+{
+	for (auto Ladder : ManagingLadders)
+		InOwnerUI.AttachChildUI(*Ladder);
+	for (auto Ladder : ManagingLadders)
+	{
+		Ladder->SetMouseFocusEvent(InCallBack);
+	}
 }

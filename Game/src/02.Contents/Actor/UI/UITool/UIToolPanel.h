@@ -19,14 +19,14 @@ public:
 		CUI::Update(InDeltaTime);
 
 		CurrentFocusUI = nullptr;
-		for (auto& PlacedUI : PlacedUIs)
+		/*for (auto& PlacedUI : PlacedUIs)
 		{
 			if (PlacedUI->GetInteractionComponent()->IsMouseFocus())
 			{
 				CurrentFocusUI = PlacedUI;
 				break;
 			}
-		}
+		}*/
 	}
 	CUI* GetCurrentFocusPlacedUI() const { return CurrentFocusUI; }
 	CUI* PlaceUIOnToolPanel(CUI* InOwnerUI, const std::wstring& InUIImagePath, const Vector2& InMouseWorldPosition);

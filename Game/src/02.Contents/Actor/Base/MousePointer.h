@@ -14,12 +14,12 @@ public:
 		CStaticActor::Update(InDeltaTime);
 		Vector3 Position = Transform->GetFinalPosition();
 
-		if (CMouseInteracter::GetCurrentMouseX() != Position.x || CMouseInteracter::GetCurrentMouseY() != Position.y)
+		/*if (CMouseInteracter::GetCurrentMouseX() != Position.x || CMouseInteracter::GetCurrentMouseY() != Position.y)
 		{
 			Position.x = float(CMouseManager::GetInst().GetMousePosition().x);
 			Position.y = float(CMouseManager::GetInst().GetMousePosition().y);
 			Transform->SetPosition(Position);
-		}
+		}*/
 	}
 	void SetMouseImageFromDialog(class CWindowManager& InWindowManager);
 

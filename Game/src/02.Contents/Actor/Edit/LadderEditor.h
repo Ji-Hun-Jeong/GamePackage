@@ -1,64 +1,31 @@
 #pragma once
 #include "01.Base/Actor/StaticActor.h"
 #include "03.Utils/CTransformUtils.h"
+#include "01.Base/Actor/UI.h"
 
-class CLadder : public CActor
+class CLadderForm : public CUI
 {
-	GENERATE_OBJECT(CLadder)
+	friend class CLadderEditor;
+	GENERATE_OBJECT(CLadderForm)
 public:
-	CLadder() {}
-	~CLadder() = default;
+	CLadderForm() {}
+	~CLadderForm() = default;
 
 public:
-	void InitalizeLadder(const std::wstring& InHeadImagePath, const std::vector<std::wstring>& InBodyImagePath, const std::wstring& InFootImagePath);
-	void StretchToUp();
-	void StretchToDown();
+	void SetHead(CStaticActor& InHead) { Head = &InHead; }
+	void AddBody(CStaticActor& InBody) { Bodys.push_back(&InBody); }
+	void SetFoot(CStaticActor& InFoot) { Foot = &InFoot; }
 
 private:
-	Vector3 ReCalculatePosition()
-	{
-		Vector3 NewPosition;
-		NewPosition += Head->GetTransform()->GetPosition();
-		NewPosition += Foot->GetTransform()->GetPosition();
-		for (auto Body : Bodys)
-			NewPosition += Body->GetTransform()->GetPosition();
-		NewPosition += Transform->GetPosition() * (Bodys.size() + 2);
-		NewPosition /= (Bodys.size() + 2);
-
-		return NewPosition;
-	}
-	void ReBuild(CStaticActor& InNewBody)
-	{
-		const Vector3& OriginPosition = Transform->GetFinalPosition();
-		const Vector3& OriginScale = Transform->GetScale();
-		Vector2 NewBodyScale = InNewBody.GetSpriteRenderComponent()->GetImageScale();
-
-		Vector3 NewPosition = ReCalculatePosition();
-		Transform->SetPosition(NewPosition);
-		Vector3 NewScale = Vector3(OriginScale.x, OriginScale.y + NewBodyScale.y, 1.0f);
-		Transform->SetScale(NewScale);
-
-		Vector3 OriginNewDist = NewPosition - OriginPosition;
-		Head->GetTransform()->SetPosition(Head->GetTransform()->GetPosition() - OriginNewDist);
-		for(auto Body : Bodys)
-			Body->GetTransform()->SetPosition(Body->GetTransform()->GetPosition() - OriginNewDist);
-		Foot->GetTransform()->SetPosition(Foot->GetTransform()->GetPosition() - OriginNewDist);
-	}
-	
-
-private:
-	std::wstring HeadImagePath;
-	std::vector<std::wstring> BodyImagePaths;
-	std::wstring FootImagePath;
-
 	CStaticActor* Head = nullptr;
 	std::list<CStaticActor*> Bodys;
 	CStaticActor* Foot = nullptr;
 
 };
 
-class CLadderEditor
+class CLadderEditor : public CActor
 {
+	GENERATE_OBJECT(CLadderEditor)
 public:
 	CLadderEditor() = default;
 	~CLadderEditor() = default;
@@ -86,20 +53,17 @@ public:
 			return false;
 		return true;
 	}
-	void SetLadder(CLadder& InLadder, const Vector3& InPosition)
-	{
-		InLadder.InitalizeLadder(HeadImagePath, BodyImagePaths, FootImagePath);
-		InLadder.GetTransform()->SetPosition(InPosition);
-		ManagingLadders.push_back(&InLadder);
-	}
-	CLadder* GetLadder(const Vector2& InPosition)
+	void StretchToUp(CLadderForm& InLadder);
+	void StretchToDown(CLadderForm& InLadder);
+	CLadderForm* CreateLadder(const Vector3& InPosition);
+	CLadderForm* GetLadder(const Vector2& InPosition)
 	{
 		for (auto Ladder : ManagingLadders)
 			if (CTransformUtils::IsPositionInsideActor(InPosition, *Ladder))
 				return Ladder;
 		return nullptr;
 	}
-	void SetFocusLadder(CLadder* InLadder)
+	void SetFocusLadder(CLadderForm* InLadder)
 	{
 		for (auto Ladder : ManagingLadders)
 		{
@@ -110,13 +74,46 @@ public:
 			}
 		}
 	}
-	CLadder* GetFocusLadder() const { return CurrentFocusLadder; }
+	CLadderForm* GetFocusLadder() const { return CurrentFocusLadder; }
+	void InteractionToScreen(CUI& InOwnerUI, std::function<void()> InCallBack = nullptr);
+
+private:
+	Vector3 ReCalculatePosition(CLadderForm& InLadder)
+	{
+		Vector3 NewPosition;
+		NewPosition += InLadder.Head->GetTransform()->GetPosition();
+		NewPosition += InLadder.Foot->GetTransform()->GetPosition();
+		for (auto Body : InLadder.Bodys)
+			NewPosition += Body->GetTransform()->GetPosition();
+		NewPosition += Transform->GetPosition() * (InLadder.Bodys.size() + 2);
+		NewPosition /= (InLadder.Bodys.size() + 2);
+
+		return NewPosition;
+	}
+	void ReBuild(CLadderForm& InLadder, CStaticActor& InNewBody)
+	{
+		const Vector3& OriginPosition = Transform->GetFinalPosition();
+		const Vector3& OriginScale = Transform->GetScale();
+		Vector2 NewBodyScale = InNewBody.GetSpriteRenderComponent()->GetImageScale();
+
+		Vector3 NewPosition = ReCalculatePosition(InLadder);
+		Transform->SetPosition(NewPosition);
+		Vector3 NewScale = Vector3(OriginScale.x, OriginScale.y + NewBodyScale.y, 1.0f);
+		Transform->SetScale(NewScale);
+
+		Vector3 OriginNewDist = NewPosition - OriginPosition;
+		InLadder.Head->GetTransform()->SetPosition(InLadder.Head->GetTransform()->GetPosition() - OriginNewDist);
+		for (auto Body : InLadder.Bodys)
+			Body->GetTransform()->SetPosition(Body->GetTransform()->GetPosition() - OriginNewDist);
+		InLadder.Foot->GetTransform()->SetPosition(InLadder.Foot->GetTransform()->GetPosition() - OriginNewDist);
+	}
 
 private:
 	std::wstring HeadImagePath;
 	std::vector<std::wstring> BodyImagePaths;
 	std::wstring FootImagePath;
 
-	CLadder* CurrentFocusLadder = nullptr;
-	std::vector<CLadder*> ManagingLadders;
+	CLadderForm* CurrentFocusLadder = nullptr;
+	std::vector<CLadderForm*> ManagingLadders;
+
 };

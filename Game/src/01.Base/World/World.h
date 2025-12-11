@@ -53,6 +53,8 @@ public:
 	{
 		for (auto& WorldActor : WorldActors)
 		{
+			if (WorldActor->IsActivate() == false)
+				continue;
 			WorldActor->Update(1.0f / 60.0f);
 
 			std::vector<CCollider*> Colliders = WorldActor->GetComponents<CCollider>();
@@ -66,10 +68,18 @@ public:
 	void CaptureSnapShot()
 	{
 		for (auto& WorldActor : WorldActors)
+		{
+			if (WorldActor->IsActivate() == false)
+				continue;
 			WorldActor->FinalUpdate();
+		}
 
 		for (auto& WorldActor : WorldActors)
+		{
+			if (WorldActor->IsActivate() == false)
+				continue;
 			WorldActor->CaptureSnapShot();
+		}
 	}
 
 	template <typename T>
@@ -136,9 +146,6 @@ public:
 	void PushWorldSynchronizeEvent(std::function<void()> InWorldSynchronizeEvent) { WorldSynchronizeEvents.push(InWorldSynchronizeEvent); }
 
 	void RenderWorld(class CSpriteRenderer& InRenderer);
-	void CollectMouseInteraction(class CMouseInteractionManager& InMouseInteractionManager);
-	void CollectCollisionObjects(class CPixelCollisionManager& InPixelCollisionManager);
-	void SetScreen(class CScreen& InScreen);
 
 public:
 	const std::vector<CActor*>& GetWorldActors() const { return WorldActors; }

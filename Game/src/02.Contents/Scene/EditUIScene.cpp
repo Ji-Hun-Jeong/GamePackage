@@ -11,7 +11,7 @@
 
 void CEditUIScene::BeginPlay()
 {
-	CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
+	/*CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/UI/Title/Background.png");
 
 	CMousePointer* MousePointer = GetWorld()->SpawnActor<CMousePointer>(GetMainCamera());
@@ -23,7 +23,7 @@ void CEditUIScene::BeginPlay()
 		, [MousePointer]()->void
 		{
 			MousePointer->SetMouseImageFromDialog(CWindowManager::GetInst());
-		});
+		});*/
 
 	//CUIToolPanel* UIToolPanel = GetWorld()->SpawnActor<CUIToolPanel>(this);
 	//UIToolPanel->GetTransform()->SetScale(Vector3(900, 600, 0));

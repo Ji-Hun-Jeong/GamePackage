@@ -2,11 +2,10 @@
 #include <Core/public/InputManager.h>
 #include "00.App/CoreSystem.h"
 #include "00.App/WindowManager.h"
+#include "00.App/MouseManager.h"
 #include "03.Utils/AssetLoader.h"
-#include "06.Interaction/MouseManager.h"
 #include "Component/Transform.h"
 #include "Component/RenderComponents/RenderComponent.h"
-#include "Component/InteractionComponent.h"
 #include "Component/Animation/Animator.h"
 #include "Component/PixelCollider.h"
 #include "Component/Collider/Collider.h"
@@ -33,10 +32,18 @@ private:
 public:
 	void Attach(CActor* InChild)
 	{
+		if (InChild == nullptr)
+			return;
+		if (InChild == this)
+			return;
+		if (InChild->Owner == this)
+			return;
+
+		if (InChild->Owner != nullptr)
+			InChild->Owner->Detach(InChild);
+		
 		InChild->Owner = this;
 		Childs.push_back(InChild);
-		if (InteractionComponent && InChild->InteractionComponent)
-			InteractionComponent->GetMouseInteracter()->AttachChildInteracter(InChild->InteractionComponent->GetMouseInteracter());
 	}
 	void AttachComponent(CComponent* InComponent)
 	{
@@ -47,14 +54,16 @@ public:
 	}
 	void Detach(CActor* InChild)
 	{
+		if (InChild->Owner != this)
+			return;
+
 		for (auto Iter = Childs.begin(); Iter != Childs.end(); ++Iter)
 		{
-			if ((*Iter) == InChild)
+			if (*Iter == InChild)
 			{
-				if (InteractionComponent && InChild->InteractionComponent)
-					InteractionComponent->GetMouseInteracter()->DetachChildInteracter(InChild->InteractionComponent->GetMouseInteracter());
 				Childs.erase(Iter);
-				break;
+				InChild->Owner = nullptr;
+				break; 
 			}
 		}
 	}
@@ -87,13 +96,11 @@ public:
 	CActor* GetOwner() const { return Owner; }
 
 	CTransform* GetTransform() const { return Transform; }
-	CInteractionComponent* GetInteractionComponent() const { return InteractionComponent; }
 	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
 
 protected:
 	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
 	CTransform* Transform;
-	CInteractionComponent* InteractionComponent;
 	CRenderComponent* RenderComponent;
 	std::vector<CCollider*> Colliders;
 	std::vector<CComponent*> Components;
@@ -110,7 +117,6 @@ public:
 				return Result;
 		}
 	}
-	// Move할까 그냥
 	template <typename T>
 	std::vector<T*> GetComponents()
 	{
@@ -165,10 +171,7 @@ public:
 	virtual void OnCollisionStay(CCollider& InTargetCollider) {}
 	virtual void OnCollisionExit(CCollider& InTargetCollider) {}
 	virtual void Update(float InDeltaTime)
-	{
-		if (InteractionComponent)
-			InteractionComponent->PerformEvent();
-	}
+	{}
 	virtual void FinalUpdate()
 	{
 		Vector3 FinalPosition = Transform->GetPosition();
@@ -181,14 +184,20 @@ public:
 	{
 		const Vector3& FinalPosition = Transform->GetFinalPosition();
 
-		if (InteractionComponent)
-			InteractionComponent->SetRectPosition(FinalPosition.x, FinalPosition.y);
-
 		for (auto Collider : Colliders)
 			Collider->SetCenterPosition(Vector2(FinalPosition.x, FinalPosition.y));
 
 	}
 	virtual void RenderActor(class CSpriteRenderer& InRenderer) final;
+	virtual void Activate(bool bInActivate)
+	{
+		bActivate = bInActivate;
+		for (auto Child : Childs)
+			Child->Activate(bInActivate);
+	}
+	bool IsActivate() const { return bActivate; }
+private:
+	bool bActivate = true;
 
 public:
 	virtual void Serialize(CSerializer& InSerializer) const override

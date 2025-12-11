@@ -186,6 +186,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\Scene\Editor\State\IEditState.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\Editor\State\LadderEditState.cpp" />
     <ClCompile Include="src\03.Utils\CTransformUtils.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Edit\EditHelper.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Edit\LadderEditor.cpp" />
@@ -193,7 +195,7 @@
     <ClCompile Include="src\00.App\Screen.cpp" />
     <ClCompile Include="src\04.Renderer\RenderState.cpp" />
     <ClCompile Include="src\04.Renderer\ImGuiManager.cpp" />
-    <ClCompile Include="src\02.Contents\Scene\MapEditorScene.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\Editor\MapEditorScene.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Collider\Collider.cpp" />
@@ -204,7 +206,7 @@
     <ClCompile Include="src\04.Renderer\RenderSorter.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\OnOffUI.cpp" />
     <ClCompile Include="src\02.Contents\Scene\LoginScene.cpp" />
-    <ClCompile Include="src\06.Interaction\MouseManager.cpp" />
+    <ClCompile Include="src\00.App\MouseManager.cpp" />
     <ClCompile Include="src\03.Utils\AssetLoader.cpp" />
     <ClCompile Include="src\00.App\Class.cpp" />
     <ClCompile Include="src\00.App\ObjectPtr.cpp" />
@@ -262,6 +264,8 @@
     <ClCompile Include="src\01.Base\Actor\UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\Scene\Editor\State\IEditState.h" />
+    <ClInclude Include="src\02.Contents\Scene\Editor\State\LadderEditState.h" />
     <ClInclude Include="src\03.Utils\CTransformUtils.h" />
     <ClInclude Include="src\02.Contents\Actor\Edit\EditHelper.h" />
     <ClInclude Include="src\02.Contents\Actor\Edit\LadderEditor.h" />
@@ -269,7 +273,7 @@
     <ClInclude Include="src\00.App\Screen.h" />
     <ClInclude Include="src\04.Renderer\RenderState.h" />
     <ClInclude Include="src\04.Renderer\ImGuiManager.h" />
-    <ClInclude Include="src\02.Contents\Scene\MapEditorScene.h" />
+    <ClInclude Include="src\02.Contents\Scene\Editor\MapEditorScene.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Collider\Collider.h" />
@@ -281,7 +285,7 @@
     <ClInclude Include="src\04.Renderer\RenderSorter.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\OnOffUI.h" />
     <ClInclude Include="src\02.Contents\Scene\LoginScene.h" />
-    <ClInclude Include="src\06.Interaction\MouseManager.h" />
+    <ClInclude Include="src\00.App\MouseManager.h" />
     <ClInclude Include="src\03.Utils\AssetLoader.h" />
     <ClInclude Include="src\00.App\Class.h" />
     <ClInclude Include="src\00.App\ObjectPtr.h" />

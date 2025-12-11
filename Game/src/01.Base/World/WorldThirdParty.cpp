@@ -16,37 +16,3 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 	}
 	InRenderer.Draw();
 }
-
-void CWorld::CollectMouseInteraction(CMouseInteractionManager& InMouseInteractionManager)
-{
-	for (auto& WorldActor : WorldActors)
-	{
-		CInteractionComponent* InteractionComponent = WorldActor->GetInteractionComponent();
-		if (InteractionComponent)
-			InteractionComponent->InteractionCheck(InMouseInteractionManager);
-	}
-}
-
-void CWorld::CollectCollisionObjects(CPixelCollisionManager& InPixelCollisionManager)
-{
-	/*for (auto& WorldActor : WorldActors)
-	{
-		CPixelCollider* PixelCollider = WorldActor->GetPixelCollider();
-		if (PixelCollider)
-			PixelCollider->CollisionProcess(InPixelCollisionManager);
-	}*/
-}
-
-void CWorld::SetScreen(CScreen& InScreen)
-{
-	const CCamera* Camera = nullptr;
-	for (auto WorldActor : WorldActors)
-	{
-		if (WorldActor->GetType() == CCamera::GetStaticType())
-		{
-			Camera = static_cast<const CCamera*>(WorldActor);
-			InScreen.SetScreenPosition(Camera->GetTransform()->GetFinalPosition2D());
-			break;
-		}
-	}
-}

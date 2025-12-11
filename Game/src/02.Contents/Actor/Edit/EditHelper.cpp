@@ -3,7 +3,7 @@
 
 #include "GameCore.h"
 #include "00.App/WindowManager.h"
-#include "06.Interaction/MouseManager.h"
+#include "00.App/MouseManager.h"
 
 void CImageImporter::AddImagePathByWindowManager(CWindowManager& InWindowManager)
 {

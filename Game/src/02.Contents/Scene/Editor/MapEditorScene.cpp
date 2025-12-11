@@ -6,8 +6,8 @@
 
 CMapEditorScene::CMapEditorScene()
 {
-	InteractionComponent = AddComponent<CInteractionComponent>();
-	InteractionComponent->SetRectScale(5000.0f, 5000.0f);
+	MainPanel = GetWorld()->SpawnActor<CUI>(this);
+	MainPanel->GetTransform()->SetScale(Vector3(1270.0f, 950.0f, 1.0f));
 }
 
 void CMapEditorScene::BeginPlay()
@@ -15,9 +15,9 @@ void CMapEditorScene::BeginPlay()
 	CScene::BeginPlay();
 	GetFader()->FadeIn(1.0f);
 
+	LadderEditState = GetWorld()->SpawnActor<CLadderEditState>(this);
 	TileMap = GetWorld()->SpawnActor<CTileMap>(this);
 	TileSnapUI = GetWorld()->SpawnActor<CTileSnapUI>(this);
-
 	TileInteractionHandler = std::make_unique<CTileInteractionHandler>(*TileMap);
 
 	TileSnapUI->SetUIEvent(ETilePositionType::Center, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Center); });
@@ -32,46 +32,26 @@ void CMapEditorScene::BeginPlay()
 
 	GroundManager = GetWorld()->SpawnActor<CGroundManager>(this);
 
-	LadderEditor.SetHeadImagePath(L"resources/image/Tile/ladder/ladder0.png");
-	LadderEditor.AddBodyImagePath(L"resources/image/Tile/ladder/ladder1.png");
-	LadderEditor.AddBodyImagePath(L"resources/image/Tile/ladder/ladder2.png");
-	LadderEditor.SetFootImagePath(L"resources/image/Tile/ladder/ladder3.png");
+	ChangeMode(EditMode);
 }
 
 void CMapEditorScene::Update(float InDeltaTime)
 {
 	CScene::Update(InDeltaTime);
 
-	switch (EditMode)
-	{
-	case EEditMode::Free:
-		FreeMode();
-		break;
-	case EEditMode::Tile:
-		TileMode();
-		break;
-	case EEditMode::Ladder:
-		LadderMode();
-		break;
-	case EEditMode::Collider:
-		ColliderMode();
-		break;
-	default:
-		break;
-	}
+	const int32_t MouseX = UIManager.GetMouseWorldPosition().x;
+	const int32_t MouseY = UIManager.GetMouseWorldPosition().y;
+	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
+	CurrentEditState->SetMouseWorldPosition(MouseWorld2DPosition);
+	CurrentEditState->OnEditState(*MainPanel);
+
+	UIManager.PushUI(*MainPanel);
 }
 
 void CMapEditorScene::FreeMode()
 {
-	if (InteractionComponent->IsMouseFocus() == false)
-		return;
-
-	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
-	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
-	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
-
-	if (LClicked())
-		ActorGenerator.GenerateStaticActor(ImageImporter, MouseWorld2DPosition);
+	/*if (LClicked())
+		ActorGenerator.GenerateStaticActor(ImageImporter, MouseWorld2DPosition);*/
 	//else if (RClicked())
 	//{
 	//	// Test
@@ -93,11 +73,9 @@ void CMapEditorScene::TileMode()
 		bLayTiles = false;
 	}
 
-	if (InteractionComponent->IsMouseFocus() == false)
-		return;
 
-	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
-	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
+	const int32_t MouseX = UIManager.GetMouseWorldPosition().x;
+	const int32_t MouseY = UIManager.GetMouseWorldPosition().y;
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
 
 	if (LClicked())
@@ -111,7 +89,7 @@ void CMapEditorScene::TileMode()
 		if (TileMap->IsValidateKey(ProximateTileKey) == false)
 		{
 			TileInteractionHandler->ClearHandledTiles();
-			TileSnapUI->DisappearUI();
+			TileSnapUI->Activate(false);
 			return;
 		}
 		if (ImageImporter.IsExistCurrentImagePath() == false)
@@ -150,12 +128,12 @@ void CMapEditorScene::TileMode()
 	{
 		bool bAdjustPosition = TileInteractionHandler->AdjustTileSnapUIPosition(*TileSnapUI);
 		if (bAdjustPosition)
-			TileSnapUI->AppearUI();
+			TileSnapUI->Activate(true);
 	}
 	else if (RHold())
 	{
 		TileInteractionHandler->ClearHandledTiles();
-		TileSnapUI->DisappearUI();
+		TileSnapUI->Activate(false);
 		TileKey ProximateTileKey = TileMap->GetProximateTile(MouseWorld2DPosition);
 		if (TileMap->IsValidateKey(ProximateTileKey) == false)
 			return;
@@ -172,97 +150,72 @@ void CMapEditorScene::TileMode()
 
 void CMapEditorScene::LadderMode()
 {
-	if (bSetLadderHead)
-	{
-		std::wstring LadderHeadImagePath;
-		if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderHeadImagePath))
-			LadderEditor.SetHeadImagePath(LadderHeadImagePath);
-		bSetLadderHead = false;
-	}
-	if (bSetLadderBody)
-	{
-		std::wstring LadderBodyImagePath;
-		if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderBodyImagePath))
-			LadderEditor.AddBodyImagePath(LadderBodyImagePath);
-		bSetLadderBody = false;
-	}
-	if (bSetLadderFoot)
-	{
-		std::wstring LadderFootImagePath;
-		if(CWindowManager::GetInst().TryGetFilePathByDialog(&LadderFootImagePath))
-			LadderEditor.SetFootImagePath(LadderFootImagePath);
-		bSetLadderFoot = false;
-	}
 
-	CLadder* FocusLadder = LadderEditor.GetFocusLadder();
+
+	/*CLadderForm* FocusLadder = LadderEditor->GetFocusLadder();
 	if (FocusLadder)
 	{
-		static CStaticActor* FocusActorRenderer = GetWorld()->SpawnActor<CStaticActor>(this);
-		FocusActorRenderer->SetLineActor();
-		FocusActorRenderer->GetTransform()->SetPosition(FocusLadder->GetTransform()->GetFinalPosition());
-		FocusActorRenderer->GetTransform()->SetScale(FocusLadder->GetTransform()->GetScale());
-		FocusActorRenderer->GetSpriteRenderComponent()->SetColor(Vector3(1.0f, 0.0f, 0.0f), 1.0f);
+		static CUI* FocusActorMarker = GetWorld()->SpawnActor<CUI>(this);
+		FocusActorMarker->SetLineActor();
+		FocusActorMarker->GetTransform()->SetPosition(FocusLadder->GetTransform()->GetFinalPosition());
+		FocusActorMarker->GetTransform()->SetScale(FocusLadder->GetTransform()->GetScale());
+		FocusActorMarker->GetSpriteRenderComponent()->SetColor(Vector3(1.0f, 0.0f, 0.0f), 1.0f);
 
 		static CUI* StretchUpUI = GetWorld()->SpawnActor<CUI>(this);
 		StretchUpUI->SetRectUI(1);
-		StretchUpUI->GetInteractionComponent()->SetRectScale(20.0f, 20.0f);
 		StretchUpUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 0.0f));
-		Vector3 UIPosition = CTransformUtils::GetTopPosition(*FocusActorRenderer, *StretchUpUI);
+		Vector3 UIPosition = CTransformUtils::GetTopPosition(*FocusActorMarker, *StretchUpUI);
 		StretchUpUI->GetTransform()->SetPosition(UIPosition);
-		StretchUpUI->GetInteractionComponent()->SetMouseFocusEvent([this]()->void
+		StretchUpUI->SetMouseFocusEvent([this]()->void
 			{
 				if (LClicked())
 				{
-					CLadder* FocusLadder = LadderEditor.GetFocusLadder();
+					CLadderForm* FocusLadder = LadderEditor->GetFocusLadder();
 					if (FocusLadder)
 						FocusLadder->StretchToUp();
 				}
 			});
 		static CUI* StretchDownUI = GetWorld()->SpawnActor<CUI>(this);
 		StretchDownUI->SetRectUI(1);
-		StretchDownUI->GetInteractionComponent()->SetRectScale(20.0f, 20.0f);
 		StretchDownUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 0.0f));
-		UIPosition = CTransformUtils::GetBottomPosition(*FocusActorRenderer, *StretchDownUI);
+		UIPosition = CTransformUtils::GetBottomPosition(*FocusActorMarker, *StretchDownUI);
 		StretchDownUI->GetTransform()->SetPosition(UIPosition);
-		StretchDownUI->GetInteractionComponent()->SetMouseFocusEvent([this]()->void
+		StretchDownUI->SetMouseFocusEvent([this]()->void
 			{
 				if (LClicked())
 				{
-					CLadder* FocusLadder = LadderEditor.GetFocusLadder();
+					CLadderForm* FocusLadder = LadderEditor->GetFocusLadder();
 					if (FocusLadder)
 						FocusLadder->StretchToDown();
 				}
 			});
-	}
+	}*/
 
-	if (InteractionComponent->IsMouseFocus() == false)
-		return;
-	if (LadderEditor.IsEditReady() == false)
-		return;
-	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
-	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
+	//if (LadderEditor->IsEditReady() == false)
+	//	return;
+	/*const int32_t MouseX = UIManager.GetMouseWorldPosition().x;
+	const int32_t MouseY = UIManager.GetMouseWorldPosition().y;
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
 
 	if (LClicked())
 	{
-		CLadder* ProximateLadder = LadderEditor.GetLadder(MouseWorld2DPosition);
+		CLadderForm* ProximateLadder = LadderEditor->GetLadder(MouseWorld2DPosition);
 		if (ProximateLadder)
 		{
-			LadderEditor.SetFocusLadder(ProximateLadder);
+			LadderEditor->SetFocusLadder(ProximateLadder);
 			ActorTranslator.SetFirstDiff(CMouseManager::GetInst(), *ProximateLadder);
 		}
 		else
 		{
-			CLadder* Ladder = GetWorld()->SpawnActor<CLadder>(this);
-			LadderEditor.SetLadder(*Ladder, Vector3(MouseWorld2DPosition.x, MouseWorld2DPosition.y, 1.0f));
-			LadderEditor.SetFocusLadder(Ladder);
+			CLadderForm* Ladder = LadderEditor->CreateLadder(Vector3(MouseWorld2DPosition.x, MouseWorld2DPosition.y, 1.0f));
+			LadderEditor->SetFocusLadder(Ladder);
 		}
-	}	
+	}
 	else if (LHold())
 	{
-		CLadder* Ladder = LadderEditor.GetFocusLadder();
+		CLadderForm* Ladder = LadderEditor->GetFocusLadder();
 		ActorTranslator.TranslateActor(CMouseManager::GetInst(), *Ladder);
-	}
+	}*/
 }
 
 void CMapEditorScene::ColliderMode()
@@ -273,10 +226,8 @@ void CMapEditorScene::ColliderMode()
 		bPlaceGround = false;
 	}
 
-	if (InteractionComponent->IsMouseFocus() == false)
-		return;
-	const int32_t MouseX = InteractionComponent->GetMouseInteracter()->GetCurrentMouseX();
-	const int32_t MouseY = InteractionComponent->GetMouseInteracter()->GetCurrentMouseY();
+	const int32_t MouseX = UIManager.GetMouseWorldPosition().x;
+	const int32_t MouseY = UIManager.GetMouseWorldPosition().y;
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
 
 	if (LHold())
@@ -296,8 +247,8 @@ void CMapEditorScene::ColliderMode()
 
 void CMapEditorScene::ChangeMode(EEditMode InEditMode)
 {
-	TileInteractionHandler->ClearHandledTiles();
-	TileSnapUI->DisappearUI();
+	if (CurrentEditState)
+		CurrentEditState->ExitEditState(*MainPanel);
 	switch (InEditMode)
 	{
 	case EEditMode::Free:
@@ -305,6 +256,7 @@ void CMapEditorScene::ChangeMode(EEditMode InEditMode)
 	case EEditMode::Tile:
 		break;
 	case EEditMode::Ladder:
+		CurrentEditState = LadderEditState;
 		break;
 	case EEditMode::Collider:
 		break;
@@ -313,6 +265,7 @@ void CMapEditorScene::ChangeMode(EEditMode InEditMode)
 		break;
 	}
 	EditMode = InEditMode;
+	CurrentEditState->EnterEditState(*MainPanel);
 }
 
 void CMapEditorScene::CaptureSnapShot()
@@ -327,6 +280,7 @@ void CMapEditorScene::CaptureSnapShot()
 			ChangeMode(static_cast<EEditMode>(CurrentIndex));
 	}
 
+	CurrentEditState->ToImGUI();
 	switch (EditMode)
 	{
 	case EEditMode::Free:
@@ -365,12 +319,7 @@ void CMapEditorScene::CaptureSnapShot()
 	break;
 	case EEditMode::Ladder:
 	{
-		if (ImGui::Button("SetLadderHead"))
-			bSetLadderHead = true;
-		if (ImGui::Button("SetLadderBody"))
-			bSetLadderBody = true;
-		if (ImGui::Button("SetLadderFoot"))
-			bSetLadderFoot = true;
+
 	}
 	break;
 	case EEditMode::Collider:
