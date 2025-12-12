@@ -1,6 +1,5 @@
 #pragma once
 #include "01.Base/Actor/Scene.h"
-#include "02.Contents/Actor/Edit/EditHelper.h"
 #include "02.Contents/Actor/Tile/TileMap.h"
 #include "02.Contents/Actor/Tile/TileSnapUI.h"
 #include "02.Contents/Actor/Tile/TileInteractionHandler.h"
@@ -42,7 +41,7 @@ private:
 	IEditState* CurrentEditState = nullptr;
 	CUI* MainPanel = nullptr;
 
-	CActorTranslator ActorTranslator;
+
 	CImageImporter ImageImporter;
 	CActorGenerator ActorGenerator;
 	bool bOpenWindowDialog = false;

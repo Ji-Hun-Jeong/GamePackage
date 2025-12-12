@@ -10,4 +10,7 @@ CLadderEditState::CLadderEditState()
 	LadderEditor->AddBodyImagePath(L"resources/image/Tile/ladder/ladder1.png");
 	LadderEditor->AddBodyImagePath(L"resources/image/Tile/ladder/ladder2.png");
 	LadderEditor->SetFootImagePath(L"resources/image/Tile/ladder/ladder3.png");
+
+	LadderMarker = GetWorld()->SpawnActor<CStaticActor>(this);
+	LadderMarker->SetLineActor();
 }

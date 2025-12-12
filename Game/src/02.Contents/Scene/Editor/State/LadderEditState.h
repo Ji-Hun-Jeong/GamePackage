@@ -15,46 +15,44 @@ public:
 		InMainPanel.SetMouseFocusEvent([this]()->void
 			{
 				if (LClicked())
-				{
-					if (LadderEditor->IsEditReady() == false)
-						return;
-					const Vector2& MouseWorld2DPosition = GetMouseWorldPosition();
-					CLadderForm* Ladder = LadderEditor->CreateLadder(Vector3(MouseWorld2DPosition.x, MouseWorld2DPosition.y, 1.0f));
-					LadderEditor->SetFocusLadder(Ladder);
-				}
+					bCreateLadder = true;
 			});
 	}
 	void OnEditState(CUI& InMainPanel) override
 	{
-		if (bSetLadderHead)
+		if (bCreateLadder)
 		{
-			std::wstring LadderHeadImagePath;
-			if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderHeadImagePath))
-				LadderEditor->SetHeadImagePath(LadderHeadImagePath);
-			bSetLadderHead = false;
+			if (LadderEditor->IsEditReady() == false)
+				return;
+			const Vector2& MouseWorld2DPosition = GetMouseWorldPosition();
+			CLadderForm* Ladder = LadderEditor->CreateLadder(Vector3(MouseWorld2DPosition.x, MouseWorld2DPosition.y, 1.0f));
+			LadderEditor->SetFocusLadder(Ladder);
+
+			Ladder->SetMouseFocusEvent([this, Ladder]()->void
+				{
+					if (LClicked())
+					{
+						CurrentMoveLadder = Ladder;
+						ActorTranslator.SetFirstDiff(CMouseManager::GetInst(), *CurrentMoveLadder);
+						LadderEditor->SetFocusLadder(Ladder);
+					}
+				});
+			bCreateLadder = false;
 		}
-		if (bSetLadderBody)
+		if (CLadderForm* FocusLadder = LadderEditor->GetFocusLadder())
 		{
-			std::wstring LadderBodyImagePath;
-			if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderBodyImagePath))
-				LadderEditor->AddBodyImagePath(LadderBodyImagePath);
-			bSetLadderBody = false;
-		}
-		if (bSetLadderFoot)
-		{
-			std::wstring LadderFootImagePath;
-			if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderFootImagePath))
-				LadderEditor->SetFootImagePath(LadderFootImagePath);
-			bSetLadderFoot = false;
+			LadderMarker->GetTransform()->SetPosition(InMainPanel.GetTransform()->GetFinalPosition() + FocusLadder->GetTransform()->GetPosition());
+			LadderMarker->GetTransform()->SetScale(FocusLadder->GetTransform()->GetScale());
+			LadderMarker->GetSpriteRenderComponent()->SetColor(Vector3(1.0f, 0.0f, 0.0f), 1.0f);
+
+			if (LHold())
+			{
+				if (CurrentMoveLadder)
+					ActorTranslator.TranslateActor(CMouseManager::GetInst(), *CurrentMoveLadder);
+			}
 		}
 
-		LadderEditor->InteractionToScreen(InMainPanel, []()->void
-			{
-				static int i = 0;
-				//std::cout << "Hi "<< i++ << std::endl;
-				/*if (LClicked())
-					std::cout << "Hi\n";*/
-			});
+		LadderEditor->InteractionToScreen(InMainPanel);
 	}
 	void ExitEditState(CUI& InMainPanel) override
 	{
@@ -63,18 +61,33 @@ public:
 	void ToImGUI() override
 	{
 		if (ImGui::Button("SetLadderHead"))
-			bSetLadderHead = true;
+		{
+			std::wstring LadderHeadImagePath;
+			if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderHeadImagePath))
+				LadderEditor->SetHeadImagePath(LadderHeadImagePath);
+		}
 		if (ImGui::Button("SetLadderBody"))
-			bSetLadderBody = true;
+		{
+			std::wstring LadderBodyImagePath;
+			if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderBodyImagePath))
+				LadderEditor->AddBodyImagePath(LadderBodyImagePath);
+		}
 		if (ImGui::Button("SetLadderFoot"))
-			bSetLadderFoot = true;
+		{
+			std::wstring LadderFootImagePath;
+			if (CWindowManager::GetInst().TryGetFilePathByDialog(&LadderFootImagePath))
+				LadderEditor->SetFootImagePath(LadderFootImagePath);
+		}
 	}
 
 private:
 	CLadderEditor* LadderEditor = nullptr;
-	bool bSetLadderHead = false;
-	bool bSetLadderBody = false;
-	bool bSetLadderFoot = false;
+	bool bCreateLadder = false;
 
+	CStaticActor* LadderMarker = nullptr;
+
+	CActorTranslator ActorTranslator;
+
+	CLadderForm* CurrentMoveLadder = nullptr;
 };
 

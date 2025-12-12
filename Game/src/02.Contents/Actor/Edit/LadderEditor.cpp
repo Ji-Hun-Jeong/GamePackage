@@ -90,12 +90,8 @@ CLadderForm* CLadderEditor::CreateLadder(const Vector3& InPosition)
 	return Ladder;
 }
 
-void CLadderEditor::InteractionToScreen(CUI& InOwnerUI, std::function<void()> InCallBack)
+void CLadderEditor::InteractionToScreen(CUI& InOwnerUI)
 {
 	for (auto Ladder : ManagingLadders)
 		InOwnerUI.AttachChildUI(*Ladder);
-	for (auto Ladder : ManagingLadders)
-	{
-		Ladder->SetMouseFocusEvent(InCallBack);
-	}
 }

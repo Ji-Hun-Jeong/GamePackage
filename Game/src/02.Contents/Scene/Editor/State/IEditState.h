@@ -1,6 +1,7 @@
 #pragma once
 #include "01.Base/Actor/Actor.h"
 #include "01.Base/Actor/UI.h"
+#include "02.Contents/Actor/Edit/EditHelper.h"
 #include "04.Renderer/ImGuiManager.h"
 
 class IEditState : public CActor

@@ -8,7 +8,12 @@ class CLadderForm : public CUI
 	friend class CLadderEditor;
 	GENERATE_OBJECT(CLadderForm)
 public:
-	CLadderForm() {}
+	CLadderForm()
+	{
+		DetachComponent(SpriteRenderComponent);
+		SpriteRenderComponent = nullptr;
+		RenderComponent = nullptr;
+	}
 	~CLadderForm() = default;
 
 public:
@@ -56,13 +61,6 @@ public:
 	void StretchToUp(CLadderForm& InLadder);
 	void StretchToDown(CLadderForm& InLadder);
 	CLadderForm* CreateLadder(const Vector3& InPosition);
-	CLadderForm* GetLadder(const Vector2& InPosition)
-	{
-		for (auto Ladder : ManagingLadders)
-			if (CTransformUtils::IsPositionInsideActor(InPosition, *Ladder))
-				return Ladder;
-		return nullptr;
-	}
 	void SetFocusLadder(CLadderForm* InLadder)
 	{
 		for (auto Ladder : ManagingLadders)
@@ -75,7 +73,7 @@ public:
 		}
 	}
 	CLadderForm* GetFocusLadder() const { return CurrentFocusLadder; }
-	void InteractionToScreen(CUI& InOwnerUI, std::function<void()> InCallBack = nullptr);
+	void InteractionToScreen(CUI& InOwnerUI);
 
 private:
 	Vector3 ReCalculatePosition(CLadderForm& InLadder)

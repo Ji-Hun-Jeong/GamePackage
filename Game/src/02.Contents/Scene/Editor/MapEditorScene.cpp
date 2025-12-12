@@ -6,8 +6,7 @@
 
 CMapEditorScene::CMapEditorScene()
 {
-	MainPanel = GetWorld()->SpawnActor<CUI>(this);
-	MainPanel->GetTransform()->SetScale(Vector3(1270.0f, 950.0f, 1.0f));
+
 }
 
 void CMapEditorScene::BeginPlay()
@@ -15,8 +14,11 @@ void CMapEditorScene::BeginPlay()
 	CScene::BeginPlay();
 	GetFader()->FadeIn(1.0f);
 
+	MainPanel = GetWorld()->SpawnActor<CUI>(this);
+	MainPanel->GetTransform()->SetScale(Vector3(1270.0f, 950.0f, 1.0f));
+
 	LadderEditState = GetWorld()->SpawnActor<CLadderEditState>(this);
-	TileMap = GetWorld()->SpawnActor<CTileMap>(this);
+	/*TileMap = GetWorld()->SpawnActor<CTileMap>(this);
 	TileSnapUI = GetWorld()->SpawnActor<CTileSnapUI>(this);
 	TileInteractionHandler = std::make_unique<CTileInteractionHandler>(*TileMap);
 
@@ -30,7 +32,7 @@ void CMapEditorScene::BeginPlay()
 	TileSnapUI->SetUIEvent(ETilePositionType::RightTop, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::RightTop); });
 	TileSnapUI->SetUIEvent(ETilePositionType::RightBottom, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::RightBottom); });
 
-	GroundManager = GetWorld()->SpawnActor<CGroundManager>(this);
+	GroundManager = GetWorld()->SpawnActor<CGroundManager>(this);*/
 
 	ChangeMode(EditMode);
 }

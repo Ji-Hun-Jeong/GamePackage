@@ -106,7 +106,7 @@ private:
 	bool IsMouseOn(const CUI& InUI)
 	{
 		Vector2 UISize;
-		if (InUI.GetSpriteRenderComponent()->IsImageType())
+		if (InUI.GetSpriteRenderComponent() && InUI.GetSpriteRenderComponent()->IsImageType())
 			UISize = InUI.GetSpriteRenderComponent()->GetImageScale();
 		else
 			UISize = InUI.GetTransform()->GetScale2D();
