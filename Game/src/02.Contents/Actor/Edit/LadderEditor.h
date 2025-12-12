@@ -83,21 +83,21 @@ private:
 		NewPosition += InLadder.Foot->GetTransform()->GetPosition();
 		for (auto Body : InLadder.Bodys)
 			NewPosition += Body->GetTransform()->GetPosition();
-		NewPosition += Transform->GetPosition() * (InLadder.Bodys.size() + 2);
+		NewPosition += InLadder.GetTransform()->GetPosition() * (InLadder.Bodys.size() + 2);
 		NewPosition /= (InLadder.Bodys.size() + 2);
 
 		return NewPosition;
 	}
 	void ReBuild(CLadderForm& InLadder, CStaticActor& InNewBody)
 	{
-		const Vector3& OriginPosition = Transform->GetFinalPosition();
-		const Vector3& OriginScale = Transform->GetScale();
+		const Vector3& OriginPosition = InLadder.GetTransform()->GetFinalPosition();
+		const Vector3& OriginScale = InLadder.GetTransform()->GetScale();
 		Vector2 NewBodyScale = InNewBody.GetSpriteRenderComponent()->GetImageScale();
 
 		Vector3 NewPosition = ReCalculatePosition(InLadder);
-		Transform->SetPosition(NewPosition);
+		InLadder.GetTransform()->SetPosition(NewPosition);
 		Vector3 NewScale = Vector3(OriginScale.x, OriginScale.y + NewBodyScale.y, 1.0f);
-		Transform->SetScale(NewScale);
+		InLadder.GetTransform()->SetScale(NewScale);
 
 		Vector3 OriginNewDist = NewPosition - OriginPosition;
 		InLadder.Head->GetTransform()->SetPosition(InLadder.Head->GetTransform()->GetPosition() - OriginNewDist);

@@ -23,7 +23,7 @@ void CPSOManager::Initalize(Graphics::CRenderDevice& InDevice)
 	RasterizerDesc.FillMode = Graphics::EFillMode::FillSolid;
 	RasterizerDesc.CullMode = Graphics::ECullMode::CullBack;
 	RasterizerDesc.FrontCounterClockwise = false;
-	RasterizerDesc.DepthClipEnable = true;
+	RasterizerDesc.DepthClipEnable = false;
 	RasterizerDesc.MultisampleEnable = true;
 	BasicRasterizerState = InDevice.CreateRasterizerState(RasterizerDesc);
 

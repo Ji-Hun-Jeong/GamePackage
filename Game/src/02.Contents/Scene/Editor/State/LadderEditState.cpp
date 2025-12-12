@@ -13,4 +13,9 @@ CLadderEditState::CLadderEditState()
 
 	LadderMarker = GetWorld()->SpawnActor<CStaticActor>(this);
 	LadderMarker->SetLineActor();
+
+	StretchUpUI = GetWorld()->SpawnActor<CUI>(this);
+	StretchUpUI->SetRectUI(5);
+	StretchDownUI = GetWorld()->SpawnActor<CUI>(this);
+	StretchDownUI->SetRectUI(5);
 }

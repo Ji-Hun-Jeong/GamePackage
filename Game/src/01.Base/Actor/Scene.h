@@ -15,11 +15,15 @@ public:
 	{
 		CActor::Update(InDeltaTime);
 		UIManager.SetMouseWorldPosition(CMouseManager::GetInst(), *MainCamera);
+		UIManager.FindFocusUI();
 	}
 	void FinalUpdate() override
 	{
 		CActor::FinalUpdate();
-		UIManager.FindFocusUI();
+	}
+	void CaptureSnapShot() override
+	{
+		CActor::CaptureSnapShot();
 	}
 	CCamera* GetMainCamera() const { return MainCamera; }
 	CFader* GetFader() const { return Fader; }
