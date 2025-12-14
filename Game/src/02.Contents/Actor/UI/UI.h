@@ -1,5 +1,5 @@
 #pragma once
-#include "StaticActor.h"
+#include "01.Base/Actor/StaticActor.h"
 
 class CUI : public CStaticActor
 {
@@ -9,7 +9,7 @@ class CUI : public CStaticActor
 public:
 	CUI()
 	{
-
+		//SpriteRenderComponent->SetUIPass();
 	}
 	virtual ~CUI() = default;
 

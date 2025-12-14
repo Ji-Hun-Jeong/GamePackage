@@ -1,8 +1,15 @@
 #pragma once
 #include "01.Base/Actor/Actor.h"
-#include "01.Base/Actor/UI.h"
+#include "02.Contents/Actor/UI/UI.h"
+#include "02.Contents/Actor/Tile/TileMap.h"
 #include "02.Contents/Actor/Edit/EditHelper.h"
 #include "04.Renderer/ImGuiManager.h"
+
+struct TEditContext
+{
+	CUI* MainPanel = nullptr;
+	CTileMap* TileMap = nullptr;
+};
 
 class IEditState : public CActor
 {
@@ -11,9 +18,9 @@ public:
 	virtual ~IEditState() = default;
 
 public:
-	virtual void EnterEditState(CUI& InMainPanel) = 0;
-	virtual void OnEditState(CUI& InMainPanel) = 0;
-	virtual void ExitEditState(CUI& InMainPanel) = 0;
+	virtual void EnterEditState(TEditContext& InEditContext) = 0;
+	virtual void OnEditState(TEditContext& InEditContext) = 0;
+	virtual void ExitEditState(TEditContext& InEditContext) = 0;
 	virtual void ToImGUI() {}
 
 	void SetMouseWorldPosition(const Vector2& InMouseWorldPosition) { MouseWorldPosition = InMouseWorldPosition; }

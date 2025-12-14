@@ -1,7 +1,7 @@
 #pragma once
 #include "01.Base/Actor/StaticActor.h"
 #include "03.Utils/CTransformUtils.h"
-#include "01.Base/Actor/UI.h"
+#include "02.Contents/Actor/UI/UI.h"
 
 class CLadderForm : public CUI
 {
@@ -73,7 +73,8 @@ public:
 		}
 	}
 	CLadderForm* GetFocusLadder() const { return CurrentFocusLadder; }
-	void InteractionToScreen(CUI& InOwnerUI);
+	void AttachToPanel(CUI& InOwnerUI);
+	void DetachToPanel(CUI& InMainPanel);
 
 private:
 	Vector3 ReCalculatePosition(CLadderForm& InLadder)

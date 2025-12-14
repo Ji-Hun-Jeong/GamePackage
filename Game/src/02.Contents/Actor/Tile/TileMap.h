@@ -1,17 +1,28 @@
 #pragma once
 #include "01.Base/Actor/Actor.h"
-#include "01.Base/Actor/UI.h"
+#include "02.Contents/Actor/UI/UI.h"
 #include "03.Utils/CTransformUtils.h"
 #include "04.Renderer/ImGuiManager.h"
-#include "Tile.h"
 
-struct TTileGridData
+
+class CTile : public CUI
 {
-	CTile* Tile;
-	CStaticActor* PutOnActor;
-};
+	GENERATE_OBJECT(CTile)
+public:
+	CTile()
+		: CUI()
+	{
+		static const Graphics::TMeshData& LineSquareMeshData = CAssetLoader::GetInst().GetMeshData("LineSquareMesh");
+		SpriteRenderComponent->SetLayer(1);
+		SpriteRenderComponent->SetMesh(LineSquareMeshData);
+		SpriteRenderComponent->SetPSO(EPSOType::Line);
+		SpriteRenderComponent->SetColor(Vector3(0.0f, 0.0f, 0.0f), 1.0f);
+	}
+	~CTile() = default;
 
-using TileKey = size_t;
+public:
+
+};
 
 class CTileMap : public CActor
 {
@@ -21,31 +32,31 @@ public:
 	~CTileMap() = default;
 
 public:
-	TileKey GetProximateTile(const Vector2& InWorldPosition)
-	{
-		for (size_t i = 0; i < TileGridDatas.size(); ++i)
-		{
-			CTile* Tile = TileGridDatas[i].Tile;
-			if (CTransformUtils::IsPositionInsideActor(InWorldPosition, *Tile))
-				return i;
-		}
-
-		return TileNone;
-	}
-	CTile* GetTile(TileKey InTileKey) { return TileGridDatas[InTileKey].Tile; }
-	CStaticActor* GetPutOnActor(TileKey InTileKey) { return TileGridDatas[InTileKey].PutOnActor; }
-
 	void LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol);
-
-	bool IsValidateKey(TileKey InTileKey) { return InTileKey != TileNone; }
-	bool IsActorOnTile(TileKey InTileKey) { return TileGridDatas[InTileKey].PutOnActor; }
-	void PutActorOnTile(CStaticActor& InActor, TileKey InTileKey);
-	void CutActorOnTile(TileKey InTileKey);
-
+	CTile* GetTileByPosition(const Vector3& InPosition);
 	void RenderTiles(bool bInRender)
 	{
-		for (auto TileGridData : TileGridDatas)
-			TileGridData.Tile->GetSpriteRenderComponent()->SetRender(bInRender);
+		for (auto Tile : Tiles)
+			Tile->GetSpriteRenderComponent()->SetRender(bInRender);
+	}
+	void AttachToPanel(CUI& InMainPanel, std::function<void(CTile&)> InTileFocusEvent)
+	{
+		for (auto Tile : Tiles)
+		{
+			Tile->SetMouseFocusEvent([this, Tile, InTileFocusEvent]()->void
+				{
+					InTileFocusEvent(*Tile);
+				});
+			InMainPanel.AttachChildUI(*Tile);
+		}
+	}
+	void DetachToPanel(CUI& InMainPanel)
+	{
+		for (auto Tile : Tiles)
+		{
+			Tile->SetMouseFocusEvent(nullptr);
+			InMainPanel.DetachChildUI(*Tile);
+		}
 	}
 	size_t GetTileMapRow() const { return TileMapRow; }
 	size_t GetTileMapCol() const { return TileMapCol; }
@@ -53,13 +64,12 @@ public:
 	size_t GetTileHeight() const { return TileHeight; }
 
 private:
-	std::vector<TTileGridData> TileGridDatas;
+	std::vector<CTile*> Tiles;
 
 	size_t TileWidth = 0;
 	size_t TileHeight = 0;
 	size_t TileMapRow = 0;
 	size_t TileMapCol = 0;
 
-	inline static const size_t TileNone = -1;
 };
 

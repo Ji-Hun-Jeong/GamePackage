@@ -1,11 +1,10 @@
 #pragma once
 #include "01.Base/Actor/Scene.h"
-#include "02.Contents/Actor/Tile/TileMap.h"
 #include "02.Contents/Actor/Tile/TileSnapUI.h"
-#include "02.Contents/Actor/Tile/TileInteractionHandler.h"
 #include "02.Contents/Actor/Collision/GroundManager.h"
 
 #include "State/LadderEditState.h"
+#include "State/TileEditState.h"
 
 enum class EEditMode
 {
@@ -37,27 +36,15 @@ public:
 
 private:
 	// 원래는 모드를 두는게 좋을것같은데 그냥 일단 씬에 때려박자 나중에 ㄱㄱ
-	EEditMode EditMode = EEditMode::Ladder;
+	EEditMode EditMode = EEditMode::Tile;
 	IEditState* CurrentEditState = nullptr;
-	CUI* MainPanel = nullptr;
 
-
-	CImageImporter ImageImporter;
-	CActorGenerator ActorGenerator;
-	bool bOpenWindowDialog = false;
-
-	CTileMap* TileMap = nullptr;
-	size_t TileWidth = 90;
-	size_t TileHeight = 60;
-	size_t TileMapRow = 30;
-	size_t TileMapCol = 30;
-	bool bLayTiles = false;
+	TEditContext EditContext;
 
 	CTileSnapUI* TileSnapUI = nullptr;
 
 	CLadderEditState* LadderEditState = nullptr;
-
-	std::unique_ptr<CTileInteractionHandler> TileInteractionHandler;
+	CTileEditState* TileEditState = nullptr;
 
 	CGroundManager* GroundManager = nullptr;
 	bool bPlaceGround = false;

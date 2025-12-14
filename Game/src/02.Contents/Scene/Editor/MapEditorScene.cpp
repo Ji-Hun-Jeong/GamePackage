@@ -14,10 +14,12 @@ void CMapEditorScene::BeginPlay()
 	CScene::BeginPlay();
 	GetFader()->FadeIn(1.0f);
 
-	MainPanel = GetWorld()->SpawnActor<CUI>(this);
-	MainPanel->GetTransform()->SetScale(Vector3(1270.0f, 950.0f, 1.0f));
-
 	LadderEditState = GetWorld()->SpawnActor<CLadderEditState>(this);
+	TileEditState = GetWorld()->SpawnActor<CTileEditState>(this);
+
+	EditContext.MainPanel = GetWorld()->SpawnActor<CUI>(this);
+	EditContext.MainPanel->GetTransform()->SetScale(Vector3(1270.0f, 950.0f, 1.0f));
+	EditContext.TileMap = GetWorld()->SpawnActor<CTileMap>(this);
 	/*TileMap = GetWorld()->SpawnActor<CTileMap>(this);
 	TileSnapUI = GetWorld()->SpawnActor<CTileSnapUI>(this);
 	TileInteractionHandler = std::make_unique<CTileInteractionHandler>(*TileMap);
@@ -41,13 +43,15 @@ void CMapEditorScene::Update(float InDeltaTime)
 {
 	CScene::Update(InDeltaTime);
 
+	
+
 	const int32_t MouseX = UIManager.GetMouseWorldPosition().x;
 	const int32_t MouseY = UIManager.GetMouseWorldPosition().y;
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
 	CurrentEditState->SetMouseWorldPosition(MouseWorld2DPosition);
-	CurrentEditState->OnEditState(*MainPanel);
+	CurrentEditState->OnEditState(EditContext);
 
-	UIManager.PushUI(*MainPanel);
+	UIManager.PushUI(*EditContext.MainPanel);
 }
 
 void CMapEditorScene::FreeMode()
@@ -63,91 +67,7 @@ void CMapEditorScene::FreeMode()
 
 void CMapEditorScene::TileMode()
 {
-	if (bOpenWindowDialog)
-	{
-		ImageImporter.AddImagePathByWindowManager(CWindowManager::GetInst());
-		bOpenWindowDialog = false;
-	}
-
-	if (bLayTiles)
-	{
-		TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
-		bLayTiles = false;
-	}
-
-
-	const int32_t MouseX = UIManager.GetMouseWorldPosition().x;
-	const int32_t MouseY = UIManager.GetMouseWorldPosition().y;
-	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
-
-	if (LClicked())
-	{
-		if (GetKey(EKeyType::Ctrl, EButtonState::Hold) == false)
-			TileInteractionHandler->ClearHandledTiles();
-	}
-	else if (LHold())
-	{
-		TileKey ProximateTileKey = TileMap->GetProximateTile(MouseWorld2DPosition);
-		if (TileMap->IsValidateKey(ProximateTileKey) == false)
-		{
-			TileInteractionHandler->ClearHandledTiles();
-			TileSnapUI->Activate(false);
-			return;
-		}
-		if (ImageImporter.IsExistCurrentImagePath() == false)
-			return;
-
-		const std::wstring& GeneratedActorImagePath = ImageImporter.GetCurrentImagePath();
-
-		CTile* ProximateTile = TileMap->GetTile(ProximateTileKey);
-		CStaticActor* TilePutOnActor = TileMap->GetPutOnActor(ProximateTileKey);
-
-		CStaticActor* FinalPutOnActor = nullptr;
-		if (TilePutOnActor)
-		{
-			const std::wstring& TilePutOnActorImagePath = TilePutOnActor->GetSpriteRenderComponent()->GetImagePath();
-			if (TilePutOnActorImagePath == GeneratedActorImagePath)
-				FinalPutOnActor = TilePutOnActor;
-			else
-			{
-				TilePutOnActor->Destroy();
-				TileMap->CutActorOnTile(ProximateTileKey);
-				FinalPutOnActor = TileMap->GetPutOnActor(ProximateTileKey);
-			}
-		}
-
-		if (FinalPutOnActor == nullptr)
-		{
-			// Todo: Generate nullptr
-			Vector2 ProximateTileWorldPosition = ProximateTile->GetTransform()->GetFinalPosition2D();
-			FinalPutOnActor = ActorGenerator.GenerateStaticActor(ImageImporter, ProximateTileWorldPosition);
-			TileMap->PutActorOnTile(*FinalPutOnActor, ProximateTileKey);
-		}
-
-		TileInteractionHandler->AddHandledTile(ProximateTileKey);
-	}
-	else if (LReleased())
-	{
-		bool bAdjustPosition = TileInteractionHandler->AdjustTileSnapUIPosition(*TileSnapUI);
-		if (bAdjustPosition)
-			TileSnapUI->Activate(true);
-	}
-	else if (RHold())
-	{
-		TileInteractionHandler->ClearHandledTiles();
-		TileSnapUI->Activate(false);
-		TileKey ProximateTileKey = TileMap->GetProximateTile(MouseWorld2DPosition);
-		if (TileMap->IsValidateKey(ProximateTileKey) == false)
-			return;
-
-		CTile* ProximateTile = TileMap->GetTile(ProximateTileKey);
-		CStaticActor* TilePutOnActor = TileMap->GetPutOnActor(ProximateTileKey);
-
-		if (TilePutOnActor)
-			TilePutOnActor->Destroy();
-		TileMap->CutActorOnTile(ProximateTileKey);
-		TileInteractionHandler->RemoveHandledTile(ProximateTileKey);
-	}
+	
 }
 
 void CMapEditorScene::LadderMode()
@@ -222,7 +142,7 @@ void CMapEditorScene::LadderMode()
 
 void CMapEditorScene::ColliderMode()
 {
-	if (bPlaceGround)
+	/*if (bPlaceGround)
 	{
 		TileInteractionHandler->SetGroundByHandledTiles(*GroundManager);
 		bPlaceGround = false;
@@ -244,18 +164,19 @@ void CMapEditorScene::ColliderMode()
 		if (TileMap->IsValidateKey(ProximateTileKey))
 			TileInteractionHandler->RemoveHandledTile(ProximateTileKey);
 		GroundManager->RemoveProximateCollider(MouseWorld2DPosition);
-	}
+	}*/
 }
 
 void CMapEditorScene::ChangeMode(EEditMode InEditMode)
 {
 	if (CurrentEditState)
-		CurrentEditState->ExitEditState(*MainPanel);
+		CurrentEditState->ExitEditState(EditContext);
 	switch (InEditMode)
 	{
 	case EEditMode::Free:
 		break;
 	case EEditMode::Tile:
+		CurrentEditState = TileEditState;
 		break;
 	case EEditMode::Ladder:
 		CurrentEditState = LadderEditState;
@@ -267,7 +188,7 @@ void CMapEditorScene::ChangeMode(EEditMode InEditMode)
 		break;
 	}
 	EditMode = InEditMode;
-	CurrentEditState->EnterEditState(*MainPanel);
+	CurrentEditState->EnterEditState(EditContext);
 }
 
 void CMapEditorScene::CaptureSnapShot()
@@ -289,34 +210,7 @@ void CMapEditorScene::CaptureSnapShot()
 		break;
 	case EEditMode::Tile:
 	{
-		if (ImGui::Button("LayTiles"))
-			bLayTiles = true;
-		ImGui::InputScalar("TileWidth", ImGuiDataType_U64, &TileWidth);
-		ImGui::InputScalar("TileHeight", ImGuiDataType_U64, &TileHeight);
-		ImGui::InputScalar("TileMapRow", ImGuiDataType_U64, &TileMapRow);
-		ImGui::InputScalar("TileMapCol", ImGuiDataType_U64, &TileMapCol);
-
-		if (ImGui::Button("OpenWindowDialog"))
-			bOpenWindowDialog = true;
-
-		ImGui::BeginChild("TileList", ImVec2(0, 0), true);
-
-		const std::wstring& GeneratedActorImagePath = ImageImporter.GetCurrentImagePath();
-		for (auto& Pair : ImageImporter.GetLoadedImagePaths())
-		{
-			const std::string& ImageName = Pair.first;
-			const std::wstring& ImagePath = Pair.second;
-
-			bool bSelected = (GeneratedActorImagePath == ImagePath);
-
-			if (ImGui::Selectable(ImageName.c_str(), bSelected))
-			{
-				ImageImporter.SetCurrentImagePath(ImageName);
-				ImGui::SetItemDefaultFocus();
-			}
-		}
-
-		ImGui::EndChild();
+		
 	}
 	break;
 	case EEditMode::Ladder:

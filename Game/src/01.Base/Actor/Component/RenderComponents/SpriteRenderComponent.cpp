@@ -128,6 +128,8 @@ void CSpriteRenderComponent::Render(CSpriteRenderer& InRenderer, const Vector3& 
 
 	InRenderer.SetInstanceData(EShaderType::PixelShader, 0, *SpriteBuffer.get());
 
+	if (bUIPass)
+		InRenderer.SetPass(ERenderPass::UI);
 	InRenderer.EndState();
 
 	ClearState();

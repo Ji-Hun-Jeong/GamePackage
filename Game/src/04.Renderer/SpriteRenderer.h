@@ -65,6 +65,11 @@ public:
 			}
 		}
 	}
+	void SetPass(ERenderPass InRenderPass)
+	{
+		if (bDefineState)
+			RenderStates[CurrentRenderState].RenderPass = InRenderPass;
+	}
 	void UpdateBuffer(Graphics::CBuffer& InBuffer, const void* InMappingPoint, size_t InByteWidth)
 	{
 		Context.UpLoadBuffer(InBuffer, InMappingPoint, InByteWidth, Graphics::EMapType::MAP_WRITE_DISCARD);
@@ -93,6 +98,8 @@ public:
 
 		std::stable_sort(CulledRenderStates.begin(), CulledRenderStates.begin() + CulledRenderStates.size(), [](const TRenderState& InA, const TRenderState& InB)->bool
 			{
+				if (InA.RenderPass != InB.RenderPass)
+					return InA.RenderPass < InB.RenderPass;
 				return InA.RenderLayer < InB.RenderLayer;
 			});
 		static float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };

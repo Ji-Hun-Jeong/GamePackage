@@ -96,7 +96,7 @@
     <ClCompile Include="src\02.Contents\Scene\EditUIScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Actor\UI.cpp">
+    <ClCompile Include="src\02.Contents\Actor\UI\UI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\06.Interaction\MouseInteractionManager.cpp">
@@ -189,16 +189,13 @@
     <ClCompile Include="src\02.Contents\Actor\Tile\TileMap.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\Tile\Tile.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\04.Renderer\ImGuiManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\Tile\TileSnapUI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\Tile\TileInteractionHandler.cpp">
+    <ClCompile Include="src\02.Contents\Actor\Tile\TileHandler.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\04.Renderer\RenderState.cpp">
@@ -219,13 +216,16 @@
     <ClCompile Include="src\03.Utils\CTransformUtils.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Actor\UIManager.cpp">
+    <ClCompile Include="src\02.Contents\Actor\UI\UIManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Scene\Editor\State\IEditState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Scene\Editor\State\LadderEditState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -308,7 +308,7 @@
     <ClInclude Include="src\02.Contents\Scene\EditUIScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Actor\UI.h">
+    <ClInclude Include="src\02.Contents\Actor\UI\UI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\06.Interaction\MouseInteractionManager.h">
@@ -404,16 +404,13 @@
     <ClInclude Include="src\02.Contents\Actor\Tile\TileMap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\Tile\Tile.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\04.Renderer\ImGuiManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Tile\TileSnapUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\Tile\TileInteractionHandler.h">
+    <ClInclude Include="src\02.Contents\Actor\Tile\TileHandler.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\04.Renderer\RenderState.h">
@@ -434,13 +431,16 @@
     <ClInclude Include="src\03.Utils\CTransformUtils.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Actor\UIManager.h">
+    <ClInclude Include="src\02.Contents\Actor\UI\UIManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Scene\Editor\State\IEditState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Scene\Editor\State\LadderEditState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

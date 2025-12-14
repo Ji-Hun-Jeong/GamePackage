@@ -11,6 +11,12 @@ enum class EShaderType
 	PixelShader
 };
 
+enum class ERenderPass
+{
+	Opaque,
+	UI,
+};
+
 struct TRenderState
 {
 	Graphics::CMesh* Mesh;
@@ -25,5 +31,6 @@ struct TRenderState
 	std::array<Graphics::CBuffer*, 6> VertexConstBuffers;
 	std::array<Graphics::CBuffer*, 6> PixelConstBuffers;
 
+	ERenderPass RenderPass = ERenderPass::Opaque;
 	uint32_t RenderLayer;
 };

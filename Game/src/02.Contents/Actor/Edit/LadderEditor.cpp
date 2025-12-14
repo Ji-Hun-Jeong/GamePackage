@@ -90,8 +90,14 @@ CLadderForm* CLadderEditor::CreateLadder(const Vector3& InPosition)
 	return Ladder;
 }
 
-void CLadderEditor::InteractionToScreen(CUI& InOwnerUI)
+void CLadderEditor::AttachToPanel(CUI& InOwnerUI)
 {
 	for (auto Ladder : ManagingLadders)
 		InOwnerUI.AttachChildUI(*Ladder);
+}
+
+void CLadderEditor::DetachToPanel(CUI& InMainPanel)
+{
+	for (auto Ladder : ManagingLadders)
+		InMainPanel.DetachChildUI(*Ladder);
 }

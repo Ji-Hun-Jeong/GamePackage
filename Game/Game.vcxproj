@@ -249,7 +249,7 @@
     <ClCompile Include="src\01.Base\World\World.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Transform.cpp" />
     <ClCompile Include="src\02.Contents\Scene\LobbyScene.cpp" />
-    <ClCompile Include="src\01.Base\Actor\UI.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\UI\UI.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolStates.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.cpp" />
@@ -258,10 +258,10 @@
     <ClCompile Include="src\01.Base\Actor\StaticActor.cpp" />
     <ClCompile Include="src\00.App\WindowManager.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Tile\TileMap.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\Tile\Tile.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Tile\TileSnapUI.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\Tile\TileInteractionHandler.cpp" />
-    <ClCompile Include="src\01.Base\Actor\UIManager.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\Tile\TileHandler.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\UI\UIManager.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\02.Contents\Scene\Editor\State\IEditState.h" />
@@ -322,7 +322,7 @@
     <ClInclude Include="src\01.Base\World\World.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Transform.h" />
     <ClInclude Include="src\02.Contents\Scene\LobbyScene.h" />
-    <ClInclude Include="src\01.Base\Actor\UI.h" />
+    <ClInclude Include="src\02.Contents\Actor\UI\UI.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolStates.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.h" />
@@ -331,10 +331,10 @@
     <ClInclude Include="src\01.Base\Actor\StaticActor.h" />
     <ClInclude Include="src\00.App\WindowManager.h" />
     <ClInclude Include="src\02.Contents\Actor\Tile\TileMap.h" />
-    <ClInclude Include="src\02.Contents\Actor\Tile\Tile.h" />
     <ClInclude Include="src\02.Contents\Actor\Tile\TileSnapUI.h" />
-    <ClInclude Include="src\02.Contents\Actor\Tile\TileInteractionHandler.h" />
-    <ClInclude Include="src\01.Base\Actor\UIManager.h" />
+    <ClInclude Include="src\02.Contents\Actor\Tile\TileHandler.h" />
+    <ClInclude Include="src\02.Contents\Actor\UI\UIManager.h" />
+    <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

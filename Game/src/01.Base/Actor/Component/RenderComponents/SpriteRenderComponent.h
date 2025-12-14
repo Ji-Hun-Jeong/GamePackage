@@ -27,8 +27,10 @@ public:
 
 	void SetLayer(uint32_t InLayer) { RenderLayer = InLayer; }
 	void SetRender(bool bInRender) { bRender = bInRender; }
+	uint32_t GetLayer() const { return RenderLayer; }
 
 	void SetColor(const Vector3& InColor, float InAlpha);
+	void SetUIPass() { bUIPass = true; }
 
 	bool IsImageType() const { return !MaterialData.ImagePaths[0].empty(); }
 	Vector2 GetImageScale() const { return Vector2(ImageScale.x, ImageScale.y); }
@@ -55,6 +57,7 @@ private:
 	EPSOType PSOType;
 	CPSO* PSO = nullptr;
 
+	bool bUIPass = false;
 	uint32_t RenderLayer = 0;
 
 	std::unique_ptr<Graphics::CBuffer> SpriteBuffer = nullptr;

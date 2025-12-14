@@ -10,12 +10,12 @@ public:
 	~CLadderEditState() = default;
 
 public:
-	void EnterEditState(CUI& InMainPanel) override
+	void EnterEditState(TEditContext& InEditContext) override
 	{
-		InMainPanel.SetMouseFocusEvent([this]()->void
+		InEditContext.MainPanel->SetMouseFocusEvent([this, &InEditContext]()->void
 			{
 				if (LClicked())
-					CreateLadder();
+					CreateLadder(InEditContext);
 			});
 		StretchUpUI->SetMouseFocusEvent([this]()->void
 			{
@@ -35,8 +35,8 @@ public:
 		StretchDownUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 1.0f));
 		StretchDownUI->Activate(false);
 	}
-	void OnEditState(CUI& InMainPanel) override
-	{	
+	void OnEditState(TEditContext& InEditContext) override
+	{
 		if (CLadderForm* FocusLadder = LadderEditor->GetFocusLadder())
 		{
 			LadderMarker->GetTransform()->SetPosition(FocusLadder->GetTransform()->GetFinalPosition());
@@ -67,16 +67,15 @@ public:
 				bStretchDown = false;
 			}
 		}
-
-		LadderEditor->InteractionToScreen(InMainPanel);
 	}
-	void ExitEditState(CUI& InMainPanel) override
+	void ExitEditState(TEditContext& InEditContext) override
 	{
-		InMainPanel.SetMouseFocusEvent(nullptr);
+		InEditContext.MainPanel->SetMouseFocusEvent(nullptr);
 		StretchUpUI->SetMouseFocusEvent(nullptr);
 		StretchUpUI->Activate(false);
 		StretchDownUI->SetMouseFocusEvent(nullptr);
 		StretchDownUI->Activate(false);
+		LadderEditor->DetachToPanel(*InEditContext.MainPanel);
 	}
 	void ToImGUI() override
 	{
@@ -101,7 +100,7 @@ public:
 	}
 
 private:
-	void CreateLadder()
+	void CreateLadder(TEditContext& InEditContext)
 	{
 		if (LadderEditor->IsEditReady() == false)
 			return;
@@ -119,6 +118,7 @@ private:
 					LadderEditor->SetFocusLadder(Ladder);
 				}
 			});
+		LadderEditor->AttachToPanel(*InEditContext.MainPanel);
 	}
 
 private:

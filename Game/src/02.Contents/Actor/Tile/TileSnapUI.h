@@ -1,17 +1,16 @@
 #pragma once
 #include "01.Base/Actor/Actor.h"
-#include "01.Base/Actor/UI.h"
-#include "Tile.h"
+#include "02.Contents/Actor/UI/UI.h"
 
 class CTileSnapUI : public CActor
 {
 	GENERATE_OBJECT(CTileSnapUI)
 public:
-	CTileSnapUI();
+	CTileSnapUI() = default;
 	~CTileSnapUI() = default;
 
 public:
-	void SetUIEvent(ETilePositionType InTilePositionType, std::function<void()> InEvent)
+	/*void SetUIEvent(ETilePositionType InTilePositionType, std::function<void()> InEvent)
 	{
 		switch (InTilePositionType)
 		{
@@ -86,6 +85,6 @@ private:
 
 	std::vector<CUI*> UIs;
 
-	CUI* OwnerUI = nullptr;
+	CUI* OwnerUI = nullptr;*/
 };
 

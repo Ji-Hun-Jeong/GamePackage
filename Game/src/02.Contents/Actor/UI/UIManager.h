@@ -128,12 +128,15 @@ private:
 		return (MouseWorldPosition.x >= left && MouseWorldPosition.x <= right &&
 			MouseWorldPosition.y >= bottom && MouseWorldPosition.y <= top);
 	}
+
+	bool IsInsideScreen(const CUI& InUI);
 private:
 	std::vector<CUI*> CurrentFrameDetectUIs;
 	std::vector<CUI*> AddToEndUIs;
 	CUI* CurrentFocusUI;
 
 	Vector2 MouseWorldPosition;
+	Vector3 CameraPosition;
 
 };
 
