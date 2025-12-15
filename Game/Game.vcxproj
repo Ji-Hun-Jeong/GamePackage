@@ -262,6 +262,7 @@
     <ClCompile Include="src\02.Contents\Actor\Tile\TileHandler.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UIManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\UI\UISceneProxy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\02.Contents\Scene\Editor\State\IEditState.h" />
@@ -335,6 +336,7 @@
     <ClInclude Include="src\02.Contents\Actor\Tile\TileHandler.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UIManager.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h" />
+    <ClInclude Include="src\02.Contents\Actor\UI\UISceneProxy.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

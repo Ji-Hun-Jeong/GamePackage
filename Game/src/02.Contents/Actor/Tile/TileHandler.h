@@ -1,7 +1,7 @@
 #pragma once
 #include "TileMap.h"
 
-class CTileFocus : public CStaticActor
+class CTileFocus : public CUI
 {
 	GENERATE_OBJECT(CTileFocus)
 public:
@@ -190,12 +190,11 @@ public:
 			CStaticActor* MappingActor = TileMapper.GetMappingActor(*HandledTile);
 			CTileMover::MoveActor(*HandledTile, *MappingActor, TilePositionType);
 		}
-
 	}
 
 private:
 	std::vector<CTile*> HandledTiles;
 
-	std::vector<CStaticActor*> TileMarkers;
+	std::vector<CUI*> TileMarkers;
 
 };

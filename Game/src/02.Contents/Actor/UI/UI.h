@@ -3,13 +3,14 @@
 
 class CUI : public CStaticActor
 {
+	friend class CUISceneProxy;
 	friend class CUIManager;
 	GENERATE_OBJECT(CUI)
 		DONTCOPY(CUI)
 public:
 	CUI()
 	{
-		//SpriteRenderComponent->SetUIPass();
+		SpriteRenderComponent->SetUIPass();
 	}
 	virtual ~CUI() = default;
 
@@ -84,6 +85,12 @@ public:
 		}
 	}
 	CUI* GetOwnerUI() const { return OwnerUI; }
+	void SetUILayer(uint32_t InUILayer)
+	{
+		UILayer = InUILayer; 
+		SpriteRenderComponent->SetLayer(UILayer);
+	}
+	uint32_t GetUILayer() const { return UILayer; }
 
 private:
 	std::function<void()> MouseEnterEvent = nullptr;
@@ -96,5 +103,8 @@ private:
 
 	std::vector<CUI*> ChildUIs;
 	CUI* OwnerUI = nullptr;
+
+	uint32_t UILayer = 0;
+
 };
 

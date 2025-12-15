@@ -103,7 +103,7 @@ void CTileHandler::HandleTile(CTile& InHandledTile, uint32_t InLayer)
 {
 	HandledTiles.push_back(&InHandledTile);
 
-	CStaticActor* TileMarker = GetWorld()->SpawnActor<CStaticActor>(this);
+	CUI* TileMarker = GetWorld()->SpawnActor<CUI>(this);
 	TileMarker->GetTransform()->SetPosition(InHandledTile.GetTransform()->GetFinalPosition());
 	TileMarker->GetTransform()->SetScale(InHandledTile.GetTransform()->GetScale());
 	TileMarker->SetLineActor();

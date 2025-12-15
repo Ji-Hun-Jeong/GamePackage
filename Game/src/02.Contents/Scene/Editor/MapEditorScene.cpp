@@ -43,8 +43,6 @@ void CMapEditorScene::Update(float InDeltaTime)
 {
 	CScene::Update(InDeltaTime);
 
-	
-
 	const int32_t MouseX = UIManager.GetMouseWorldPosition().x;
 	const int32_t MouseY = UIManager.GetMouseWorldPosition().y;
 	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));

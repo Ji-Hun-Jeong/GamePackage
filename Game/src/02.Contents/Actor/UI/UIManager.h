@@ -40,17 +40,47 @@ public:
 	void SetMouseWorldPosition(const class CMouseManager& InMouseManager, const class CCamera& InCamera);
 	void PushUI(CUI& InUI)
 	{
+		Unwrapped(InUI);
+		// CurrentFrameDetectUIs.push_back(&InUI);
+	}
+	void Unwrapped(CUI& InUI)
+	{
+		if (InUI.bInteraction == false)
+			return;
 		CurrentFrameDetectUIs.push_back(&InUI);
+		for (auto ChildUI : InUI.ChildUIs)
+			Unwrapped(*ChildUI);
 	}
 	void PushUIToEnd(CUI& InUI)
 	{
+		if (InUI.bInteraction == false)
+			return;
 		AddToEndUIs.push_back(&InUI);
 	}
 	void FindFocusUI()
 	{
 		CurrentFrameDetectUIs.insert(CurrentFrameDetectUIs.end(), AddToEndUIs.begin(), AddToEndUIs.end());
 
-		CFocusUICandidate FocusUICandidates;
+		std::vector<CUI*> FinalDetectUI;
+		FinalDetectUI.reserve(CurrentFrameDetectUIs.size());
+
+		for (auto UI : CurrentFrameDetectUIs)
+		{
+			if (IsMouseOn(*UI))
+			{
+				if (UI->MouseOnEvent)
+					UI->MouseOnEvent();
+				FinalDetectUI.push_back(UI);
+			}
+		}
+
+		CUI* NewFocusUI = nullptr;
+		if (FinalDetectUI.empty() == false)
+		{
+			std::stable_sort(FinalDetectUI.begin(), FinalDetectUI.end(), [](CUI* InA, CUI* InB)->bool {return InA->GetUILayer() < InB->GetUILayer(); });
+			NewFocusUI = FinalDetectUI.back();
+		}
+		/*CFocusUICandidate FocusUICandidates;
 
 		for (auto& UI : CurrentFrameDetectUIs)
 		{
@@ -60,7 +90,7 @@ public:
 			FocusUICandidates.Merge(Candidates);
 		}
 
-		CUI* NewFocusUI = FocusUICandidates.GetOneFocusUI();
+		CUI* NewFocusUI = FocusUICandidates.GetOneFocusUI();*/
 
 		if (CurrentFocusUI != NewFocusUI)
 		{
@@ -71,10 +101,10 @@ public:
 				NewFocusUI->MouseEnterEvent();
 		}
 
+		CurrentFocusUI = NewFocusUI;
+
 		if (CurrentFocusUI && CurrentFocusUI->MouseFocusEvent)
 			CurrentFocusUI->MouseFocusEvent();
-
-		CurrentFocusUI = NewFocusUI;
 
 		CurrentFrameDetectUIs.clear();
 		AddToEndUIs.clear();

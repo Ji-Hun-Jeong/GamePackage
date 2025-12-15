@@ -16,54 +16,56 @@ public:
 	}
 	void OnEditState(TEditContext& InEditContext) override
 	{
-		CTileMap* TileMap = InEditContext.TileMap;
-		if (bLayTiles)
-		{
-			TileMap->DetachToPanel(*InEditContext.MainPanel);
-			TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
+		if (bLayTiles == false)
+			return;
 
-			TileMap->AttachToPanel(*InEditContext.MainPanel, [this, TileMap](CTile& InFocusTile)->void
+		CTileMap* TileMap = InEditContext.TileMap;
+		CUI* MainPanel = InEditContext.MainPanel;
+
+		TileMap->DetachToPanel(*MainPanel);
+		TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
+
+		TileMap->AttachToPanel(*MainPanel, [this, TileMap](CTile& InFocusTile)->void
+			{
+				TileFocus->SetFocusTile(&InFocusTile);
+				if (LHold())
 				{
-					TileFocus->SetFocusTile(&InFocusTile);
-					if (LHold())
+					if (TileMapper.IsAlreadyMapping(InFocusTile) == false)
 					{
-						if (TileMapper.IsAlreadyMapping(InFocusTile) == false)
-						{
-							CStaticActor* Actor = ActorGenerator.GenerateStaticActor(ImageImporter, InFocusTile.GetTransform()->GetFinalPosition2D());
-							if (Actor)
-								TileMapper.Map(InFocusTile, *Actor);
-						}
-						else
-						{
-							if (TileHandler->IsExist(InFocusTile) == false)
-								TileHandler->HandleTile(InFocusTile, TileFocus->GetSpriteRenderComponent()->GetLayer() + 1);
-						}
+						CStaticActor* Actor = ActorGenerator.GenerateStaticActor(ImageImporter, InFocusTile.GetTransform()->GetFinalPosition2D());
+						if (Actor)
+							TileMapper.Map(InFocusTile, *Actor);
 					}
-					else if (LReleased())
+					else
 					{
-						if (TileHandler->IsEmpty())
-							return;
-						Vector3 CenterPosition = TileHandler->GetCenterPosition();
-						CTile* ProximateTile = TileMap->GetTileByPosition(CenterPosition);
-						if (ProximateTile)
-						{
-							Vector3 Offset = CenterPosition - ProximateTile->GetTransform()->GetFinalPosition();
-							AttachUIs(*ProximateTile, Offset, TileFocus->GetSpriteRenderComponent()->GetLayer() + 2);
-						}
+						if (TileHandler->IsExist(InFocusTile) == false)
+							TileHandler->HandleTile(InFocusTile, TileFocus->GetSpriteRenderComponent()->GetLayer() + 1);
 					}
-					else if (RHold())
+				}
+				else if (LReleased())
+				{
+					if (TileHandler->IsEmpty())
+						return;
+					Vector3 CenterPosition = TileHandler->GetCenterPosition();
+					CTile* ProximateTile = TileMap->GetTileByPosition(CenterPosition);
+					if (ProximateTile)
 					{
-						TileHandler->ClearHandledTiles();
-						if (TileMapper.IsAlreadyMapping(InFocusTile))
-						{
-							CStaticActor& MappingActor = TileMapper.UnMap(InFocusTile);
-							MappingActor.Destroy();
-						}
-						DetachUIs();
+						Vector3 Offset = CenterPosition - ProximateTile->GetTransform()->GetFinalPosition();
+						AttachUIs(*ProximateTile, Offset, TileFocus->GetSpriteRenderComponent()->GetLayer() + 2);
 					}
-				});
-			bLayTiles = false;
-		}
+				}
+				else if (RHold())
+				{
+					TileHandler->ClearHandledTiles();
+					if (TileMapper.IsAlreadyMapping(InFocusTile))
+					{
+						CStaticActor& MappingActor = TileMapper.UnMap(InFocusTile);
+						MappingActor.Destroy();
+					}
+					DetachUIs();
+				}
+			});
+		bLayTiles = false;
 	}
 
 	void ExitEditState(TEditContext& InEditContext) override
