@@ -4,10 +4,6 @@
 
 #include "03.Utils/CTransformUtils.h"
 #include "04.Renderer/ImGuiManager.h"
-CTileMap::CTileMap()
-{
-
-}
 
 void CTileMap::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol)
 {
@@ -40,7 +36,7 @@ void CTileMap::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t In
 	}
 }
 
-CTile* CTileMap::GetTileByPosition(const Vector3& InPosition)
+CTile* CTileMap::GetTileByPosition(const Vector2& InPosition)
 {
 	for (auto Tile : Tiles)
 	{

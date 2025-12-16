@@ -3,16 +3,16 @@
 #include "03.Utils/CTransformUtils.h"
 #include "02.Contents/Actor/UI/UI.h"
 
-class CLadderForm : public CUI
+class CLadderForm : public CStaticActor
 {
 	friend class CLadderEditor;
 	GENERATE_OBJECT(CLadderForm)
 public:
 	CLadderForm()
 	{
-		DetachComponent(SpriteRenderComponent);
-		SpriteRenderComponent = nullptr;
+		DetachComponent(GetSpriteRenderComponent());
 		RenderComponent = nullptr;
+		SpriteRenderComponent = nullptr;
 	}
 	~CLadderForm() = default;
 
@@ -61,20 +61,15 @@ public:
 	void StretchToUp(CLadderForm& InLadder);
 	void StretchToDown(CLadderForm& InLadder);
 	CLadderForm* CreateLadder(const Vector3& InPosition);
-	void SetFocusLadder(CLadderForm* InLadder)
+	CLadderForm* GetProximateLadder(const Vector2& InPosition)
 	{
 		for (auto Ladder : ManagingLadders)
 		{
-			if (Ladder == InLadder)
-			{
-				CurrentFocusLadder = Ladder;
-				break;
-			}
+			if (CTransformUtils::IsPositionInsideActor(InPosition, *Ladder))
+				return Ladder;
 		}
+		return nullptr;
 	}
-	CLadderForm* GetFocusLadder() const { return CurrentFocusLadder; }
-	void AttachToPanel(CUI& InOwnerUI);
-	void DetachToPanel(CUI& InMainPanel);
 
 private:
 	Vector3 ReCalculatePosition(CLadderForm& InLadder)
@@ -112,7 +107,6 @@ private:
 	std::vector<std::wstring> BodyImagePaths;
 	std::wstring FootImagePath;
 
-	CLadderForm* CurrentFocusLadder = nullptr;
 	std::vector<CLadderForm*> ManagingLadders;
 
 };

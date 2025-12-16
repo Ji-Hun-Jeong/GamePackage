@@ -36,7 +36,7 @@ public:
 
 private:
 	// 원래는 모드를 두는게 좋을것같은데 그냥 일단 씬에 때려박자 나중에 ㄱㄱ
-	EEditMode EditMode = EEditMode::Tile;
+	EEditMode EditMode = EEditMode::Ladder;
 	IEditState* CurrentEditState = nullptr;
 
 	TEditContext EditContext;

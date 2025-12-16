@@ -89,15 +89,3 @@ CLadderForm* CLadderEditor::CreateLadder(const Vector3& InPosition)
 	ManagingLadders.push_back(Ladder);
 	return Ladder;
 }
-
-void CLadderEditor::AttachToPanel(CUI& InOwnerUI)
-{
-	for (auto Ladder : ManagingLadders)
-		InOwnerUI.AttachChildUI(*Ladder);
-}
-
-void CLadderEditor::DetachToPanel(CUI& InMainPanel)
-{
-	for (auto Ladder : ManagingLadders)
-		InMainPanel.DetachChildUI(*Ladder);
-}

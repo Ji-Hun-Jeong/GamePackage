@@ -14,12 +14,7 @@ public:
 	}
 	void ArrangeLayer()
 	{
-		for (size_t i = 0; i < UIWindows.size(); ++i)
-		{
-			CUI* UIWindow = UIWindows[i];
-			UIWindow->SetUILayer(i * 100);
-			GetFinalLayer(*UIWindow, UIWindow->UILayer);
-		}
+		
 	}
 	void WindowToFront(CUI& InUIWindow)
 	{
@@ -27,18 +22,8 @@ public:
 
 		if (it != UIWindows.end())
 		{
-			UIWindows.erase(it);            
-			UIWindows.push_back(&InUIWindow); 
-		}
-	}
-
-private:
-	void GetFinalLayer(CUI& InOwnerUI, uint32_t InOwnerLayer)
-	{
-		for (auto ChildUI : InOwnerUI.ChildUIs)
-		{
-			ChildUI->SetUILayer(InOwnerLayer + 1);
-			GetFinalLayer(*ChildUI, ChildUI->UILayer);
+			UIWindows.erase(it);
+			UIWindows.push_back(&InUIWindow);
 		}
 	}
 

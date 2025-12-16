@@ -191,13 +191,11 @@ public:
 	virtual void RenderActor(class CSpriteRenderer& InRenderer) final;
 	virtual void Activate(bool bInActivate)
 	{
-		bActivate = bInActivate;
+		bActive = bInActivate;
 		for (auto Child : Childs)
 			Child->Activate(bInActivate);
 	}
-	bool IsActivate() const { return bActivate; }
-private:
-	bool bActivate = true;
+	bool IsActivate() const { return bActive; }
 
 public:
 	virtual void Serialize(CSerializer& InSerializer) const override

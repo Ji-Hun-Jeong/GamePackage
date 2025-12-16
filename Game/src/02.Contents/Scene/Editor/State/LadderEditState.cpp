@@ -13,9 +13,33 @@ CLadderEditState::CLadderEditState()
 
 	LadderMarker = GetWorld()->SpawnActor<CStaticActor>(this);
 	LadderMarker->SetLineActor();
+	LadderMarker->Activate(false);
 
 	StretchUpUI = GetWorld()->SpawnActor<CUI>(this);
-	StretchUpUI->SetRectUI(5);
+	StretchUpUI->SetLineActor();
+	StretchUpUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 1.0f));
+	StretchUpUI->Activate(false);
+	StretchUpUI->SetMouseFocusEvent([this]()->void
+		{
+			if (LClicked())
+			{
+				LadderEditor->StretchToUp(*CurrentFocusLadder);
+				Vector3 NewUpPosition = CTransformUtils::GetTopPosition(*CurrentFocusLadder, *StretchUpUI);
+				StretchUpUI->GetTransform()->SetPosition(NewUpPosition);
+			}
+		});
+
 	StretchDownUI = GetWorld()->SpawnActor<CUI>(this);
-	StretchDownUI->SetRectUI(5);
+	StretchDownUI->SetLineActor();
+	StretchDownUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 1.0f));
+	StretchDownUI->Activate(false);
+	StretchDownUI->SetMouseFocusEvent([this]()->void
+		{
+			if (LClicked())
+			{
+				LadderEditor->StretchToDown(*CurrentFocusLadder);
+				Vector3 NewDownPosition = CTransformUtils::GetBottomPosition(*CurrentFocusLadder, *StretchDownUI);
+				StretchDownUI->GetTransform()->SetPosition(NewDownPosition);
+			}
+		});
 }

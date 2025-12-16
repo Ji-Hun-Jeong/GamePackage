@@ -12,65 +12,77 @@ public:
 public:
 	void EnterEditState(TEditContext& InEditContext) override
 	{
+		CTileMap* TileMap = InEditContext.TileMap;
+		CUI* MainPanel = InEditContext.MainPanel;
+		MainPanel->SetUILayer(0);
 
+		MainPanel->SetMouseFocusEvent([this]()->void
+			{
+				bChooseTile = true;
+			});
+
+		MoveUIOwner->Activate(false);
+		MainPanel->AttachChildUI(*MoveUIOwner);
 	}
 	void OnEditState(TEditContext& InEditContext) override
 	{
-		if (bLayTiles == false)
-			return;
-
 		CTileMap* TileMap = InEditContext.TileMap;
 		CUI* MainPanel = InEditContext.MainPanel;
 
-		TileMap->DetachToPanel(*MainPanel);
-		TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
+		if (bLayTiles)
+		{
+			TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
+			bLayTiles = false;
+		}
 
-		TileMap->AttachToPanel(*MainPanel, [this, TileMap](CTile& InFocusTile)->void
+		if (bChooseTile == false)
+			return;
+
+		const Vector2& MouseWorldPosition = GetMouseWorldPosition();
+
+		CTile* FocusTile = TileMap->GetTileByPosition(MouseWorldPosition);
+		if (FocusTile == nullptr)
+			return;
+
+		TileFocus->SetFocusTile(FocusTile, FocusTile->GetSpriteRenderComponent()->GetLayer() + 1);
+		if (LHold())
+		{
+			if (TileMapper.IsAlreadyMapping(*FocusTile) == false)
 			{
-				TileFocus->SetFocusTile(&InFocusTile);
-				if (LHold())
-				{
-					if (TileMapper.IsAlreadyMapping(InFocusTile) == false)
-					{
-						CStaticActor* Actor = ActorGenerator.GenerateStaticActor(ImageImporter, InFocusTile.GetTransform()->GetFinalPosition2D());
-						if (Actor)
-							TileMapper.Map(InFocusTile, *Actor);
-					}
-					else
-					{
-						if (TileHandler->IsExist(InFocusTile) == false)
-							TileHandler->HandleTile(InFocusTile, TileFocus->GetSpriteRenderComponent()->GetLayer() + 1);
-					}
-				}
-				else if (LReleased())
-				{
-					if (TileHandler->IsEmpty())
-						return;
-					Vector3 CenterPosition = TileHandler->GetCenterPosition();
-					CTile* ProximateTile = TileMap->GetTileByPosition(CenterPosition);
-					if (ProximateTile)
-					{
-						Vector3 Offset = CenterPosition - ProximateTile->GetTransform()->GetFinalPosition();
-						AttachUIs(*ProximateTile, Offset, TileFocus->GetSpriteRenderComponent()->GetLayer() + 2);
-					}
-				}
-				else if (RHold())
-				{
-					TileHandler->ClearHandledTiles();
-					if (TileMapper.IsAlreadyMapping(InFocusTile))
-					{
-						CStaticActor& MappingActor = TileMapper.UnMap(InFocusTile);
-						MappingActor.Destroy();
-					}
-					DetachUIs();
-				}
-			});
-		bLayTiles = false;
+				CStaticActor* Actor = ActorGenerator.GenerateStaticActor(ImageImporter, FocusTile->GetTransform()->GetFinalPosition2D());
+				if (Actor)
+					TileMapper.Map(*FocusTile, *Actor);
+			}
+			else
+			{
+				if (TileHandler->IsExist(*FocusTile) == false)
+					TileHandler->HandleTile(*FocusTile, FocusTile->GetSpriteRenderComponent()->GetLayer() + 2);
+			}
+		}
+		else if (LReleased())
+		{
+			if (TileHandler->IsEmpty())
+				return;
+			Vector3 CenterPosition = TileHandler->GetCenterPosition();
+			MoveUIOwner->Activate(true);
+			MoveUIOwner->GetTransform()->SetPosition(CenterPosition);
+		}
+		else if (RHold())
+		{
+			TileHandler->ClearHandledTiles();
+			if (TileMapper.IsAlreadyMapping(*FocusTile))
+				TileMapper.UnMap(*FocusTile);
+			MoveUIOwner->Activate(false);
+		}
+		bChooseTile = false;
 	}
 
 	void ExitEditState(TEditContext& InEditContext) override
 	{
-		InEditContext.TileMap->DetachToPanel(*InEditContext.MainPanel);
+		InEditContext.MainPanel->SetMouseFocusEvent(nullptr);
+
+		MoveUIOwner->Activate(false);
+		InEditContext.MainPanel->DetachChildUI(*MoveUIOwner);
 	}
 	void ToImGUI() override
 	{
@@ -108,29 +120,10 @@ private:
 	void InitalizeMoveUI(CUI* InMoveUI)
 	{
 		InMoveUI->Activate(false);
-		InMoveUI->SetRectUI(3);
+		InMoveUI->SetLineActor();
 		InMoveUI->GetTransform()->SetScale(Vector3(20.0f, 20.0f, 1.0f));
-		MoveUIs.push_back(InMoveUI);
+		MoveUIOwner->AttachChildUI(*InMoveUI);
 	}
-	void AttachUIs(CUI& InOwnerUI, const Vector3& InOffset, uint32_t InLayer)
-	{
-		for (auto UI : MoveUIs)
-		{
-			UI->Activate(true);
-			UI->GetSpriteRenderComponent()->SetLayer(InLayer);
-			InOwnerUI.AttachChildUI(*UI);
-		}
-	}
-	void DetachUIs()
-	{
-		for (auto UI : MoveUIs)
-		{
-			UI->Activate(false);
-			if (UI->GetOwnerUI())
-				UI->GetOwnerUI()->DetachChildUI(*UI);
-		}
-	}
-
 
 private:
 	CImageImporter ImageImporter;
@@ -147,7 +140,8 @@ private:
 	size_t TileMapCol = 30;
 	bool bLayTiles = false;
 
-	std::vector<CUI*> MoveUIs;
+	CUI* MoveUIOwner = nullptr;
 
+	bool bChooseTile = false;
 };
 

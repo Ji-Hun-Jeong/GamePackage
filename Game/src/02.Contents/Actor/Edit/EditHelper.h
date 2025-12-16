@@ -69,6 +69,7 @@ public:
 
 public:
 	void SetFirstDiff(class CMouseManager& InMouseManager, CActor& InTranslatedActor);
+	void SetFirstDiff(class CMouseManager& InMouseManager, const Vector3& InPosition);
 	void TranslateActor(class CMouseManager& InMouseManager, CActor& InTranslatedActor);
 
 private:

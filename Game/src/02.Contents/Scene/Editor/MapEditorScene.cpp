@@ -20,23 +20,10 @@ void CMapEditorScene::BeginPlay()
 	EditContext.MainPanel = GetWorld()->SpawnActor<CUI>(this);
 	EditContext.MainPanel->GetTransform()->SetScale(Vector3(1270.0f, 950.0f, 1.0f));
 	EditContext.TileMap = GetWorld()->SpawnActor<CTileMap>(this);
-	/*TileMap = GetWorld()->SpawnActor<CTileMap>(this);
-	TileSnapUI = GetWorld()->SpawnActor<CTileSnapUI>(this);
-	TileInteractionHandler = std::make_unique<CTileInteractionHandler>(*TileMap);
-
-	TileSnapUI->SetUIEvent(ETilePositionType::Center, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Center); });
-	TileSnapUI->SetUIEvent(ETilePositionType::Left, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Left); });
-	TileSnapUI->SetUIEvent(ETilePositionType::Right, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Right); });
-	TileSnapUI->SetUIEvent(ETilePositionType::Top, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Top); });
-	TileSnapUI->SetUIEvent(ETilePositionType::Bottom, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::Bottom); });
-	TileSnapUI->SetUIEvent(ETilePositionType::LeftTop, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::LeftTop); });
-	TileSnapUI->SetUIEvent(ETilePositionType::LeftBottom, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::LeftBottom); });
-	TileSnapUI->SetUIEvent(ETilePositionType::RightTop, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::RightTop); });
-	TileSnapUI->SetUIEvent(ETilePositionType::RightBottom, [this]()->void {if (LClicked())TileInteractionHandler->MoveHandledTiles(ETilePositionType::RightBottom); });
-
-	GroundManager = GetWorld()->SpawnActor<CGroundManager>(this);*/
 
 	ChangeMode(EditMode);
+
+	UIManager.AddUI(*EditContext.MainPanel);
 }
 
 void CMapEditorScene::Update(float InDeltaTime)
@@ -49,7 +36,6 @@ void CMapEditorScene::Update(float InDeltaTime)
 	CurrentEditState->SetMouseWorldPosition(MouseWorld2DPosition);
 	CurrentEditState->OnEditState(EditContext);
 
-	UIManager.PushUI(*EditContext.MainPanel);
 }
 
 void CMapEditorScene::FreeMode()

@@ -18,7 +18,8 @@ public:
 	void Activate(bool bInActivate) override
 	{
 		CStaticActor::Activate(bInActivate);
-		SpriteRenderComponent->SetRender(bInActivate);
+		if (SpriteRenderComponent)
+			SpriteRenderComponent->SetRender(bInActivate);
 		bInteraction = bInActivate;
 	}
 	void InitalizeBasicButtonUI(const std::wstring& InBasicImagePath, const std::wstring& InMouseOnImagePath
@@ -38,14 +39,6 @@ public:
 						InButtonEvent();
 				}
 			});
-	}
-	
-	void SetRectUI(uint32_t InLayer)
-	{
-		SpriteRenderComponent->SetMesh(CAssetLoader::GetInst().GetMeshData("LineSquareMesh"));
-		SpriteRenderComponent->SetPSO(EPSOType::Line);
-		SpriteRenderComponent->SetColor(Vector3(0.0f, 0.0f, 0.0f), 1.0f);
-		SpriteRenderComponent->SetLayer(InLayer);
 	}
 
 	void SetInteraction(bool bInInteraction) { bInteraction = bInInteraction; }

@@ -7,12 +7,12 @@ public:
 	static Vector3 GetTopPosition(CStaticActor& InPivotActor, CStaticActor& InOffsetActor)
 	{
 		Vector2 PivotScale;
-		if (InPivotActor.GetSpriteRenderComponent()->IsImageType())
+		if (InPivotActor.GetSpriteRenderComponent() && InPivotActor.GetSpriteRenderComponent()->IsImageType())
 			PivotScale = InPivotActor.GetSpriteRenderComponent()->GetImageScale();
 		else
 			PivotScale = InPivotActor.GetTransform()->GetScale2D();
 		Vector2 OffsetScale;
-		if (InOffsetActor.GetSpriteRenderComponent()->IsImageType())
+		if (InPivotActor.GetSpriteRenderComponent() && InOffsetActor.GetSpriteRenderComponent()->IsImageType())
 			OffsetScale = InOffsetActor.GetSpriteRenderComponent()->GetImageScale();
 		else
 			OffsetScale = InOffsetActor.GetTransform()->GetScale2D();
@@ -24,12 +24,12 @@ public:
 	static Vector3 GetBottomPosition(CStaticActor& InPivotActor, CStaticActor& InOffsetActor)
 	{
 		Vector2 PivotScale;
-		if (InPivotActor.GetSpriteRenderComponent()->IsImageType())
+		if (InPivotActor.GetSpriteRenderComponent() && InPivotActor.GetSpriteRenderComponent()->IsImageType())
 			PivotScale = InPivotActor.GetSpriteRenderComponent()->GetImageScale();
 		else
 			PivotScale = InPivotActor.GetTransform()->GetScale2D();
 		Vector2 OffsetScale;
-		if (InOffsetActor.GetSpriteRenderComponent()->IsImageType())
+		if (InPivotActor.GetSpriteRenderComponent() && InOffsetActor.GetSpriteRenderComponent()->IsImageType())
 			OffsetScale = InOffsetActor.GetSpriteRenderComponent()->GetImageScale();
 		else
 			OffsetScale = InOffsetActor.GetTransform()->GetScale2D();

@@ -1,7 +1,7 @@
 #pragma once
 #include "TileMap.h"
 
-class CTileFocus : public CUI
+class CTileFocus : public CStaticActor
 {
 	GENERATE_OBJECT(CTileFocus)
 public:
@@ -17,7 +17,7 @@ public:
 	{
 		MarkColor = InMarkColor;
 	}
-	void SetFocusTile(CTile* InTile)
+	void SetFocusTile(CTile* InTile, uint32_t InLayer)
 	{
 		if (InTile)
 		{
@@ -25,7 +25,7 @@ public:
 			Transform->SetPosition(InTile->GetTransform()->GetFinalPosition());
 			Transform->SetScale(InTile->GetTransform()->GetScale());
 			SpriteRenderComponent->SetColor(MarkColor, 1.0f);
-			SpriteRenderComponent->SetLayer(InTile->GetSpriteRenderComponent()->GetLayer() + 1);
+			SpriteRenderComponent->SetLayer(InLayer);
 		}
 		else
 			Activate(false);
@@ -49,11 +49,11 @@ public:
 	{
 		MappingContexts[&InTile] = &InMappingActor;
 	}
-	CStaticActor& UnMap(CTile& InTile)
+	void UnMap(CTile& InTile)
 	{
 		CStaticActor* MappingActor = MappingContexts.find(&InTile)->second;
 		MappingContexts.erase(&InTile);
-		return *MappingActor;
+		MappingActor->Destroy();
 	}
 	bool IsAlreadyMapping(CTile& InTile)
 	{
@@ -195,6 +195,6 @@ public:
 private:
 	std::vector<CTile*> HandledTiles;
 
-	std::vector<CUI*> TileMarkers;
+	std::vector<CStaticActor*> TileMarkers;
 
 };

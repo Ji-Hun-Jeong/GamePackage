@@ -6,17 +6,19 @@
 CTileEditState::CTileEditState()
 {
 	TileFocus = GetWorld()->SpawnActor<CTileFocus>(this);
+	TileFocus->Activate(false);
 	TileHandler = GetWorld()->SpawnActor<CTileHandler>(this);
 
-	CUI* LeftMoveUI = GetWorld()->SpawnActor<CUI>(nullptr);
-	CUI* RightMoveUI = GetWorld()->SpawnActor<CUI>(nullptr);
-	CUI* TopMoveUI = GetWorld()->SpawnActor<CUI>(nullptr);
-	CUI* BottomMoveUI = GetWorld()->SpawnActor<CUI>(nullptr);
-	CUI* CenterMoveUI = GetWorld()->SpawnActor<CUI>(nullptr);
-	CUI* LeftTopMoveUI = GetWorld()->SpawnActor<CUI>(nullptr);
-	CUI* LeftBottomMoveUI = GetWorld()->SpawnActor<CUI>(nullptr);
-	CUI* RightTopMoveUI = GetWorld()->SpawnActor<CUI>(nullptr);
-	CUI* RightBottomMoveUI = GetWorld()->SpawnActor<CUI>(nullptr);
+	MoveUIOwner = GetWorld()->SpawnActor<CUI>(this);
+	CUI* LeftMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
+	CUI* RightMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
+	CUI* TopMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
+	CUI* BottomMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
+	CUI* CenterMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
+	CUI* LeftTopMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
+	CUI* LeftBottomMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
+	CUI* RightTopMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
+	CUI* RightBottomMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
 
 	LeftMoveUI->GetTransform()->SetPosition(Vector3(-20.0f, 0.0f, 0.0f));
 	LeftMoveUI->SetMouseFocusEvent([this]()->void
@@ -89,4 +91,7 @@ CTileEditState::CTileEditState()
 				TileHandler->MoveActorByTile(ETilePositionType::RightBottom, TileMapper);
 		});
 	InitalizeMoveUI(RightBottomMoveUI);
+
+	MoveUIOwner->GetTransform()->SetScale(Vector3(20.0f * 3, 20.0f * 3, 1.0f));
+	MoveUIOwner->Activate(false);
 }
