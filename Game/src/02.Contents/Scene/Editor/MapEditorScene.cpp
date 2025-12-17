@@ -41,7 +41,16 @@ void CMapEditorScene::Update(float InDeltaTime)
 
 	if (bLayTiles)
 	{
-		EditContext.TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
+		CTileMap* TileMap = EditContext.TileMap;
+		CTileMapper& TileMapper = EditContext.TileMapper;
+
+		TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
+		TileMapper.ClearMapping();
+
+		LadderEditState->ClearEditState();
+		TileEditState->ClearEditState();
+		ColliderEditState->ClearEditState();
+
 		bLayTiles = false;
 	}
 

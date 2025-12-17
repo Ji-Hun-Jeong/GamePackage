@@ -100,3 +100,62 @@ void CTileEditState::InitalizeEditState(TTileMapEditContext& InTileMapEditContex
 	MoveUIOwner->GetTransform()->SetScale(Vector3(20.0f * 3, 20.0f * 3, 1.0f));
 	MoveUIOwner->Activate(false);
 }
+
+void CTileEditState::OnEditState()
+{
+	CUI* MainPanel = GetTileMapEditContext().MainPanel;
+	CTileMap* TileMap = GetTileMapEditContext().TileMap;
+	CTileMapper& TileMapper = GetTileMapEditContext().TileMapper;
+	CTileFocus* TileFocus = GetTileMapEditContext().TileFocus;
+	CTileHandler* TileHandler = GetTileMapEditContext().TileHandler;
+
+	if (bOnMainPanel == false)
+		return;
+
+	const Vector2& MouseWorldPosition = GetMouseWorldPosition();
+	CTile* FocusTile = TileMap->GetTileByPosition(MouseWorldPosition);
+	if (FocusTile == nullptr)
+		return;
+
+	TileFocus->SetFocusTile(FocusTile, FocusTile->GetSpriteRenderComponent()->GetLayer() + 1);
+
+	if (LHold())
+	{
+		if (ImageImporter.IsExistCurrentImagePath() == false)
+			return;
+		if (TileHandler->IsExist(*FocusTile) == false)
+			TileHandler->HandleTile(*FocusTile, FocusTile->GetSpriteRenderComponent()->GetLayer() + 2);
+		if (GetKey(EKeyType::Ctrl, EButtonState::Hold))
+			return;
+		if (TileMapper.IsAlreadyMapping(*FocusTile))
+		{
+			CStaticActor* MappingActor = TileMapper.GetMappingActor(*FocusTile);
+			if (MappingActor->GetSpriteRenderComponent()->GetImagePath() != ImageImporter.GetCurrentImagePath())
+				MappingActor->GetSpriteRenderComponent()->SetDiffuseImage(ImageImporter.GetCurrentImagePath());
+		}
+		else
+		{
+			CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
+			Actor->GetTransform()->SetPosition(FocusTile->GetTransform()->GetFinalPosition());
+			Actor->GetSpriteRenderComponent()->SetDiffuseImage(ImageImporter.GetCurrentImagePath());
+			TileMapper.Map(*FocusTile, *Actor);
+		}
+	}
+	else if (LReleased())
+	{
+		if (TileHandler->IsEmpty())
+			return;
+		Vector3 CenterPosition = TileHandler->GetCenterPosition();
+		MoveUIOwner->Activate(true);
+		MoveUIOwner->GetTransform()->SetPosition(CenterPosition);
+	}
+	else if (RHold())
+	{
+		TileHandler->ClearHandledTiles();
+		if (TileMapper.IsAlreadyMapping(*FocusTile))
+			TileMapper.UnMap(*FocusTile);
+		MoveUIOwner->Activate(false);
+	}
+
+	bOnMainPanel = false;
+}

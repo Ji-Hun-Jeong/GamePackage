@@ -33,6 +33,7 @@ public:
 	virtual void EnterEditState() = 0;
 	virtual void OnEditState() = 0;
 	virtual void ExitEditState() = 0;
+	virtual void ClearEditState() {}
 	virtual void ToImGUI() {}
 
 	void SetMouseWorldPosition(const Vector2& InMouseWorldPosition) { MouseWorldPosition = InMouseWorldPosition; }

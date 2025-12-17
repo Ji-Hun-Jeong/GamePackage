@@ -25,9 +25,8 @@ public:
 
 		if (bPlaceGround)
 		{
-			if (TileHandler->IsEmpty())
-				return;
-			TileHandler->SetGroundByHandledTiles(*TileMap, *GroundManager);
+			if (TileHandler->IsEmpty() == false)
+				TileHandler->SetGroundByHandledTiles(*TileMap, *GroundManager);
 			bPlaceGround = false;
 		}
 
@@ -59,7 +58,20 @@ public:
 	}
 	void ExitEditState() override
 	{
-		GetTileMapEditContext().MainPanel->SetMouseFocusEvent(nullptr);
+		CUI* MainPanel = GetTileMapEditContext().MainPanel;
+		CTileMap* TileMap = GetTileMapEditContext().TileMap;
+		CTileMapper& TileMapper = GetTileMapEditContext().TileMapper;
+		CTileFocus* TileFocus = GetTileMapEditContext().TileFocus;
+		CTileHandler* TileHandler = GetTileMapEditContext().TileHandler;
+
+		MainPanel->SetMouseFocusEvent(nullptr);
+
+		TileFocus->SetFocusTile(nullptr, 0);
+		TileHandler->ClearHandledTiles();
+	}
+	void ClearEditState() override
+	{
+		GroundManager->ClearColliders();
 	}
 	void ToImGUI() override
 	{

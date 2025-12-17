@@ -11,7 +11,6 @@ public:
 	CTile()
 	{
 		static const Graphics::TMeshData& LineSquareMeshData = CAssetLoader::GetInst().GetMeshData("LineSquareMesh");
-		// SpriteRenderComponent->SetLayer(1);
 		SpriteRenderComponent->SetMesh(LineSquareMeshData);
 		SpriteRenderComponent->SetPSO(EPSOType::Line);
 		SpriteRenderComponent->SetColor(Vector3(0.0f, 0.0f, 0.0f), 1.0f);
@@ -51,6 +50,25 @@ public:
 	size_t GetTileWidth() const { return TileWidth; }
 	size_t GetTileHeight() const { return TileHeight; }
 
+	void AddTileMapActor(CActor& InActor)
+	{
+		for (auto Actor : TileMapActors)
+		{
+			if (Actor == &InActor)
+				return;
+		}
+		TileMapActors.push_back(&InActor);
+	}
+	void ClearTileMap()
+	{
+		for (CTile* Tile : Tiles)
+			Tile->Destroy();
+		Tiles.clear();
+
+		for (CActor* Actor : TileMapActors)
+			Actor->Destroy();
+		TileMapActors.clear();
+	}
 public:
 	inline const static size_t TileNone = -1;
 
@@ -61,6 +79,8 @@ private:
 	size_t TileHeight = 0;
 	size_t TileMapRow = 0;
 	size_t TileMapCol = 0;
+
+	std::vector<CActor*> TileMapActors;
 
 };
 

@@ -7,9 +7,7 @@
 
 void CTileMap::LayTiles(size_t InWidth, size_t InHeight, size_t InRow, size_t InCol)
 {
-	for (CTile* Tile : Tiles)
-		Tile->Destroy();
-	Tiles.clear();
+	ClearTileMap();
 
 	TileWidth = InWidth;
 	TileHeight = InHeight;

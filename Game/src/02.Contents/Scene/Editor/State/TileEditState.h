@@ -12,8 +12,8 @@ public:
 	void InitalizeEditState(TTileMapEditContext& InTileMapEditContext) override;
 	void EnterEditState() override
 	{
-		CTileMap* TileMap = GetTileMapEditContext().TileMap;
 		CUI* MainPanel = GetTileMapEditContext().MainPanel;
+		CTileMap* TileMap = GetTileMapEditContext().TileMap;
 
 		MoveUIOwner->Activate(false);
 		MainPanel->AttachChildUI(*MoveUIOwner);
@@ -23,7 +23,9 @@ public:
 				bOnMainPanel = true;
 			});
 	}
-	void OnEditState() override
+	void OnEditState() override;
+
+	void ExitEditState() override
 	{
 		CUI* MainPanel = GetTileMapEditContext().MainPanel;
 		CTileMap* TileMap = GetTileMapEditContext().TileMap;
@@ -31,57 +33,13 @@ public:
 		CTileFocus* TileFocus = GetTileMapEditContext().TileFocus;
 		CTileHandler* TileHandler = GetTileMapEditContext().TileHandler;
 
-		if (bOnMainPanel == false)
-			return;
-
-		const Vector2& MouseWorldPosition = GetMouseWorldPosition();
-		CTile* FocusTile = TileMap->GetTileByPosition(MouseWorldPosition);
-		if (FocusTile == nullptr)
-			return;
-
-		TileFocus->SetFocusTile(FocusTile, FocusTile->GetSpriteRenderComponent()->GetLayer() + 1);
-
-		if (LHold())
-		{
-			if (TileMapper.IsAlreadyMapping(*FocusTile) == false)
-			{
-				CStaticActor* Actor = ActorGenerator.GenerateStaticActor(ImageImporter, FocusTile->GetTransform()->GetFinalPosition2D());
-				if (Actor)
-					TileMapper.Map(*FocusTile, *Actor);
-			}
-			else
-			{
-				if (TileHandler->IsExist(*FocusTile) == false)
-					TileHandler->HandleTile(*FocusTile, FocusTile->GetSpriteRenderComponent()->GetLayer() + 2);
-			}
-		}
-		else if (LReleased())
-		{
-			if (TileHandler->IsEmpty())
-				return;
-			Vector3 CenterPosition = TileHandler->GetCenterPosition();
-			MoveUIOwner->Activate(true);
-			MoveUIOwner->GetTransform()->SetPosition(CenterPosition);
-		}
-		else if (RHold())
-		{
-			TileHandler->ClearHandledTiles();
-			if (TileMapper.IsAlreadyMapping(*FocusTile))
-				TileMapper.UnMap(*FocusTile);
-			MoveUIOwner->Activate(false);
-		}
-
-		bOnMainPanel = false;
-	}
-
-	void ExitEditState() override
-	{
-		CTileMap* TileMap = GetTileMapEditContext().TileMap;
-		CUI* MainPanel = GetTileMapEditContext().MainPanel;
 		MainPanel->SetMouseFocusEvent(nullptr);
 
 		MoveUIOwner->Activate(false);
 		MainPanel->DetachChildUI(*MoveUIOwner);
+
+		TileFocus->SetFocusTile(nullptr, 0);
+		TileHandler->ClearHandledTiles();
 	}
 	void ToImGUI() override
 	{
@@ -119,7 +77,6 @@ private:
 
 private:
 	CImageImporter ImageImporter;
-	CActorGenerator ActorGenerator;
 	bool bOpenWindowDialog = false;
 
 	CUI* MoveUIOwner = nullptr;

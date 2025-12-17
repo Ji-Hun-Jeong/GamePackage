@@ -31,8 +31,26 @@ public:
 		return false;
 	}
 
-private:
+	void ClearColliders()
+	{
+		for (auto Iter = Colliders.begin(); Iter != Colliders.end(); )
+		{
+			CCollider* Collider = *Iter;
+			for (auto Iter = Components.begin(); Iter != Components.end(); ++Iter)
+			{
+				if (Collider == *Iter)
+				{
+					Components.erase(Iter);
+					break;
+				}
+			}
+			Iter = Colliders.erase(Iter);
+			DestroyObject(Collider);
+		}
+		Colliders.clear();
+	}
 
+private:
 
 };
 

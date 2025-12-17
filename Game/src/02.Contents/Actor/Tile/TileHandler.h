@@ -66,6 +66,13 @@ public:
 			return nullptr;
 		return Iter->second;
 	}
+	void ClearMapping()
+	{
+		for (auto& Pair : MappingContexts)
+			Pair.second->Destroy();
+		
+		MappingContexts.clear();
+	}
 
 private:
 	std::map<CTile*, CStaticActor*> MappingContexts;
