@@ -13,6 +13,7 @@ public:
 	void BeginPlay() override;
 	void EnterEditState() override
 	{
+		GetTileMapEditContext().MainPanel->SetMouseFocusEvent([this]()->void {bOnMainPanel = true; });
 	}
 	void OnEditState() override
 	{
@@ -30,6 +31,9 @@ public:
 			bPlaceGround = false;
 		}
 
+		if (bOnMainPanel == false)
+			return;
+
 		const Vector2& MouseWorldPosition = GetMouseWorldPosition();
 		CTile* FocusTile = TileMap->GetTileByPosition(MouseWorldPosition);
 		if (FocusTile == nullptr)
@@ -44,12 +48,18 @@ public:
 		}
 		else if (RHold())
 		{
-			GroundManager->RemoveProximateCollider(MouseWorldPosition);
-			TileHandler->ClearHandledTiles();
+			bool bSuccessRemoveCollider = GroundManager->RemoveProximateCollider(MouseWorldPosition);
+			if (bSuccessRemoveCollider)
+				TileHandler->ClearHandledTiles();
+			else
+				TileHandler->EraseHandledTile(*FocusTile);
 		}
+
+		bOnMainPanel = false;
 	}
 	void ExitEditState() override
 	{
+		GetTileMapEditContext().MainPanel->SetMouseFocusEvent(nullptr);
 	}
 	void ToImGUI() override
 	{
@@ -61,5 +71,6 @@ private:
 	CGroundManager* GroundManager = nullptr;
 	bool bPlaceGround = false;
 
+	bool bOnMainPanel = false;
 };
 

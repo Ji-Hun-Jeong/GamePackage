@@ -17,7 +17,7 @@ public:
 		Collider->SetDebugRender(true);
 	}
 
-	void RemoveProximateCollider(const Vector2& InPosition)
+	bool RemoveProximateCollider(const Vector2& InPosition)
 	{
 		for (auto Iter = Colliders.begin(); Iter != Colliders.end(); ++Iter)
 		{
@@ -25,9 +25,10 @@ public:
 			if (Collider->IsInside(InPosition))
 			{
 				DetachComponent(Collider);
-				break;
+				return true;
 			}
 		}
+		return false;
 	}
 
 private:

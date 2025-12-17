@@ -37,10 +37,22 @@ public:
 		for (auto Tile : Tiles)
 			Tile->GetSpriteRenderComponent()->SetRender(bInRender);
 	}
+	size_t GetTileIndex(const CTile& InTile) const
+	{
+		for (size_t i = 0; i < Tiles.size(); ++i)
+		{
+			if (Tiles[i] == &InTile)
+				return i;
+		}
+		return TileNone;
+	}
 	size_t GetTileMapRow() const { return TileMapRow; }
 	size_t GetTileMapCol() const { return TileMapCol; }
 	size_t GetTileWidth() const { return TileWidth; }
 	size_t GetTileHeight() const { return TileHeight; }
+
+public:
+	inline const static size_t TileNone = -1;
 
 private:
 	std::vector<CTile*> Tiles;

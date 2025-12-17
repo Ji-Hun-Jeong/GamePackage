@@ -20,7 +20,6 @@ public:
 
 		MainPanel->SetMouseFocusEvent([this]()->void
 			{
-				std::cout << "HI\n";
 				bOnMainPanel = true;
 			});
 	}

@@ -157,46 +157,57 @@ public:
 	void HandleTile(CTile& InHandledTile, uint32_t InLayer);
 	void ClearHandledTiles()
 	{
-		HandledTiles.clear();
-		for (auto TileMarker : TileMarkers)
-			TileMarker->Destroy();
-		TileMarkers.clear();
+		for (auto& Pair : TileMarkerMap)
+			Pair.second->Destroy();
+		TileMarkerMap.clear();
+	}
+	void EraseHandledTile(CTile& InTile)
+	{
+		for (auto Iter = TileMarkerMap.begin(); Iter != TileMarkerMap.end(); ++Iter)
+		{
+			CTile* Tile = Iter->first;
+			CStaticActor* TileMarker = Iter->second;
+
+			if (Tile == &InTile)
+			{
+				TileMarker->Destroy();
+				TileMarkerMap.erase(Iter);
+				break;
+			}
+		}
 	}
 
 	bool IsExist(const CTile& InHandledTile) const
 	{
-		for (CTile* HandledTile : HandledTiles)
+		for (auto& Pair : TileMarkerMap)
 		{
-			if (HandledTile == &InHandledTile)
+			if (Pair.first == &InHandledTile)
 				return true;
 		}
 		return false;
 	}
-	uint32_t GetMarkerLayer() const { return HandledTiles[0]->GetSpriteRenderComponent()->GetLayer(); }
-	bool IsEmpty() const { return HandledTiles.empty(); }
+	bool IsEmpty() const { return TileMarkerMap.empty(); }
 	Vector3 GetCenterPosition() const;
 
 	void MoveActorByTile(ETilePositionType TilePositionType, CTileMapper& TileMapper)
 	{
-		for (auto HandledTile : HandledTiles)
+		for (auto& Pair : TileMarkerMap)
 		{
-			CStaticActor* MappingActor = TileMapper.GetMappingActor(*HandledTile);
+			CStaticActor* MappingActor = TileMapper.GetMappingActor(*Pair.first);
 			if (MappingActor == nullptr)
 				return;
 		}
 
-		for (auto HandledTile : HandledTiles)
+		for (auto& Pair : TileMarkerMap)
 		{
-			CStaticActor* MappingActor = TileMapper.GetMappingActor(*HandledTile);
-			CTileMover::MoveActor(*HandledTile, *MappingActor, TilePositionType);
+			CStaticActor* MappingActor = TileMapper.GetMappingActor(*Pair.first);
+			CTileMover::MoveActor(*Pair.first, *MappingActor, TilePositionType);
 		}
 	}
 
 	void SetGroundByHandledTiles(const CTileMap& InTileMap, class CGroundManager& InGroundManager);
 
 private:
-	std::vector<CTile*> HandledTiles;
-
-	std::vector<CStaticActor*> TileMarkers;
+	std::map<CTile*, CStaticActor*> TileMarkerMap;
 
 };
