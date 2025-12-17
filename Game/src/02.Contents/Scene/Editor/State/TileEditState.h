@@ -1,8 +1,7 @@
 #pragma once
 #include "IEditState.h"
-#include "02.Contents/Actor/Tile/TileHandler.h"
 
-class CTileEditState : public IEditState
+class CTileEditState : public CEditState
 {
 	GENERATE_OBJECT(CTileEditState)
 public:
@@ -10,41 +9,39 @@ public:
 	~CTileEditState() = default;
 
 public:
-	void EnterEditState(TEditContext& InEditContext) override
+	void InitalizeEditState(TTileMapEditContext& InTileMapEditContext) override;
+	void EnterEditState() override
 	{
-		CTileMap* TileMap = InEditContext.TileMap;
-		CUI* MainPanel = InEditContext.MainPanel;
-		MainPanel->SetUILayer(0);
-
-		MainPanel->SetMouseFocusEvent([this]()->void
-			{
-				bChooseTile = true;
-			});
+		CTileMap* TileMap = GetTileMapEditContext().TileMap;
+		CUI* MainPanel = GetTileMapEditContext().MainPanel;
 
 		MoveUIOwner->Activate(false);
 		MainPanel->AttachChildUI(*MoveUIOwner);
+
+		MainPanel->SetMouseFocusEvent([this]()->void
+			{
+				std::cout << "HI\n";
+				bOnMainPanel = true;
+			});
 	}
-	void OnEditState(TEditContext& InEditContext) override
+	void OnEditState() override
 	{
-		CTileMap* TileMap = InEditContext.TileMap;
-		CUI* MainPanel = InEditContext.MainPanel;
+		CUI* MainPanel = GetTileMapEditContext().MainPanel;
+		CTileMap* TileMap = GetTileMapEditContext().TileMap;
+		CTileMapper& TileMapper = GetTileMapEditContext().TileMapper;
+		CTileFocus* TileFocus = GetTileMapEditContext().TileFocus;
+		CTileHandler* TileHandler = GetTileMapEditContext().TileHandler;
 
-		if (bLayTiles)
-		{
-			TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
-			bLayTiles = false;
-		}
-
-		if (bChooseTile == false)
+		if (bOnMainPanel == false)
 			return;
 
 		const Vector2& MouseWorldPosition = GetMouseWorldPosition();
-
 		CTile* FocusTile = TileMap->GetTileByPosition(MouseWorldPosition);
 		if (FocusTile == nullptr)
 			return;
 
 		TileFocus->SetFocusTile(FocusTile, FocusTile->GetSpriteRenderComponent()->GetLayer() + 1);
+
 		if (LHold())
 		{
 			if (TileMapper.IsAlreadyMapping(*FocusTile) == false)
@@ -74,25 +71,21 @@ public:
 				TileMapper.UnMap(*FocusTile);
 			MoveUIOwner->Activate(false);
 		}
-		bChooseTile = false;
+
+		bOnMainPanel = false;
 	}
 
-	void ExitEditState(TEditContext& InEditContext) override
+	void ExitEditState() override
 	{
-		InEditContext.MainPanel->SetMouseFocusEvent(nullptr);
+		CTileMap* TileMap = GetTileMapEditContext().TileMap;
+		CUI* MainPanel = GetTileMapEditContext().MainPanel;
+		MainPanel->SetMouseFocusEvent(nullptr);
 
 		MoveUIOwner->Activate(false);
-		InEditContext.MainPanel->DetachChildUI(*MoveUIOwner);
+		MainPanel->DetachChildUI(*MoveUIOwner);
 	}
 	void ToImGUI() override
 	{
-		if (ImGui::Button("LayTiles"))
-			bLayTiles = true;
-		ImGui::InputScalar("TileWidth", ImGuiDataType_U64, &TileWidth);
-		ImGui::InputScalar("TileHeight", ImGuiDataType_U64, &TileHeight);
-		ImGui::InputScalar("TileMapRow", ImGuiDataType_U64, &TileMapRow);
-		ImGui::InputScalar("TileMapCol", ImGuiDataType_U64, &TileMapCol);
-
 		if (ImGui::Button("OpenWindowDialog"))
 			ImageImporter.AddImagePathByWindowManager(CWindowManager::GetInst());
 
@@ -130,18 +123,9 @@ private:
 	CActorGenerator ActorGenerator;
 	bool bOpenWindowDialog = false;
 
-	CTileMapper TileMapper;
-	CTileFocus* TileFocus = nullptr;
-	CTileHandler* TileHandler = nullptr;
-
-	size_t TileWidth = 90;
-	size_t TileHeight = 60;
-	size_t TileMapRow = 30;
-	size_t TileMapCol = 30;
-	bool bLayTiles = false;
-
 	CUI* MoveUIOwner = nullptr;
 
-	bool bChooseTile = false;
+	bool bOnMainPanel = false;
+
 };
 

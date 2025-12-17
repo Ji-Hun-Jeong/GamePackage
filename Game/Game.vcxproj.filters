@@ -231,6 +231,12 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UISceneProxy.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\02.Contents\Scene\Editor\State\ColliderEditState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Actor\Base\ImGUIInteracter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -447,6 +453,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\UI\UISceneProxy.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Scene\Editor\State\ColliderEditState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Actor\Base\ImGUIInteracter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -64,7 +64,6 @@ bool CGame::Process()
 
 	World.RenderWorld(SpriteRenderer);
 
-	ImGuiManager.DeliverMouseInteraction(MouseInteractionManager, SpriteRenderer);
 	ImGuiManager.EndFrame();
 	ImGuiManager.Render();
 

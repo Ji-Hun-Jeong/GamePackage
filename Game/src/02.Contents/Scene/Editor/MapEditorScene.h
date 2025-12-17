@@ -1,10 +1,10 @@
 #pragma once
 #include "01.Base/Actor/Scene.h"
-#include "02.Contents/Actor/Tile/TileSnapUI.h"
-#include "02.Contents/Actor/Collision/GroundManager.h"
+#include "02.Contents/Actor/Base/ImGUIInteracter.h"
 
 #include "State/LadderEditState.h"
 #include "State/TileEditState.h"
+#include "State/ColliderEditState.h"
 
 enum class EEditMode
 {
@@ -27,27 +27,26 @@ public:
 	void Update(float InDeltaTime) override;
 	void CaptureSnapShot() override;
 
-	void FreeMode();
-	void TileMode();
-	void LadderMode();
-	void ColliderMode();
-
 	void ChangeMode(EEditMode InEditMode);
 
 private:
 	// 원래는 모드를 두는게 좋을것같은데 그냥 일단 씬에 때려박자 나중에 ㄱㄱ
-	EEditMode EditMode = EEditMode::Ladder;
-	IEditState* CurrentEditState = nullptr;
+	EEditMode EditMode = EEditMode::Tile;
+	CEditState* CurrentEditState = nullptr;
 
-	TEditContext EditContext;
-
-	CTileSnapUI* TileSnapUI = nullptr;
+	TTileMapEditContext EditContext;
 
 	CLadderEditState* LadderEditState = nullptr;
 	CTileEditState* TileEditState = nullptr;
+	CColliderEditState* ColliderEditState = nullptr;
 
-	CGroundManager* GroundManager = nullptr;
-	bool bPlaceGround = false;
+	size_t TileWidth = 90;
+	size_t TileHeight = 60;
+	size_t TileMapRow = 30;
+	size_t TileMapCol = 30;
+	bool bLayTiles = false;
+
+	CImGUIInteracter* ImGUIInteracter = nullptr;
 
 };
 

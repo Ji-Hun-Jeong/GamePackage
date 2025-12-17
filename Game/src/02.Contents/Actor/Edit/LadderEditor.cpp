@@ -86,6 +86,6 @@ CLadderForm* CLadderEditor::CreateLadder(const Vector3& InPosition)
 	Vector2 FootScale = Foot->GetSpriteRenderComponent()->GetImageScale();
 	Ladder->GetTransform()->SetScale(Vector3(BodyScale.x, HeadScale.y + BodyScale.y + FootScale.y, 1.0f));
 
-	ManagingLadders.push_back(Ladder);
+	Ladders.push_back(Ladder);
 	return Ladder;
 }

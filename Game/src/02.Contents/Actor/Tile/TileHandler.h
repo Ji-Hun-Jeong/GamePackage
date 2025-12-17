@@ -192,6 +192,8 @@ public:
 		}
 	}
 
+	void SetGroundByHandledTiles(const CTileMap& InTileMap, class CGroundManager& InGroundManager);
+
 private:
 	std::vector<CTile*> HandledTiles;
 

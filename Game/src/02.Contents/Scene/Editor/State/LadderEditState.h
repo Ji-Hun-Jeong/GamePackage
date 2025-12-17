@@ -2,7 +2,7 @@
 #include "IEditState.h"
 #include "02.Contents/Actor/Edit/LadderEditor.h"
 
-class CLadderEditState : public IEditState
+class CLadderEditState : public CEditState
 {
 	GENERATE_OBJECT(CLadderEditState)
 public:
@@ -10,16 +10,16 @@ public:
 	~CLadderEditState() = default;
 
 public:
-	void EnterEditState(TEditContext& InEditContext) override
+	void EnterEditState() override
 	{
-		InEditContext.MainPanel->SetMouseFocusEvent([this, &InEditContext]()->void { bBasicState = true; });
-		InEditContext.MainPanel->AttachChildUI(*StretchUpUI);
-		InEditContext.MainPanel->AttachChildUI(*StretchDownUI);
+		GetTileMapEditContext().MainPanel->SetMouseFocusEvent([this]()->void { bBasicState = true; });
+		GetTileMapEditContext().MainPanel->AttachChildUI(*StretchUpUI);
+		GetTileMapEditContext().MainPanel->AttachChildUI(*StretchDownUI);
 		StretchUpUI->Activate(false);
 		StretchDownUI->Activate(false);
 		LadderMarker->Activate(false);
 	}
-	void OnEditState(TEditContext& InEditContext) override
+	void OnEditState() override
 	{
 		if (CurrentFocusLadder)
 		{
@@ -73,22 +73,31 @@ public:
 
 			bFocusLadderMove = false;
 		}
-		else if (RHold())
+		else if (RClicked())
 		{
-			CurrentFocusLadder->Activate(false);
-			CurrentFocusLadder = nullptr;
-			StretchUpUI->Activate(false);
-			StretchDownUI->Activate(false);
+			const Vector2& MouseWorld2DPosition = GetMouseWorldPosition();
+
+			if (CLadderForm* ProximateLadder = LadderEditor->GetProximateLadder(MouseWorld2DPosition))
+			{
+				LadderEditor->DestroyLadder(*ProximateLadder);
+				if (ProximateLadder == CurrentFocusLadder)
+				{
+					CurrentFocusLadder = nullptr;
+					StretchUpUI->Activate(false);
+					StretchDownUI->Activate(false);
+					LadderMarker->Activate(false);
+				}
+			}
 		}
 
 		bBasicState = false;
 
 	}
-	void ExitEditState(TEditContext& InEditContext) override
+	void ExitEditState() override
 	{
-		InEditContext.MainPanel->SetMouseFocusEvent(nullptr);
-		InEditContext.MainPanel->DetachChildUI(*StretchUpUI);
-		InEditContext.MainPanel->DetachChildUI(*StretchDownUI);
+		GetTileMapEditContext().MainPanel->SetMouseFocusEvent(nullptr);
+		GetTileMapEditContext().MainPanel->DetachChildUI(*StretchUpUI);
+		GetTileMapEditContext().MainPanel->DetachChildUI(*StretchDownUI);
 		StretchUpUI->Activate(false);
 		StretchDownUI->Activate(false);
 		LadderMarker->Activate(false);

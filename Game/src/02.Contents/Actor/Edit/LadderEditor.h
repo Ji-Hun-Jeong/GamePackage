@@ -63,12 +63,24 @@ public:
 	CLadderForm* CreateLadder(const Vector3& InPosition);
 	CLadderForm* GetProximateLadder(const Vector2& InPosition)
 	{
-		for (auto Ladder : ManagingLadders)
+		for (auto Ladder : Ladders)
 		{
 			if (CTransformUtils::IsPositionInsideActor(InPosition, *Ladder))
 				return Ladder;
 		}
 		return nullptr;
+	}
+	void DestroyLadder(CLadderForm& InLadder)
+	{
+		for (auto Iter = Ladders.begin(); Iter != Ladders.end(); ++Iter)
+		{
+			if (*Iter == &InLadder)
+			{
+				(*Iter)->Destroy();
+				Ladders.erase(Iter);
+				break;
+			}
+		}
 	}
 
 private:
@@ -107,6 +119,6 @@ private:
 	std::vector<std::wstring> BodyImagePaths;
 	std::wstring FootImagePath;
 
-	std::vector<CLadderForm*> ManagingLadders;
+	std::vector<CLadderForm*> Ladders;
 
 };

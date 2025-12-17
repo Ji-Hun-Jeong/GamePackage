@@ -27,7 +27,7 @@ private:
 			CUI* FinalNewFocusUI = nullptr;
 			if (FocusUICandidates.empty() == false)
 			{
-				std::stable_sort(FocusUICandidates.begin(), FocusUICandidates.end(), [](CUI* InA, CUI* InB)->bool {return InA->GetUILayer() < InB->GetUILayer(); });
+				std::stable_sort(FocusUICandidates.begin(), FocusUICandidates.end(), [](CUI* InA, CUI* InB)->bool {return InA->GetFinalUILayer() < InB->GetFinalUILayer(); });
 				FinalNewFocusUI = FocusUICandidates.back();
 			}
 
@@ -62,7 +62,7 @@ public:
 
 		CFocusUICandidate FocusUICandidates;
 
-		for (auto& UI : CurrentFrameDetectUIs)
+		for (auto& UI : FinalDetectUI)
 		{
 			CFocusUICandidate Candidates = TryFindFocusInteracters(*UI);
 			if (Candidates.IsEmpty())
@@ -91,7 +91,7 @@ private:
 	{
 		for (auto ChildUI : InOwnerUI.ChildUIs)
 		{
-			ChildUI->SetUILayer(InOwnerUI.UILayer + 1);
+			ChildUI->SetFinalUILayer(InOwnerUI.UILayer + ChildUI->UILayer + 1);
 			GetFinalLayer(*ChildUI);
 		}
 	}

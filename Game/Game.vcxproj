@@ -186,6 +186,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\Actor\Base\ImGUIInteracter.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\Editor\State\ColliderEditState.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\IEditState.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\LadderEditState.cpp" />
     <ClCompile Include="src\03.Utils\CTransformUtils.cpp" />
@@ -265,6 +267,8 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UISceneProxy.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\Actor\Base\ImGUIInteracter.h" />
+    <ClInclude Include="src\02.Contents\Scene\Editor\State\ColliderEditState.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\IEditState.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\LadderEditState.h" />
     <ClInclude Include="src\03.Utils\CTransformUtils.h" />

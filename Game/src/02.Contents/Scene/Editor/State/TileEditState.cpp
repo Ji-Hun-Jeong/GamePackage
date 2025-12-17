@@ -5,9 +5,14 @@
 
 CTileEditState::CTileEditState()
 {
-	TileFocus = GetWorld()->SpawnActor<CTileFocus>(this);
-	TileFocus->Activate(false);
-	TileHandler = GetWorld()->SpawnActor<CTileHandler>(this);
+	
+}
+
+void CTileEditState::InitalizeEditState(TTileMapEditContext& InTileMapEditContext)
+{
+	CEditState::InitalizeEditState(InTileMapEditContext);
+
+	GetTileMapEditContext().TileFocus->Activate(false);
 
 	MoveUIOwner = GetWorld()->SpawnActor<CUI>(this);
 	CUI* LeftMoveUI = GetWorld()->SpawnActor<CUI>(MoveUIOwner);
@@ -24,7 +29,7 @@ CTileEditState::CTileEditState()
 	LeftMoveUI->SetMouseFocusEvent([this]()->void
 		{
 			if (LClicked())
-				TileHandler->MoveActorByTile(ETilePositionType::Left, TileMapper);
+				GetTileMapEditContext().TileHandler->MoveActorByTile(ETilePositionType::Left, GetTileMapEditContext().TileMapper);
 		});
 	InitalizeMoveUI(LeftMoveUI);
 
@@ -32,7 +37,7 @@ CTileEditState::CTileEditState()
 	RightMoveUI->SetMouseFocusEvent([this]()->void
 		{
 			if (LClicked())
-				TileHandler->MoveActorByTile(ETilePositionType::Right, TileMapper);
+				GetTileMapEditContext().TileHandler->MoveActorByTile(ETilePositionType::Right, GetTileMapEditContext().TileMapper);
 		});
 	InitalizeMoveUI(RightMoveUI);
 
@@ -40,7 +45,7 @@ CTileEditState::CTileEditState()
 	TopMoveUI->SetMouseFocusEvent([this]()->void
 		{
 			if (LClicked())
-				TileHandler->MoveActorByTile(ETilePositionType::Top, TileMapper);
+				GetTileMapEditContext().TileHandler->MoveActorByTile(ETilePositionType::Top, GetTileMapEditContext().TileMapper);
 		});
 	InitalizeMoveUI(TopMoveUI);
 
@@ -48,7 +53,7 @@ CTileEditState::CTileEditState()
 	BottomMoveUI->SetMouseFocusEvent([this]()->void
 		{
 			if (LClicked())
-				TileHandler->MoveActorByTile(ETilePositionType::Bottom, TileMapper);
+				GetTileMapEditContext().TileHandler->MoveActorByTile(ETilePositionType::Bottom, GetTileMapEditContext().TileMapper);
 		});
 	InitalizeMoveUI(BottomMoveUI);
 
@@ -56,7 +61,7 @@ CTileEditState::CTileEditState()
 	CenterMoveUI->SetMouseFocusEvent([this]()->void
 		{
 			if (LClicked())
-				TileHandler->MoveActorByTile(ETilePositionType::Center, TileMapper);
+				GetTileMapEditContext().TileHandler->MoveActorByTile(ETilePositionType::Center, GetTileMapEditContext().TileMapper);
 		});
 	InitalizeMoveUI(CenterMoveUI);
 
@@ -64,7 +69,7 @@ CTileEditState::CTileEditState()
 	LeftTopMoveUI->SetMouseFocusEvent([this]()->void
 		{
 			if (LClicked())
-				TileHandler->MoveActorByTile(ETilePositionType::LeftTop, TileMapper);
+				GetTileMapEditContext().TileHandler->MoveActorByTile(ETilePositionType::LeftTop, GetTileMapEditContext().TileMapper);
 		});
 	InitalizeMoveUI(LeftTopMoveUI);
 
@@ -72,7 +77,7 @@ CTileEditState::CTileEditState()
 	LeftBottomMoveUI->SetMouseFocusEvent([this]()->void
 		{
 			if (LClicked())
-				TileHandler->MoveActorByTile(ETilePositionType::LeftBottom, TileMapper);
+				GetTileMapEditContext().TileHandler->MoveActorByTile(ETilePositionType::LeftBottom, GetTileMapEditContext().TileMapper);
 		});
 	InitalizeMoveUI(LeftBottomMoveUI);
 
@@ -80,7 +85,7 @@ CTileEditState::CTileEditState()
 	RightTopMoveUI->SetMouseFocusEvent([this]()->void
 		{
 			if (LClicked())
-				TileHandler->MoveActorByTile(ETilePositionType::RightTop, TileMapper);
+				GetTileMapEditContext().TileHandler->MoveActorByTile(ETilePositionType::RightTop, GetTileMapEditContext().TileMapper);
 		});
 	InitalizeMoveUI(RightTopMoveUI);
 
@@ -88,7 +93,7 @@ CTileEditState::CTileEditState()
 	RightBottomMoveUI->SetMouseFocusEvent([this]()->void
 		{
 			if (LClicked())
-				TileHandler->MoveActorByTile(ETilePositionType::RightBottom, TileMapper);
+				GetTileMapEditContext().TileHandler->MoveActorByTile(ETilePositionType::RightBottom, GetTileMapEditContext().TileMapper);
 		});
 	InitalizeMoveUI(RightBottomMoveUI);
 

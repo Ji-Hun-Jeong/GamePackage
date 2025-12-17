@@ -80,10 +80,17 @@ public:
 	CUI* GetOwnerUI() const { return OwnerUI; }
 	void SetUILayer(uint32_t InUILayer)
 	{
-		UILayer = InUILayer; 
-		SpriteRenderComponent->SetLayer(UILayer);
+		UILayer = InUILayer;
 	}
-	uint32_t GetUILayer() const { return UILayer; }
+	uint32_t GetFinalUILayer() const { return FinalUILayer; }
+
+private:
+	void SetFinalUILayer(uint32_t InFinalUILayer)
+	{
+		FinalUILayer = InFinalUILayer;
+		if (SpriteRenderComponent)
+			SpriteRenderComponent->SetLayer(UILayer);
+	}
 
 private:
 	std::function<void()> MouseEnterEvent = nullptr;
@@ -98,6 +105,7 @@ private:
 	CUI* OwnerUI = nullptr;
 
 	uint32_t UILayer = 0;
+	uint32_t FinalUILayer = 0;
 
 };
 
