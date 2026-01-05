@@ -33,6 +33,8 @@ private:
 	CDynamicActor* Arm;
 	CDynamicActor* Hand;
 
+	CSpriteRenderComponent* DebugRenderComponent = nullptr;
+
 private:
 	CGroundDetector* GroundDetector = nullptr;
 };

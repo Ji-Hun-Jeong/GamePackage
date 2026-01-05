@@ -9,7 +9,14 @@ CPlayer::CPlayer()
 	, Hand(nullptr)
 {
 	Transform->SetSpeed(2.0f);
-	Transform->SetScale(Vector3(50.0f, 50.0f, 1.0f));
+	Transform->SetScale(Vector3(37.0f, 37.0f, 1.0f));
+
+	DebugRenderComponent = AddComponent<CSpriteRenderComponent>();
+	RenderComponent = DebugRenderComponent;
+	const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("LineSquareMesh");
+	DebugRenderComponent->SetMesh(MeshData);
+	DebugRenderComponent->SetPSO(EPSOType::Line);
+	DebugRenderComponent->SetColor(Vector3(0.0f, 1.0f, 0.0f), 1.0f);
 }
 CPlayer::~CPlayer()
 {

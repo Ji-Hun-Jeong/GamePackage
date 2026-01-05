@@ -16,6 +16,11 @@
 #include "Common/Define.h"
 #include "Renderer/pch.h"
 
+std::ostream& operator << (std::ostream& InOS, const Vector3& InVec3)
+{
+	InOS << "x: " << InVec3.x << ", y: " << InVec3.y << ", z: " << InVec3.z << '\n';
+	return InOS;
+}
 /*
 생포인터: 내가 이녀석의 생명주기를 관리할거지만 너가 이걸 삭제하지 않는다면 내가 너한테 참조를 줄 순 있어.
 
