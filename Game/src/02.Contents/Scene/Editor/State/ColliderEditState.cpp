@@ -47,7 +47,7 @@ void CColliderEditState::DrawMode()
 	{
 		DrawCollider->GetSpriteRenderComponent()->SetRender(false);
 
-		const Vector3& Position = DrawCollider->GetTransform()->GetFinalPosition();
+		const Vector3& Position = DrawCollider->GetTransform()->GetPosition();
 		const Vector3& Scale = DrawCollider->GetTransform()->GetScale();
 		GroundManager->AddGround(Position, Scale);
 	}

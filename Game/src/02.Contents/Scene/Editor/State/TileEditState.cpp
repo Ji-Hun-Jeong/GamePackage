@@ -138,7 +138,7 @@ void CTileEditState::OnEditState()
 		else
 		{
 			CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
-			Actor->GetTransform()->SetPosition(FocusTile->GetTransform()->GetFinalPosition());
+			Actor->GetTransform()->SetPosition(FocusTile->GetTransform()->GetPosition());
 			Actor->GetSpriteRenderComponent()->SetDiffuseImage(ImageImporter.GetCurrentImagePath());
 			TileMapper.Map(*FocusTile, *Actor);
 		}

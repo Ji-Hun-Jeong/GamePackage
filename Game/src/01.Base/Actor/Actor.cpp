@@ -15,7 +15,7 @@ void CActor::RenderActor(CSpriteRenderer& InRenderer)
 {
 	if (RenderComponent)
 	{
-		const Vector3& Position = Transform->GetFinalPosition();
+		const Vector3& Position = Transform->GetWorldPosition();
 		const Vector3& Rotation = Transform->GetRotation();
 		const Vector3& Scale = Transform->GetScale();
 

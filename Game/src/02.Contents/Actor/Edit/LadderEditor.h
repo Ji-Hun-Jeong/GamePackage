@@ -98,7 +98,7 @@ private:
 	}
 	void ReBuild(CLadderForm& InLadder, CStaticActor& InNewBody)
 	{
-		const Vector3& OriginPosition = InLadder.GetTransform()->GetFinalPosition();
+		const Vector3& OriginPosition = InLadder.GetTransform()->GetPosition();
 		const Vector3& OriginScale = InLadder.GetTransform()->GetScale();
 		Vector2 NewBodyScale = InNewBody.GetSpriteRenderComponent()->GetImageScale();
 

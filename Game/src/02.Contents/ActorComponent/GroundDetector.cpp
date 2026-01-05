@@ -22,6 +22,6 @@ void CGroundDetector::AdjustPlayerPosition(CPlayer& InPlayer)
 
 	const Vector2 UpDistance = Vector2(SurfacePosition.x, SurfacePosition.y) - DetectCenterPosition;
 
-	const Vector3& PlayerPosition = InPlayer.GetTransform()->GetFinalPosition();
+	const Vector3& PlayerPosition = InPlayer.GetTransform()->GetPosition();
 	InPlayer.GetTransform()->SetPosition(PlayerPosition + Vector3(UpDistance.x, UpDistance.y, 0.0f));
 }

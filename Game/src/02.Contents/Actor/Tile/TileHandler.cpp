@@ -11,7 +11,7 @@ void CTileHandler::HandleTile(CTile& InHandledTile, uint32_t InLayer)
 		return;
 
 	CStaticActor* TileMarker = GetWorld()->SpawnActor<CStaticActor>(this);
-	TileMarker->GetTransform()->SetPosition(InHandledTile.GetTransform()->GetFinalPosition());
+	TileMarker->GetTransform()->SetPosition(InHandledTile.GetTransform()->GetPosition());
 	TileMarker->GetTransform()->SetScale(InHandledTile.GetTransform()->GetScale());
 	TileMarker->SetLineActor();
 	TileMarker->GetSpriteRenderComponent()->SetColor(Vector3(1.0f, 0.0f, 0.0f), 1.0f);
@@ -24,7 +24,7 @@ Vector3 CTileHandler::GetCenterPosition() const
 {
 	Vector3 CenterPosition;
 	for (auto& Pair : TileMarkerMap)
-		CenterPosition += Pair.first->GetTransform()->GetFinalPosition();
+		CenterPosition += Pair.first->GetTransform()->GetPosition();
 	return CenterPosition / float(TileMarkerMap.size());
 }
 
@@ -185,7 +185,7 @@ void CTileHandler::SetGroundByHandledTiles(const CTileMap& InTileMap, CGroundMan
         // 낱개 생성
         for (auto& Pair : TileMarkerMap)
         {
-            const Vector3& TileFinalPosition = Pair.first->GetTransform()->GetFinalPosition();
+            const Vector3& TileFinalPosition = Pair.first->GetTransform()->GetPosition();
             const Vector3& TileScale = Pair.first->GetTransform()->GetScale(); // 보통 타일 크기
 
             InGroundManager.AddGround(TileFinalPosition, TileScale);

@@ -18,10 +18,6 @@ public:
 	}
 
 public:
-	void FinalUpdate() override
-	{
-		CActor::FinalUpdate();
-	}
 	void CaptureSnapShot() override
 	{
 		CActor::CaptureSnapShot();

@@ -71,13 +71,6 @@ public:
 		{
 			if (WorldActor->IsActivate() == false)
 				continue;
-			WorldActor->FinalUpdate();
-		}
-
-		for (auto& WorldActor : WorldActors)
-		{
-			if (WorldActor->IsActivate() == false)
-				continue;
 			WorldActor->CaptureSnapShot();
 		}
 	}

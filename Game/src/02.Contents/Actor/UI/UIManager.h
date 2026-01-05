@@ -132,7 +132,7 @@ private:
 			UISize = InUI.GetTransform()->GetScale2D();
 
 		// 사각형의 중심 위치와 크기
-		const Vector3& UIPosition = InUI.GetTransform()->GetFinalPosition();
+		const Vector3& UIPosition = InUI.GetTransform()->GetPosition();
 		float centerX = UIPosition.x;
 		float centerY = UIPosition.y;
 		float halfWidth = UISize.x * 0.5f;

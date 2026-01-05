@@ -40,7 +40,7 @@ public:
 	}
 	static bool IsPositionInsideActor(const Vector2& InPosition, CActor& InActor)
 	{
-		Vector2 TileCenter = Vector2(InActor.GetTransform()->GetFinalPosition().x, InActor.GetTransform()->GetFinalPosition().y);
+		Vector2 TileCenter = Vector2(InActor.GetTransform()->GetPosition().x, InActor.GetTransform()->GetPosition().y);
 		Vector2 TileScale = Vector2(InActor.GetTransform()->GetScale().x, InActor.GetTransform()->GetScale().y);
 
 		float HalfWidth = TileScale.x * 0.5f;
@@ -60,7 +60,7 @@ public:
 	}
 	static bool IsPositionInsideStaticActor(const Vector2& InPosition, CStaticActor& InActor)
 	{
-		Vector2 Center = Vector2(InActor.GetTransform()->GetFinalPosition().x, InActor.GetTransform()->GetFinalPosition().y);
+		Vector2 Center = Vector2(InActor.GetTransform()->GetPosition().x, InActor.GetTransform()->GetPosition().y);
 		Vector2 Scale = InActor.GetSpriteRenderComponent()->GetImageScale();
 
 		float HalfWidth = Scale.x * 0.5f;

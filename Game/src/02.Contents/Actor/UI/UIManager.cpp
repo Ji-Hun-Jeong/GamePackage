@@ -6,13 +6,13 @@
 #include "01.Base/Actor/Camera.h"
 void CUIManager::SetMouseWorldPosition(const CMouseManager& InMouseManager, const CCamera& InCamera)
 {
-	CameraPosition = InCamera.GetTransform()->GetFinalPosition();
-	MouseWorldPosition = InMouseManager.GetMousePosition() + InCamera.GetTransform()->GetFinalPosition2D();
+	CameraPosition = InCamera.GetTransform()->GetPosition();
+	MouseWorldPosition = InMouseManager.GetMousePosition() + InCamera.GetTransform()->GetPosition2D();
 }
 
 bool CUIManager::IsInsideScreen(const CUI& InUI)
 {
-	Vector3 RelativePosition = InUI.GetTransform()->GetFinalPosition() - CameraPosition;
+	Vector3 RelativePosition = InUI.GetTransform()->GetPosition() - CameraPosition;
 
 	float halfW = InUI.GetTransform()->GetScale().x * 0.5f;
 	float halfH = InUI.GetTransform()->GetScale().y * 0.5f;

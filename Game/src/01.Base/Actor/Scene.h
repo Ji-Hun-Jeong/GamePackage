@@ -19,10 +19,6 @@ public:
 		UIManager.SetMouseWorldPosition(CMouseManager::GetInst(), *MainCamera);
 		UIManager.FindFocusUI();
 	}
-	void FinalUpdate() override
-	{
-		CActor::FinalUpdate();
-	}
 	void CaptureSnapShot() override
 	{
 		CActor::CaptureSnapShot();

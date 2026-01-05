@@ -55,10 +55,6 @@ public:
 			break;
 		}
 	}
-	void FinalUpdate() override
-	{
-		CStaticActor::FinalUpdate();
-	}
 	void CaptureSnapShot() override
 	{
 		CStaticActor::CaptureSnapShot();

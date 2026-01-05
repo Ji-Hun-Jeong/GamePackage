@@ -32,7 +32,7 @@ void CActorTranslator::SetFirstDiff(CMouseManager& InMouseManager, CActor& InTra
 {
 	const Vector2& Mouse2dPosition = InMouseManager.GetMousePosition();
 	Vector3 Mouse3dPosition = Vector3(Mouse2dPosition.x, Mouse2dPosition.y, 1.0f);
-	FirstDiff = Mouse3dPosition - InTranslatedActor.GetTransform()->GetFinalPosition();
+	FirstDiff = Mouse3dPosition - InTranslatedActor.GetTransform()->GetPosition();
 }
 
 void CActorTranslator::SetFirstDiff(CMouseManager& InMouseManager, const Vector3& InPosition)

@@ -12,7 +12,7 @@ public:
 	void Update(float InDeltaTime) override
 	{
 		CStaticActor::Update(InDeltaTime);
-		Vector3 Position = Transform->GetFinalPosition();
+		Vector3 Position = Transform->GetPosition();
 
 		/*if (CMouseInteracter::GetCurrentMouseX() != Position.x || CMouseInteracter::GetCurrentMouseY() != Position.y)
 		{

@@ -25,11 +25,6 @@ public:
 		}
 		GroundDetector->AdjustPlayerPosition(*this);
 	}
-	void FinalUpdate() override
-	{
-		CActor::FinalUpdate();
-		
-	}
 
 private:
 	CDynamicActor* Head;

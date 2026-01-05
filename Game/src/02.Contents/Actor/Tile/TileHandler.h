@@ -22,7 +22,7 @@ public:
 		if (InTile)
 		{
 			Activate(true);
-			Transform->SetPosition(InTile->GetTransform()->GetFinalPosition());
+			Transform->SetPosition(InTile->GetTransform()->GetPosition());
 			Transform->SetScale(InTile->GetTransform()->GetScale());
 			SpriteRenderComponent->SetColor(MarkColor, 1.0f);
 			SpriteRenderComponent->SetLayer(InLayer);
@@ -106,7 +106,7 @@ public:
 		const Vector2& ImageScale = InMovedActor.GetSpriteRenderComponent()->GetImageScale();
 		Vector2 OffsetScale = TileScale - ImageScale;
 
-		Vector2 Position = InTile.GetTransform()->GetFinalPosition2D();
+		Vector2 Position = InTile.GetTransform()->GetPosition2D();
 		Vector2 Scale = InTile.GetTransform()->GetScale2D();
 
 		const Vector2 Top = Vector2(Position.x, Position.y + OffsetScale.y / 2.0f);

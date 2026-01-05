@@ -23,7 +23,7 @@ public:
 	{
 		if (CurrentFocusLadder)
 		{
-			LadderMarker->GetTransform()->SetPosition(CurrentFocusLadder->GetTransform()->GetFinalPosition());
+			LadderMarker->GetTransform()->SetPosition(CurrentFocusLadder->GetTransform()->GetPosition());
 			LadderMarker->GetTransform()->SetScale(CurrentFocusLadder->GetTransform()->GetScale());
 
 			Vector3 NewUpPosition = CTransformUtils::GetTopPosition(*CurrentFocusLadder, *StretchUpUI);
@@ -61,7 +61,7 @@ public:
 				return;
 
 			ActorTranslator.TranslateActor(CMouseManager::GetInst(), *CurrentFocusLadder);
-			LadderMarker->GetTransform()->SetPosition(CurrentFocusLadder->GetTransform()->GetFinalPosition());
+			LadderMarker->GetTransform()->SetPosition(CurrentFocusLadder->GetTransform()->GetPosition());
 		}
 		else if (LReleased())
 		{

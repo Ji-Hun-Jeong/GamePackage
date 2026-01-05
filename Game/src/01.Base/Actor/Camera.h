@@ -22,10 +22,6 @@ public:
 			Transform->Move(Vector3(0.0f, 1.0f, 0.0f));
 		if (GetKey(EKeyType::Down, EButtonState::Hold))
 			Transform->Move(Vector3(0.0f, -1.0f, 0.0f));
-	}
-	void FinalUpdate() override
-	{
-		CActor::FinalUpdate();
 
 		uint32_t ScreenWidth = CWindowManager::GetInst().GetScreenWidth();
 		uint32_t ScreenHeight = CWindowManager::GetInst().GetScreenHeight();

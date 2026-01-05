@@ -172,17 +172,9 @@ public:
 	virtual void OnCollisionExit(CCollider& InTargetCollider) {}
 	virtual void Update(float InDeltaTime)
 	{}
-	virtual void FinalUpdate()
-	{
-		Vector3 FinalPosition = Transform->GetPosition();
-		if (Owner)
-			FinalPosition += Owner->Transform->GetFinalPosition();
-
-		Transform->SetFinalPosition(FinalPosition);
-	}
 	virtual void CaptureSnapShot()
 	{
-		const Vector3& FinalPosition = Transform->GetFinalPosition();
+		const Vector3& FinalPosition = Transform->GetWorldPosition();
 
 		for (auto Collider : Colliders)
 			Collider->SetCenterPosition(Vector2(FinalPosition.x, FinalPosition.y));
