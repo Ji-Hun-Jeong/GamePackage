@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Collider.h"
 
+#include "01.Base/Actor/Actor.h"
 #include "../RenderComponents/SpriteRenderComponent.h"
 #include "03.Utils/AssetLoader.h"
 #include "04.Renderer/RenderResourceLoader.h"
@@ -10,6 +11,12 @@ CCollider::CCollider(EColliderType InColliderType)
 	: ColliderType(InColliderType)
 	, bDebugRender(false)
 {
+}
+
+Vector2 CCollider::GetFinalPosition() const
+{
+	CActor* OwnerActor = GetOwnerActor();
+	return OwnerActor->GetTransform()->GetWorldPosition2D() + Offset;
 }
 
 CRectCollider::CRectCollider()

@@ -174,10 +174,6 @@ public:
 	{}
 	virtual void CaptureSnapShot()
 	{
-		const Vector3& FinalPosition = Transform->GetWorldPosition();
-
-		for (auto Collider : Colliders)
-			Collider->SetCenterPosition(Vector2(FinalPosition.x, FinalPosition.y));
 
 	}
 	virtual void RenderActor(class CSpriteRenderer& InRenderer) final;

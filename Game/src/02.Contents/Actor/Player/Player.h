@@ -19,11 +19,12 @@ public:
 
 		Transform->Move(Vector3(0.0f, -0.1f, 0.0f));
 
+		GroundDetector->AdjustPlayerPosition(*this);
+
 		if (LClicked())
 		{
 			Transform->Move(Vector3(0.0f, 50.0f, 0.0f));
 		}
-		GroundDetector->AdjustPlayerPosition(*this);
 	}
 
 private:

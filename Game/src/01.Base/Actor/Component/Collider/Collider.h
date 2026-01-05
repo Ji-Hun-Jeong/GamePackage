@@ -20,14 +20,12 @@ public:
 	void SetDebugRender(bool bInDebugRender) { bDebugRender = bInDebugRender; }
 
 	void SetOffset(const Vector2& InOffset) { Offset = InOffset; }
-	void SetCenterPosition(const Vector2& InCenterPosition) { CenterPosition = InCenterPosition; }
-	Vector2 GetFinalPosition() const { return CenterPosition + Offset; }
+	Vector2 GetFinalPosition() const;
 	EColliderType GetColliderType() const { return ColliderType; }
 
 private:
 	EColliderType ColliderType;
 
-	Vector2 CenterPosition;
 	Vector2 Offset;
 
 protected:
