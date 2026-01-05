@@ -1,7 +1,7 @@
 #pragma once
 #include "01.Base/Actor/Actor.h"
 #include "01.Base/Actor/DynamicActor.h"
-#include "02.Contents/Actor/Base/BackGround.h"
+#include "02.Contents/ActorComponent/GroundDetector.h"
 
 class CPlayer : public CActor
 {
@@ -13,15 +13,22 @@ public:
 
 public:
 	void BeginPlay() override;
-	void CaptureSnapShot() override;
-	void OnCollisionEnter(CCollider& InTargetCollider) override
+	void Update(float InDeltaTime) override
 	{
-		if (IsSame<CBackGround>(*InTargetCollider.GetOwnerActor()) == false)
-			std::cout << "Hi\n";
+		CActor::Update(InDeltaTime);
+
+		Transform->Move(Vector3(0.0f, -0.1f, 0.0f));
+
+		if (LClicked())
+		{
+			Transform->Move(Vector3(0.0f, 50.0f, 0.0f));
+		}
+		GroundDetector->AdjustPlayerPosition(*this);
 	}
-	void OnCollisionExit(CCollider& InTargetCollider) override
+	void FinalUpdate() override
 	{
-		std::cout << "Bye\n";
+		CActor::FinalUpdate();
+		
 	}
 
 private:
@@ -31,13 +38,6 @@ private:
 	CDynamicActor* Hand;
 
 private:
-	/*void InitalizeInputActionValue();*/
-
-	/*std::unique_ptr<class CInputActionValue> LeftMoveActionValue;
-	std::unique_ptr<class CInputActionValue> RightMoveActionValue;
-	std::unique_ptr<class CInputActionValue> UpMoveActionValue;
-	std::unique_ptr<class CInputActionValue> DownMoveActionValue;*/
-
-	CRectCollider* Collider;
+	CGroundDetector* GroundDetector = nullptr;
 };
 

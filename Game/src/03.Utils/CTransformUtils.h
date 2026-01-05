@@ -58,5 +58,25 @@ public:
 		}
 		return false;
 	}
+	static bool IsPositionInsideStaticActor(const Vector2& InPosition, CStaticActor& InActor)
+	{
+		Vector2 Center = Vector2(InActor.GetTransform()->GetFinalPosition().x, InActor.GetTransform()->GetFinalPosition().y);
+		Vector2 Scale = InActor.GetSpriteRenderComponent()->GetImageScale();
+
+		float HalfWidth = Scale.x * 0.5f;
+		float HalfHeight = Scale.y * 0.5f;
+
+		float Left = Center.x - HalfWidth;
+		float Right = Center.x + HalfWidth;
+		float Top = Center.y - HalfHeight;
+		float Bottom = Center.y + HalfHeight;
+
+		if (InPosition.x >= Left && InPosition.x <= Right &&
+			InPosition.y >= Top && InPosition.y <= Bottom)
+		{
+			return true;
+		}
+		return false;
+	}
 };
 

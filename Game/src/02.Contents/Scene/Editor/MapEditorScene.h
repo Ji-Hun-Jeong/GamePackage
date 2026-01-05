@@ -2,6 +2,7 @@
 #include "01.Base/Actor/Scene.h"
 #include "02.Contents/Actor/Base/ImGUIInteracter.h"
 
+#include "State/FreeEditState.h"
 #include "State/LadderEditState.h"
 #include "State/TileEditState.h"
 #include "State/ColliderEditState.h"
@@ -36,6 +37,7 @@ private:
 
 	TTileMapEditContext EditContext;
 
+	CFreeEditState* FreeEditState = nullptr;
 	CLadderEditState* LadderEditState = nullptr;
 	CTileEditState* TileEditState = nullptr;
 	CColliderEditState* ColliderEditState = nullptr;

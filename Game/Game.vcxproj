@@ -186,14 +186,16 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\ActorComponent\GroundDetector.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\ImGUIInteracter.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\ColliderEditState.cpp" />
+    <ClCompile Include="src\02.Contents\Scene\Editor\State\FreeEditState.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\IEditState.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\LadderEditState.cpp" />
     <ClCompile Include="src\03.Utils\CTransformUtils.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Edit\EditHelper.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Edit\LadderEditor.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\Collision\GroundManager.cpp" />
+    <ClCompile Include="src\02.Contents\Actor\Manager\GroundManager.cpp" />
     <ClCompile Include="src\00.App\Screen.cpp" />
     <ClCompile Include="src\04.Renderer\RenderState.cpp" />
     <ClCompile Include="src\04.Renderer\ImGuiManager.cpp" />
@@ -267,14 +269,16 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UISceneProxy.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\ActorComponent\GroundDetector.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\ImGUIInteracter.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\ColliderEditState.h" />
+    <ClInclude Include="src\02.Contents\Scene\Editor\State\FreeEditState.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\IEditState.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\LadderEditState.h" />
     <ClInclude Include="src\03.Utils\CTransformUtils.h" />
     <ClInclude Include="src\02.Contents\Actor\Edit\EditHelper.h" />
     <ClInclude Include="src\02.Contents\Actor\Edit\LadderEditor.h" />
-    <ClInclude Include="src\02.Contents\Actor\Collision\GroundManager.h" />
+    <ClInclude Include="src\02.Contents\Actor\Manager\GroundManager.h" />
     <ClInclude Include="src\00.App\Screen.h" />
     <ClInclude Include="src\04.Renderer\RenderState.h" />
     <ClInclude Include="src\04.Renderer\ImGuiManager.h" />
@@ -341,6 +345,7 @@
     <ClInclude Include="src\02.Contents\Actor\UI\UIManager.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UISceneProxy.h" />
+    <ClInclude Include="src\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

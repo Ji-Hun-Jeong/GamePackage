@@ -112,6 +112,8 @@ void CTileEditState::OnEditState()
 	if (bOnMainPanel == false)
 		return;
 
+	bOnMainPanel = false;
+
 	const Vector2& MouseWorldPosition = GetMouseWorldPosition();
 	CTile* FocusTile = TileMap->GetTileByPosition(MouseWorldPosition);
 	if (FocusTile == nullptr)
@@ -156,6 +158,4 @@ void CTileEditState::OnEditState()
 			TileMapper.UnMap(*FocusTile);
 		MoveUIOwner->Activate(false);
 	}
-
-	bOnMainPanel = false;
 }

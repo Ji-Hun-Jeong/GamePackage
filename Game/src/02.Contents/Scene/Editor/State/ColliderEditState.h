@@ -1,7 +1,19 @@
 #pragma once
 #include "IEditState.h"
-#include "02.Contents/Actor/Collision/GroundManager.h"
+#include "02.Contents/Actor/Manager/GroundManager.h"
 
+class CColliderTemporaryMarker : public CStaticActor
+{
+	GENERATE_OBJECT(CColliderTemporaryMarker)
+public:
+	CColliderTemporaryMarker() = default;
+	~CColliderTemporaryMarker() = default;
+
+public:
+
+private:
+
+};
 class CColliderEditState : public CEditState
 {
 	GENERATE_OBJECT(CColliderEditState)
@@ -17,44 +29,10 @@ public:
 	}
 	void OnEditState() override
 	{
-		CUI* MainPanel = GetTileMapEditContext().MainPanel;
-		CTileMap* TileMap = GetTileMapEditContext().TileMap;
-		CTileMapper& TileMapper = GetTileMapEditContext().TileMapper;
-		CTileFocus* TileFocus = GetTileMapEditContext().TileFocus;
-		CTileHandler* TileHandler = GetTileMapEditContext().TileHandler;
-
-		if (bPlaceGround)
-		{
-			if (TileHandler->IsEmpty() == false)
-				TileHandler->SetGroundByHandledTiles(*TileMap, *GroundManager);
-			bPlaceGround = false;
-		}
-
-		if (bOnMainPanel == false)
-			return;
-
-		const Vector2& MouseWorldPosition = GetMouseWorldPosition();
-		CTile* FocusTile = TileMap->GetTileByPosition(MouseWorldPosition);
-		if (FocusTile == nullptr)
-			return;
-
-		TileFocus->SetFocusTile(FocusTile, FocusTile->GetSpriteRenderComponent()->GetLayer() + 1);
-
-		if (LHold())
-		{
-			if (TileHandler->IsExist(*FocusTile) == false)
-				TileHandler->HandleTile(*FocusTile, FocusTile->GetSpriteRenderComponent()->GetLayer() + 2);
-		}
-		else if (RHold())
-		{
-			bool bSuccessRemoveCollider = GroundManager->RemoveProximateCollider(MouseWorldPosition);
-			if (bSuccessRemoveCollider)
-				TileHandler->ClearHandledTiles();
-			else
-				TileHandler->EraseHandledTile(*FocusTile);
-		}
-
-		bOnMainPanel = false;
+		if (bDrawMode)
+			DrawMode();
+		else
+			PlaceMode();
 	}
 	void ExitEditState() override
 	{
@@ -71,18 +49,40 @@ public:
 	}
 	void ClearEditState() override
 	{
-		GroundManager->ClearColliders();
+		GroundManager->ClearGrounds();
 	}
 	void ToImGUI() override
 	{
+		if (ImGui::Button("DrawMode"))
+		{
+			CTileFocus* TileFocus = GetTileMapEditContext().TileFocus;
+			CTileHandler* TileHandler = GetTileMapEditContext().TileHandler;
+
+			TileFocus->SetFocusTile(nullptr, 0);
+			TileHandler->ClearHandledTiles();
+			bDrawMode = true;
+		}
+		if (ImGui::Button("PlaceMode"))
+			bDrawMode = false;
+
 		if (ImGui::Button("PlaceGround"))
 			bPlaceGround = true;
 	}
+
+private:
+	void DrawMode();
+	void PlaceMode();
 
 private:
 	CGroundManager* GroundManager = nullptr;
 	bool bPlaceGround = false;
 
 	bool bOnMainPanel = false;
+
+	bool bDrawMode = false;
+
+	CStaticActor* DrawCollider = nullptr;
+	Vector3 LeftTopPosition;
+
 };
 

@@ -23,6 +23,8 @@ void CMapEditorScene::BeginPlay()
 	ImGUIInteracter = GetWorld()->SpawnActor<CImGUIInteracter>(GetMainCamera());
 	EditContext.MainPanel->AttachChildUI(*ImGUIInteracter);
 
+	FreeEditState = GetWorld()->SpawnActor<CFreeEditState>(this);
+	FreeEditState->InitalizeEditState(EditContext);
 	LadderEditState = GetWorld()->SpawnActor<CLadderEditState>(this);
 	LadderEditState->InitalizeEditState(EditContext);
 	TileEditState = GetWorld()->SpawnActor<CTileEditState>(this);
@@ -47,6 +49,7 @@ void CMapEditorScene::Update(float InDeltaTime)
 		TileMap->LayTiles(TileWidth, TileHeight, TileMapRow, TileMapCol);
 		TileMapper.ClearMapping();
 
+		FreeEditState->ClearEditState();
 		LadderEditState->ClearEditState();
 		TileEditState->ClearEditState();
 		ColliderEditState->ClearEditState();
@@ -70,6 +73,7 @@ void CMapEditorScene::ChangeMode(EEditMode InEditMode)
 	switch (InEditMode)
 	{
 	case EEditMode::Free:
+		CurrentEditState = FreeEditState;
 		break;
 	case EEditMode::Tile:
 		CurrentEditState = TileEditState;

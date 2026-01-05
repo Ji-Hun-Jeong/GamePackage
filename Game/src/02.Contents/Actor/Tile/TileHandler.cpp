@@ -2,7 +2,7 @@
 #include "TileHandler.h"
 #include "GameCore.h"
 
-#include "02.Contents/Actor/Collision/GroundManager.h"
+#include "02.Contents/Actor/Manager/GroundManager.h"
 
 void CTileHandler::HandleTile(CTile& InHandledTile, uint32_t InLayer)
 {
@@ -175,7 +175,7 @@ void CTileHandler::SetGroundByHandledTiles(const CTileMap& InTileMap, CGroundMan
         // 간단하게는 기존 GetCenterPosition() 활용 (이미 무게중심일 테니)
         Vector3 CenterPosition = GetCenterPosition();
 
-        InGroundManager.AddGroundCollider(
+        InGroundManager.AddGround(
             Vector3(CenterPosition.x, CenterPosition.y, 1.0f),
             Vector3(TotalWidth, TotalHeight, 1.0f)
         );
@@ -188,7 +188,7 @@ void CTileHandler::SetGroundByHandledTiles(const CTileMap& InTileMap, CGroundMan
             const Vector3& TileFinalPosition = Pair.first->GetTransform()->GetFinalPosition();
             const Vector3& TileScale = Pair.first->GetTransform()->GetScale(); // 보통 타일 크기
 
-            InGroundManager.AddGroundCollider(TileFinalPosition, TileScale);
+            InGroundManager.AddGround(TileFinalPosition, TileScale);
         }
     }
 

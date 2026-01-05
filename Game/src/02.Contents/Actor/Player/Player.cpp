@@ -7,22 +7,7 @@ CPlayer::CPlayer()
 	, Body(nullptr)
 	, Arm(nullptr)
 	, Hand(nullptr)
-	//, LeftMoveActionValue(nullptr)
-	//, RightMoveActionValue(nullptr)
-	//, UpMoveActionValue(nullptr)
-	//, DownMoveActionValue(nullptr)
-	, Collider(AddComponent<CRectCollider>())
 {
-	// InitalizeInputActionValue();
-
-	/*Head = GetWorld()->SpawnActor<CCharacter>(this);
-	Head->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/Head_Front.png");
-	Head->GetTransform()->SetPosition(Vector3(5.0f, 6.5f, 0.0f));
-
-	Arm = GetWorld()->SpawnActor<CCharacter>(this);
-	Arm->GetRenderComponent()->SetDiffuseImage(L"resources/image/Character/stand/Arm0.png");
-	Arm->GetTransform()->SetPosition(Vector3(2.0f, 0.0f, 0.0f));*/
-
 	Transform->SetSpeed(2.0f);
 	Transform->SetScale(Vector3(50.0f, 50.0f, 1.0f));
 }
@@ -49,37 +34,8 @@ void CPlayer::BeginPlay()
 
 	Body->GetAnimator()->AddAnimation("Basic", std::unique_ptr<CAnimation>(Animation));
 	Body->GetAnimator()->SetCurrentAnimation("Basic");
+
+	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
+	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));
+	GroundDetector->GetTransform()->SetPosition(Vector3(0.0f, -10.0f, 0.0f));
 }
-
-void CPlayer::CaptureSnapShot()
-{
-	CActor::CaptureSnapShot();
-
-	const Vector3& Position = Transform->GetFinalPosition();
-	const Vector3& Scale = Transform->GetScale();
-	Collider->SetCenterPosition(Vector2(Position.x, Position.y));
-	Collider->SetRectScale(Vector2(Scale.x, Scale.y));
-}
-
-//void CPlayer::SetupInputActionValue(CInputActionValueCollector& InInputActionValueCollector)
-//{
-//	InInputActionValueCollector.PushInputActionValue(*LeftMoveActionValue);
-//	InInputActionValueCollector.PushInputActionValue(*RightMoveActionValue);
-//	InInputActionValueCollector.PushInputActionValue(*UpMoveActionValue);
-//	InInputActionValueCollector.PushInputActionValue(*DownMoveActionValue);
-//}
-
-//void CPlayer::InitalizeInputActionValue()
-//{
-//	LeftMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(-1.0f, 0.0f, 0.0f)); });
-//	LeftMoveActionValue->AddKeyCondition({EKeyType::A, EButtonState::Hold});
-//
-//	RightMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(1.0f, 0.0f, 0.0f)); });
-//	RightMoveActionValue->AddKeyCondition({ EKeyType::D, EButtonState::Hold });
-//
-//	UpMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(0.0f, 1.0f, 0.0f)); });
-//	UpMoveActionValue->AddKeyCondition({ EKeyType::W, EButtonState::Hold });
-//
-//	DownMoveActionValue = std::make_unique<CInputActionValue>([this]()->void {GetTransform()->Move(Vector3(0.0f, -1.0f, 0.0f)); });
-//	DownMoveActionValue->AddKeyCondition({ EKeyType::S, EButtonState::Hold });
-//}

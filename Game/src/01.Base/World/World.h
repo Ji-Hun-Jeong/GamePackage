@@ -58,7 +58,7 @@ public:
 			WorldActor->Update(1.0f / 60.0f);
 
 			std::vector<CCollider*> Colliders = WorldActor->GetComponents<CCollider>();
-			for (auto Collider : Colliders) 
+			for (auto Collider : Colliders)
 				CollisionManager.RequestCollision(*Collider);
 		}
 
