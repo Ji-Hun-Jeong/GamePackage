@@ -1,9 +1,9 @@
 #pragma once
-#include "01.Base/Actor/Actor.h"
-#include "01.Base/Actor/DynamicActor.h"
+#include "01.Base/Actor/StaticActor.h"
 #include "02.Contents/ActorComponent/GroundDetector.h"
 
 #include "01.Base/Actor/Component/RigidBody.h"
+#include "01.Base/Actor/Component/Animation/Animator.h"
 class CPlayer : public CActor
 {
 	GENERATE_OBJECT(CPlayer)
@@ -47,11 +47,10 @@ public:
 
 private:
 	CStaticActor* Head;
-	CDynamicActor* Body;
-	CDynamicActor* Arm;
-	CDynamicActor* Hand;
+	CStaticActor* Body;
+	CStaticActor* Arm;
+	CStaticActor* Hand;
 
-	CSpriteRenderComponent* DebugRenderComponent = nullptr;
 
 private:
 	CGroundDetector* GroundDetector = nullptr;

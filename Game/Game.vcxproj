@@ -229,7 +229,6 @@
     <ClCompile Include="src\01.Base\Actor\Camera.cpp" />
     <ClCompile Include="src\04.Renderer\SpriteRendererProvide.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\InputActionManager.cpp" />
-    <ClCompile Include="src\01.Base\Actor\DynamicActor.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Player\Player.cpp" />
     <ClCompile Include="src\04.Renderer\Image.cpp" />
     <ClCompile Include="src\03.Utils\GeometryGenerator.cpp" />
@@ -311,7 +310,6 @@
     <ClInclude Include="src\01.Base\Actor\Component\Animation\Animator.h" />
     <ClInclude Include="src\01.Base\Actor\Camera.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\InputActionManager.h" />
-    <ClInclude Include="src\01.Base\Actor\DynamicActor.h" />
     <ClInclude Include="src\02.Contents\Actor\Player\Player.h" />
     <ClInclude Include="src\04.Renderer\Image.h" />
     <ClInclude Include="src\03.Utils\GeometryGenerator.h" />

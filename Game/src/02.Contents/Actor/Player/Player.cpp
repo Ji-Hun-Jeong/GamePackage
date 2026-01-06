@@ -10,13 +10,11 @@ CPlayer::CPlayer()
 {
 	Transform->SetScale(Vector3(37.0f, 37.0f, 1.0f));
 
-	DebugRenderComponent = AddComponent<CSpriteRenderComponent>();
-	const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("LineSquareMesh");
-	DebugRenderComponent->SetMesh(MeshData);
-	DebugRenderComponent->SetPSO(EPSOType::Line);
-	DebugRenderComponent->SetColor(Vector3(0.0f, 1.0f, 0.0f), 1.0f);
+	AddComponent<CSpriteRenderComponent>();
+	SetLineActor();
+	SpriteRenderComponent->SetColor(Vector3(0.0f, 1.0f, 0.0f), 1.0f);
 
-	CRigidBody* RigidBody = AddComponent<CRigidBody>();
+	AddComponent<CRigidBody>();
 }
 CPlayer::~CPlayer()
 {
@@ -27,7 +25,8 @@ CPlayer::~CPlayer()
 void CPlayer::BeginPlay()
 {
 	{
-		Body = GetWorld()->SpawnActor<CDynamicActor>(this);
+		Body = GetWorld()->SpawnActor<CStaticActor>(this);
+		Body->AddComponent<CAnimator>();
 
 		auto Animation = std::make_unique<CAnimation>(true);
 		TFrame Frame;
@@ -49,8 +48,6 @@ void CPlayer::BeginPlay()
 		Head->GetSpriteRenderComponent()->SetDiffuseImage(L"resources/image/Character/Head_Front.png");
 		Head->GetTransform()->SetPosition(Vector3(3.0f, 32.0f, 0.0f));
 	}
-
-	
 
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));

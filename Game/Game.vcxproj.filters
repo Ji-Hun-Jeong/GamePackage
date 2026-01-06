@@ -66,9 +66,6 @@
     <ClCompile Include="src\02.Contents\Actor\Player\Player.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Actor\DynamicActor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\Base\InputActionManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -294,9 +291,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Player\Player.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\01.Base\Actor\DynamicActor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Base\InputActionManager.h">
