@@ -7,13 +7,11 @@ class CAnimator : public CComponent
 	DONTCOPY(CAnimator)
 	GENERATE_OBJECT(CAnimator)
 public:
-	CAnimator()
-		: CurrentAnimation(nullptr)
-		, CurrentAnimationChangeRequest(nullptr)
-	{}
+	CAnimator();
 	~CAnimator() = default;
 
 public:
+	void PlayAnimation(float InDeltaTime);
 	void AddAnimation(const std::string& InAnimationName, std::unique_ptr<CAnimation> InAnimation)
 	{
 		assert(InAnimation);
@@ -63,7 +61,6 @@ private:
 	CAnimation* CurrentAnimation;
 
 	CAnimation* CurrentAnimationChangeRequest;
-
 
 };
 

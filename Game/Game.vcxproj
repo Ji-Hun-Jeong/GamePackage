@@ -186,6 +186,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\01.Base\Actor\Component\Animation\AnimatorController.cpp" />
+    <ClCompile Include="src\01.Base\Actor\Component\RigidBody.cpp" />
     <ClCompile Include="src\02.Contents\ActorComponent\GroundDetector.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\ImGUIInteracter.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\ColliderEditState.cpp" />
@@ -200,7 +202,6 @@
     <ClCompile Include="src\04.Renderer\RenderState.cpp" />
     <ClCompile Include="src\04.Renderer\ImGuiManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\MapEditorScene.cpp" />
-    <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Collider\Collider.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Collider\CollisionManager.cpp" />
@@ -218,7 +219,6 @@
     <ClCompile Include="src\03.Utils\InstancePool.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\MousePointer.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\BackGround.cpp" />
-    <ClCompile Include="src\01.Base\Actor\Component\InteractionComponent.cpp" />
     <ClCompile Include="src\06.Interaction\MouseInteracter.cpp" />
     <ClCompile Include="src\06.Interaction\MouseInteractionManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\EditUIScene.cpp" />
@@ -269,6 +269,8 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UISceneProxy.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\01.Base\Actor\Component\Animation\AnimatorController.h" />
+    <ClInclude Include="src\01.Base\Actor\Component\RigidBody.h" />
     <ClInclude Include="src\02.Contents\ActorComponent\GroundDetector.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\ImGUIInteracter.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\ColliderEditState.h" />
@@ -283,7 +285,6 @@
     <ClInclude Include="src\04.Renderer\RenderState.h" />
     <ClInclude Include="src\04.Renderer\ImGuiManager.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\MapEditorScene.h" />
-    <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Collider\Collider.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Collider\CollisionManager.h" />
@@ -301,7 +302,6 @@
     <ClInclude Include="src\03.Utils\InstancePool.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\MousePointer.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\BackGround.h" />
-    <ClInclude Include="src\01.Base\Actor\Component\InteractionComponent.h" />
     <ClInclude Include="src\06.Interaction\MouseInteracter.h" />
     <ClInclude Include="src\06.Interaction\MouseInteractionManager.h" />
     <ClInclude Include="src\02.Contents\Scene\EditUIScene.h" />

@@ -105,9 +105,6 @@
     <ClCompile Include="src\06.Interaction\MouseInteracter.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Actor\Component\InteractionComponent.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\02.Contents\Actor\Base\BackGround.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -180,9 +177,6 @@
     <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\02.Contents\Scene\Editor\MapEditorScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -241,6 +235,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\ActorComponent\GroundDetector.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\01.Base\Actor\Component\RigidBody.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\01.Base\Actor\Component\Animation\AnimatorController.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -332,9 +332,6 @@
     <ClInclude Include="src\06.Interaction\MouseInteracter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Actor\Component\InteractionComponent.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\02.Contents\Actor\Base\BackGround.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -410,9 +407,6 @@
     <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\SpriteRenderComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Actor\Component\RenderComponents\CameraComponent.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\02.Contents\Scene\Editor\MapEditorScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -474,6 +468,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Actor\Component\RigidBody.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Actor\Component\Animation\AnimatorController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

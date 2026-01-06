@@ -12,6 +12,7 @@ public:
 
 public:
 	class CActor* GetOwnerActor() const { return OwnerActor; }
+	class CWorld* GetWorld() const;
 
 	virtual void Serialize(CSerializer& InSerializer) const override {}
 	virtual void Deserialize(const CSerializer& InDeserializer) override {}

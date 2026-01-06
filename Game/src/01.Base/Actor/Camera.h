@@ -1,6 +1,5 @@
 #pragma once
 #include "Actor.h"
-#include "Component/RenderComponents/CameraComponent.h"
 
 class CCamera : public CActor
 {
@@ -27,9 +26,8 @@ public:
 		uint32_t ScreenHeight = CWindowManager::GetInst().GetScreenHeight();
 		Transform->SetScale(Vector3(float(ScreenWidth), float(ScreenHeight), 1.0f));
 	}
+	void RenderActor(class CSpriteRenderer& InRenderer) override;
 
-private:
-	CCameraComponent* CameraComponent;
 
 };
 

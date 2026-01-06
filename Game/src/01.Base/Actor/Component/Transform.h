@@ -10,7 +10,6 @@ public:
 		, Position(Vector3(0.0f))
 		, Rotation(Vector3(0.0f))
 		, Scale(Vector3(1.0f))
-		, Speed(0.0f)
 	{}
 	~CTransform() = default;
 
@@ -24,7 +23,6 @@ public:
 		Data["Position"] = { Position.x, Position.y, Position.z };
 		Data["Rotation"] = { Rotation.x, Rotation.y, Rotation.z };
 		Data["Scale"] = { Scale.x, Scale.y, Scale.z };
-		Data["Speed"] = Speed;
 		InSerializer = Data;
 	}
 	void Deserialize(const CSerializer& InDeserializer) override
@@ -39,7 +37,6 @@ public:
 		Scale.x = InDeserializer["Scale"][0];
 		Scale.y = InDeserializer["Scale"][1];
 		Scale.z = InDeserializer["Scale"][2];
-		Speed = InDeserializer["Speed"];
 	}
 	// =================================================================
 	// Getters
@@ -48,7 +45,7 @@ public:
 	const Vector3& GetPosition() const { return Position; }
 	const Vector3& GetRotation() const { return Rotation; }
 	const Vector3& GetScale() const { return Scale; }
-	float GetSpeed() const { return Speed; }
+
 	Vector2 GetWorldPosition2D();
 	Vector2 GetPosition2D() const{return Vector2(Position.x, Position.y);}
 	Vector2 GetScale2D() const { return Vector2(Scale.x, Scale.y); }
@@ -65,18 +62,12 @@ public:
 	{
 		Scale = InScale;
 	}
-	void SetSpeed(float InSpeed) { Speed = InSpeed; }
 
-	void Move(const Vector3& InDirection)
-	{
-		if (Speed == 0.0f)
-			std::cout << "Speed Is Zero\n";
-		SetPosition(Position + InDirection * Speed);
-	}
-	void MoveTo(const Vector2& InOffset)
+	void Move(const Vector3& InOffset)
 	{
 		SetPosition(Position + InOffset);
 	}
+
 	static Vector3 GetOffset3D(const Vector3& InStart, const Vector3& InEnd)
 	{
 		return InEnd - InStart;
@@ -94,8 +85,6 @@ private:
 	Vector3 Position;
 	Vector3 Rotation;
 	Vector3 Scale;
-
-	float Speed;
 
 	bool bChangePosition = true;
 };

@@ -21,7 +21,7 @@ void CTestScene::BeginPlay()
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");
 
 	CGroundManager* GroundManager = GetWorld()->SpawnActor<CGroundManager>(this);
-	GroundManager->AddGround(Vector3(-50.0f, -50.0f, 0.0f), Vector3(50.0f, 50.0f, 0.0f));
-	GroundManager->AddGround(Vector3(0.0f, -50.0f, 0.0f), Vector3(50.0f, 50.0f, 0.0f));
-	GroundManager->AddGround(Vector3(50.0f, -50.0f, 0.0f), Vector3(50.0f, 50.0f, 0.0f));
+	Vector3 FirstPosition = Vector3(-500.0f, -50.0f, 0.0f);
+
+	GroundManager->AddGround(Vector3(0.0f, -50.0f, 0.0f), Vector3(1000.0f, 50.0f, 0.0f));
 }

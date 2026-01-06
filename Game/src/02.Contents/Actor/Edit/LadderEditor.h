@@ -11,8 +11,6 @@ public:
 	CLadderForm()
 	{
 		DetachComponent(GetSpriteRenderComponent());
-		RenderComponent = nullptr;
-		SpriteRenderComponent = nullptr;
 	}
 	~CLadderForm() = default;
 

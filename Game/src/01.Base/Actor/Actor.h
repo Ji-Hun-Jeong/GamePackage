@@ -5,8 +5,7 @@
 #include "00.App/MouseManager.h"
 #include "03.Utils/AssetLoader.h"
 #include "Component/Transform.h"
-#include "Component/RenderComponents/RenderComponent.h"
-#include "Component/Animation/Animator.h"
+#include "Component/RenderComponents/SpriteRenderComponent.h"
 #include "Component/PixelCollider.h"
 #include "Component/Collider/Collider.h"
 
@@ -45,13 +44,7 @@ public:
 		InChild->Owner = this;
 		Childs.push_back(InChild);
 	}
-	void AttachComponent(CComponent* InComponent)
-	{
-		InComponent->OwnerActor = this;
-		Components.push_back(InComponent);
-		if (CCollider* Collider = dynamic_cast<CCollider*>(InComponent))
-			Colliders.push_back(Collider);
-	}
+	void AttachComponent(CComponent* InComponent);
 	void Detach(CActor* InChild)
 	{
 		if (InChild->Owner != this)
@@ -67,41 +60,22 @@ public:
 			}
 		}
 	}
-	void DetachComponent(CComponent* InComponent)
-	{
-		for (auto Iter = Components.begin(); Iter != Components.end(); ++Iter)
-		{
-			if (*Iter == InComponent)
-			{
-				DestroyObject(*Iter);
-				Components.erase(Iter);
-				break;
-			}
-		}
-		if (CCollider* Collider = dynamic_cast<CCollider*>(InComponent))
-		{
-			for (auto Iter = Colliders.begin(); Iter != Colliders.end(); ++Iter)
-			{
-				if (*Iter == Collider)
-				{
-					Colliders.erase(Iter);
-					break;
-				}
-			}
-		}
-	}
+	void DetachComponent(CComponent* InComponent);
 
 public:
 	class CWorld* GetWorld() const { return g_World; }
 	CActor* GetOwner() const { return Owner; }
 
 	CTransform* GetTransform() const { return Transform; }
-	CRenderComponent* GetRenderComponent() const { return RenderComponent; }
+	CSpriteRenderComponent* GetSpriteRenderComponent() const { return SpriteRenderComponent; }
+	class CAnimator* GetAnimator() const { return Animator; }
 
 protected:
 	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
-	CTransform* Transform;
-	CRenderComponent* RenderComponent;
+	CTransform* Transform							= nullptr;
+	CSpriteRenderComponent* SpriteRenderComponent	= nullptr;
+	class CRigidBody* RigidBody						= nullptr;
+	class CAnimator* Animator						= nullptr;
 	std::vector<CCollider*> Colliders;
 	std::vector<CComponent*> Components;
 
@@ -170,13 +144,13 @@ public:
 	virtual void OnCollisionEnter(CCollider& InTargetCollider) {}
 	virtual void OnCollisionStay(CCollider& InTargetCollider) {}
 	virtual void OnCollisionExit(CCollider& InTargetCollider) {}
-	virtual void Update(float InDeltaTime)
-	{}
+	virtual void Update(float InDeltaTime);
+	virtual void LateUpdate(float InDeltaTime) {} // 충돌이후 로직
 	virtual void CaptureSnapShot()
 	{
 
 	}
-	virtual void RenderActor(class CSpriteRenderer& InRenderer) final;
+	virtual void RenderActor(class CSpriteRenderer& InRenderer);
 	virtual void Activate(bool bInActivate)
 	{
 		bActive = bInActivate;

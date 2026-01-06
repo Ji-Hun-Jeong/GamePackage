@@ -63,6 +63,13 @@ public:
 		}
 
 		CollisionManager.CheckCollisionProcess();
+
+		for (auto& WorldActor : WorldActors)
+		{
+			if (WorldActor->IsActivate() == false)
+				continue;
+			WorldActor->LateUpdate(1.0f / 60.0f);
+		}
 	}
 
 	void CaptureSnapShot()

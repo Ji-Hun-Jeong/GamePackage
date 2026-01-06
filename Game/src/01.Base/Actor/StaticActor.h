@@ -8,10 +8,8 @@ class CStaticActor : public CActor
 public:
 	CStaticActor()
 		: CActor()
-		, SpriteRenderComponent(nullptr)
 	{
 		SpriteRenderComponent = AddComponent<CSpriteRenderComponent>();
-		RenderComponent = SpriteRenderComponent;
 
 		const Graphics::TMeshData& MeshData = CAssetLoader::GetInst().GetMeshData("SquareMesh");
 		SpriteRenderComponent->SetMesh(MeshData);
@@ -29,10 +27,6 @@ public:
 		SpriteRenderComponent->SetPSO(EPSOType::Line);
 		SpriteRenderComponent->SetColor(Vector3(0.0f, 0.0f, 0.0f), 1.0f);
 	}
-	CSpriteRenderComponent* GetSpriteRenderComponent() const { return SpriteRenderComponent; }
-
-protected:
-	CSpriteRenderComponent* SpriteRenderComponent;
 
 };
 
