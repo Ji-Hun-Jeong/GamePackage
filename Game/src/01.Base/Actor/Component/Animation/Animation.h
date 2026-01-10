@@ -83,6 +83,8 @@ public:
 			Frame.Duration = InDuration;
 	}
 
+	const TFrame& GetFrame(size_t InOrder) { return Frames[InOrder]; }
+
 private:
 	std::vector<TFrame> Frames;
 	TFrame* CurrentFrame;

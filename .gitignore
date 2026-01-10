@@ -2,5 +2,5 @@
 bin/
 build/
 *.meta
-/Game/src/01.Base/Object/Component/Animation/Animator.h
 vcpkg_installed/
+WzDataBuild/

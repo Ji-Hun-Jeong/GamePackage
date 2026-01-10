@@ -240,6 +240,15 @@
     <ClCompile Include="src\01.Base\Actor\Component\Animation\AnimatorController.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\02.Contents\Component\Character.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Manager\CharacterLoader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -468,6 +477,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Actor\Component\Animation\AnimatorController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Component\Character.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Common\Json.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Manager\CharacterLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

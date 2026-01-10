@@ -81,3 +81,30 @@ Multi-Arch: same
 Description: Make available Win32 binding
 Status: install ok installed
 
+Package: tinyxml2
+Version: 11.0.0
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 2d7a5d7b619e2dda030916005388cd4df13d1b9c9580bb4fb9f88ec8e31ce75a
+Description: A simple, small, efficient, C++ XML parser
+Status: install ok installed
+
+Package: rapidjson
+Version: 2025-02-26
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 45f2c855f69c1d07596fb1c32f61862dfff407287d57048341a8608d38176011
+Description: A fast JSON parser/generator for C++ with both SAX/DOM style API <http://rapidjson.org/>
+Status: install ok installed
+
+Package: rapidxml
+Version: 1.13
+Port-Version: 8
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 930366e44a45b877a29d383230a55754a2e236d1fb9a1d4db93840fce1300d9b
+Description: RapidXml is an attempt to create the fastest XML parser possible, while retaining useability, portability and reasonable W3C compatibility.
+Status: install ok installed
+

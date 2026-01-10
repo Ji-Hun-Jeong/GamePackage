@@ -15,3 +15,5 @@ bool EraseOnVector(std::vector<T*>& InVector, T& InErasedElement)
 	}
 	return false;
 }
+
+bool StrToVec2(const std::string& InStr, Vector2* OutVec2);

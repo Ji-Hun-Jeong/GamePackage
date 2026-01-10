@@ -14,9 +14,10 @@ public:
 	{
 		Animators.push_back(&InAnimator);
 	}
-	void PlayAnimation()
+	void PlayIntegrationAnimation(const std::string& InAnimationName)
 	{
-
+		for (auto Animator : Animators)
+			Animator->SetCurrentAnimation(InAnimationName);
 	}
 
 private:

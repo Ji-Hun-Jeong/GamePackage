@@ -4,6 +4,10 @@
 
 #include "01.Base/Actor/Component/RigidBody.h"
 #include "01.Base/Actor/Component/Animation/Animator.h"
+#include "01.Base/Actor/Component/Animation/AnimatorController.h"
+
+#include "02.Contents/Component/Character.h"
+
 class CPlayer : public CActor
 {
 	GENERATE_OBJECT(CPlayer)
@@ -44,17 +48,18 @@ public:
 
 public:
 	bool IsOnGround() const { return GroundDetector->IsOnGround(); }
+	void PlayPlayerAnimation(const std::string& InAnimationName) { AnimatorController->PlayIntegrationAnimation(InAnimationName); }
 
 private:
-	CStaticActor* Head;
-	CStaticActor* Body;
-	CStaticActor* Arm;
-	CStaticActor* Hand;
+	CStaticActor* Head = nullptr;
+	CStaticActor* Body = nullptr;
+	CStaticActor* Arm = nullptr;
+	CStaticActor* Hand = nullptr;
 
-
+	CCharacter* Character = nullptr;
 private:
 	CGroundDetector* GroundDetector = nullptr;
-	
+	CAnimatorController* AnimatorController = nullptr;
 
 };
 

@@ -20,6 +20,18 @@ public:
 		PixelShaders.clear();
 		Images.clear();
 	}
+	CImage* GetImage(const std::wstring& InImagePath)
+	{
+		if (Images.contains(InImagePath) == false)
+		{
+			auto SRV_Texture2D = Device->CreateImage(InImagePath);
+			Images.emplace(InImagePath, std::make_unique<CImage>(std::move(SRV_Texture2D.first), std::move(SRV_Texture2D.second), InImagePath));
+		}
+		auto Iter = Images.find(InImagePath);
+		if (Iter == Images.end())
+			assert(0);
+		return Iter->second.get();
+	}
 	Graphics::CMesh* LoadMesh(const Graphics::TMeshData& InMeshData)
 	{
 		auto Iter = Meshes.find(InMeshData.Key);

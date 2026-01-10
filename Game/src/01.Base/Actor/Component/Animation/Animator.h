@@ -55,6 +55,13 @@ public:
 		}
 		InSerializer = AnimationArray;
 	}
+	CAnimation* GetAnimation(const std::string& InAnimationName) const 
+	{
+		auto Iter = Animations.find(InAnimationName);
+		if (Iter == Animations.end())
+			return nullptr;
+		return Iter->second.get();
+	}
 
 private:
 	std::map<std::string, std::unique_ptr<CAnimation>> Animations;

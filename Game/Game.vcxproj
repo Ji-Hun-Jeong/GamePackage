@@ -186,6 +186,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\Manager\CharacterLoader.cpp" />
+    <ClCompile Include="src\02.Contents\Component\Character.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Animation\AnimatorController.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RigidBody.cpp" />
     <ClCompile Include="src\02.Contents\ActorComponent\GroundDetector.cpp" />
@@ -266,8 +268,11 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UIManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UISceneProxy.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\Manager\CharacterLoader.h" />
+    <ClInclude Include="src\02.Contents\Component\Character.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Animation\AnimatorController.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RigidBody.h" />
     <ClInclude Include="src\02.Contents\ActorComponent\GroundDetector.h" />
@@ -324,6 +329,7 @@
     <ClInclude Include="src\01.Base\Actor\Actor.h" />
     <ClInclude Include="src\Common\Define.h" />
     <ClInclude Include="src\00.App\Game.h" />
+    <ClInclude Include="src\Common\Json.h" />
     <ClInclude Include="src\GameCore.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\01.Base\World\World.h" />
