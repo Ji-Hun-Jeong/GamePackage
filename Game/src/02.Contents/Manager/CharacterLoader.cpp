@@ -149,6 +149,11 @@ void CCharacterLoader::CompositeCharacterFrame(const std::string& InAnimName, co
 	if (Animation == nullptr)
 		ArmPart->GetAnimator()->AddAnimation(InAnimName, std::make_unique<CAnimation>());
 	AddFrameToPart(InAnimName, InKeyFrameData, InKeyFrameData.Arm, "arm", InFrameNumber, OutCharacter);
+
+	Animation = HandPart->GetAnimator()->GetAnimation(InAnimName);
+	if (Animation == nullptr)
+		HandPart->GetAnimator()->AddAnimation(InAnimName, std::make_unique<CAnimation>());
+	AddFrameToPart(InAnimName, InKeyFrameData, InKeyFrameData.Hand, "hand", InFrameNumber, OutCharacter);
 }
 
 void CCharacterLoader::AddFrameToPart(const std::string& InAnimName, const TKeyFrameData& InKeyFrameData, const TPartData& InPartData
@@ -190,31 +195,47 @@ void CCharacterLoader::AddFrameToPart(const std::string& InAnimName, const TKeyF
 Vector3 CCharacterLoader::CalculatePartOffset(const std::string& InAnimName, const std::string& InPartName, size_t InFrameNumber
 	, const CCharacter& InCharacter, const TKeyFrameData& InKeyFrameData, const TPartData& InPartData)
 {
+	if (IsValidPartData(InPartData) == false)
+		return Vector3(0.0f);
+
 	Vector2 ResultOffset;
+	CPart* BodyPart = InCharacter.GetPart("body");
+
+	Vector2 BodyOrigin = InKeyFrameData.Body.Origin;
+	Vector2 BodyNavel = InKeyFrameData.Body.Map.Navel;
+	std::wstring BodyImagePath = std::wstring(InKeyFrameData.Body.OutLink.begin(), InKeyFrameData.Body.OutLink.end());
+	Vector2 BodyImageCenter = InCharacter.GetOwnerActor()->GetImageScale(BodyImagePath) * 0.5f;
+	Vector2 BodyNavelOffset = Vector2(1.0f, -1.0f) * ((BodyOrigin + BodyNavel) - BodyImageCenter);
+
+
 	if (InPartName == "arm")
 	{
-		CPart* BodyPart = InCharacter.GetPart("body");
-
-		Vector2 BodyOrigin = InKeyFrameData.Body.Origin;
-		Vector2 BodyNavel = InKeyFrameData.Body.Map.Navel;
-		auto& BodyFrame = BodyPart->GetAnimator()->GetAnimation(InAnimName)->GetFrame(InFrameNumber);
-		Vector2 BodyImageCenter = InCharacter.GetOwnerActor()->GetImageScale(BodyFrame.ImagePath) * 0.5f;
+		Vector2 ArmOrigin = InKeyFrameData.Arm.Origin;
 		Vector2 ArmNavel = InKeyFrameData.Arm.Map.Navel;
+		Vector2 ArmHand = InKeyFrameData.Arm.Map.Hand;
+		std::wstring ArmImagePath = std::wstring(InKeyFrameData.Arm.OutLink.begin(), InKeyFrameData.Arm.OutLink.end());
+		Vector2 ArmImageCenter = InCharacter.GetOwnerActor()->GetImageScale(ArmImagePath) * 0.5f;
+		Vector2 ArmNavelOffset = Vector2(1.0f, -1.0f) * ((ArmOrigin + ArmNavel) - ArmImageCenter);
+		Vector2 ArmHandOffset = Vector2(1.0f, -1.0f) * (ArmOrigin + ArmHand - ArmImageCenter);
 
-		Vector2 ArmPosition = Vector2(1.0f, -1.0f) * ((BodyOrigin + BodyNavel) - BodyImageCenter)
-			- Vector2(1.0f, -1.0f) * ArmNavel;
-		ResultOffset = ArmPosition;
+		ResultOffset = BodyNavelOffset - ArmNavelOffset;
 	}
 	else if (InPartName == "hand")
 	{
-		/*CPart* ArmPart = InCharacter.GetPart("arm");
 		Vector2 ArmOrigin = InKeyFrameData.Arm.Origin;
 		Vector2 ArmHand = InKeyFrameData.Arm.Map.Hand;
-		auto& ArmFrame = ArmPart->GetAnimator()->GetAnimation(InAnimName)->GetFrame(InFrameNumber);
-		Vector2 ArmImageCenter = InCharacter.GetOwnerActor()->GetImageScale(ArmFrame.ImagePath) * 0.5f;
-		Vector2 HandHand = InKeyFrameData.Hand.Map.Hand;
-		Vector2 HandPosition = Vector2(1.0f, -1.0f) * ((ArmOrigin + ArmHand) - ArmImageCenter)
-			- Vector2(1.0f, -1.0f) * HandHand;*/
+		std::wstring ArmImagePath = std::wstring(InKeyFrameData.Arm.OutLink.begin(), InKeyFrameData.Arm.OutLink.end());
+		Vector2 ArmImageCenter = InCharacter.GetOwnerActor()->GetImageScale(ArmImagePath) * 0.5f;
+		Vector2 ArmHandOffset = Vector2(1.0f, -1.0f) * (ArmOrigin + ArmHand - ArmImageCenter);
+
+		Vector2 HandOrigin = InKeyFrameData.Hand.Origin;
+		Vector2 HandNavel = InKeyFrameData.Hand.Map.Navel;
+		std::wstring HandImagePath = std::wstring(InKeyFrameData.Hand.OutLink.begin(), InKeyFrameData.Hand.OutLink.end());
+		Vector2 HandImageCenter = InCharacter.GetOwnerActor()->GetImageScale(HandImagePath) * 0.5f;
+
+		Vector2 HandNavelOffset = Vector2(1.0f, -1.0f) * (HandOrigin + HandNavel - HandImageCenter);
+		Vector2 HandPosition = BodyNavelOffset - ArmHandOffset - HandNavelOffset;
+		ResultOffset = HandPosition;
 	}
 	return Vector3(ResultOffset.x, ResultOffset.y, 1.0f);
 }
@@ -233,12 +254,9 @@ void CCharacterLoader::ParseNode(const std::string& InNodeName, const std::strin
 	}
 	else if (InNodeName == "hand")
 	{
-		if (CurrentEditPartData)
-		{
-			Vector2 HandPos;
-			if (StrToVec2(InValue, &HandPos))
-				CurrentEditPartData->Map.Hand = HandPos;
-		}
+		Vector2 HandPos;
+		if (StrToVec2(InValue, &HandPos))
+			CurrentEditPartData->Map.Hand = HandPos;
 		else
 		{
 			CurrentEditPartData = &CurrentEditKeyFrameData->Hand;
@@ -313,7 +331,7 @@ void CCharacterLoader::ParseNode(const std::string& InNodeName, const std::strin
 	else if (InNodeName == "delay")
 	{
 		int32_t FaceValue = static_cast<int32_t>(std::stoi(InValue));
-		CurrentEditKeyFrameData->Delay = FaceValue;
+		CurrentEditKeyFrameData->Delay = FaceValue * 4.0f;
 	}
 	else if (InNodeName == "frame")
 	{

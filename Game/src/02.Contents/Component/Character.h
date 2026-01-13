@@ -13,28 +13,6 @@ public:
 	}
 	~CPart() = default;
 
-public:
-	// Origin
-	void SetOrigin(const Vector2& InOrigin) { Origin = InOrigin; }
-	const Vector2& GetOrigin() const { return Origin; }
-
-	// Neck
-	void SetNeck(const Vector2& InNeck) { Neck = InNeck; }
-	const Vector2& GetNeck() const { return Neck; }
-
-	// Navel
-	void SetNavel(const Vector2& InNavel) { Navel = InNavel; }
-	const Vector2& GetNavel() const { return Navel; }
-
-	// Hand
-	void SetHand(const Vector2& InHand) { Hand = InHand; }
-	const Vector2& GetHand() const { return Hand; }
-
-private:
-	Vector2 Origin;
-	Vector2 Neck;
-	Vector2 Navel;
-	Vector2 Hand;
 };
 
 class CCharacter : public CComponent
@@ -64,11 +42,20 @@ public:
 		{
 			CPart* Part = PartPair.second;
 			CAnimator* Animator = Part->GetAnimator();
-			if (Animator == nullptr)
-				continue;
 			if(Animator->GetAnimation(InAnimName) == nullptr)
 				continue;
 			Animator->SetCurrentAnimation(InAnimName);
+		}
+	}
+	void InfiniteAnimation(const std::string& InAnimName)
+	{
+		for (auto& PartPair : Parts)
+		{
+			CPart* Part = PartPair.second;
+			CAnimation* Animation = Part->GetAnimator()->GetAnimation(InAnimName);
+			if (Animation == nullptr)
+				continue;
+			Animation->SetInfinite(true);
 		}
 	}
 

@@ -8,6 +8,8 @@
 
 #include "02.Contents/Component/Character.h"
 
+#include "04.Renderer/ImGuiManager.h"
+
 class CPlayer : public CActor
 {
 	GENERATE_OBJECT(CPlayer)
@@ -22,7 +24,7 @@ public:
 	{
 		CActor::Update(InDeltaTime);
 
-		if (GetKey(EKeyType::A, EButtonState::Hold))
+		/*if (GetKey(EKeyType::A, EButtonState::Hold))
 		{
 			RigidBody->AddForce(Vector2(-2.0f, 0.0f));
 		}
@@ -36,14 +38,41 @@ public:
 		}
 		else if (GetKey(EKeyType::S, EButtonState::Hold))
 		{
-			RigidBody->AddForce(Vector2(0.0f, 50.0f));
-		}
+			RigidBody->AddForce(Vector2(0.0f, -50.0f));
+		}*/
 	}
 	void LateUpdate(float InDeltaTime) override
 	{
 		CActor::LateUpdate(InDeltaTime);
 
 		GroundDetector->AdjustPlayerPosition(*this);
+	}
+
+	void CaptureSnapShot() override
+	{
+		CActor::CaptureSnapShot();
+
+		// 입력받은 문자열을 저장할 버퍼 (정적 변수나 멤버 변수 권장)
+		static char inputBuffer[256] = "";
+
+		ImGui::Begin("Snapshot Event");
+
+		// 엔터키를 쳤을 때만 true를 반환하도록 설정
+		if (ImGui::InputText("Command", inputBuffer, IM_ARRAYSIZE(inputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			// 여기서 이벤트 발생!
+			std::string command = inputBuffer;
+			
+			Character->PlayAnimation(command);
+
+			// 입력 후 버퍼 비우기 (필요 시)
+			memset(inputBuffer, 0, sizeof(inputBuffer));
+
+			// 입력 칸에 계속 포커스를 유지하고 싶다면
+			ImGui::SetKeyboardFocusHere(-1);
+		}
+
+		ImGui::End();
 	}
 
 public:

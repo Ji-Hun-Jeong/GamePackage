@@ -131,7 +131,7 @@ public:
 	{
 		Document = rapidjson::Document{};
 	}
-	void LoadCharacterAnimation(const std::string& InCharacterName, const std::string& InAnimName)
+	void LoadCharacterAnimation(const std::string& InCharacterName, const std::string& InAnimName, CCharacter* OutCharacter = nullptr)
 	{
 		if (CharacterDatas.contains(InCharacterName) == false)
 			CharacterDatas.emplace(InCharacterName, CCharacterData{});
@@ -180,6 +180,9 @@ public:
 			}
 		}
 		CurrentEditCharacterData = nullptr;
+
+		if(OutCharacter)
+			CoverToCharacter(InCharacterName, InAnimName, *OutCharacter);
 	}
 	void InitalizeCharacter(CCharacter& OutCharacter);
 	void CoverToCharacter(const std::string& InCharacterName, const std::string& InAnimName, CCharacter& OutCharacter);

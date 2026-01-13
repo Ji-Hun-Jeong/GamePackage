@@ -90,6 +90,7 @@ public:
 			if (Result)
 				return Result;
 		}
+		return nullptr;
 	}
 	template <typename T>
 	std::vector<T*> GetComponents()

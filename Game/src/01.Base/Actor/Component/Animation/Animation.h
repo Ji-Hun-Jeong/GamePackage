@@ -11,10 +11,15 @@ struct TFrame
 	float Duration = 0.0f;
 };
 
+enum class EFrameIncreaseState
+{
+	Increase,
+	Decrease
+};
 class CAnimation
 {
 public:
-	CAnimation(bool bInInfinite = true)
+	CAnimation(bool bInInfinite = false)
 		: CurrentFrameIndex(-1)
 		, NextFrameIndex(0)
 		, CurrentFrame(nullptr)
@@ -33,7 +38,7 @@ public:
 			auto& Frame = Frames[i];
 			CSerializer FrameData;
 			FrameData["Order"] = uint32_t(i);
-			FrameData["Offset"] = { Frame.Offset.x , Frame.Offset.y , Frame.Offset.z};
+			FrameData["Offset"] = { Frame.Offset.x , Frame.Offset.y , Frame.Offset.z };
 			FrameData["ImagePath"] = Frame.ImagePath;
 			FrameArray.push_back(FrameData);
 		}
@@ -47,16 +52,86 @@ public:
 	void UpdateAnimationState(float InDeltaTime)
 	{
 		ProgressTime += InDeltaTime;
-		
 		if (CurrentFrame->Duration <= ProgressTime)
 		{
-			if (Frames.size() - 1 == CurrentFrameIndex)
+			// 지금 프레임 증가 상태에 따라 끝에 도달했는지 체크
+			// 루프가 아니면 멈추기
+			// 루프면 프레임 증가 상태에 따라 다음 프레임으로 이동
+			if (IsAnimationEnd())
 			{
 				if (bInfinite)
-					RequestFrame(0);
+				{
+					if (bPingPong)
+						ChangeFrameIncreaseState();
+					else
+						RequestFrame(0);
+				}
 			}
 			else
+			{
+				AdvanceFrame();
+			}
+		}
+	}
+
+	bool IsAnimationEnd() const
+	{
+		bool bEnd = false;
+		if (bInfinite && bPingPong)
+		{
+			switch (FrameIncreaseState)
+			{
+			case EFrameIncreaseState::Increase:
+				if (Frames.size() - 1 == CurrentFrameIndex)
+					bEnd = true;
+				break;
+			case EFrameIncreaseState::Decrease:
+				if (CurrentFrameIndex == 0)
+					bEnd = true;
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+			if (Frames.size() - 1 == CurrentFrameIndex)
+				bEnd = true;
+		}
+		return bEnd;
+	}
+	void AdvanceFrame()
+	{
+		if (bInfinite && bPingPong)
+		{
+			switch (FrameIncreaseState)
+			{
+			case EFrameIncreaseState::Increase:
 				RequestFrame(CurrentFrameIndex + 1);
+				break;
+			case EFrameIncreaseState::Decrease:
+				RequestFrame(CurrentFrameIndex - 1);
+				break;
+			default:
+				break;
+			}
+			return;
+		}
+		else
+			RequestFrame(CurrentFrameIndex + 1);
+	}
+	void ChangeFrameIncreaseState()
+	{
+		switch (FrameIncreaseState)
+		{
+		case EFrameIncreaseState::Increase:
+			FrameIncreaseState = EFrameIncreaseState::Decrease;
+			break;
+		case EFrameIncreaseState::Decrease:
+			FrameIncreaseState = EFrameIncreaseState::Increase;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -85,6 +160,22 @@ public:
 
 	const TFrame& GetFrame(size_t InOrder) { return Frames[InOrder]; }
 
+	void SetInfinite(bool bInInfinite) { bInfinite = bInInfinite; }
+	void SetPingPong(bool bInPingPong)
+	{
+		if (bInPingPong)
+		{
+			bInfinite = true;
+			FrameIncreaseState = EFrameIncreaseState::Increase;
+		}
+		else
+		{
+			bInfinite = false;
+			FrameIncreaseState = EFrameIncreaseState::Increase;
+		}
+		bPingPong = bInPingPong;
+	}
+
 private:
 	std::vector<TFrame> Frames;
 	TFrame* CurrentFrame;
@@ -95,6 +186,8 @@ private:
 	float ProgressTime;
 
 	bool bInfinite;
+	bool bPingPong = false;
+	EFrameIncreaseState FrameIncreaseState = EFrameIncreaseState::Increase;
 
 };
 

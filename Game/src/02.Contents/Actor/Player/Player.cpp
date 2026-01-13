@@ -119,12 +119,27 @@ void CPlayer::BeginPlay()
 	Loader.OpenCharacterData("resources/data/Character/Character.00002000.img.json");
 	Loader.InitalizeCharacter(*Character);
 
-	Loader.LoadCharacterAnimation("Base", "walk1");
-	Loader.CoverToCharacter("Base", "walk1", *Character);
+	Loader.LoadCharacterAnimation("Base", "walk1", Character);
+	Loader.LoadCharacterAnimation("Base", "walk2", Character);
+	Loader.LoadCharacterAnimation("Base", "stand1", Character);
+	Loader.LoadCharacterAnimation("Base", "stand2", Character);
+	Loader.LoadCharacterAnimation("Base", "swingO1", Character);
+	Loader.LoadCharacterAnimation("Base", "swingO2", Character);
+	Loader.LoadCharacterAnimation("Base", "swingO3", Character);
+	//Loader.LoadCharacterAnimation("Base", "swingOF", Character);
 
 	Loader.CloseCharacterData("Base");
 
-	Character->PlayAnimation("walk1");
+	Character->InfiniteAnimation("walk1");
+	Character->InfiniteAnimation("walk2");
+	Character->InfiniteAnimation("stand1");
+	Character->InfiniteAnimation("stand2");
+	Character->InfiniteAnimation("swingO1");
+	Character->InfiniteAnimation("swingO2");
+	Character->InfiniteAnimation("swingO3");
+	//Character->InfiniteAnimation("swingOF");
+
+	Character->PlayAnimation("swingO1");	
 
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));

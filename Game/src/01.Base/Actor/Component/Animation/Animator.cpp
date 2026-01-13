@@ -30,11 +30,12 @@ void CAnimator::PlayAnimation(float InDeltaTime)
 
 		CActor* OwnerActor = GetOwnerActor();
 		OwnerActor->GetTransform()->SetPosition(ChangedFrame.Offset);
-		if (ChangedFrame.ImagePath.empty() == false && OwnerActor->GetSpriteRenderComponent())
+		if (OwnerActor->GetSpriteRenderComponent())
 			OwnerActor->GetSpriteRenderComponent()->SetDiffuseImage(ChangedFrame.ImagePath);
 		if (ChangedFrame.FrameAction)
 			ChangedFrame.FrameAction();
 	}
 
 	CurrentAnimation->UpdateAnimationState(InDeltaTime);
+	
 }
