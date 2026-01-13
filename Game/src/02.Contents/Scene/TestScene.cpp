@@ -15,11 +15,11 @@ void CTestScene::BeginPlay()
 	CScene::BeginPlay();
 
 	GetFader()->FadeIn(1.0f);
-	CCharacterLoader::GetInst().LoadCharacter("sdf", "resources/data/Character/Character.00002000.img.json");
-	/*CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
+	CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
 	Player->GetTransform()->SetPosition(Vector3(0.0f, 50.0f, 0.0f));
+	Player->GetComponent<CRigidBody>()->SetGravity(0.0f);
 
-	CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
+	/*CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");
 
 	CGroundManager* GroundManager = GetWorld()->SpawnActor<CGroundManager>(this);

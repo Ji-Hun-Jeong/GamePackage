@@ -244,5 +244,10 @@ public:
 			DestroyObject(Component);
 	}
 
+	Vector2 GetImageScale(const std::wstring& InImagePath) const
+	{
+		CImage* Image = CRenderResourceLoader::GetInst().GetImage(InImagePath);
+		return Image->GetTexture2D().GetTextureSize();
+	}
 };
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <Renderer/Base/GraphicInfra.h>
 #include "PSOManager.h"
 #include "RenderState.h"

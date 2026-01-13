@@ -15,7 +15,7 @@ public:
 	void SetAccel(const Vector2& InAccel) { Accel = InAccel; }
 	void SetVelocity(const Vector2& InVelocity) { Velocity = InVelocity; }
 	void SetCoeff(const Vector2& InCoeff) { Coeff = InCoeff; }
-	void SetMass(float InMass) { Mass = InMass; }
+	void SetMass(float InMass) { assert(InMass); Mass = InMass; }
 
 	void AddForce(const Vector2& InForce) { Force += InForce; }
 	void AddAccel(const Vector2& InAccel) { Accel += InAccel; }
@@ -30,6 +30,7 @@ public:
 	float		   GetMass() const { return Mass; }
 
 	void SetMaxSpeed(const Vector2& _MaxSpeed) { MaxSpeed = _MaxSpeed; }
+	void SetGravity(float InGravity) { Gravity = InGravity; }
 
 private:
 	Vector2 Force;

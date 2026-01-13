@@ -43,7 +43,7 @@ namespace Graphics
 		const CPixelShader& GetPixelShader() const { return PixelShader; }
 		const std::array<const CShaderResourceView*, 6>& GetShaderResourceViews() const { return ShaderResourceViews; }
 		const std::array<const CTexture2D*, 6>& GetTexture2Ds() const { return Texture2Ds; }
-		const CTexture2D& GetTexture2D(size_t InSlot) const { return *Texture2Ds[InSlot]; }
+		const CTexture2D* GetTexture2D(size_t InSlot) const { return Texture2Ds[InSlot]; }
 		void SetShaderResourceView(size_t InSlot, const CShaderResourceView* InShaderResourceView)
 		{
 			ShaderResourceViews[InSlot] = InShaderResourceView;

@@ -14,7 +14,7 @@ struct TFrame
 class CAnimation
 {
 public:
-	CAnimation(bool bInInfinite = false)
+	CAnimation(bool bInInfinite = true)
 		: CurrentFrameIndex(-1)
 		, NextFrameIndex(0)
 		, CurrentFrame(nullptr)

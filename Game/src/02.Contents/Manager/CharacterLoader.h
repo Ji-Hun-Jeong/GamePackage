@@ -5,6 +5,8 @@
 #include "02.Contents/Component/Character.h"
 #include "Utils.h"
 
+#include "01.Base/Actor/Component/Animation/Animator.h"
+
 struct TMap
 {
 	Vector2 Neck;
@@ -40,6 +42,7 @@ struct TKeyFrameData
 
 class CAnimData
 {
+	friend class CCharacterLoader;
 public:
 	CAnimData(size_t InNumOfFrame)
 	{
@@ -67,6 +70,7 @@ private:
 
 class CCharacterData
 {
+	friend class CCharacterLoader;
 public:
 	CCharacterData() = default;
 	~CCharacterData() = default;
@@ -104,39 +108,39 @@ public:
 	~CCharacterLoader() = default;
 
 public:
-	void LoadCharacter(const std::string& InCharacterName, const std::string& InCharacterWzJsonPath, CCharacter* OutCharacter = nullptr)
+	bool OpenCharacterData(const std::string& InCharacterWzJsonPath)
 	{
-		if (CharacterDatas.contains(InCharacterName))
-		{
-			if (OutCharacter)
-			{
-				CoverToCharacter(*OutCharacter);
-				return;
-			}
-		}
-		else
-			CharacterDatas.emplace(InCharacterName, CCharacterData{});
-
-		auto Iter = CharacterDatas.find(InCharacterName);
-		CurrentEditCharacterData = &Iter->second;
-		assert(CurrentEditCharacterData);
-
 		FILE* File = nullptr;
 		fopen_s(&File, InCharacterWzJsonPath.c_str(), "rb"); // 바이너리 읽기 권장
-		if (!File) return;
+		if (!File)
+			return false;
 
 		char Buffer[65536]; // 데이터가 크므로 버퍼를 조금 더 늘렸습니다.
 		rapidjson::FileReadStream JsonReader(File, Buffer, sizeof(Buffer));
 
-		rapidjson::Document Document;
 		Document.ParseStream(JsonReader);
 		fclose(File);
 
 		if (Document.HasParseError()) {
 			std::cout << "JSON 파싱 에러!" << std::endl;
-			return;
+			return false;
 		}
+		return true;
+	}
+	void CloseCharacterData(const std::string& InCharacterName)
+	{
+		Document = rapidjson::Document{};
+	}
+	void LoadCharacterAnimation(const std::string& InCharacterName, const std::string& InAnimName)
+	{
+		if (CharacterDatas.contains(InCharacterName) == false)
+			CharacterDatas.emplace(InCharacterName, CCharacterData{});
+
+		auto Iter = CharacterDatas.find(InCharacterName);
+		CurrentEditCharacterData = &Iter->second;
+		
 		auto AnimBundle = Document["dir"]["dir"].GetArray();
+		// AnimBundle에서 InAnimName과 일치하는 애니메이션만 로드
 
 		for (auto& Anim : AnimBundle)
 		{
@@ -144,41 +148,41 @@ public:
 			std::string dirName = Anim["@name"].GetString();
 
 			// 만약 "info"라면 애니메이션 데이터가 아니니 건너뜁니다.
-			if (dirName == "info") continue;
-
-			std::cout << "--- 애니메이션 발견: " << dirName << " ---" << std::endl;
-
-			// 2. 애니메이션 노드(walk1 등) 안에는 "dir"이라는 배열이 프레임들을 들고 있습니다.
-			if (Anim.HasMember("dir") && Anim["dir"].IsArray())
+			if (dirName == "info") 
+				continue;
+			if (dirName == InAnimName)
 			{
-				auto Frames = Anim["dir"].GetArray();
-				CurrentEditCharacterData->AddAnimData(dirName, Frames.Size());
-				CurrentEditAnimData = &CurrentEditCharacterData->GetAnimDataRef(dirName);
-				for (size_t i = 0; i < Frames.Size(); ++i)
+				std::cout << "--- 애니메이션 발견: " << dirName << " ---" << std::endl;
+
+				// 2. 애니메이션 노드(walk1 등) 안에는 "dir"이라는 배열이 프레임들을 들고 있습니다.
+				if (Anim.HasMember("dir") && Anim["dir"].IsArray())
 				{
-					auto& Frame = Frames[i];
-					CurrentEditKeyFrameData = &CurrentEditAnimData->GetKeyFrame(i);
-					ParseJsonValue(Frame);
-					if (bEmpty)
+					auto Frames = Anim["dir"].GetArray();
+					CurrentEditCharacterData->AddAnimData(dirName, Frames.Size());
+					CurrentEditAnimData = &CurrentEditCharacterData->GetAnimDataRef(dirName);
+					for (size_t i = 0; i < Frames.Size(); ++i)
 					{
-						CurrentEditCharacterData->RemoveAnimData(dirName);
-						break;
+						auto& Frame = Frames[i];
+						CurrentEditKeyFrameData = &CurrentEditAnimData->GetKeyFrame(i);
+						ParseJsonValue(Frame);
+						if (bEmpty)
+						{
+							CurrentEditCharacterData->RemoveAnimData(dirName);
+							break;
+						}
 					}
+					CurrentEditAnimData = nullptr;
+					CurrentEditPartData = nullptr;
+					CurrentEditKeyFrameData = nullptr;
+					bEmpty = false;
+					break;
 				}
 			}
-			CurrentEditAnimData = nullptr;
-			CurrentEditPartData = nullptr;
-			CurrentEditKeyFrameData = nullptr;
-			bEmpty = false;
-			if (100 <= CurrentEditCharacterData->GetAnimDataSize())
-				break;
 		}
 		CurrentEditCharacterData = nullptr;
 	}
-	void CoverToCharacter(CCharacter& OutCharacter)
-	{
-
-	}
+	void InitalizeCharacter(CCharacter& OutCharacter);
+	void CoverToCharacter(const std::string& InCharacterName, const std::string& InAnimName, CCharacter& OutCharacter);
 
 private:
 	void ParseObject(const rapidjson::GenericObject<true, rapidjson::Value>& InObject)
@@ -217,122 +221,61 @@ private:
 			ParseArray(InValue.GetArray());
 	}
 
-	void ParseNode(const std::string& InNodeName, const std::string& InValue)
+	void ParseNode(const std::string& InNodeName, const std::string& InValue);
+
+private:
+	void CompositeCharacterFrame(const std::string& InAnimName, const TKeyFrameData& InKeyFrameData, size_t InFrame, CCharacter& OutCharacter);
+	void AddFrameToPart(const std::string& InAnimName, const TKeyFrameData& InKeyFrameData, const TPartData& InPartData, const std::string& InPartName
+		, size_t InFrame, CCharacter& OutCharacter);
+	// AnimName, FrameNumber, OutCharacter, KeyFrameData, PartData, PartName
+	// 각자의 Offset계산하기 함수 만들어줘
+	Vector3 CalculatePartOffset(const std::string& InAnimName, const std::string& InPartName, size_t InFrameNumber, const CCharacter& InCharacter
+		, const TKeyFrameData& InKeyFrameData, const TPartData& InPartData);
+	bool IsValidPartData(const TPartData& InPartData)
 	{
-		if (InNodeName == "body")
-		{
-			CurrentEditPartData = &CurrentEditKeyFrameData->Body;
-			CurrentEditPartData->Value = InValue;
-		}
-		else if (InNodeName == "arm")
-		{
-			CurrentEditPartData = &CurrentEditKeyFrameData->Arm;
-			CurrentEditPartData->Value = InValue;
-		}
-		else if (InNodeName == "hand")
-		{
-			if (CurrentEditPartData)
-			{
-				Vector2 HandPos;
-				if (StrToVec2(InValue, &HandPos))
-					CurrentEditPartData->Map.Hand = HandPos;
-			}
-			else
-			{
-				CurrentEditPartData = &CurrentEditKeyFrameData->Hand;
-				CurrentEditPartData->Value = InValue;
-			}
-		}
-		else if (InNodeName == "armOverHair")
-		{
-			CurrentEditPartData = &CurrentEditKeyFrameData->ArmOverHair;
-			CurrentEditPartData->Value = InValue;
-		}
-		else if (InNodeName == "lHand")
-		{
-			CurrentEditPartData = &CurrentEditKeyFrameData->LHand;
-			CurrentEditPartData->Value = InValue;
-		}
-		else if (InNodeName == "rHand")
-		{
-			CurrentEditPartData = &CurrentEditKeyFrameData->RHand;
-			CurrentEditPartData->Value = InValue;
-		}
-		else if (InNodeName == "neck")
-		{
-			Vector2 NeckPos;
-			if (StrToVec2(InValue, &NeckPos) && CurrentEditPartData)
-				CurrentEditPartData->Map.Neck = NeckPos;
-			else
-				bEmpty = true;
-		}
-		else if (InNodeName == "navel")
-		{
-			Vector2 NavelPos;
-			if (StrToVec2(InValue, &NavelPos) && CurrentEditPartData)
-				CurrentEditPartData->Map.Navel = NavelPos;
-			else
-				bEmpty = true;
-		}
-		else if (InNodeName == "origin")
-		{
-			Vector2 OriginPos;
-			if (StrToVec2(InValue, &OriginPos) && CurrentEditPartData)
-				CurrentEditPartData->Origin = OriginPos;
-			else
-				bEmpty = true;
-		}
-		else if (InNodeName == "z")
-		{
-			if (CurrentEditPartData)
-				CurrentEditPartData->Z = InValue;
-			else
-				bEmpty = true;
-		}
-		else if (InNodeName == "group")
-		{
-			if (CurrentEditPartData)
-				CurrentEditPartData->Group = InValue;
-			else
-				bEmpty = true;
-		}
-		else if (InNodeName == "_outlink")
-		{
-			if (CurrentEditPartData)
-				CurrentEditPartData->OutLink = InValue;
-			else
-				bEmpty = true;
-		}
-		else if (InNodeName == "face")
-		{
-			int16_t FaceValue = static_cast<int16_t>(std::stoi(InValue));
-			CurrentEditKeyFrameData->Face = FaceValue;
-		}
-		else if (InNodeName == "delay")
-		{
-			int32_t FaceValue = static_cast<int32_t>(std::stoi(InValue));
-			CurrentEditKeyFrameData->Delay = FaceValue;
-		}
-		else if (InNodeName == "frame")
-		{
-			int32_t FrameValue = static_cast<int32_t>(std::stoi(InValue));
-			CurrentEditKeyFrameData->Frame = FrameValue;
-		}
-		else if (InNodeName == "move")
-		{
-			Vector2 Move;
-			if (StrToVec2(InValue, &Move))
-				CurrentEditKeyFrameData->Move = Move;
-		}
-		else if (InNodeName == "action")
-		{
-			CurrentEditKeyFrameData->Action = InValue;
-		}
-		else
-			bEmpty = true;
+		return InPartData.Value.empty() == false;
+	}
+
+	std::string DetachRelativePath(const std::string& InFullPath)
+	{
+		// Ex: ../../walk1/0/body
+		size_t Pos = InFullPath.find("../", 0);
+		if (Pos == std::string::npos)
+			return InFullPath;
+		return DetachRelativePath(InFullPath.substr(Pos + 3));
+	}
+	std::string GetAnimationNameInRefPath(const std::string& InRefPath, std::string* OutFramePath)
+	{
+		// Ex: walk1/0/body
+		size_t SlashPos = InRefPath.find('/');
+		*OutFramePath = InRefPath.substr(SlashPos + 1);
+		return InRefPath.substr(0, SlashPos);
+	}
+	uint32_t GetFrameNumberInRefPath(const std::string& InFramePath)
+	{
+		// Ex: 0/body
+		size_t SlashPos = InFramePath.find('/');
+		std::string FrameNumberStr = InFramePath.substr(0, SlashPos);
+		return static_cast<uint32_t>(std::stoul(FrameNumberStr));
+	}
+	bool IsFrameRefPath(const std::string& InFramePath)
+	{
+		// /의 개수가 1개인지 확인
+		return std::count(InFramePath.begin(), InFramePath.end(), '/') == 1;
+	}
+	bool IsRefValue(const std::string& InValue)
+	{
+		return InValue.find("../") != std::string::npos;
+	}
+	float GetDurationFromDelay(int32_t InDelay)
+	{
+		// 1000ms -> 1s
+		return static_cast<float>(InDelay) / 1000.0f;
 	}
 
 private:
+	rapidjson::Document Document;
+
 	std::map<std::string, CCharacterData> CharacterDatas;
 	CCharacterData* CurrentEditCharacterData = nullptr;
 	CAnimData* CurrentEditAnimData = nullptr;

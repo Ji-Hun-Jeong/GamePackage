@@ -13,6 +13,13 @@ void CAnimator::PlayAnimation(float InDeltaTime)
 	bool bChangeAnimation = TryChangeCurrentAnimation();
 
 	CAnimation* CurrentAnimation = GetCurrentAnimation();
+	if (CurrentAnimation == nullptr)
+	{
+		if(GetOwnerActor()->GetSpriteRenderComponent())
+			GetOwnerActor()->GetSpriteRenderComponent()->SetDiffuseImage(L"");
+		return;
+	}
+
 	if (bChangeAnimation)
 		CurrentAnimation->RequestFrame(0);
 
