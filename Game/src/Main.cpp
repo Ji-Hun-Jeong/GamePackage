@@ -6,15 +6,6 @@
 #include <Core/public/Core.h>
 #include "00.App/Game.h"
 
-class A
-{
-public:
-	A(int a, int b) {}
-};
-class B
-{
-
-};
 int main(int InArgc, char** InArgv)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);

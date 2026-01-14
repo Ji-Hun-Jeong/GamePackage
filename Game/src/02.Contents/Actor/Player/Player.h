@@ -4,9 +4,8 @@
 
 #include "01.Base/Actor/Component/RigidBody.h"
 #include "01.Base/Actor/Component/Animation/Animator.h"
-#include "01.Base/Actor/Component/Animation/AnimatorController.h"
 
-#include "02.Contents/Component/Character.h"
+#include "01.Base/Actor/Component/Animation/WzCharacterLoader.h"
 
 #include "04.Renderer/ImGuiManager.h"
 
@@ -63,7 +62,8 @@ public:
 			// 여기서 이벤트 발생!
 			std::string command = inputBuffer;
 			
-			Character->PlayAnimation(command);
+			// Todo: 명령어 처리 하든지 말든지
+			// Character->PlayAnimation(command);
 
 			// 입력 후 버퍼 비우기 (필요 시)
 			memset(inputBuffer, 0, sizeof(inputBuffer));
@@ -77,18 +77,15 @@ public:
 
 public:
 	bool IsOnGround() const { return GroundDetector->IsOnGround(); }
-	void PlayPlayerAnimation(const std::string& InAnimationName) { AnimatorController->PlayIntegrationAnimation(InAnimationName); }
 
 private:
 	CStaticActor* Head = nullptr;
 	CStaticActor* Body = nullptr;
 	CStaticActor* Arm = nullptr;
 	CStaticActor* Hand = nullptr;
-
-	CCharacter* Character = nullptr;
 private:
 	CGroundDetector* GroundDetector = nullptr;
-	CAnimatorController* AnimatorController = nullptr;
+	CWzCharacterAnimator* CharacterAnimator = nullptr;
 
 };
 

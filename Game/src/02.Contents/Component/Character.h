@@ -4,16 +4,7 @@
 #include "01.Base/Actor/Component/Animation/Animator.h"
 #include "Common/Json.h"
 
-class CPart : public CStaticActor
-{
-	GENERATE_OBJECT(CPart)
-public:
-	CPart()
-	{
-	}
-	~CPart() = default;
 
-};
 
 class CCharacter : public CComponent
 {
@@ -23,7 +14,7 @@ public:
 	~CCharacter() = default;
 
 public:
-	void AddPart(const std::string& InPartName, CPart* InPart = nullptr);
+	/*void AddPart(const std::string& InPartName, CPart* InPart = nullptr);
 	CPart* GetPart(const std::string& InPartName) const
 	{
 		auto Iter = Parts.find(InPartName);
@@ -60,7 +51,7 @@ public:
 	}
 
 private:
-	std::unordered_map<std::string, CPart*> Parts;
+	std::unordered_map<std::string, CPart*> Parts;*/
 
 };
 

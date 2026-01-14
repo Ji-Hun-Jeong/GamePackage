@@ -237,9 +237,6 @@
     <ClCompile Include="src\01.Base\Actor\Component\RigidBody.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Actor\Component\Animation\AnimatorController.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\02.Contents\Component\Character.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -247,6 +244,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\01.Base\Actor\Component\Animation\WzCharacterAnimator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\01.Base\Actor\Component\Animation\WzCharacterLoader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -476,9 +479,6 @@
     <ClInclude Include="src\01.Base\Actor\Component\RigidBody.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Actor\Component\Animation\AnimatorController.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\02.Contents\Component\Character.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -486,6 +486,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Manager\CharacterLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Actor\Component\Animation\WzCharacterAnimator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\01.Base\Actor\Component\Animation\WzCharacterLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,13 +3,13 @@
   "spdxVersion": "SPDX-2.2",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "documentNamespace": "https://spdx.org/spdxdocs/directxmath-x64-windows-2025-04-03-2fc4c83b-bbde-4c91-9021-feb43e1bf92f",
-  "name": "directxmath:x64-windows@2025-04-03 fbff569f24b30f43d2bc41b4ff5bc5735ed42d374e88e1a59002072f04f4c2e4",
+  "documentNamespace": "https://spdx.org/spdxdocs/directxmath-x64-windows-2025-04-03-83d0140f-fb7a-40e7-8567-e6f8a07a9764",
+  "name": "directxmath:x64-windows@2025-04-03 b9a65db3c99f8085446d13be9bab80311e959bb7abda77e5dcf2717a2865b11d",
   "creationInfo": {
     "creators": [
-      "Tool: vcpkg-2025-09-03-4580816534ed8fd9634ac83d46471440edd82dfe"
+      "Tool: vcpkg-2025-12-16-44bb3ce006467fc13ba37ca099f64077b8bbf84d"
     ],
-    "created": "2025-10-09T04:06:56Z"
+    "created": "2026-01-13T12:00:44Z"
   },
   "relationships": [
     {
@@ -148,7 +148,7 @@
       "name": "directxmath",
       "SPDXID": "SPDXRef-port",
       "versionInfo": "2025-04-03",
-      "downloadLocation": "git+https://github.com/Microsoft/vcpkg#ports/directxmath",
+      "downloadLocation": "git+https://github.com/microsoft/vcpkg@b199edaeaf0b2b92a634dfeb1289879ea5eeae7f",
       "homepage": "https://github.com/Microsoft/DirectXMath",
       "licenseConcluded": "MIT",
       "licenseDeclared": "NOASSERTION",
@@ -159,7 +159,7 @@
     {
       "name": "directxmath:x64-windows",
       "SPDXID": "SPDXRef-binary",
-      "versionInfo": "fbff569f24b30f43d2bc41b4ff5bc5735ed42d374e88e1a59002072f04f4c2e4",
+      "versionInfo": "b9a65db3c99f8085446d13be9bab80311e959bb7abda77e5dcf2717a2865b11d",
       "downloadLocation": "NONE",
       "licenseConcluded": "MIT",
       "licenseDeclared": "NOASSERTION",
@@ -455,7 +455,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "270e1cd1e983a18267e16601da009509dfdd145936cc8d0d57152ab4531ce5a5"
+          "checksumValue": "ea2f33a529e288b1edd08c3ea7d4f4d00ce16eef804d20598e60f5b0249e2896"
         }
       ],
       "licenseConcluded": "NOASSERTION",

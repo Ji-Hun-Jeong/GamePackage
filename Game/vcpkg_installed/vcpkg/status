@@ -2,14 +2,14 @@ Package: vcpkg-cmake-config
 Version: 2024-05-23
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 44549356ed5d391ffb0fc8672456d4c6bce7f885f3d0584af9e13a77195e81fe
+Abi: efd9d162cc549ed11ab28675ae7ddd16ea8e941b8d19ca53ed956fc1fb9f7f4d
 Status: install ok installed
 
 Package: vcpkg-cmake
 Version: 2024-04-23
 Architecture: x64-windows
 Multi-Arch: same
-Abi: ef7f3e30bb82dfb82f0275d009b0f6aad8455bbd4148965c5cf679ab12976047
+Abi: 60549859c8f68d9a6b06ab894764df4158baa010d766664132d0cfacf6754608
 Status: install ok installed
 
 Package: directxmath
@@ -17,7 +17,7 @@ Version: 2025-04-03
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: fbff569f24b30f43d2bc41b4ff5bc5735ed42d374e88e1a59002072f04f4c2e4
+Abi: b9a65db3c99f8085446d13be9bab80311e959bb7abda77e5dcf2717a2865b11d
 Description: DirectXMath SIMD C++ math library
 Status: install ok installed
 
@@ -26,36 +26,8 @@ Version: 2025-07-10
 Depends: directxmath, vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 09f1bcc10b4dd828dcf3dde112ace11d3eeccfbcd26bfc7f3fb7fb040a2dfb70
+Abi: b8a1754e5b232af7fb602a7aea00bc7c7ff7a576999c05be3ddcf7f06993f07a
 Description: A collection of helper classes for writing DirectX 11.x code in C++.
-Status: install ok installed
-
-Package: fmt
-Version: 12.0.0
-Depends: vcpkg-cmake, vcpkg-cmake-config
-Architecture: x64-windows
-Multi-Arch: same
-Abi: e5e7feabbc06e6e1d205ca227dd38e5ea2e2d2c9c7bc2a9ea97a3bd7d6096568
-Description: {fmt} is an open-source formatting library providing a fast and safe alternative to C stdio and C++ iostreams.
-Status: purge ok not-installed
-
-Package: spdlog
-Version: 1.15.3
-Depends: fmt, vcpkg-cmake, vcpkg-cmake-config
-Architecture: x64-windows
-Multi-Arch: same
-Abi: 378a43687da6bbdb0ee256bdec14e532d638c593f3f33ad6db8a4ca772fb054d
-Description: Very fast, header-only/compiled, C++ logging library.
-Status: purge ok not-installed
-
-Package: nlohmann-json
-Version: 3.12.0
-Port-Version: 1
-Depends: vcpkg-cmake, vcpkg-cmake-config
-Architecture: x64-windows
-Multi-Arch: same
-Abi: f680b5f870ad22ef899b55aa45f57a45d91bc44253ec8a8b926907b6dbdfcd3f
-Description: JSON for Modern C++
 Status: install ok installed
 
 Package: imgui
@@ -63,7 +35,7 @@ Version: 1.91.9
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: a6e54199e189d50d6a0e6fe01637c2782c022fef441f8a68d9a5f9206a258622
+Abi: dae30934703ef614fc63af193869ee6b26b38be473f3d1fd525d4d04aa34daad
 Description: Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.
 Status: install ok installed
 
@@ -81,13 +53,14 @@ Multi-Arch: same
 Description: Make available Win32 binding
 Status: install ok installed
 
-Package: tinyxml2
-Version: 11.0.0
+Package: nlohmann-json
+Version: 3.12.0
+Port-Version: 1
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 2d7a5d7b619e2dda030916005388cd4df13d1b9c9580bb4fb9f88ec8e31ce75a
-Description: A simple, small, efficient, C++ XML parser
+Abi: c4772d9f9183afd96ffd8df5c58f2c39e973ed4b08c4d0d96bc1f55fd9ea0eff
+Description: JSON for Modern C++
 Status: install ok installed
 
 Package: rapidjson
@@ -95,7 +68,7 @@ Version: 2025-02-26
 Depends: vcpkg-cmake, vcpkg-cmake-config
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 45f2c855f69c1d07596fb1c32f61862dfff407287d57048341a8608d38176011
+Abi: a43c16addab38e99f74841c64a8d7a317219587380c1b49bb68910b0891e80f9
 Description: A fast JSON parser/generator for C++ with both SAX/DOM style API <http://rapidjson.org/>
 Status: install ok installed
 
@@ -104,7 +77,16 @@ Version: 1.13
 Port-Version: 8
 Architecture: x64-windows
 Multi-Arch: same
-Abi: 930366e44a45b877a29d383230a55754a2e236d1fb9a1d4db93840fce1300d9b
+Abi: 03fa5ef7b059864af74107f0977b72d2771f867fbbfa34996cc5a453bf155429
 Description: RapidXml is an attempt to create the fastest XML parser possible, while retaining useability, portability and reasonable W3C compatibility.
+Status: install ok installed
+
+Package: tinyxml2
+Version: 11.0.0
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 34e907257c526d38702d363779c72011a752712e76bf3192ee292091f39e55da
+Description: A simple, small, efficient, C++ XML parser
 Status: install ok installed
 
