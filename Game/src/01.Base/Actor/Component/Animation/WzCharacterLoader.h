@@ -36,6 +36,7 @@ public:
 	}
 	void SetValue(const std::string& InValue) { Value = InValue; }
 	const std::string& GetValue() const { return Value; }
+	const std::string& GetName() const { return Name; }
 
 private:
 	std::string Name;
@@ -116,8 +117,8 @@ public:
 private:
 	void ParseWzAnimNode(const CWzNode& InAnimNode, CWzCharacterAnimator& OutWzCharacterAnimator)
 	{
-		const std::string& AnimName = InAnimNode.GetValue();
-		CWzCharacterAnimation& WzCharacterAnimation = OutWzCharacterAnimator.GetAnimation(AnimName);
+		const std::string& AnimName = InAnimNode.GetName();
+		CWzCharacterAnimation& WzCharacterAnimation = OutWzCharacterAnimator.GetAnimationRef(AnimName);
 
 		for (auto& AnimChildIter : InAnimNode.ChildNodes)
 		{

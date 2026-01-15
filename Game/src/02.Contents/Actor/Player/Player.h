@@ -22,7 +22,8 @@ public:
 	void Update(float InDeltaTime) override
 	{
 		CActor::Update(InDeltaTime);
-
+		if (CharacterAnimator)
+			CharacterAnimator->Update(InDeltaTime);
 		/*if (GetKey(EKeyType::A, EButtonState::Hold))
 		{
 			RigidBody->AddForce(Vector2(-2.0f, 0.0f));

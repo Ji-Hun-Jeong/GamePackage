@@ -28,6 +28,8 @@ void CPlayer::BeginPlay()
 	Loader.LoadWzAnimation("Base", "walk1", CharacterAnimator);
 	Loader.CloseWzData();
 
+	CharacterAnimator->SetCurrentAnimation("walk1", true);
+
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));
 	GroundDetector->GetTransform()->SetPosition(Vector3(0.0f, -10.0f, 0.0f));

@@ -7,7 +7,10 @@
 CWzCharacterAnimator::CWzCharacterAnimator()
 {
 	for (size_t i = 0; i < static_cast<size_t>(EWzPartType::End); ++i)
-		Parts[i] = GetWorld()->SpawnActor<CWzPart>(GetOwnerActor());
+	{
+		CWzPart* Part= GetWorld()->SpawnActor<CWzPart>(GetOwnerActor());
+		PartsManager.SetPart(static_cast<EWzPartType>(i), Part);
+	}
 }
 
 EWzPartType CWzPart::GetPartTypeByName(const std::string& InPartName)
@@ -20,3 +23,13 @@ EWzPartType CWzPart::GetPartTypeByName(const std::string& InPartName)
 	if (InPartName == "rHand")			return EWzPartType::RHand;
 	return EWzPartType::End;
 }
+
+void CWzCharacterAnimator::Update(float InDeltaTime)
+{
+	if (CurrentAnimation == nullptr)
+		return;
+
+	CurrentAnimation->PlayAnimation(InDeltaTime);
+}
+
+
