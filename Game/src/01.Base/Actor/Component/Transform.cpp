@@ -29,7 +29,6 @@ void CTransform::SetPosition(const Vector3& InPosition)
     if (Position != InPosition)
     {
         Position = InPosition;
-        bChangePosition = true;
 
         ChangePosition();
     }
@@ -43,4 +42,16 @@ void CTransform::ChangePosition()
     const std::vector<CActor*>& Childs = OwnerActor->GetChild();
     for (auto Child : Childs)
         Child->GetTransform()->ChangePosition();
+}
+
+std::ostream& operator<<(std::ostream& InOS, const Vector3& InVec3)
+{
+    InOS << "x: " << InVec3.x << ", y: " << InVec3.y << ", z: " << InVec3.z << '\n';
+    return InOS;
+}
+
+std::ostream& operator<<(std::ostream& InOS, const Vector2& InVec2)
+{
+    InOS << "x: " << InVec2.x << ", y: " << InVec2.y << '\n';
+    return InOS;
 }

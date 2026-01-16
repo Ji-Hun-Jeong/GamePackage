@@ -10,7 +10,8 @@ public:
 		, Position(Vector3(0.0f))
 		, Rotation(Vector3(0.0f))
 		, Scale(Vector3(1.0f))
-	{}
+	{
+	}
 	~CTransform() = default;
 
 public:
@@ -47,7 +48,7 @@ public:
 	const Vector3& GetScale() const { return Scale; }
 
 	Vector2 GetWorldPosition2D();
-	Vector2 GetPosition2D() const{return Vector2(Position.x, Position.y);}
+	Vector2 GetPosition2D() const { return Vector2(Position.x, Position.y); }
 	Vector2 GetScale2D() const { return Vector2(Scale.x, Scale.y); }
 
 	// =================================================================
@@ -88,3 +89,6 @@ private:
 
 	bool bChangePosition = true;
 };
+
+std::ostream& operator<< (std::ostream& InOS, const Vector3& InVec3);
+std::ostream& operator<< (std::ostream& InOS, const Vector2& InVec2);

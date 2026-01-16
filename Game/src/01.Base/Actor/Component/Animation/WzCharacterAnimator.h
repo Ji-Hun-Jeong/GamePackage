@@ -32,57 +32,36 @@ class CWzPart : public CStaticActor
 {
 	GENERATE_OBJECT(CWzPart)
 public:
-	CWzPart()
-		: PartType(EWzPartType::End)
-	{
-	}
+	CWzPart() : PartType(EWzPartType::End) {}
 	~CWzPart() = default;
 
 public:
+	void Composite();
 	void SetPartType(EWzPartType InPartType) { PartType = InPartType; }
 	EWzPartType GetPartType() const { return PartType; }
 
 	void SetPartData(const TWzPartData& InPartData) { PartData = InPartData; }
-	TWzPartData& GetPartData() { return PartData; }
+	const TWzPartData& GetPartData() const { return PartData; }
 
 	static EWzPartType GetPartTypeByName(const std::string& InPartName);
+
+	void AttachChildPart(CWzPart& InChildPart)
+	{
+		InChildPart.OwnerPart = this;
+		ChildParts.push_back(&InChildPart);
+	}
 
 private:
 	EWzPartType PartType;
 
 	TWzPartData PartData;
 
-};
+	CWzPart* OwnerPart = nullptr;
+	std::vector<CWzPart*> ChildParts;
 
-class CWzPartsManager
-{
-public:
-	CWzPartsManager() = default;
-	~CWzPartsManager() = default;
-
-public:
-	CWzPart* GetPart(EWzPartType InPartType) const
-	{
-		if (InPartType == EWzPartType::End)
-		{
-			std::cout << "[CWzCharacterAnimator::GetPart] 잘못된 파트 타입 요청: End" << std::endl;
-			return nullptr;
-		}
-		return Parts[static_cast<size_t>(InPartType)];
-	}
-	void SetPart(EWzPartType InPartType, CWzPart* InPart)
-	{
-		if (InPartType == EWzPartType::End)
-		{
-			std::cout << "[CWzCharacterAnimator::SetPart] 잘못된 파트 타입 요청: End" << std::endl;
-			return;
-		}
-		Parts[static_cast<size_t>(InPartType)] = InPart;
-	}
-
-private:
-	CWzPart* Parts[static_cast<size_t>(EWzPartType::End)];
-
+	Vector2 FinalNeck;
+	Vector2 FinalNavel;
+	Vector2 FinalHand;
 };
 
 class CWzFrameData
@@ -123,33 +102,59 @@ private:
 
 };
 
+class CWzPartsManager
+{
+public:
+	explicit CWzPartsManager(std::array<CWzPart*, static_cast<size_t>(EWzPartType::End)>&& InParts);
+	~CWzPartsManager() = default;
+
+public:
+	// 얘가 직접 만들어줘야할듯?
+	void UpdateParts();
+	void CompositeParts(const CWzFrameData& InFrameData);
+	CWzPart* GetPart(EWzPartType InPartType) const
+	{
+		if (InPartType == EWzPartType::End)
+		{
+			std::cout << "[CWzCharacterAnimator::GetPart] 잘못된 파트 타입 요청: End" << std::endl;
+			return nullptr;
+		}
+		return Parts[static_cast<size_t>(InPartType)];
+	}
+
+private:
+	std::array<CWzPart*, static_cast<size_t>(EWzPartType::End)> Parts;
+
+};
+
 class CWzCharacterAnimation
 {
 	friend class CWzCharacterAnimator;
 public:
-	CWzCharacterAnimation(const std::string& InAnimName, CWzPartsManager& InPartsManager) 
-		: AnimName(InAnimName), PartsManager(InPartsManager)
-	{}
+	CWzCharacterAnimation(const std::string& InAnimName)
+		: AnimName(InAnimName)
+	{
+	}
 	~CWzCharacterAnimation() = default;
 
 public:
 	void PlayAnimation(float InDeltaTime)
 	{
+		bFrameChange = false;
 		if (bStop)
 			return;
 
-		ProgressTime += InDeltaTime;
+		ProgressTime += InDeltaTime * 0.5f;
 
 		const CWzFrameData& CurrentFrame = Frames[CurrentFrameIndex];
 
 		if (CurrentFrame.GetDelay() < ProgressTime * 1000.0f)
-		{
 			EnterFrame(CurrentFrameIndex + 1);
-		}
 	}
 
 	void EnterFrame(size_t InFrameIndex)
 	{
+		bFrameChange = true;
 		size_t FinalFrame = InFrameIndex;
 		if (FinalFrame == Frames.size())
 		{
@@ -165,20 +170,9 @@ public:
 		CurrentFrameIndex = FinalFrame;
 		ProgressTime = 0.0f;
 		bStop = false;
-
-		std::cout << "[CWzCharacterAnimation::EnterFrame] 애니메이션 프레임 변경: " << AnimName << " - " << CurrentFrameIndex << std::endl;
-
-		const CWzFrameData& CurrentFrame = Frames[CurrentFrameIndex];
-		for (size_t PartIndex = 0; PartIndex < static_cast<size_t>(EWzPartType::End); ++PartIndex)
-		{
-			EWzPartType PartType = static_cast<EWzPartType>(PartIndex);
-
-			const TWzPartData& PartData = CurrentFrame.GetPartData(PartType);
-
-			CWzPart* Part = PartsManager.GetPart(PartType);
-			Part->SetPartData(PartData);
-		}
 	}
+
+	const CWzFrameData& GetCurrentFrame() const { return Frames[CurrentFrameIndex]; }
 
 	void AddFrameData(const CWzFrameData& InFrameData)
 	{
@@ -186,12 +180,11 @@ public:
 	}
 
 	bool IsStopped() const { return bStop; }
+	bool IsFrameChanged() const { return bFrameChange; }
 
 	void SetLoop(bool InLoop) { bLoop = InLoop; }
 
 private:
-	CWzPartsManager& PartsManager;
-
 	std::string AnimName;
 	std::vector<CWzFrameData> Frames;
 
@@ -202,16 +195,19 @@ private:
 	bool bLoop = false;
 	bool bStop = false;
 
+	bool bFrameChange = false;
+
 };
 
 class CWzCharacterAnimator : public CComponent
 {
 	GENERATE_OBJECT(CWzCharacterAnimator)
 public:
-	CWzCharacterAnimator();
+	CWzCharacterAnimator() = default;
 	~CWzCharacterAnimator() = default;
 
 public:
+	void InitalizeComponent() override;
 	void Update(float InDeltaTime);
 	void SetCurrentAnimation(const std::string& InAnimName, bool bInLoop = false)
 	{
@@ -230,7 +226,7 @@ public:
 	CWzCharacterAnimation& GetAnimationRef(const std::string& InAnimName)
 	{
 		if (WzCharacterAnimations.contains(InAnimName) == false)
-			WzCharacterAnimations.emplace(InAnimName, CWzCharacterAnimation(InAnimName, PartsManager));
+			WzCharacterAnimations.emplace(InAnimName, InAnimName);
 		return WzCharacterAnimations.at(InAnimName);
 	}
 	CWzCharacterAnimation* GetAnimation(const std::string& InAnimName)
@@ -241,9 +237,8 @@ public:
 		return &Iter->second;
 	}
 
-
 private:
-	CWzPartsManager PartsManager;
+	std::unique_ptr<CWzPartsManager> PartsManager;
 
 	std::unordered_map<std::string, CWzCharacterAnimation> WzCharacterAnimations;
 

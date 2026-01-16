@@ -85,11 +85,13 @@ void CSpriteRenderComponent::SetDiffuseImage(const std::wstring& InImagePath)
 		const auto& Texture2DDesc = Texture2D->GetTexture2DDesc();
 		ImageScale = Vector3(float(Texture2DDesc.Width), float(Texture2DDesc.Height), 1.0f);
 		SpriteData.bUseImage = true;
+		ImagePath = InImagePath;
 	}
 	else
 	{
 		ImageScale = Vector3(0.0f, 0.0f, 0.0f);
 		SpriteData.bUseImage = false;
+		ImagePath = L"";
 	}
 	bUpdatedImage = true;
 	bUpdatedSpriteData = true;

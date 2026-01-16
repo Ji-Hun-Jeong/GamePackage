@@ -9,7 +9,6 @@ CPlayer::CPlayer()
 	AddComponent<CSpriteRenderComponent>();
 	SetLineActor();
 	SpriteRenderComponent->SetColor(Vector3(0.0f, 1.0f, 0.0f), 1.0f);
-
 	AddComponent<CRigidBody>();
 
 	CharacterAnimator = AddComponent<CWzCharacterAnimator>();
@@ -26,9 +25,10 @@ void CPlayer::BeginPlay()
 	CWzCharacterLoader& Loader = CWzCharacterLoader::GetInst();
 	Loader.OpenWzData("resources/data/Character/Character.00002000.img.json");
 	Loader.LoadWzAnimation("Base", "walk1", CharacterAnimator);
+	Loader.LoadWzAnimation("Base", "walk2", CharacterAnimator);
 	Loader.CloseWzData();
 
-	CharacterAnimator->SetCurrentAnimation("walk1", true);
+	CharacterAnimator->SetCurrentAnimation("walk2", true);
 
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));

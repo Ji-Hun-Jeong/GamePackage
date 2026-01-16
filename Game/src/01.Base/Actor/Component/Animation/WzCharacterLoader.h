@@ -198,8 +198,8 @@ private:
 			OutPartData.Z = PartNodes.at("z")->GetValue();
 		if (PartNodes.contains("group"))
 			OutPartData.Group = PartNodes.at("group")->GetValue();
-		if (PartNodes.contains("outlink"))
-			OutPartData.OutLink = "resources/image/" + PartNodes.at("outlink")->GetValue() + ".png";
+		if (PartNodes.contains("_outlink"))
+			OutPartData.OutLink = "resources/image/" + PartNodes.at("_outlink")->GetValue() + ".png";
 	}
 	void ParseJsonValue(const rapidjson::Value& InValue, CWzNode* OutNode)
 	{

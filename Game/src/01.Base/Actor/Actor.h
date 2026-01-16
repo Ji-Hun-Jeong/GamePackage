@@ -110,6 +110,7 @@ public:
 	{
 		T* Component = NewObject<T>(this);
 		AttachComponent(Component);
+		Component->InitalizeComponent();
 		return Component;
 	}
 	std::vector<CComponent*> GetComponentsByName(const std::string& InComponentName)
