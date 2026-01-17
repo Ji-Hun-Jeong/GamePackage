@@ -26,6 +26,7 @@ private:
 	std::string Name;
 	std::string Description;
 	std::wstring Icon;
+
 };
 
 class CActiveSkillActor : public CStaticActor
@@ -47,3 +48,5 @@ public:
 private:
 	
 };
+
+extern void Attack(CActor* InOwner);

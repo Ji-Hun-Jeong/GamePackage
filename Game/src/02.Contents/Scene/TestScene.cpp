@@ -15,7 +15,7 @@ void CTestScene::BeginPlay()
 	CScene::BeginPlay();
 
 	GetFader()->FadeIn(1.0f);
-	CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
+	/*CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
 	CAnimator* Animator = Actor->AddComponent<CAnimator>();
 	CAnimation& Animation = Animator->GetAnimationRef("walk1");
 	TFrame& Frame0 = Animation.AddFrame();
@@ -29,10 +29,10 @@ void CTestScene::BeginPlay()
 	Animation.UnifyFrameDuration(0.5f);
 	Animation.SetLoop(true);
 
-	Animator->SetCurrentAnimation("walk1");
-	/*CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
+	Animator->SetCurrentAnimation("walk1");*/
+	CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
 	Player->GetTransform()->SetPosition(Vector3(0.0f, 50.0f, 0.0f));
-	Player->GetComponent<CRigidBody>()->SetGravity(0.0f);*/
+	Player->GetComponent<CRigidBody>()->SetGravity(0.0f);
 
 	/*CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");

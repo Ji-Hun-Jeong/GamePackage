@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "GameCore.h"
 
+
+
 CPlayer::CPlayer()
 {
 	Transform->SetScale(Vector3(37.0f, 37.0f, 1.0f));

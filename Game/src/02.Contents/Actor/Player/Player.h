@@ -7,6 +7,8 @@
 
 #include "01.Base/Actor/Component/Animation/WzCharacterLoader.h"
 
+#include "02.Contents/Skill/Skill.h"
+
 #include "04.Renderer/ImGuiManager.h"
 
 class CPlayer : public CActor
@@ -22,8 +24,11 @@ public:
 	void Update(float InDeltaTime) override
 	{
 		CActor::Update(InDeltaTime);
+
 		if (CharacterAnimator)
 			CharacterAnimator->Update(InDeltaTime);
+		if (GetKey(EKeyType::Ctrl, EButtonState::Tap))
+			Attack(this);
 		/*if (GetKey(EKeyType::A, EButtonState::Hold))
 		{
 			RigidBody->AddForce(Vector2(-2.0f, 0.0f));

@@ -17,6 +17,7 @@ public:
 		if (Animations.contains(InAnimationName) == false)
 			Animations.emplace(InAnimationName, CAnimation{});
 		auto Iter = Animations.find(InAnimationName);
+		CurrentAnimation = &Iter->second;
 		return Iter->second;
 	}
 	void SetCurrentAnimation(const std::string& InAnimation)
