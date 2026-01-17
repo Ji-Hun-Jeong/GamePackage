@@ -26,9 +26,16 @@ void CPlayer::BeginPlay()
 	Loader.OpenWzData("resources/data/Character/Character.00002000.img.json");
 	Loader.LoadWzAnimation("Base", "walk1", CharacterAnimator);
 	Loader.LoadWzAnimation("Base", "walk2", CharacterAnimator);
+	Loader.LoadWzAnimation("Base", "stand1", CharacterAnimator);
+	Loader.LoadWzAnimation("Base", "stand2", CharacterAnimator);
+	Loader.LoadWzAnimation("Base", "swingO1", CharacterAnimator);
+	Loader.LoadWzAnimation("Base", "swingO2", CharacterAnimator);
+	Loader.LoadWzAnimation("Base", "swingO3", CharacterAnimator);
+	Loader.LoadWzAnimation("Base", "alert", CharacterAnimator);
+	Loader.LoadWzAnimation("Base", "fly", CharacterAnimator);
 	Loader.CloseWzData();
 
-	CharacterAnimator->SetCurrentAnimation("walk2", true);
+	CharacterAnimator->SetCurrentAnimation("walk1", true);
 
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));

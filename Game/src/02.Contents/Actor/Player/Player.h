@@ -63,8 +63,7 @@ public:
 			// 여기서 이벤트 발생!
 			std::string command = inputBuffer;
 			
-			// Todo: 명령어 처리 하든지 말든지
-			// Character->PlayAnimation(command);
+			CharacterAnimator->SetCurrentAnimation(command, true);
 
 			// 입력 후 버퍼 비우기 (필요 시)
 			memset(inputBuffer, 0, sizeof(inputBuffer));

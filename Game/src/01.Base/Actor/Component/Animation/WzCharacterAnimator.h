@@ -22,6 +22,7 @@ struct TWzPartData
 		Vector2 Neck;
 		Vector2 Navel;
 		Vector2 Hand;
+		Vector2 HandMove;
 	} Map;
 	std::string Z;
 	std::string Group;
@@ -62,6 +63,8 @@ private:
 	Vector2 FinalNeck;
 	Vector2 FinalNavel;
 	Vector2 FinalHand;
+	Vector2 FinalHandMove;
+
 };
 
 class CWzFrameData

@@ -4,52 +4,66 @@
 #include "GameCore.h"
 #include "WzCharacterLoader.h"
 
-
-
 void CWzPart::Composite()
 {
-	// 여기서 자신을 먼저 업데이트함. 부모를 참조해서
-	const std::wstring& ImagePath = SpriteRenderComponent->GetImagePath();
-	if (ImagePath.empty())
-		return;
-	Vector2 ImageCenter = GetImageScale(ImagePath) * 0.5f;
-	Vector2 Origin = PartData.Origin;
-	Vector2 Navel = PartData.Map.Navel;
-	Vector2 Hand = PartData.Map.Hand;
+    // [공통 계산] 이미지 중심 대비 포인트들의 상대 오프셋 (Y축 반전 포함)
+    const std::wstring& ImagePath = SpriteRenderComponent->GetImagePath();
+    if (ImagePath.empty()) return;
 
-	FinalNavel = Vector2(1.0f, -1.0f) * ((Origin + Navel) - ImageCenter);
-	FinalHand = Vector2(1.0f, -1.0f) * ((Origin + Hand) - ImageCenter);
-	if (OwnerPart)
-	{
-		FinalNavel = OwnerPart->FinalNavel - FinalNavel;
-		FinalHand = OwnerPart->FinalNavel - FinalHand;
-		EWzPartType PartType = GetPartType();
-		switch (PartType)
-		{
-		case EWzPartType::Body:
-			break;
-		case EWzPartType::Arm:
-			Transform->SetPosition(Vector3(FinalNavel.x, FinalNavel.y, 0.0f));
-			break;
-		case EWzPartType::Hand:
-			Transform->SetPosition(Vector3(FinalNavel.x, FinalNavel.y, 0.0f));
-			break;
-		case EWzPartType::ArmOverHair:
-			break;
-		case EWzPartType::LHand:
-			break;
-		case EWzPartType::RHand:
-			break;
-		case EWzPartType::End:
-			break;
-		default:
-			break;
-		}
-	}
-	for (CWzPart* ChildPart : ChildParts)
-		ChildPart->Composite();
+    Vector2 ImageCenter = GetImageScale(ImagePath) * 0.5f;
+    Vector2 Origin = PartData.Origin;
+
+    // 각 포인트들이 이미지 중심에서 얼마나 떨어져 있는지 계산
+    FinalNavel = Vector2(1.0f, -1.0f) * ((Origin + PartData.Map.Navel) - ImageCenter);
+    FinalHand = Vector2(1.0f, -1.0f) * ((Origin + PartData.Map.Hand) - ImageCenter);
+    FinalHandMove = Vector2(1.0f, -1.0f) * ((Origin + PartData.Map.HandMove) - ImageCenter);
+
+    EWzPartType PartType = GetPartType();
+	Vector2 ResultPos;
+
+    switch (PartType)
+    {
+    case EWzPartType::Body:
+        // 바디는 루트이므로 원점에 배치 (혹은 캐릭터 월드 좌표)
+		ResultPos;
+        break;
+
+    case EWzPartType::Arm:
+        // Arm(navel) -> Body(navel) 연결
+        ResultPos = OwnerPart->FinalNavel - FinalNavel;
+        // 다음 자식(LHand)을 위해 자신의 Hand 포인트 위치를 업데이트
+        // (현재 좌표에 자신의 Hand 오프셋을 더함)
+        FinalHand = ResultPos + FinalHand;
+        break;
+
+    case EWzPartType::LHand:
+        // LHand(handMove) -> Arm(hand) 연결
+        // Arm이 위에서 업데이트한 FinalHand(월드기준)를 사용함
+        //ResultPos = OwnerPart->FinalHand - FinalHandMove;
+		ResultPos = OwnerPart->FinalHand - (Vector2(1.0f, -1.0f) * (Origin - ImageCenter)) - Vector2(0.0f,15.0f);
+        break;
+
+    case EWzPartType::RHand:
+        // RHand(navel) -> Body(navel) 연결
+        ResultPos = OwnerPart->FinalNavel - FinalNavel;
+		FinalNavel = ResultPos;
+        break;
+
+    case EWzPartType::Hand: // 보통의 Hand 파츠
+        ResultPos = OwnerPart->FinalNavel - FinalNavel;
+        break;
+
+    default:
+        break;
+    }
+
+    // 최종 트랜스폼 적용
+    Transform->SetPosition(Vector3(ResultPos.x, ResultPos.y, 0.0f));
+
+    // 자식들에게 전파
+    for (CWzPart* ChildPart : ChildParts)
+        ChildPart->Composite();
 }
-
 CWzPartsManager::CWzPartsManager(std::array<CWzPart*, static_cast<size_t>(EWzPartType::End)>&& InParts)
 	: Parts(std::move(InParts))
 {
@@ -65,8 +79,8 @@ CWzPartsManager::CWzPartsManager(std::array<CWzPart*, static_cast<size_t>(EWzPar
 
 	BodyPart->AttachChildPart(*ArmPart);
 	BodyPart->AttachChildPart(*HandPart);
+	BodyPart->AttachChildPart(*RHandPart);
 	ArmPart->AttachChildPart(*LHandPart);
-	ArmPart->AttachChildPart(*RHandPart);
 }
 
 void CWzPartsManager::UpdateParts()
@@ -114,14 +128,13 @@ void CWzCharacterAnimator::Update(float InDeltaTime)
 {
 	if (CurrentAnimation == nullptr)
 		return;
-
-	CurrentAnimation->PlayAnimation(InDeltaTime);
-
 	if (CurrentAnimation->IsFrameChanged())
 	{
 		const auto& CurrentFrameData = CurrentAnimation->GetCurrentFrame();
 		PartsManager->CompositeParts(CurrentFrameData);
 	}
 	PartsManager->UpdateParts();
+
+	CurrentAnimation->PlayAnimation(InDeltaTime);
 }
 

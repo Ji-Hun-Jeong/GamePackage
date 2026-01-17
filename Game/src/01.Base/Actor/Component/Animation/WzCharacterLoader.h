@@ -193,6 +193,12 @@ private:
 				if (StrToVec2(MapNodes.at("hand")->GetValue(), &Hand))
 					OutPartData.Map.Hand = Hand;
 			}
+			if (MapNodes.contains("handMove"))
+			{
+				Vector2 HandMove;
+				if (StrToVec2(MapNodes.at("handMove")->GetValue(), &HandMove))
+					OutPartData.Map.HandMove = HandMove;
+			}
 		}
 		if (PartNodes.contains("z"))
 			OutPartData.Z = PartNodes.at("z")->GetValue();
