@@ -7,15 +7,17 @@ class CAnimator : public CComponent
 	DONTCOPY(CAnimator)
 	GENERATE_OBJECT(CAnimator)
 public:
-	CAnimator();
+	CAnimator() = default;
 	~CAnimator() = default;
 
 public:
 	void PlayAnimation(float InDeltaTime);
-	void AddAnimation(const std::string& InAnimationName, std::unique_ptr<CAnimation> InAnimation)
+	CAnimation& GetAnimationRef(const std::string& InAnimationName)
 	{
-		assert(InAnimation);
-		Animations.insert({ InAnimationName, std::move(InAnimation) });
+		if (Animations.contains(InAnimationName) == false)
+			Animations.emplace(InAnimationName, CAnimation{});
+		auto Iter = Animations.find(InAnimationName);
+		return Iter->second;
 	}
 	void SetCurrentAnimation(const std::string& InAnimation)
 	{
@@ -23,23 +25,10 @@ public:
 		if (Iter == Animations.end())
 			assert(0);
 
-		CurrentAnimationChangeRequest = Iter->second.get();
-	}
-	void SetCurrentAnimation(CAnimation& InAnimation)
-	{
-		CurrentAnimationChangeRequest = &InAnimation;
+		CurrentAnimation = &Iter->second;
+		CurrentAnimation->EnterFrame(0);
 	}
 
-	bool TryChangeCurrentAnimation()
-	{
-		if (CurrentAnimationChangeRequest == nullptr)
-			return false;
-
-		CurrentAnimation = CurrentAnimationChangeRequest;
-		CurrentAnimationChangeRequest = nullptr;
-
-		return true;
-	}
 	CAnimation* GetCurrentAnimation() const { return CurrentAnimation; }
 	void Serialize(CSerializer& InSerializer) const override
 	{
@@ -50,24 +39,22 @@ public:
 		for (auto& Animation : Animations)
 		{
 			CSerializer AnimationData;
-			Animation.second->Serialize(AnimationData);
+			//Animation.second->Serialize(AnimationData);
 			AnimationArray.push_back(AnimationData);
 		}
 		InSerializer = AnimationArray;
 	}
-	CAnimation* GetAnimation(const std::string& InAnimationName) const 
+	CAnimation* GetAnimation(const std::string& InAnimationName) 
 	{
 		auto Iter = Animations.find(InAnimationName);
 		if (Iter == Animations.end())
 			return nullptr;
-		return Iter->second.get();
+		return &Iter->second;
 	}
 
 private:
-	std::map<std::string, std::unique_ptr<CAnimation>> Animations;
-	CAnimation* CurrentAnimation;
-
-	CAnimation* CurrentAnimationChangeRequest;
+	std::map<std::string, CAnimation> Animations;
+	CAnimation* CurrentAnimation = nullptr;
 
 };
 

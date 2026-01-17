@@ -5,7 +5,7 @@
 #include "02.Contents/Actor/Base/BackGround.h"
 
 #include "02.Contents/Actor/Manager/GroundManager.h"
-#include "02.Contents/Manager/CharacterLoader.h"
+
 CTestScene::CTestScene()
 {
 }
@@ -15,9 +15,24 @@ void CTestScene::BeginPlay()
 	CScene::BeginPlay();
 
 	GetFader()->FadeIn(1.0f);
-	CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
+	CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
+	CAnimator* Animator = Actor->AddComponent<CAnimator>();
+	CAnimation& Animation = Animator->GetAnimationRef("walk1");
+	TFrame& Frame0 = Animation.AddFrame();
+	Frame0.ImagePath = L"resources/image/Player/Alert/0.png";
+	TFrame& Frame1 = Animation.AddFrame();
+	Frame1.ImagePath = L"resources/image/Player/Alert/1.png";
+	TFrame& Frame2 = Animation.AddFrame();
+	Frame2.ImagePath = L"resources/image/Player/Alert/2.png";
+	TFrame& Frame3 = Animation.AddFrame();
+	Frame3.ImagePath = L"resources/image/Player/Alert/3.png";
+	Animation.UnifyFrameDuration(0.5f);
+	Animation.SetLoop(true);
+
+	Animator->SetCurrentAnimation("walk1");
+	/*CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
 	Player->GetTransform()->SetPosition(Vector3(0.0f, 50.0f, 0.0f));
-	Player->GetComponent<CRigidBody>()->SetGravity(0.0f);
+	Player->GetComponent<CRigidBody>()->SetGravity(0.0f);*/
 
 	/*CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");

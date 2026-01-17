@@ -40,11 +40,13 @@ void CWzPart::Composite()
         // LHand(handMove) -> Arm(hand) 연결
         // Arm이 위에서 업데이트한 FinalHand(월드기준)를 사용함
         //ResultPos = OwnerPart->FinalHand - FinalHandMove;
-		ResultPos = OwnerPart->FinalHand - (Vector2(1.0f, -1.0f) * (Origin - ImageCenter)) - Vector2(0.0f,15.0f);
+		// Todo: 알아내긴 해야함
+		ResultPos = (Vector2(1.0f, -1.0f) * (Origin + PartData.Map.HandMove- ImageCenter));
         break;
 
     case EWzPartType::RHand:
         // RHand(navel) -> Body(navel) 연결
+		// Todo: rHand계산법도 뭔가 이상함. 그냥 가만히 있던데 alert에서 rHand는
         ResultPos = OwnerPart->FinalNavel - FinalNavel;
 		FinalNavel = ResultPos;
         break;
@@ -80,7 +82,7 @@ CWzPartsManager::CWzPartsManager(std::array<CWzPart*, static_cast<size_t>(EWzPar
 	BodyPart->AttachChildPart(*ArmPart);
 	BodyPart->AttachChildPart(*HandPart);
 	BodyPart->AttachChildPart(*RHandPart);
-	ArmPart->AttachChildPart(*LHandPart);
+	BodyPart->AttachChildPart(*LHandPart);
 }
 
 void CWzPartsManager::UpdateParts()

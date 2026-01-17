@@ -11,22 +11,10 @@ struct TFrame
 	float Duration = 0.0f;
 };
 
-enum class EFrameIncreaseState
-{
-	Increase,
-	Decrease
-};
 class CAnimation
 {
 public:
-	CAnimation(bool bInInfinite = false)
-		: CurrentFrameIndex(-1)
-		, NextFrameIndex(0)
-		, CurrentFrame(nullptr)
-		, ProgressTime(0.0f)
-		, bInfinite(bInInfinite)
-	{
-	}
+	CAnimation() = default;
 	~CAnimation() = default;
 
 public:
@@ -44,150 +32,58 @@ public:
 		}
 		InSerializer.push_back(FrameArray);
 	}
-	void AddFrame(const TFrame& InFrame)
+	TFrame& AddFrame()
 	{
-		Frames.push_back(InFrame);
+		Frames.emplace_back(TFrame{});
+		return Frames.back();
 	}
-	const TFrame& GetCurrentFrame() const { return *CurrentFrame; }
+	void SetLoop(bool bInLoop) { bLoop = bInLoop; }
+	const TFrame& GetCurrentFrame() const { return Frames[CurrentFrameIndex]; }
 	void UpdateAnimationState(float InDeltaTime)
 	{
-		ProgressTime += InDeltaTime;
-		if (CurrentFrame->Duration <= ProgressTime)
-		{
-			// 지금 프레임 증가 상태에 따라 끝에 도달했는지 체크
-			// 루프가 아니면 멈추기
-			// 루프면 프레임 증가 상태에 따라 다음 프레임으로 이동
-			if (IsAnimationEnd())
-			{
-				if (bInfinite)
-				{
-					if (bPingPong)
-						ChangeFrameIncreaseState();
-					else
-						RequestFrame(0);
-				}
-			}
-			else
-			{
-				AdvanceFrame();
-			}
-		}
-	}
-
-	bool IsAnimationEnd() const
-	{
-		bool bEnd = false;
-		if (bInfinite && bPingPong)
-		{
-			switch (FrameIncreaseState)
-			{
-			case EFrameIncreaseState::Increase:
-				if (Frames.size() - 1 == CurrentFrameIndex)
-					bEnd = true;
-				break;
-			case EFrameIncreaseState::Decrease:
-				if (CurrentFrameIndex == 0)
-					bEnd = true;
-				break;
-			default:
-				break;
-			}
-		}
-		else
-		{
-			if (Frames.size() - 1 == CurrentFrameIndex)
-				bEnd = true;
-		}
-		return bEnd;
-	}
-	void AdvanceFrame()
-	{
-		if (bInfinite && bPingPong)
-		{
-			switch (FrameIncreaseState)
-			{
-			case EFrameIncreaseState::Increase:
-				RequestFrame(CurrentFrameIndex + 1);
-				break;
-			case EFrameIncreaseState::Decrease:
-				RequestFrame(CurrentFrameIndex - 1);
-				break;
-			default:
-				break;
-			}
+		bFrameChange = false;
+		if (bFinish)
 			return;
-		}
-		else
-			RequestFrame(CurrentFrameIndex + 1);
-	}
-	void ChangeFrameIncreaseState()
-	{
-		switch (FrameIncreaseState)
-		{
-		case EFrameIncreaseState::Increase:
-			FrameIncreaseState = EFrameIncreaseState::Decrease;
-			break;
-		case EFrameIncreaseState::Decrease:
-			FrameIncreaseState = EFrameIncreaseState::Increase;
-			break;
-		default:
-			break;
-		}
-	}
 
-	bool TryChangeFrame()
-	{
-		if (NextFrameIndex != CurrentFrameIndex)
-		{
-			CurrentFrameIndex = NextFrameIndex;
-			CurrentFrame = &Frames[CurrentFrameIndex];
-			return true;
-		}
-		return false;
-	}
+		ProgressTime += InDeltaTime;
 
-	void RequestFrame(size_t InFrameIndex)
+		const TFrame& CurrentFrame = GetCurrentFrame();
+		if (CurrentFrame.Duration <= ProgressTime)
+			EnterFrame(CurrentFrameIndex + 1);
+	}
+	void EnterFrame(size_t InFrameIndex)
 	{
-		NextFrameIndex = InFrameIndex;
+		bFrameChange = true;
+
+		size_t FinalFrameIndex = InFrameIndex;
+		if (FinalFrameIndex == Frames.size())
+		{
+			if (bLoop)
+				FinalFrameIndex = 0;
+			else
+				bFinish = true;
+		}
+
+		CurrentFrameIndex = FinalFrameIndex;
 		ProgressTime = 0.0f;
 	}
-
+	bool IsFrameChanged() const { return bFrameChange; }
+	bool IsFinish() const { return bFinish; }
 	void UnifyFrameDuration(float InDuration)
 	{
 		for (auto& Frame : Frames)
 			Frame.Duration = InDuration;
 	}
 
-	const TFrame& GetFrame(size_t InOrder) { return Frames[InOrder]; }
-
-	void SetInfinite(bool bInInfinite) { bInfinite = bInInfinite; }
-	void SetPingPong(bool bInPingPong)
-	{
-		if (bInPingPong)
-		{
-			bInfinite = true;
-			FrameIncreaseState = EFrameIncreaseState::Increase;
-		}
-		else
-		{
-			bInfinite = false;
-			FrameIncreaseState = EFrameIncreaseState::Increase;
-		}
-		bPingPong = bInPingPong;
-	}
-
 private:
 	std::vector<TFrame> Frames;
-	TFrame* CurrentFrame;
 
-	size_t CurrentFrameIndex;
-	size_t NextFrameIndex;
+	size_t CurrentFrameIndex = 0;
+	float ProgressTime = 0.0f;
 
-	float ProgressTime;
-
-	bool bInfinite;
-	bool bPingPong = false;
-	EFrameIncreaseState FrameIncreaseState = EFrameIncreaseState::Increase;
+	bool bLoop = false;
+	bool bFrameChange = false;
+	bool bFinish = false;
 
 };
 

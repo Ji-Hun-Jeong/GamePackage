@@ -51,7 +51,6 @@ void CPSOManager::Initalize(Graphics::CRenderDevice& InDevice)
 	// 필요하면 RGBA 각각에 대해서도 조절 가능
 	BasicBlendStateDesc.RenderTarget[0].RenderTargetWriteMask = Graphics::EColorWhiteEnable::COLOR_WRITE_ENABLE_ALL;
 	BasicBlendState = InDevice.CreateBlendState(BasicBlendStateDesc);
-	std::cout << BasicBlendState << std::endl;
 
 	Graphics::TBlendDesc TransparentBlendStateDesc;
 	TransparentBlendStateDesc.RenderTarget[0].BlendEnable = true;
@@ -66,7 +65,6 @@ void CPSOManager::Initalize(Graphics::CRenderDevice& InDevice)
 	TransparentBlendStateDesc.RenderTarget[0].RenderTargetWriteMask = Graphics::EColorWhiteEnable::COLOR_WRITE_ENABLE_ALL;
 
 	TransparentBlendState = InDevice.CreateBlendState(TransparentBlendStateDesc);
-	std::cout << TransparentBlendState << std::endl;
 
 	CPSO* BasicPSO = new CPSO(Graphics::ETopology::PrimitiveTopologyTRIANGLELIST, BasicInputLayout.get(), BasicVertexShader.get()
 		, BasicRasterizerState.get(), LinearSamplerState.get(), BasicBlendState.get());

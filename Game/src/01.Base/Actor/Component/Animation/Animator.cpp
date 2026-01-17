@@ -3,27 +3,14 @@
 
 #include "01.Base/Actor/Actor.h"
 
-CAnimator::CAnimator()
-	: CurrentAnimation(nullptr)
-	, CurrentAnimationChangeRequest(nullptr)
-{}
-
 void CAnimator::PlayAnimation(float InDeltaTime)
 {
-	bool bChangeAnimation = TryChangeCurrentAnimation();
-
-	CAnimation* CurrentAnimation = GetCurrentAnimation();
 	if (CurrentAnimation == nullptr)
-	{
-		if(GetOwnerActor()->GetSpriteRenderComponent())
-			GetOwnerActor()->GetSpriteRenderComponent()->SetDiffuseImage(L"");
 		return;
-	}
+	if (CurrentAnimation->IsFinish())
+		return;
 
-	if (bChangeAnimation)
-		CurrentAnimation->RequestFrame(0);
-
-	bool bChangeFrame = CurrentAnimation->TryChangeFrame();
+	bool bChangeFrame = CurrentAnimation->IsFrameChanged();
 	if (bChangeFrame)
 	{
 		const TFrame& ChangedFrame = CurrentAnimation->GetCurrentFrame();
@@ -37,5 +24,4 @@ void CAnimator::PlayAnimation(float InDeltaTime)
 	}
 
 	CurrentAnimation->UpdateAnimationState(InDeltaTime);
-	
 }

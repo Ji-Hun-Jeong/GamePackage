@@ -8,6 +8,7 @@
 #include "Component/RenderComponents/SpriteRenderComponent.h"
 #include "Component/PixelCollider.h"
 #include "Component/Collider/Collider.h"
+#include "Component/Animation/Animator.h"
 
 extern class CWorld* g_World;
 

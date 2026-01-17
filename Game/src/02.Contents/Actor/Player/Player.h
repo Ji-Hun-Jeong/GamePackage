@@ -79,11 +79,6 @@ public:
 	bool IsOnGround() const { return GroundDetector->IsOnGround(); }
 
 private:
-	CStaticActor* Head = nullptr;
-	CStaticActor* Body = nullptr;
-	CStaticActor* Arm = nullptr;
-	CStaticActor* Hand = nullptr;
-private:
 	CGroundDetector* GroundDetector = nullptr;
 	CWzCharacterAnimator* CharacterAnimator = nullptr;
 

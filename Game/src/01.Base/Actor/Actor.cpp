@@ -3,7 +3,6 @@
 
 #include "04.Renderer/SpriteRenderer.h"
 #include "Component/RigidBody.h"
-#include "Component/Animation/Animator.h"
 
 CActor::CActor()
 	: Owner(nullptr)

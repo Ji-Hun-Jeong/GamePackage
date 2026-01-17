@@ -81,9 +81,6 @@
     <ClCompile Include="src\01.Base\Actor\Component\Animation\Animation.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Actor\Component\Animation\AnimationTransition.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\01.Base\Actor\Scene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -237,12 +234,6 @@
     <ClCompile Include="src\01.Base\Actor\Component\RigidBody.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Component\Character.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\02.Contents\Manager\CharacterLoader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utils.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -250,6 +241,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\01.Base\Actor\Component\Animation\WzCharacterLoader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Skill\Skill.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Skill\SkillCaster.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -315,9 +312,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Actor\Component\Animation\Animation.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\01.Base\Actor\Component\Animation\AnimationTransition.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Actor\Scene.h">
@@ -479,19 +473,19 @@
     <ClInclude Include="src\01.Base\Actor\Component\RigidBody.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Component\Character.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\Common\Json.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\02.Contents\Manager\CharacterLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Actor\Component\Animation\WzCharacterAnimator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\01.Base\Actor\Component\Animation\WzCharacterLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Skill\Skill.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Skill\SkillCaster.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
