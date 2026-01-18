@@ -59,7 +59,9 @@ public:
 
 			std::vector<CCollider*> Colliders = WorldActor->GetComponents<CCollider>();
 			for (auto Collider : Colliders)
+			{
 				CollisionManager.RequestCollision(*Collider);
+			}
 		}
 
 		CollisionManager.CheckCollisionProcess();
@@ -118,7 +120,7 @@ public:
 			DestroyObject(WorldActor);
 		// Todo: 나중에 상태패턴 또는 메세지큐로 전환
 		PushWorldSynchronizeEvent([this]()->void
-			{ 
+			{
 				SpawnActor<T_SCENE>();
 			});
 	}

@@ -1,0 +1,50 @@
+{
+  "0": {
+    "SkillName": "stabO1",
+    "SkillType": 0,
+    "Description": "Axe.stabO1",
+    "Animation": {
+      "Loop": false,
+      "Frames": [
+        {
+          "ImagePath": "resources/image/Character/AfterImage/axe.img/stabO1/0_30.png",
+          "Duration": 0.3
+        },
+        {
+          "ImagePath": "resources/image/Character/AfterImage/axe.img/stabO1/0_30.png",
+          "Duration": 0.3
+        },
+        {
+          "ImagePath": "resources/image/Character/AfterImage/axe.img/stabO1/30_60.png",
+          "Duration": 0.3
+        },
+        {
+          "ImagePath": "resources/image/Character/AfterImage/axe.img/stabO1/60_90.png",
+          "Duration": 0.3
+        },
+        {
+          "ImagePath": "resources/image/Character/AfterImage/axe.img/stabO1/90_120.png",
+          "Duration": 0.3
+        },
+        {
+          "ImagePath": "resources/image/Character/AfterImage/axe.img/stabO1/120_150.png",
+          "Duration": 0.3
+        },
+        {
+          "ImagePath": "resources/image/Character/AfterImage/axe.img/stabO1/150_180.png",
+          "Duration": 0.3
+        },
+        {
+          "ImagePath": "resources/image/Character/AfterImage/axe.img/stabO1/180_230.png",
+          "Duration": 0.5
+        }
+      ]
+    },
+    "HitBox": {
+      "LeftTop": [ -50, 50 ],
+      "RightBottom": [ 50, -50 ],
+      "AttackFrameNumber": 7
+    }
+
+  }
+}

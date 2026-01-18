@@ -16,11 +16,9 @@ void CAnimator::PlayAnimation(float InDeltaTime)
 		const TFrame& ChangedFrame = CurrentAnimation->GetCurrentFrame();
 
 		CActor* OwnerActor = GetOwnerActor();
-		OwnerActor->GetTransform()->SetPosition(ChangedFrame.Offset);
+		OwnerActor->GetTransform()->AddPositionOffset(ChangedFrame.Offset);
 		if (OwnerActor->GetSpriteRenderComponent())
 			OwnerActor->GetSpriteRenderComponent()->SetDiffuseImage(ChangedFrame.ImagePath);
-		if (ChangedFrame.FrameAction)
-			ChangedFrame.FrameAction();
 	}
 
 	CurrentAnimation->UpdateAnimationState(InDeltaTime);

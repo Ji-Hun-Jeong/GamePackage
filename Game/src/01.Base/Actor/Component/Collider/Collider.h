@@ -22,7 +22,7 @@ public:
 	void SetOffset(const Vector2& InOffset) { Offset = InOffset; }
 	Vector2 GetFinalPosition() const;
 	EColliderType GetColliderType() const { return ColliderType; }
-
+	void SetLayer(uint32_t InLayer) { Layer = InLayer; }
 private:
 	EColliderType ColliderType;
 
@@ -45,7 +45,12 @@ public:
 public:
 	void DebugRender(class CSpriteRenderer& InRenderer) override;
 	bool IsInside(const Vector2& InPosition) override;
-	void SetRectScale(const Vector2& InRectScale) { RectScale = InRectScale; }
+	void SetRectScale(const Vector2& InRectScale) 
+	{ 
+		RectScale = InRectScale; 
+		RectScale.x = RectScale.x < 0.0f ? -RectScale.x : RectScale.x;
+		RectScale.y = RectScale.y < 0.0f ? -RectScale.y : RectScale.y;
+	}
 	const Vector2& GetRectScale() const { return RectScale; }
 
 private:

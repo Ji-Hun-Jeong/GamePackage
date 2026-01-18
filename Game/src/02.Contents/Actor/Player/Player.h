@@ -7,14 +7,15 @@
 
 #include "01.Base/Actor/Component/Animation/WzCharacterLoader.h"
 
-#include "02.Contents/Skill/Skill.h"
+#include "02.Contents/Skill/SkillCaster.h"
+#include "02.Contents/Skill/SkillLoader.h"
 
 #include "04.Renderer/ImGuiManager.h"
 
 class CPlayer : public CActor
 {
 	GENERATE_OBJECT(CPlayer)
-	DONTCOPY(CPlayer)
+		DONTCOPY(CPlayer)
 public:
 	CPlayer();
 	~CPlayer();
@@ -28,7 +29,10 @@ public:
 		if (CharacterAnimator)
 			CharacterAnimator->Update(InDeltaTime);
 		if (GetKey(EKeyType::Ctrl, EButtonState::Tap))
-			Attack(this);
+		{
+			auto Data = SkillLoader.GetMeleeAttackData("stabO1");
+			SkillCaster->MeleeAttack(*Data);
+		}
 		/*if (GetKey(EKeyType::A, EButtonState::Hold))
 		{
 			RigidBody->AddForce(Vector2(-2.0f, 0.0f));
@@ -67,7 +71,7 @@ public:
 		{
 			// 여기서 이벤트 발생!
 			std::string command = inputBuffer;
-			
+
 			CharacterAnimator->SetCurrentAnimation(command, true);
 
 			// 입력 후 버퍼 비우기 (필요 시)
@@ -86,6 +90,9 @@ public:
 private:
 	CGroundDetector* GroundDetector = nullptr;
 	CWzCharacterAnimator* CharacterAnimator = nullptr;
+	CSkillCaster* SkillCaster = nullptr;
+
+	CSkillLoader SkillLoader;
 
 };
 

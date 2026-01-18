@@ -12,13 +12,17 @@ public:
 
 public:
 	void PlayAnimation(float InDeltaTime);
-	CAnimation& GetAnimationRef(const std::string& InAnimationName)
+	CAnimation& AddAnimationRef(const std::string& InAnimationName)
 	{
 		if (Animations.contains(InAnimationName) == false)
 			Animations.emplace(InAnimationName, CAnimation{});
 		auto Iter = Animations.find(InAnimationName);
 		CurrentAnimation = &Iter->second;
 		return Iter->second;
+	}
+	void AddAnimation(const std::string& InAnimationName, const CAnimation& InAnimation)
+	{
+		Animations.emplace(InAnimationName, InAnimation);
 	}
 	void SetCurrentAnimation(const std::string& InAnimation)
 	{

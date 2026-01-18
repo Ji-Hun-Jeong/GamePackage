@@ -186,6 +186,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\01.Base\Manager\WzLoader.cpp" />
+    <ClCompile Include="src\02.Contents\Skill\SkillLoader.cpp" />
     <ClCompile Include="src\02.Contents\Skill\SkillCaster.cpp" />
     <ClCompile Include="src\02.Contents\Skill\Skill.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Animation\WzCharacterLoader.cpp" />
@@ -269,8 +271,11 @@
     <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UISceneProxy.cpp" />
     <ClCompile Include="src\Utils.cpp" />
+    <ClCompile Include="src\01.Base\Actor\Component\Animation\WzAnimationLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\01.Base\Manager\WzLoader.h" />
+    <ClInclude Include="src\02.Contents\Skill\SkillLoader.h" />
     <ClInclude Include="src\02.Contents\Skill\SkillCaster.h" />
     <ClInclude Include="src\02.Contents\Skill\Skill.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Animation\WzCharacterLoader.h" />
@@ -350,6 +355,7 @@
     <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UISceneProxy.h" />
     <ClInclude Include="src\Utils.h" />
+    <ClInclude Include="src\01.Base\Actor\Component\Animation\WzAnimationLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

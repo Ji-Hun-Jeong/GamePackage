@@ -34,7 +34,7 @@ public:
 
 				bool bCollision = CheckCollision(Collider1, Collider2);
 				bool bPrevCollision = IsPrevCollision(Collider1, Collider2);
-				
+
 				if (bPrevCollision)
 				{
 					if (Collider1.IsDestroy() || Collider2.IsDestroy())
@@ -89,7 +89,7 @@ private:
 			Collider1 = &InCollider2;
 			Collider2 = &InCollider1;
 		}
-		
+
 		if (Collider1->GetColliderType() == EColliderType::Rect && Collider2->GetColliderType() == EColliderType::Rect)
 			return IsCollision(static_cast<CRectCollider&>(*Collider1), static_cast<CRectCollider&>(*Collider2));
 		else if (Collider1->GetColliderType() == EColliderType::Rect && Collider2->GetColliderType() == EColliderType::Circle)

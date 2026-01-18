@@ -12,6 +12,13 @@ const Vector3& CTransform::GetWorldPosition()
         else
             WorldPosition = Position;
 
+        while (PositionOffsets.empty() == false)
+        {
+            const Vector3& Offset = PositionOffsets.front();
+            WorldPosition += Offset;
+            PositionOffsets.pop();
+        }
+
         bChangePosition = false;
     }
 

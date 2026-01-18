@@ -1,16 +1,8 @@
 #pragma once
-#ifdef GetObject
-#undef GetObject
-#endif
+
 #include "Utils.h"
-#include "WzCharacterAnimator.h"
 #include "Common/Json.h"
-#include "Utils.h"
-// 애니메이션 재생해달라고 요청하면 그 애니메이션 재생
-// 재생을 하려면 어떤 데이터들이 있을거고 그 데이터들을 BoneAnimator한테 넣어줌
-// BoneAnimator가 그 데이터를 해석해서 자기가 가진 Part들한테 전달해줌
-// 각 파트가 자신의 새로운 위치를 계산함.
-// 프레임이 넘어갈 때마다 파츠를 갱신
+#include "WzCharacterAnimator.h"
 
 class CWzNode
 {
@@ -52,42 +44,18 @@ public:
 	~CWzCharacterLoader() = default;
 
 public:
-	bool OpenWzData(const std::string& InCharacterWzJsonPath)
+	CWzNode* LoadWzCharacterAnimation(const rapidjson::Document& InLoadData, const std::string& InCharacterName, const std::string& InAnimName, CWzCharacterAnimator* OutWzCharacterAnimator)
 	{
-		FILE* File = nullptr;
-		fopen_s(&File, InCharacterWzJsonPath.c_str(), "rb"); // 바이너리 읽기 권장
-		if (!File)
-			return false;
+		//if (WzCharacters.contains(InCharacterName) == false)
+		//	WzCharacters.emplace(InCharacterName, CCharacter{});
 
-		char Buffer[65536]; // 데이터가 크므로 버퍼를 조금 더 늘렸습니다.
-		rapidjson::FileReadStream JsonReader(File, Buffer, sizeof(Buffer));
+		//auto Iter = WzCharacters.find(InCharacterName);
+		//CCharacter& Character = Iter->second;
 
-		Document.ParseStream(JsonReader);
-		fclose(File);
+		//if (Character.contains(InAnimName))
+		//	return Character.at(InAnimName).get();
 
-		if (Document.HasParseError()) {
-			std::cout << "JSON 파싱 에러!" << std::endl;
-			return false;
-		}
-		return true;
-	}
-	void CloseWzData()
-	{
-		Document = rapidjson::Document{};
-	}
-	CWzNode* LoadWzAnimation(const std::string& InCharacterName, const std::string& InAnimName
-		, CWzCharacterAnimator* OutWzCharacterAnimator = nullptr)
-	{
-		if (WzCharacters.contains(InCharacterName) == false)
-			WzCharacters.emplace(InCharacterName, CCharacter{});
-
-		auto Iter = WzCharacters.find(InCharacterName);
-		CCharacter& Character = Iter->second;
-
-		if (Character.contains(InAnimName))
-			return Character.at(InAnimName).get();
-
-		auto AnimArray = Document["dir"]["dir"].GetArray();
+		auto AnimArray = InLoadData["dir"]["dir"].GetArray();
 		for (auto& Anim : AnimArray)
 		{
 			std::string dirName = Anim["@name"].GetString();
@@ -101,10 +69,7 @@ public:
 			auto RootNode = std::make_unique<CWzNode>("root");
 			ParseJsonValue(Anim, RootNode.get());
 
-			auto AnimNode = std::move(RootNode->ChildNodes[dirName]);
-
-			CWzNode* RawNode = AnimNode.get();
-			Character.emplace(dirName, std::move(AnimNode));
+			CWzNode* RawNode = RootNode->GetChildNode(dirName);
 
 			if (OutWzCharacterAnimator)
 				ParseWzAnimNode(*RawNode, *OutWzCharacterAnimator);
@@ -235,9 +200,8 @@ private:
 				ParseJsonValue(Element, OutNode);
 		}
 	}
-private:
-	rapidjson::Document Document;
 
+private:
 	using CCharacter = std::map<std::string, std::unique_ptr<CWzNode>>;
 	std::map<std::string, CCharacter> WzCharacters;
 

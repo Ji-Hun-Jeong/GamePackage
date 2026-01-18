@@ -2,9 +2,18 @@
 #include "01.Base/Actor/Component/Component.h"
 #include "Skill.h"
 
-struct TWeaponAttackData
+struct THitBoxData
 {
+	Vector2 LeftTop;
+	Vector2 RightBottom;
+	size_t AttackFrameNumber;
+};
 
+struct TMeleeAttackData
+{
+	TSkillData SkillData;
+	CAnimation Animation;
+	THitBoxData HitBoxData;
 };
 
 class CSkillCaster : public CComponent
@@ -15,10 +24,10 @@ public:
 	~CSkillCaster() = default;
 
 public:
-	void WeaponAttack(const std::string& InWeaponAttackName);
+	void MeleeAttack(const TMeleeAttackData& InMeleeAttackData);
 
 private:
-	std::unordered_map<std::string, TWeaponAttackData> WeaponAttackDatas;
+	// Todo: 나중에 여기서 오브젝트 풀링 구현
 
 };
 

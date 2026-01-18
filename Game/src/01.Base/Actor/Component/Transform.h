@@ -64,16 +64,22 @@ public:
 		Scale = InScale;
 	}
 
+	void AddPositionOffset(const Vector3& InOffset)
+	{
+		PositionOffsets.emplace(InOffset);
+		bChangePosition = true;
+	}
+
 	void Move(const Vector3& InOffset)
 	{
 		SetPosition(Position + InOffset);
 	}
 
-	static Vector3 GetOffset3D(const Vector3& InStart, const Vector3& InEnd)
+	static Vector3 GetDistVec3D(const Vector3& InStart, const Vector3& InEnd)
 	{
 		return InEnd - InStart;
 	}
-	static Vector2 GetOffset2D(const Vector2& InStart, const Vector2& InEnd)
+	static Vector2 GetDistVec2D(const Vector2& InStart, const Vector2& InEnd)
 	{
 		return InEnd - InStart;
 	}
@@ -88,6 +94,9 @@ private:
 	Vector3 Scale;
 
 	bool bChangePosition = true;
+
+	std::queue<Vector3> PositionOffsets;
+
 };
 
 std::ostream& operator<< (std::ostream& InOS, const Vector3& InVec3);

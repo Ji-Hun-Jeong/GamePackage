@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "GameCore.h"
 
-
+#include "01.Base/Manager/WzLoader.h"
 
 CPlayer::CPlayer()
 {
@@ -14,6 +14,7 @@ CPlayer::CPlayer()
 	AddComponent<CRigidBody>();
 
 	CharacterAnimator = AddComponent<CWzCharacterAnimator>();
+	SkillCaster = AddComponent<CSkillCaster>();
 }
 
 CPlayer::~CPlayer()
@@ -21,25 +22,30 @@ CPlayer::~CPlayer()
 	
 }
 
-
 void CPlayer::BeginPlay()
 {
-	CWzCharacterLoader& Loader = CWzCharacterLoader::GetInst();
-	Loader.OpenWzData("resources/data/Character/Character.00002000.img.json");
-	Loader.LoadWzAnimation("Base", "walk1", CharacterAnimator);
-	Loader.LoadWzAnimation("Base", "walk2", CharacterAnimator);
-	Loader.LoadWzAnimation("Base", "stand1", CharacterAnimator);
-	Loader.LoadWzAnimation("Base", "stand2", CharacterAnimator);
-	Loader.LoadWzAnimation("Base", "swingO1", CharacterAnimator);
-	Loader.LoadWzAnimation("Base", "swingO2", CharacterAnimator);
-	Loader.LoadWzAnimation("Base", "swingO3", CharacterAnimator);
-	Loader.LoadWzAnimation("Base", "alert", CharacterAnimator);
-	Loader.LoadWzAnimation("Base", "fly", CharacterAnimator);
-	Loader.CloseWzData();
+	CWzCharacterLoader& CharacterLoader = CWzCharacterLoader::GetInst();
+	/*CWzLoader WzLoader("resources/data/Character/Character.00002000.img.json");
+	if (WzLoader.OpenWzData())
+	{
+		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "walk1", CharacterAnimator);
+		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "walk2", CharacterAnimator);
+		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "stand1", CharacterAnimator);
+		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "stand2", CharacterAnimator);
+		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "swingO1", CharacterAnimator);
+		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "swingO2", CharacterAnimator);
+		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "swingO3", CharacterAnimator);
+		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "alert", CharacterAnimator);
+		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "fly", CharacterAnimator);
 
-	CharacterAnimator->SetCurrentAnimation("walk1", true);
+		WzLoader.CloseWzData();
+		CharacterAnimator->SetCurrentAnimation("walk1", true);
+	}*/
 
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));
 	GroundDetector->GetTransform()->SetPosition(Vector3(0.0f, -10.0f, 0.0f));
+
+	CWzLoader WzLoader;
+	SkillLoader.LoadMeleeAttackData(WzLoader, "resources/data/Skill/Test.json");
 }
