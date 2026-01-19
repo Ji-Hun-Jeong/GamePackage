@@ -27,6 +27,7 @@ public:
 	{
 		ManagingPlayer = &InManagedPlayer;
 	}
+
 	void SetupInputComponent(class CInputDispatcher& InInputDispatcher);
 
 private:

@@ -107,5 +107,7 @@ private:
 	uint32_t UILayer = 0;
 	uint32_t FinalUILayer = 0;
 
+	std::wstring BaseImagePath;
+
 };
 

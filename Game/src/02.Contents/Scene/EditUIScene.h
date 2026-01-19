@@ -4,7 +4,6 @@
 #include "02.Contents/Actor/Player/Player.h"
 #include "02.Contents/Actor/Base/BackGround.h"
 #include "02.Contents/Actor/Base/MousePointer.h"
-#include "02.Contents/Actor/UI/UITool/UIToolPanelManager.h"
 
 class CEditUIScene : public CScene
 {

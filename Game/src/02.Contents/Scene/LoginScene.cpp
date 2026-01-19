@@ -3,7 +3,6 @@
 #include "GameCore.h"
 
 #include "02.Contents/Actor/Base/BackGround.h"
-#include "02.Contents/Actor/UI/OnOffUI.h"
 #include "02.Contents/Scene/TestScene.h"
 
 void CLoginScene::BeginPlay()
@@ -21,18 +20,18 @@ void CLoginScene::BeginPlay()
 	MapleIdBack->GetTransform()->SetPosition(Vector3(-37.0f, 49.0f, 0.0f));
 	MapleIdBack->InitalizeBackGround(L"resources/image/UI/Title/Login/MapleIDBack.png");
 
-	COnOffUI* CheckUI = GetWorld()->SpawnActor<COnOffUI>(LoginBackGround);
+	/*COnOffUI* CheckUI = GetWorld()->SpawnActor<COnOffUI>(LoginBackGround);
 	CheckUI->GetTransform()->SetPosition(Vector3(74.0f, 49.0f, 0.0f));
-	CheckUI->InitalizeOnOffUI(L"resources/image/UI/Title/Login/Tab/Check/Enable/0.png", L"resources/image/UI/Title/Login/Tab/Check/Disable/0.png");
+	CheckUI->InitalizeOnOffUI(L"resources/image/UI/Title/Login/Tab/Check/Enable/0.png", L"resources/image/UI/Title/Login/Tab/Check/Disable/0.png");*/
 
-	CUI* SaveUI = GetWorld()->SpawnActor<CUI>(LoginBackGround);
+	/*CUI* SaveUI = GetWorld()->SpawnActor<CUI>(LoginBackGround);
 	SaveUI->GetTransform()->SetPosition(Vector3(112.0f, 49.0f, 0.0f));
 	SaveUI->InitalizeBasicButtonUI(L"resources/image/UI/Title/Login/SaveEmailButton/Normal/0.png", L"resources/image/UI/Title/Login/SaveEmailButton/MouseOn/0.png"
 		, L"resources/image/UI/Title/Login/SaveEmailButton/Pressed/0.png"
 		, [this, CheckUI]()->void
 		{
 			CheckUI->ChangeState();
-		});
+		});*/
 
 	CBackGround* PWBack = GetWorld()->SpawnActor<CBackGround>(LoginBackGround);
 	PWBack->InitalizeBackGround(L"resources/image/UI/Title/Login/PWBack.png");

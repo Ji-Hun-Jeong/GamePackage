@@ -217,7 +217,6 @@
     <ClCompile Include="src\07.Collision\PixelCollisionManager.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\Fader.cpp" />
     <ClCompile Include="src\04.Renderer\RenderSorter.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\UI\OnOffUI.cpp" />
     <ClCompile Include="src\02.Contents\Scene\LoginScene.cpp" />
     <ClCompile Include="src\00.App\MouseManager.cpp" />
     <ClCompile Include="src\03.Utils\AssetLoader.cpp" />
@@ -260,9 +259,6 @@
     <ClCompile Include="src\01.Base\Actor\Component\Transform.cpp" />
     <ClCompile Include="src\02.Contents\Scene\LobbyScene.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UI.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolStates.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\TestScene.cpp" />
     <ClCompile Include="src\00.App\CoreSystem.cpp" />
     <ClCompile Include="src\01.Base\Actor\StaticActor.cpp" />
@@ -309,7 +305,6 @@
     <ClInclude Include="src\07.Collision\PixelCollisionManager.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\Fader.h" />
     <ClInclude Include="src\04.Renderer\RenderSorter.h" />
-    <ClInclude Include="src\02.Contents\Actor\UI\OnOffUI.h" />
     <ClInclude Include="src\02.Contents\Scene\LoginScene.h" />
     <ClInclude Include="src\00.App\MouseManager.h" />
     <ClInclude Include="src\03.Utils\AssetLoader.h" />
@@ -347,9 +342,6 @@
     <ClInclude Include="src\01.Base\Actor\Component\Transform.h" />
     <ClInclude Include="src\02.Contents\Scene\LobbyScene.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UI.h" />
-    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.h" />
-    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolStates.h" />
-    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.h" />
     <ClInclude Include="src\02.Contents\Scene\TestScene.h" />
     <ClInclude Include="src\00.App\CoreSystem.h" />
     <ClInclude Include="src\01.Base\Actor\StaticActor.h" />

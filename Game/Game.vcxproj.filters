@@ -105,15 +105,6 @@
     <ClCompile Include="src\02.Contents\Actor\Base\MousePointer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolStates.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\03.Utils\InstancePool.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -142,9 +133,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Scene\LoginScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\02.Contents\Actor\UI\OnOffUI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\04.Renderer\RenderSorter.cpp">
@@ -356,15 +344,6 @@
     <ClInclude Include="src\02.Contents\Actor\Base\MousePointer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanel.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolStates.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\UI\UITool\UIToolPanelManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\03.Utils\InstancePool.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -393,9 +372,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Scene\LoginScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\02.Contents\Actor\UI\OnOffUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\04.Renderer\RenderSorter.h">
