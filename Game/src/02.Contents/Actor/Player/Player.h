@@ -3,15 +3,15 @@
 #include "02.Contents/ActorComponent/GroundDetector.h"
 
 #include "01.Base/Actor/Component/RigidBody.h"
-#include "01.Base/Actor/Component/Animation/Animator.h"
 
 #include "01.Base/Actor/Component/Animation/WzCharacterLoader.h"
 
-#include "02.Contents/Skill/SkillCaster.h"
-#include "02.Contents/Skill/SkillLoader.h"
+
 
 #include "04.Renderer/ImGuiManager.h"
 
+// 플레이어는 단순히 어떻게 생겨먹었는지 정의하기만 하기
+// 다른 정보들은 플레이어가 죽어도 유지되어야하기 때문에 다른걸로 빼는게 나을듯
 class CPlayer : public CActor
 {
 	GENERATE_OBJECT(CPlayer)
@@ -28,27 +28,6 @@ public:
 
 		if (CharacterAnimator)
 			CharacterAnimator->Update(InDeltaTime);
-		if (GetKey(EKeyType::Ctrl, EButtonState::Tap))
-		{
-			auto Data = SkillLoader.GetMeleeAttackData("stabO1");
-			SkillCaster->MeleeAttack(*Data);
-		}
-		/*if (GetKey(EKeyType::A, EButtonState::Hold))
-		{
-			RigidBody->AddForce(Vector2(-2.0f, 0.0f));
-		}
-		else if (GetKey(EKeyType::D, EButtonState::Hold))
-		{
-			RigidBody->AddForce(Vector2(2.0f, 0.0f));
-		}
-		else if (GetKey(EKeyType::W, EButtonState::Hold))
-		{
-			RigidBody->AddForce(Vector2(0.0f, 50.0f));
-		}
-		else if (GetKey(EKeyType::S, EButtonState::Hold))
-		{
-			RigidBody->AddForce(Vector2(0.0f, -50.0f));
-		}*/
 	}
 	void LateUpdate(float InDeltaTime) override
 	{
@@ -90,9 +69,7 @@ public:
 private:
 	CGroundDetector* GroundDetector = nullptr;
 	CWzCharacterAnimator* CharacterAnimator = nullptr;
-	CSkillCaster* SkillCaster = nullptr;
-
-	CSkillLoader SkillLoader;
+	
 
 };
 

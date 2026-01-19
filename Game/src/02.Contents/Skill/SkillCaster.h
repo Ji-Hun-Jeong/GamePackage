@@ -6,7 +6,7 @@ struct THitBoxData
 {
 	Vector2 LeftTop;
 	Vector2 RightBottom;
-	size_t AttackFrameNumber;
+	size_t AttackFrameNumber = 0;
 };
 
 struct TMeleeAttackData
@@ -31,3 +31,4 @@ private:
 
 };
 
+extern void DeSerialize(const rapidjson::Value& InData, THitBoxData* OutHitBoxData);

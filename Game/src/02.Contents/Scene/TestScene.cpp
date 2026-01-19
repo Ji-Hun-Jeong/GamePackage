@@ -5,6 +5,8 @@
 #include "02.Contents/Actor/Base/BackGround.h"
 
 #include "02.Contents/Actor/Manager/GroundManager.h"
+#include "02.Contents/Component/Input/InputDispatcher.h"
+#include "02.Contents/Actor/Player/PlayerController.h"
 
 CTestScene::CTestScene()
 {
@@ -15,7 +17,8 @@ void CTestScene::BeginPlay()
 	CScene::BeginPlay();
 
 	GetFader()->FadeIn(1.0f);
-	CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
+
+	/*CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
 	Actor->GetTransform()->SetPosition(Vector3(-100.0f, 50.0f, 0.0f));
 	CRectCollider* RectCollider = Actor->AddComponent<CRectCollider>();
 	RectCollider->SetRectScale(Vector2(100.0f, 100.0f));
@@ -34,12 +37,17 @@ void CTestScene::BeginPlay()
 	Animation.UnifyFrameDuration(0.5f);
 	Animation.SetLoop(true);
 
-	Animator->SetCurrentAnimation("walk1");
+	Animator->SetCurrentAnimation("walk1");*/
 
+	CInputDispatcher* InputDispatcher = GetWorld()->SpawnActor<CInputDispatcher>(this);
 
 	CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
 	Player->GetTransform()->SetPosition(Vector3(0.0f, 50.0f, 0.0f));
 	Player->GetComponent<CRigidBody>()->SetGravity(0.0f);
+
+	CPlayerController* PlayerController = GetWorld()->SpawnActor<CPlayerController>(this);
+	PlayerController->Link(*Player);
+	PlayerController->SetupInputComponent(*InputDispatcher);
 
 	/*CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");

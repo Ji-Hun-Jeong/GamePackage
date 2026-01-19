@@ -10,7 +10,10 @@ enum class ESkillType
 
 struct TSkillData
 {
-	ESkillType SkillType;
+	ESkillType SkillType = ESkillType::Active;
 	std::string Name;
 	std::string Description;
 };
+
+extern void Serialize(const TSkillData& InSkillData, rapidjson::Value& OutValue, rapidjson::Document::AllocatorType& InAllocator);
+extern void DeSerialize(const rapidjson::Value& InValue, TSkillData* OutSkillData);

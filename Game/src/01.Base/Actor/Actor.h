@@ -165,67 +165,67 @@ public:
 public:
 	virtual void Serialize(CSerializer& InSerializer) const override
 	{
-		CClass* Class = GetClass();
-		assert(Class);
-		InSerializer["Name"] = Class->GetName();
+		//CClass* Class = GetClass();
+		//assert(Class);
+		//InSerializer["Name"] = Class->GetName();
 
-		if (!InSerializer.contains("Components"))
-			InSerializer["Components"] = CSerializer::object();
+		//if (!InSerializer.contains("Components"))
+		//	InSerializer["Components"] = CSerializer::object();
 
-		CSerializer& ComponentsObject = InSerializer["Components"];
+		//CSerializer& ComponentsObject = InSerializer["Components"];
 
-		for (const auto& Component : Components)
-		{
-			CClass* ComponentClass = Component->GetClass();
-			const std::string& ComponentName = ComponentClass->GetName();
+		//for (const auto& Component : Components)
+		//{
+		//	CClass* ComponentClass = Component->GetClass();
+		//	const std::string& ComponentName = ComponentClass->GetName();
 
-			// 해당 이름의 배열이 componentsObject 안에 없으면 빈 배열([])로 생성
-			if (!ComponentsObject.contains(ComponentName))
-				ComponentsObject[ComponentName] = CSerializer::array();
+		//	// 해당 이름의 배열이 componentsObject 안에 없으면 빈 배열([])로 생성
+		//	if (!ComponentsObject.contains(ComponentName))
+		//		ComponentsObject[ComponentName] = CSerializer::array();
 
-			CSerializer& ComponentArray = ComponentsObject[ComponentName];
+		//	CSerializer& ComponentArray = ComponentsObject[ComponentName];
 
-			CSerializer ComponentData;
-			Component->Serialize(ComponentData);
+		//	CSerializer ComponentData;
+		//	Component->Serialize(ComponentData);
 
-			ComponentArray.push_back(ComponentData);
-		}
+		//	ComponentArray.push_back(ComponentData);
+		//}
 
-		CSerializer ChildArray = CSerializer::array();
-		for (auto& Child : Childs)
-		{
-			CSerializer ChildData;
-			Child->Serialize(ChildData);
-			ChildArray.push_back(ChildData);
-		}
-		InSerializer["Childs"] = ChildArray;
+		//CSerializer ChildArray = CSerializer::array();
+		//for (auto& Child : Childs)
+		//{
+		//	CSerializer ChildData;
+		//	Child->Serialize(ChildData);
+		//	ChildArray.push_back(ChildData);
+		//}
+		//InSerializer["Childs"] = ChildArray;
 	}
 	virtual void Deserialize(const CSerializer& InDeserializer) override
 	{
-		// const auto&로 받아야 수정되지 않음을 보장해요.
-		const auto& ComponentsObject = InDeserializer["Components"];
+		//// const auto&로 받아야 수정되지 않음을 보장해요.
+		//const auto& ComponentsObject = InDeserializer["Components"];
 
-		for (auto& [key, value] : ComponentsObject.items())
-		{
-			std::vector<CComponent*> MatchComponentArray = GetComponentsByName(key);
-			for (size_t i = 0; i < value.size(); ++i)
-			{
-				if (value[i].is_null())
-					continue;
-				const CSerializer& ComponentData = value[i];
-				MatchComponentArray[i]->Deserialize(ComponentData);
-			}
-		}
+		//for (auto& [key, value] : ComponentsObject.items())
+		//{
+		//	std::vector<CComponent*> MatchComponentArray = GetComponentsByName(key);
+		//	for (size_t i = 0; i < value.size(); ++i)
+		//	{
+		//		if (value[i].is_null())
+		//			continue;
+		//		const CSerializer& ComponentData = value[i];
+		//		MatchComponentArray[i]->Deserialize(ComponentData);
+		//	}
+		//}
 
-		const auto& ChildArray = InDeserializer["Childs"];
-		for (const auto& ChildDataJson : ChildArray)
-		{
-			const std::string& ClassName = ChildDataJson["Name"];
-			CClass* Class = CClassManager::GetInst().GetClassByName(ClassName);
-			//CActor* Child = Class->CreateObject<CActor>(this);
-			////GetWorld()->AppearActor(Child);
-			//Child->Deserialize(ChildDataJson);
-		}
+		//const auto& ChildArray = InDeserializer["Childs"];
+		//for (const auto& ChildDataJson : ChildArray)
+		//{
+		//	const std::string& ClassName = ChildDataJson["Name"];
+		//	CClass* Class = CClassManager::GetInst().GetClassByName(ClassName);
+		//	//CActor* Child = Class->CreateObject<CActor>(this);
+		//	////GetWorld()->AppearActor(Child);
+		//	//Child->Deserialize(ChildDataJson);
+		//}
 	}
 
 	void SetLineActor()

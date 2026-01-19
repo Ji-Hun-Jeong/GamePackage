@@ -186,6 +186,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\Actor\Player\PlayerController.cpp" />
+    <ClCompile Include="src\02.Contents\Component\Input\InputComponent.cpp" />
+    <ClCompile Include="src\02.Contents\Component\Input\InputDispatcher.cpp" />
     <ClCompile Include="src\01.Base\Manager\WzLoader.cpp" />
     <ClCompile Include="src\02.Contents\Skill\SkillLoader.cpp" />
     <ClCompile Include="src\02.Contents\Skill\SkillCaster.cpp" />
@@ -274,6 +277,9 @@
     <ClCompile Include="src\01.Base\Actor\Component\Animation\WzAnimationLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\Actor\Player\PlayerController.h" />
+    <ClInclude Include="src\02.Contents\Component\Input\InputComponent.h" />
+    <ClInclude Include="src\02.Contents\Component\Input\InputDispatcher.h" />
     <ClInclude Include="src\01.Base\Manager\WzLoader.h" />
     <ClInclude Include="src\02.Contents\Skill\SkillLoader.h" />
     <ClInclude Include="src\02.Contents\Skill\SkillCaster.h" />

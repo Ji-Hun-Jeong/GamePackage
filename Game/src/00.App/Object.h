@@ -1,7 +1,6 @@
 #pragma once
-#include <nlohmann/json.hpp>
 
-using CSerializer = nlohmann::json;
+using CSerializer = rapidjson::Value;
 using ObjectType = size_t;
 
 class CObject

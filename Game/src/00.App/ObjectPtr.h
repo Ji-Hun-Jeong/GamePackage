@@ -99,7 +99,7 @@ public:
 		UnregisterDestroyEvent();
 
 		RefPtr = nullptr;
-		DetectObjectDestroy = std::function<void(CObject&)>();
+		DetectObjectDestroy = std::function<void()>();
 	}
 
 	// Gets the raw pointer

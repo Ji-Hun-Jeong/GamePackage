@@ -38,16 +38,16 @@ public:
 	void Serialize(CSerializer& InSerializer) const override
 	{
 		CComponent::Serialize(InSerializer);
-		CSerializer AnimatorData;
+		//CSerializer AnimatorData;
 
-		CSerializer AnimationArray = CSerializer::array();
-		for (auto& Animation : Animations)
-		{
-			CSerializer AnimationData;
-			//Animation.second->Serialize(AnimationData);
-			AnimationArray.push_back(AnimationData);
-		}
-		InSerializer = AnimationArray;
+		//CSerializer AnimationArray = CSerializer::array();
+		//for (auto& Animation : Animations)
+		//{
+		//	CSerializer AnimationData;
+		//	//Animation.second->Serialize(AnimationData);
+		//	AnimationArray.push_back(AnimationData);
+		//}
+		//InSerializer = AnimationArray;
 	}
 	CAnimation* GetAnimation(const std::string& InAnimationName) 
 	{

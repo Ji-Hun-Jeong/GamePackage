@@ -61,3 +61,17 @@ void CSkillCaster::MeleeAttack(const TMeleeAttackData& InMeleeAttackData)
 
 	AttackActor->SetHitBox(InMeleeAttackData.HitBoxData);
 }
+
+void DeSerialize(const rapidjson::Value& InData, THitBoxData* OutHitBoxData)
+{
+	assert(OutHitBoxData);
+	if (InData.HasMember("HitBox") && InData["HitBox"].IsObject())
+	{
+		auto HitBoxData = InData["HitBox"].GetObject();
+		auto LeftTop = HitBoxData["LeftTop"].GetArray();
+		auto RightBottom = HitBoxData["RightBottom"].GetArray();
+		OutHitBoxData->LeftTop = Vector2(LeftTop[0].GetFloat(), LeftTop[1].GetFloat());
+		OutHitBoxData->RightBottom = Vector2(RightBottom[0].GetFloat(), RightBottom[1].GetFloat());
+		OutHitBoxData->AttackFrameNumber = HitBoxData["AttackFrameNumber"].GetInt();
+	}
+}

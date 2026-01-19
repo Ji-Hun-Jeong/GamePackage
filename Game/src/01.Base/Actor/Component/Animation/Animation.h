@@ -1,9 +1,6 @@
 #pragma once
-#include <nlohmann/json.hpp>
 #include "Common/Json.h"
 #include "04.Renderer/Image.h"
-
-using CSerializer = nlohmann::json;
 
 struct TFrame
 {
@@ -19,9 +16,9 @@ public:
 	~CAnimation() = default;
 
 public:
-	void Serialize(CSerializer& InSerializer) const
+	void Serialize(rapidjson::Value& InSerializer) const
 	{
-		CSerializer FrameArray = CSerializer::array();
+		/*CSerializer FrameArray = CSerializer::array();
 		for (size_t i = 0; i < Frames.size(); ++i)
 		{
 			auto& Frame = Frames[i];
@@ -31,10 +28,10 @@ public:
 			FrameData["ImagePath"] = Frame.ImagePath;
 			FrameArray.push_back(FrameData);
 		}
-		InSerializer.push_back(FrameArray);
+		InSerializer.push_back(FrameArray);*/
 	}
 
-	void Parse(const rapidjson::Value& InValue)
+	void DeSerialize(const rapidjson::Value& InValue)
 	{
 		if (!InValue.IsObject()) return;
 

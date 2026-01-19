@@ -24,27 +24,12 @@ public:
 
 			TMeleeAttackData MeleeAttackData;
 
-			if (SkillData.HasMember("SkillName") && SkillData["SkillName"].IsString())
-				MeleeAttackData.SkillData.Name = SkillData["SkillName"].GetString();
-
-			if (SkillData.HasMember("SkillType") && SkillData["SkillType"].IsInt())
-				MeleeAttackData.SkillData.SkillType = static_cast<ESkillType>(SkillData["SkillType"].GetInt());
-
-			if (SkillData.HasMember("Description") && SkillData["Description"].IsString())
-				MeleeAttackData.SkillData.Description = SkillData["Description"].GetString();
+			DeSerialize(SkillData, &MeleeAttackData.SkillData);
 
 			if (SkillData.HasMember("Animation") && SkillData["Animation"].IsObject())
-				MeleeAttackData.Animation.Parse(SkillData["Animation"]);
+				MeleeAttackData.Animation.DeSerialize(SkillData["Animation"]);
 
-			if (SkillData.HasMember("HitBox") && SkillData["HitBox"].IsObject())
-			{
-				auto HitBoxData = SkillData["HitBox"].GetObject();
-				auto LeftTop = HitBoxData["LeftTop"].GetArray();
-				auto RightBottom = HitBoxData["RightBottom"].GetArray();
-				MeleeAttackData.HitBoxData.LeftTop = Vector2(LeftTop[0].GetFloat(), LeftTop[1].GetFloat());
-				MeleeAttackData.HitBoxData.RightBottom = Vector2(RightBottom[0].GetFloat(), RightBottom[1].GetFloat());
-				MeleeAttackData.HitBoxData.AttackFrameNumber = HitBoxData["AttackFrameNumber"].GetInt();
-			}
+			DeSerialize(SkillData, &MeleeAttackData.HitBoxData);
 
 			MeleeAttackDatas.emplace(MeleeAttackData.SkillData.Name, MeleeAttackData);
 		}

@@ -2,8 +2,6 @@
 #include "Player.h"
 #include "GameCore.h"
 
-#include "01.Base/Manager/WzLoader.h"
-
 CPlayer::CPlayer()
 {
 	Transform->SetScale(Vector3(37.0f, 37.0f, 1.0f));
@@ -14,7 +12,7 @@ CPlayer::CPlayer()
 	AddComponent<CRigidBody>();
 
 	CharacterAnimator = AddComponent<CWzCharacterAnimator>();
-	SkillCaster = AddComponent<CSkillCaster>();
+
 }
 
 CPlayer::~CPlayer()
@@ -45,7 +43,4 @@ void CPlayer::BeginPlay()
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));
 	GroundDetector->GetTransform()->SetPosition(Vector3(0.0f, -10.0f, 0.0f));
-
-	CWzLoader WzLoader;
-	SkillLoader.LoadMeleeAttackData(WzLoader, "resources/data/Skill/Test.json");
 }

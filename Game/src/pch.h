@@ -12,8 +12,10 @@
 #include <set>
 #include <map>
 #include <functional>
+#include <algorithm>
 
 #include "Common/Define.h"
+#include "Common/Json.h"
 #include "Renderer/pch.h"
 
 /*
