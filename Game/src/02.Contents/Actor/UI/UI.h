@@ -3,7 +3,6 @@
 
 class CUI : public CStaticActor
 {
-	friend class CUISceneProxy;
 	friend class CUIManager;
 	GENERATE_OBJECT(CUI)
 		DONTCOPY(CUI)
@@ -22,31 +21,31 @@ public:
 			SpriteRenderComponent->SetRender(bInActivate);
 		bInteraction = bInActivate;
 	}
-	void InitalizeBasicButtonUI(const std::wstring& InBasicImagePath, const std::wstring& InMouseOnImagePath
-		, const std::wstring& InMouseClickImagePath, std::function<void()> InButtonEvent)
-	{
-		SpriteRenderComponent->SetDiffuseImage(InBasicImagePath);
-		MouseExitEvent = [this, InBasicImagePath]()->void{SpriteRenderComponent->SetDiffuseImage(InBasicImagePath);};
-		MouseEnterEvent = ([this, InMouseOnImagePath]()->void{SpriteRenderComponent->SetDiffuseImage(InMouseOnImagePath);});
-		MouseFocusEvent = ([this, InBasicImagePath, InMouseClickImagePath, InButtonEvent]()->void
-			{
-				if (LClicked() && InMouseClickImagePath.empty() == false)
-					SpriteRenderComponent->SetDiffuseImage(InMouseClickImagePath);
-				else if (LReleased())
-				{
-					SpriteRenderComponent->SetDiffuseImage(InBasicImagePath);
-					if (InButtonEvent)
-						InButtonEvent();
-				}
-			});
-	}
 
-	void SetInteraction(bool bInInteraction) { bInteraction = bInInteraction; }
-	void SetEndInteractionCheck(bool bInEndInteractionCheck) { bEndInteractionCheck = bInEndInteractionCheck; }
 	void SetMouseEnterEvent(std::function<void()> InMouseEnterEvent) { MouseEnterEvent = InMouseEnterEvent; }
 	void SetMouseExitEvent(std::function<void()> InMouseExitEvent) { MouseExitEvent = InMouseExitEvent; }
 	void SetMouseOnEvent(std::function<void()> InMouseOnEvent) { MouseOnEvent = InMouseOnEvent; }
 	void SetMouseFocusEvent(std::function<void()> InMouseFocusEvent) { MouseFocusEvent = InMouseFocusEvent; }
+
+	void SetBaseImagePath(const std::wstring& InPath)
+	{
+		BaseImagePath = InPath;
+		SpriteRenderComponent->SetDiffuseImage(BaseImagePath);
+	}
+	void SetHoverImagePath(const std::wstring& InPath) { HoverImagePath = InPath; }
+	void SetClickedImagePath(const std::wstring& InPath) { ClickedImagePath = InPath; }
+
+	void ApplyBaseImage() { SpriteRenderComponent->SetDiffuseImage(BaseImagePath); }
+	void ApplyHoverImage() { SpriteRenderComponent->SetDiffuseImage(HoverImagePath); }
+	void ApplyClickedImage() { SpriteRenderComponent->SetDiffuseImage(ClickedImagePath); }
+
+	void SetUIImages(const std::wstring& InBase, const std::wstring& InHover = L"", const std::wstring& InClicked = L"")
+	{
+		BaseImagePath = InBase;
+		HoverImagePath = InHover;
+		ClickedImagePath = InClicked;
+		SpriteRenderComponent->SetDiffuseImage(BaseImagePath);
+	}
 
 	void AttachChildUI(CUI& InChildUI)
 	{
@@ -54,7 +53,7 @@ public:
 			return;
 		if (InChildUI.OwnerUI)
 			InChildUI.OwnerUI->DetachChildUI(InChildUI);
-		
+
 		Attach(&InChildUI);
 		ChildUIs.push_back(&InChildUI);
 		InChildUI.OwnerUI = this;
@@ -77,11 +76,13 @@ public:
 			}
 		}
 	}
+
 	CUI* GetOwnerUI() const { return OwnerUI; }
 	void SetUILayer(uint32_t InUILayer)
 	{
 		UILayer = InUILayer;
 	}
+	uint32_t GetUILayer() const { return UILayer; }
 	uint32_t GetFinalUILayer() const { return FinalUILayer; }
 
 private:
@@ -99,7 +100,6 @@ private:
 	std::function<void()> MouseFocusEvent = nullptr;
 
 	bool bInteraction = true;
-	bool bEndInteractionCheck = false;
 
 	std::vector<CUI*> ChildUIs;
 	CUI* OwnerUI = nullptr;
@@ -108,6 +108,8 @@ private:
 	uint32_t FinalUILayer = 0;
 
 	std::wstring BaseImagePath;
+	std::wstring HoverImagePath;
+	std::wstring ClickedImagePath;
 
 };
 

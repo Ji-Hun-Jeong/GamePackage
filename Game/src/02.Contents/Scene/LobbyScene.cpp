@@ -11,11 +11,11 @@ CLobbyScene::CLobbyScene()
 	CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/UI/Title/Background.png");
 
-	CUI* UI = GetWorld()->SpawnActor<CUI>(GetMainCamera());
+	/*CUI* UI = GetWorld()->SpawnActor<CUI>(GetMainCamera());
 	UI->InitalizeBasicButtonUI(L"resources/image/UI/Title/SceneToolUI_Normal.png", L"resources/image/UI/Title/SceneToolUI_Hover.png"
 		, L"resources/image/UI/Title/SceneToolUI_Clicked.png"
 		, [this]()->void
 		{
 			GetWorld()->LoadScene<CEditUIScene>();
-		});
+		});*/
 }

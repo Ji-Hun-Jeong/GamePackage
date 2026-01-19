@@ -2,7 +2,6 @@
 #include "Actor.h"
 #include "01.Base/Actor/Camera.h"
 #include "02.Contents/Actor/UI/UIManager.h"
-#include "02.Contents/Actor/UI/UISceneProxy.h"
 #include "02.Contents/Actor/Base/Fader.h"
 
 class CScene : public CActor
@@ -15,7 +14,6 @@ public:
 	void Update(float InDeltaTime) override
 	{
 		CActor::Update(InDeltaTime);
-		UISceneProxy.ArrangeLayer();
 		UIManager.SetMouseWorldPosition(CMouseManager::GetInst(), *MainCamera);
 		UIManager.FindFocusUI();
 	}
@@ -34,7 +32,6 @@ private:
 
 protected:
 	CUIManager UIManager;
-	CUISceneProxy UISceneProxy;
 
 };
 

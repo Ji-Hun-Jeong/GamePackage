@@ -43,26 +43,29 @@ public:
 	void SetMouseWorldPosition(const class CMouseManager& InMouseManager, const class CCamera& InCamera);
 	void AddUI(CUI& InUI)
 	{
-		CurrentFrameDetectUIs.push_back(&InUI);
-	}
-	void AddUIToEnd(CUI& InUI)
-	{
-		AddToEndUIs.push_back(&InUI);
+		UIs.emplace_back(&InUI);
 	}
 	void FindFocusUI()
 	{
-		std::vector<CUI*> FinalDetectUI = CurrentFrameDetectUIs;
-		FinalDetectUI.insert(FinalDetectUI.end(), AddToEndUIs.begin(), AddToEndUIs.end());
-
-		for (size_t i = 0; i < FinalDetectUI.size(); ++i)
+		uint32_t MaxLayer = 0;
+		for (auto Iter = UIs.begin(); Iter != UIs.end();)
 		{
-			CUI* UI = FinalDetectUI[i];
-			GetFinalLayer(*UI);
+			CObjectPtr<CUI>& UI = *Iter;
+			if (UI.IsValid())
+				++Iter;
+			else
+				Iter = UIs.erase(Iter);
+		}
+
+		for (auto& UI : UIs)
+		{
+			MaxLayer = std::max<uint32_t>(MaxLayer, UI->GetUILayer());
+			CalculateFinalLayer(*UI);
 		}
 
 		CFocusUICandidate FocusUICandidates;
 
-		for (auto& UI : FinalDetectUI)
+		for (auto& UI : UIs)
 		{
 			CFocusUICandidate Candidates = TryFindFocusInteracters(*UI);
 			if (Candidates.IsEmpty())
@@ -74,8 +77,17 @@ public:
 
 		if (CurrentFocusUI != NewFocusUI)
 		{
-			if (CurrentFocusUI && CurrentFocusUI->MouseExitEvent)
-				CurrentFocusUI->MouseExitEvent();
+			if (CurrentFocusUI)
+			{
+				CUI* RootUI = GetRootUI(*CurrentFocusUI);
+				RootUI->SetUILayer(FocusUIOriginLayer);
+				CalculateFinalLayer(*RootUI);
+
+				CurrentFocusUI->ApplyBaseImage();
+
+				if (CurrentFocusUI->MouseExitEvent)
+					CurrentFocusUI->MouseExitEvent();
+			}
 
 			if (NewFocusUI && NewFocusUI->MouseEnterEvent)
 				NewFocusUI->MouseEnterEvent();
@@ -83,16 +95,37 @@ public:
 
 		CurrentFocusUI = NewFocusUI;
 
-		if (CurrentFocusUI && CurrentFocusUI->MouseFocusEvent)
-			CurrentFocusUI->MouseFocusEvent();
+		if (CurrentFocusUI)
+		{
+			CUI* RootUI = GetRootUI(*CurrentFocusUI);
+			FocusUIOriginLayer = RootUI->GetUILayer();
+			RootUI->SetUILayer(MaxLayer + 1);
+			CalculateFinalLayer(*RootUI);
+
+			if (bMouseClicked)
+				CurrentFocusUI->ApplyClickedImage();
+			else
+				CurrentFocusUI->ApplyHoverImage();
+
+			if (CurrentFocusUI->MouseFocusEvent)
+				CurrentFocusUI->MouseFocusEvent();
+		}
+
+		bMouseClicked = false;
 	}
 private:
-	void GetFinalLayer(CUI& InOwnerUI)
+	CUI* GetRootUI(CUI& InUI)
+	{
+		if (InUI.GetOwnerUI() == nullptr)
+			return &InUI;
+		return GetRootUI(*InUI.GetOwnerUI());
+	}
+	void CalculateFinalLayer(CUI& InOwnerUI)
 	{
 		for (auto ChildUI : InOwnerUI.ChildUIs)
 		{
 			ChildUI->SetFinalUILayer(InOwnerUI.UILayer + ChildUI->UILayer + 1);
-			GetFinalLayer(*ChildUI);
+			CalculateFinalLayer(*ChildUI);
 		}
 	}
 
@@ -151,12 +184,14 @@ private:
 
 	bool IsInsideScreen(const CUI& InUI);
 private:
-	std::vector<CUI*> CurrentFrameDetectUIs;
-	std::vector<CUI*> AddToEndUIs;
+	std::vector<CObjectPtr<CUI>> UIs;
 	CUI* CurrentFocusUI;
 
 	Vector2 MouseWorldPosition;
 	Vector3 CameraPosition;
 
+	uint32_t FocusUIOriginLayer = 0;
+
+	bool bMouseClicked = false;
 };
 

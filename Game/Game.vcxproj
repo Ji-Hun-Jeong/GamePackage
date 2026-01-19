@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\Skill\SkillManager.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Player\PlayerController.cpp" />
     <ClCompile Include="src\02.Contents\Component\Input\InputComponent.cpp" />
     <ClCompile Include="src\02.Contents\Component\Input\InputDispatcher.cpp" />
@@ -268,11 +269,11 @@
     <ClCompile Include="src\02.Contents\Actor\Tile\TileHandler.cpp" />
     <ClCompile Include="src\02.Contents\Actor\UI\UIManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp" />
-    <ClCompile Include="src\02.Contents\Actor\UI\UISceneProxy.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Animation\WzAnimationLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\Skill\SkillManager.h" />
     <ClInclude Include="src\02.Contents\Actor\Player\PlayerController.h" />
     <ClInclude Include="src\02.Contents\Component\Input\InputComponent.h" />
     <ClInclude Include="src\02.Contents\Component\Input\InputDispatcher.h" />
@@ -351,7 +352,6 @@
     <ClInclude Include="src\02.Contents\Actor\Tile\TileHandler.h" />
     <ClInclude Include="src\02.Contents\Actor\UI\UIManager.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h" />
-    <ClInclude Include="src\02.Contents\Actor\UI\UISceneProxy.h" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Animation\WzAnimationLoader.h" />
   </ItemGroup>

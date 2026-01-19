@@ -33,7 +33,7 @@ void CLoginScene::BeginPlay()
 			CheckUI->ChangeState();
 		});*/
 
-	CBackGround* PWBack = GetWorld()->SpawnActor<CBackGround>(LoginBackGround);
+	/*CBackGround* PWBack = GetWorld()->SpawnActor<CBackGround>(LoginBackGround);
 	PWBack->InitalizeBackGround(L"resources/image/UI/Title/Login/PWBack.png");
 
 	CUI* LoginUI = GetWorld()->SpawnActor<CUI>(LoginBackGround);
@@ -68,7 +68,7 @@ void CLoginScene::BeginPlay()
 	CUI* QuitButton = GetWorld()->SpawnActor<CUI>(LoginBackGround);
 	QuitButton->GetTransform()->SetPosition(Vector3(115.0f, -100.0f, 0.0f));
 	QuitButton->InitalizeBasicButtonUI(L"resources/image/UI/Title/Login/QuitButton/Normal/0.png", L"resources/image/UI/Title/Login/QuitButton/MouseOn/0.png"
-		, L"resources/image/UI/Title/Login/QuitButton/Pressed/0.png", nullptr);
+		, L"resources/image/UI/Title/Login/QuitButton/Pressed/0.png", nullptr);*/
 }
 
 void CLoginScene::Update(float InDeltaTime)

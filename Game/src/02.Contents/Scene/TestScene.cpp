@@ -8,6 +8,8 @@
 #include "02.Contents/Component/Input/InputDispatcher.h"
 #include "02.Contents/Actor/Player/PlayerController.h"
 
+#include "02.Contents/Skill/SkillManager.h"
+
 CTestScene::CTestScene()
 {
 }
@@ -48,6 +50,9 @@ void CTestScene::BeginPlay()
 	CPlayerController* PlayerController = GetWorld()->SpawnActor<CPlayerController>(this);
 	PlayerController->Link(*Player);
 	PlayerController->SetupInputComponent(*InputDispatcher);
+
+	CSkillManager* SkillManager = GetWorld()->SpawnActor<CSkillManager>(this);
+	SkillManager->LinkToUI(UIManager);
 
 	/*CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");
