@@ -6,8 +6,6 @@
 
 #include "01.Base/Actor/Component/Animation/WzCharacterLoader.h"
 
-
-
 #include "04.Renderer/ImGuiManager.h"
 
 // 플레이어는 단순히 어떻게 생겨먹었는지 정의하기만 하기

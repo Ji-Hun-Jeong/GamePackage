@@ -30,7 +30,8 @@ public:
 	{
 		uint32_t InCodeValue = InCode(InKeyType, InButtonState);
 		
-		Actions.emplace(InCodeValue, InAction);
+		// 대체해야함
+		Actions.insert_or_assign(InCodeValue, InAction);
 	}
 	
 	void SetInputLayer(uint32_t InInputLayer) { InputLayer = InInputLayer; }

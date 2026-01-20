@@ -1,18 +1,9 @@
 #include "pch.h"
 #include "SkillManager.h"
 
-#include "GameCore.h"
-#include "02.Contents/Actor/UI/UIManager.h"
-
-void CSkillManager::LinkToUI(CUIManager& InUIManager)
+CSkillManager::CSkillManager()
 {
-	CUI* ManagementUI = GetWorld()->SpawnActor<CUI>(this);
-	ManagementUI->GetTransform()->SetScale(Vector3(50.0f, 50.0f, 0.0f));
-	ManagementUI->GetSpriteRenderComponent()->SetColor(Vector3(1.0f, 0.0f, 0.0f), 1.0f);
-	ManagementUI->SetMouseFocusEvent([]()->void
-		{
-			if (LClicked())
-				std::cout << "Hi\n";
-		});
-	InUIManager.AddUI(*ManagementUI);
+	AddSkillData(0, {});
+	SkillDatas[0][0].UsableImagePath = L"resources/image/Player/Alert/0.png";
+	SkillDatas[0][0].SkillData.Description = "Hisdfsdf";
 }

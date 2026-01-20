@@ -11,7 +11,6 @@ class CObjectPtr
 public:
 	// 1. Constructors
 	//------------------
-
 	CObjectPtr() noexcept
 		: RefPtr(nullptr)
 	{}

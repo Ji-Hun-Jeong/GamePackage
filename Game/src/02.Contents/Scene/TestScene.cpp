@@ -5,9 +5,10 @@
 #include "02.Contents/Actor/Base/BackGround.h"
 
 #include "02.Contents/Actor/Manager/GroundManager.h"
+#include "02.Contents/Actor/Manager/SkillDataLinker.h"
+
 #include "02.Contents/Component/Input/InputDispatcher.h"
 #include "02.Contents/Actor/Player/PlayerController.h"
-
 #include "02.Contents/Skill/SkillManager.h"
 
 CTestScene::CTestScene()
@@ -41,18 +42,22 @@ void CTestScene::BeginPlay()
 
 	Animator->SetCurrentAnimation("walk1");*/
 
-	CInputDispatcher* InputDispatcher = GetWorld()->SpawnActor<CInputDispatcher>(this);
-
 	CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
 	Player->GetTransform()->SetPosition(Vector3(0.0f, 50.0f, 0.0f));
 	Player->GetComponent<CRigidBody>()->SetGravity(0.0f);
 
+	CSkillManager* SkillManager = GetWorld()->SpawnActor<CSkillManager>(this);
+
 	CPlayerController* PlayerController = GetWorld()->SpawnActor<CPlayerController>(this);
 	PlayerController->Link(*Player);
+
+	CInputDispatcher* InputDispatcher = GetWorld()->SpawnActor<CInputDispatcher>(this);
 	PlayerController->SetupInputComponent(*InputDispatcher);
 
-	CSkillManager* SkillManager = GetWorld()->SpawnActor<CSkillManager>(this);
-	SkillManager->LinkToUI(UIManager);
+	CSkillDataLinker* SkillDataLinker = GetWorld()->SpawnActor<CSkillDataLinker>(this);
+	SkillDataLinker->SetPlayerController(*PlayerController);
+	SkillDataLinker->SetSkillManager(*SkillManager);
+	SkillDataLinker->SetupUI(UIManager);
 
 	/*CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");

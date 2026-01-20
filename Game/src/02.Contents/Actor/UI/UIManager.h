@@ -43,7 +43,9 @@ public:
 	void SetMouseWorldPosition(const class CMouseManager& InMouseManager, const class CCamera& InCamera);
 	void AddUI(CUI& InUI)
 	{
-		UIs.emplace_back(&InUI);
+		auto Iter = std::find(UIs.begin(), UIs.end(), &InUI);
+		if (Iter == UIs.end())
+			UIs.emplace_back(&InUI);
 	}
 	void FindFocusUI()
 	{
@@ -103,7 +105,11 @@ public:
 			CalculateFinalLayer(*RootUI);
 
 			if (bMouseClicked)
+			{
 				CurrentFocusUI->ApplyClickedImage();
+				if (CurrentFocusUI->MouseClickEvent)
+					CurrentFocusUI->MouseClickEvent();
+			}
 			else
 				CurrentFocusUI->ApplyHoverImage();
 
@@ -158,14 +164,10 @@ private:
 	}
 	bool IsMouseOn(const CUI& InUI)
 	{
-		Vector2 UISize;
-		if (InUI.GetSpriteRenderComponent() && InUI.GetSpriteRenderComponent()->IsImageType())
-			UISize = InUI.GetSpriteRenderComponent()->GetImageScale();
-		else
-			UISize = InUI.GetTransform()->GetScale2D();
+		Vector2 UISize = InUI.UIScale;
 
 		// 사각형의 중심 위치와 크기
-		const Vector3& UIPosition = InUI.GetTransform()->GetPosition();
+		const Vector3& UIPosition = InUI.GetTransform()->GetWorldPosition();
 		float centerX = UIPosition.x;
 		float centerY = UIPosition.y;
 		float halfWidth = UISize.x * 0.5f;

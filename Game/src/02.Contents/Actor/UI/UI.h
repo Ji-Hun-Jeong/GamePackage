@@ -26,6 +26,7 @@ public:
 	void SetMouseExitEvent(std::function<void()> InMouseExitEvent) { MouseExitEvent = InMouseExitEvent; }
 	void SetMouseOnEvent(std::function<void()> InMouseOnEvent) { MouseOnEvent = InMouseOnEvent; }
 	void SetMouseFocusEvent(std::function<void()> InMouseFocusEvent) { MouseFocusEvent = InMouseFocusEvent; }
+	void SetMouseClickEvent(std::function<void()> InMouseClickEvent) { MouseClickEvent = InMouseClickEvent; }
 
 	void SetBaseImagePath(const std::wstring& InPath)
 	{
@@ -76,7 +77,15 @@ public:
 			}
 		}
 	}
-
+	void SetUIScale(const Vector2& InUIScale) { UIScale = InUIScale; }
+	void AdjustUIScaleToImage()
+	{
+		if (SpriteRenderComponent == nullptr)
+			return;
+		if (SpriteRenderComponent->GetImagePath().empty())
+			return;
+		UIScale = SpriteRenderComponent->GetImageScale();
+	}
 	CUI* GetOwnerUI() const { return OwnerUI; }
 	void SetUILayer(uint32_t InUILayer)
 	{
@@ -98,6 +107,7 @@ private:
 	std::function<void()> MouseExitEvent = nullptr;
 	std::function<void()> MouseOnEvent = nullptr;
 	std::function<void()> MouseFocusEvent = nullptr;
+	std::function<void()> MouseClickEvent = nullptr;
 
 	bool bInteraction = true;
 
@@ -110,6 +120,8 @@ private:
 	std::wstring BaseImagePath;
 	std::wstring HoverImagePath;
 	std::wstring ClickedImagePath;
+
+	Vector2 UIScale;
 
 };
 

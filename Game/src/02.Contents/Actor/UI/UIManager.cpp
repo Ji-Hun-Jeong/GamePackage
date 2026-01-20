@@ -10,7 +10,7 @@ void CUIManager::SetMouseWorldPosition(const CMouseManager& InMouseManager, cons
 	CameraPosition = InCamera.GetTransform()->GetPosition();
 	MouseWorldPosition = InMouseManager.GetMousePosition() + InCamera.GetTransform()->GetPosition2D();
 
-	bMouseClicked = InMouseManager.IsLButtonHold();
+	bMouseClicked = InMouseManager.IsLButtonClicked();
 }
 
 bool CUIManager::IsInsideScreen(const CUI& InUI)

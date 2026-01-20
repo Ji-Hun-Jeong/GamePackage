@@ -1,9 +1,6 @@
 #pragma once
 #include "01.Base/Actor/Actor.h"
 
-#include "02.Contents/Skill/SkillCaster.h"
-#include "02.Contents/Skill/SkillLoader.h"
-
 #include "Player.h"
 
 class CPlayerController : public CActor
@@ -20,22 +17,18 @@ public:
 
 		if (ManagingPlayer == nullptr)
 			return;
-
-		Transform->SetPosition(ManagingPlayer->GetTransform()->GetPosition());
 	}
-	void Link(CPlayer& InManagedPlayer)
-	{
-		ManagingPlayer = &InManagedPlayer;
-	}
+	void Link(CPlayer& InManagedPlayer);
 
 	void SetupInputComponent(class CInputDispatcher& InInputDispatcher);
+	void AddKeyInput(EKeyType InKeyType, const std::function<void()>& InAction);
+
 
 private:
-	CPlayer* ManagingPlayer = nullptr;
+	CObjectPtr<CPlayer> ManagingPlayer = nullptr;
 
 	class CInputComponent* InputComponent = nullptr;
+	class CSkillCaster* SkillCaster = nullptr;
 
-	CSkillCaster* SkillCaster = nullptr;
-	CSkillLoader SkillLoader;
 };
 
