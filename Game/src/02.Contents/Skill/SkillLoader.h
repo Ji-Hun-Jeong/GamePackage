@@ -10,7 +10,7 @@ public:
 	~CSkillLoader() = default;
 
 public:
-	void LoadMeleeAttackData(CWzLoader& InWzLoader, const std::string& InDataPath)
+	void LoadMeleeAttackData(CWzLoader& InWzLoader, const char* InDataPath)
 	{
 		InWzLoader.OpenWzData(InDataPath);
 
@@ -45,8 +45,20 @@ public:
 		return &Iter->second;
 	}
 
+	void LoadSkillData(CWzLoader& InWzLoader, const std::string_view InWzJsonPath)
+	{
+		InWzLoader.OpenWzData(InWzJsonPath);
+
+		const auto& Document = InWzLoader.GetLoadData();
+		if (Document.HasMember("dir") == false)
+			return;
+		auto& Value = Document["dir"];
+		
+
+		InWzLoader.CloseWzData();
+	}
+
 private:
 	std::map<std::string, TMeleeAttackData> MeleeAttackDatas;
 
 };
-

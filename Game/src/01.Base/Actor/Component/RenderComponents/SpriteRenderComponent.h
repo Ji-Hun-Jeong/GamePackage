@@ -22,7 +22,8 @@ public:
 	void Render(CSpriteRenderer& InRenderer, const Vector3& InPosition, const Vector3& InRotation, const Vector3& InScale) override;
 
 	void SetMesh(const Graphics::TMeshData& InMeshData);
-	void SetDiffuseImage(const std::wstring& InImagePath);
+	void SetDiffuseImage(const wchar_t* InImagePath);
+	void SetDiffuseImage(const std::wstring& InImagePath) { SetDiffuseImage(InImagePath.c_str()); }
 	void SetPSO(EPSOType InPSOType);
 
 	void SetLayer(uint32_t InLayer) { RenderLayer = InLayer; }

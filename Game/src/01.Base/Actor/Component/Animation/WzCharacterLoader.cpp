@@ -3,12 +3,15 @@
 
 /* 
 {
-  "dir": {
+  "dir": 
+  {
 	"@name": "00002000.img",
-	"dir": [
+	"dir": 
+	[
 	  {
 		"@name": "info",
-		"string": [
+		"string": 
+		[
 		  { "@name": "islot", "@value": "Bd" },
 		  { "@name": "vslot", "@value": "Bd" }
 		],
@@ -16,22 +19,27 @@
 	  },
 	  {
 		"@name": "walk1",
-		"dir": [
+		"dir": 
+		[
 		  {
 			"@name": "0",
-			"png": [
+			"png": 
+			[
 			  {
 				"@name": "body",
 				"@value": "iVBOR... (»ý·«)",
 				"vector": { "@name": "origin", "@value": "19, 32" },
-				"dir": {
+				"dir": 
+				{
 				  "@name": "map",
-				  "vector": [
+				  "vector": 
+				  [
 					{ "@name": "neck", "@value": "-4, -32" },
 					{ "@name": "navel", "@value": "-6, -20" }
 				  ]
 				},
-				"string": [
+				"string": 
+				[
 				  { "@name": "z", "@value": "body" },
 				  { "@name": "group", "@value": "skin" },
 				  { "@name": "_outlink", "@value": "Character/_Canvas/00002000.img/walk1/0/body" }

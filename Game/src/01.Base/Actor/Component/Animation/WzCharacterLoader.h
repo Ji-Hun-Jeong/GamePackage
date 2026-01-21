@@ -3,39 +3,7 @@
 #include "Utils.h"
 #include "Common/Json.h"
 #include "WzCharacterAnimator.h"
-
-class CWzNode
-{
-	friend class CWzCharacterLoader;
-public:
-	CWzNode(const std::string& InName)
-		: Name(InName)
-	{
-	}
-	~CWzNode() = default;
-
-public:
-	void AddChildNode(const std::string& InNodeName, std::unique_ptr<CWzNode> InChildNode)
-	{
-		ChildNodes.emplace(InNodeName, std::move(InChildNode));
-	}
-	CWzNode* GetChildNode(const std::string& InNodeName) const
-	{
-		auto Iter = ChildNodes.find(InNodeName);
-		if (Iter == ChildNodes.end())
-			return nullptr;
-		return Iter->second.get();
-	}
-	void SetValue(const std::string& InValue) { Value = InValue; }
-	const std::string& GetValue() const { return Value; }
-	const std::string& GetName() const { return Name; }
-
-private:
-	std::string Name;
-	std::string Value;
-	std::map<std::string, std::unique_ptr<CWzNode>> ChildNodes;
-
-};
+#include "01.Base/Manager/WzLoader.h"
 
 class CWzCharacterLoader
 {
@@ -44,18 +12,20 @@ public:
 	~CWzCharacterLoader() = default;
 
 public:
-	CWzNode* LoadWzCharacterAnimation(const rapidjson::Document& InLoadData, const std::string& InCharacterName, const std::string& InAnimName, CWzCharacterAnimator* OutWzCharacterAnimator)
+	bool LoadWzCharacterAnimation(CWzNode& InWzNode, const std::string_view InCharacterImgName
+		, const std::string_view InAnimName, CWzCharacterAnimator* OutWzCharacterAnimator)
 	{
-		//if (WzCharacters.contains(InCharacterName) == false)
-		//	WzCharacters.emplace(InCharacterName, CCharacter{});
+		if (InWzNode.HasMember(InCharacterImgName) == false)
+			return;
+		const auto& CharacterData = InWzNode[InCharacterImgName];
+		if (CharacterData.HasMember(InAnimName) == false)
+			return;
+		const auto& AnimData = CharacterData[InAnimName];
 
-		//auto Iter = WzCharacters.find(InCharacterName);
-		//CCharacter& Character = Iter->second;
+		ParseWzAnimNode(AnimData, *OutWzCharacterAnimator);
 
-		//if (Character.contains(InAnimName))
-		//	return Character.at(InAnimName).get();
-
-		auto AnimArray = InLoadData["dir"]["dir"].GetArray();
+		return true;
+		/*auto AnimArray = InLoadData["dir"]["dir"].GetArray();
 		for (auto& Anim : AnimArray)
 		{
 			std::string dirName = Anim["@name"].GetString();
@@ -76,7 +46,7 @@ public:
 
 			return RawNode;
 		}
-		return nullptr;
+		return nullptr;*/
 	}
 
 private:
@@ -85,7 +55,13 @@ private:
 		const std::string& AnimName = InAnimNode.GetName();
 		CWzCharacterAnimation& WzCharacterAnimation = OutWzCharacterAnimator.GetAnimationRef(AnimName);
 
-		for (auto& AnimChildIter : InAnimNode.ChildNodes)
+		const auto& Members = InAnimNode.GetMembers();
+		for (auto Iter = Members.begin(); Iter != Members.end(); ++Iter)
+		{
+			const std::string& FrameNumber = Iter->first;
+
+		}
+		/*for (auto& AnimChildIter : InAnimNode.ChildNodes)
 		{
 			const std::string& Frame = AnimChildIter.first;
 			CWzNode* FrameNode = AnimChildIter.second.get();
@@ -105,11 +81,11 @@ private:
 				}
 			}
 			WzCharacterAnimation.AddFrameData(FrameData);
-		}
+		}*/
 	}
 	void InterpretFrameData(const CWzNode& InEtcNode, CWzFrameData& OutFrameData)
 	{
-		const std::map<std::string, std::unique_ptr<CWzNode>>& EtcNodes = InEtcNode.ChildNodes;
+		/*const auto& EtcNodes = InEtcNode.ChildNodes;
 
 		if (EtcNodes.contains("action"))
 			OutFrameData.SetAction(EtcNodes.at("action")->GetValue());
@@ -124,11 +100,11 @@ private:
 			Vector2 Move;
 			if (StrToVec2(EtcNodes.at("move")->GetValue(), &Move))
 				OutFrameData.SetMove(Move);
-		}
+		}*/
 	}
 	void InterpretPartData(const CWzNode& InPartNode, TWzPartData& OutPartData)
 	{
-		const std::map<std::string, std::unique_ptr<CWzNode>>& PartNodes = InPartNode.ChildNodes;
+		/*const auto& PartNodes = InPartNode.ChildNodes;
 		if (PartNodes.contains("value"))
 			OutPartData.Value = PartNodes.at("value")->GetValue();
 		if (PartNodes.contains("origin"))
@@ -170,7 +146,7 @@ private:
 		if (PartNodes.contains("group"))
 			OutPartData.Group = PartNodes.at("group")->GetValue();
 		if (PartNodes.contains("_outlink"))
-			OutPartData.OutLink = "resources/image/" + PartNodes.at("_outlink")->GetValue() + ".png";
+			OutPartData.OutLink = "resources/image/" + PartNodes.at("_outlink")->GetValue() + ".png";*/
 	}
 	void ParseJsonValue(const rapidjson::Value& InValue, CWzNode* OutNode)
 	{

@@ -11,6 +11,8 @@
 #include "02.Contents/Actor/Player/PlayerController.h"
 #include "02.Contents/Skill/SkillManager.h"
 
+#include "01.Base/Manager/WzLoader.h"
+
 CTestScene::CTestScene()
 {
 }
@@ -21,32 +23,35 @@ void CTestScene::BeginPlay()
 
 	GetFader()->FadeIn(1.0f);
 
-	/*CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
-	Actor->GetTransform()->SetPosition(Vector3(-100.0f, 50.0f, 0.0f));
-	CRectCollider* RectCollider = Actor->AddComponent<CRectCollider>();
-	RectCollider->SetRectScale(Vector2(100.0f, 100.0f));
-	RectCollider->SetDebugRender(true);
+	/*CActor* Root = GetWorld()->SpawnActor<CActor>(this);
+	Root->GetTransform()->SetPosition(Vector3(-160.0f, 180.0f, 0.0f));
 
-	CAnimator* Animator = Actor->AddComponent<CAnimator>();
-	CAnimation& Animation = Animator->AddAnimationRef("walk1");
-	TFrame& Frame0 = Animation.AddFrame();
-	Frame0.ImagePath = L"resources/image/Player/Alert/0.png";
-	TFrame& Frame1 = Animation.AddFrame();
-	Frame1.ImagePath = L"resources/image/Player/Alert/1.png";
-	TFrame& Frame2 = Animation.AddFrame();
-	Frame2.ImagePath = L"resources/image/Player/Alert/2.png";
-	TFrame& Frame3 = Animation.AddFrame();
-	Frame3.ImagePath = L"resources/image/Player/Alert/3.png";
-	Animation.UnifyFrameDuration(0.5f);
-	Animation.SetLoop(true);
+	CStaticActor* UI0 = GetWorld()->SpawnActor<CStaticActor>(Root);
+	UI0->GetSpriteRenderComponent()->SetDiffuseImage(L"resources/image/UI/UIWindow2.img/Skill/main/Skill.main.backgrnd.png");
+	CWzUtils::SetWorldPositionFromOrigin(*UI0, Vector2(1.0f, 0.0f));*/
 
-	Animator->SetCurrentAnimation("walk1");*/
+	/*CStaticActor* UI0 = GetWorld()->SpawnActor<CStaticActor>(Root);
+	UI0->GetSpriteRenderComponent()->SetDiffuseImage(L"resources/image/UI/UIWindow2.img/Skill/main/Skill.main.backgrnd.png");
+	CWzUtils::SetWorldPositionFromOrigin(*UI0, Vector2(1.0f, 0.0f));
+	CStaticActor* UI1 = GetWorld()->SpawnActor<CStaticActor>(Root);
+	UI1->GetSpriteRenderComponent()->SetDiffuseImage(L"resources/image/UI/UIWindow2.img/Skill/main/Skill.main.backgrnd2.png");
+	CWzUtils::SetWorldPositionFromOrigin(*UI1, Vector2(-5.0f, -22.0f));
+	CStaticActor* UI2 = GetWorld()->SpawnActor<CStaticActor>(Root);
+	UI2->GetSpriteRenderComponent()->SetDiffuseImage(L"resources/image/UI/UIWindow2.img/Skill/main/Skill.main.backgrnd3.png");
+	CWzUtils::SetWorldPositionFromOrigin(*UI2, Vector2(-7.0f, -47.0f));
+	CStaticActor* UI3 = GetWorld()->SpawnActor<CStaticActor>(Root);
+	UI3->GetSpriteRenderComponent()->SetDiffuseImage(L"resources/image/UI/UIWindow2.img/Skill/main/Skill.main.skillPoint.png");
+	CWzUtils::SetWorldPositionFromOrigin(*UI3, Vector2(-212.0f, -29.0f));
+
+	CStaticActor* UI4 = GetWorld()->SpawnActor<CStaticActor>(Root);
+	UI4->GetSpriteRenderComponent()->SetDiffuseImage(L"resources/image/UI/UIWindow2.img/Skill/main/Skill.main.skill0.png");
+	CWzUtils::SetWorldPositionFromOrigin(*UI4, Vector2(0.0f, 0.0f));*/
 
 	CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
 	Player->GetTransform()->SetPosition(Vector3(0.0f, 50.0f, 0.0f));
 	Player->GetComponent<CRigidBody>()->SetGravity(0.0f);
 
-	CSkillManager* SkillManager = GetWorld()->SpawnActor<CSkillManager>(this);
+	/*CSkillManager* SkillManager = GetWorld()->SpawnActor<CSkillManager>(this);
 
 	CPlayerController* PlayerController = GetWorld()->SpawnActor<CPlayerController>(this);
 	PlayerController->Link(*Player);
@@ -57,7 +62,7 @@ void CTestScene::BeginPlay()
 	CSkillDataLinker* SkillDataLinker = GetWorld()->SpawnActor<CSkillDataLinker>(this);
 	SkillDataLinker->SetPlayerController(*PlayerController);
 	SkillDataLinker->SetSkillManager(*SkillManager);
-	SkillDataLinker->SetupUI(UIManager);
+	SkillDataLinker->SetupUI(UIManager);*/
 
 	/*CBackGround* BackGround = GetWorld()->SpawnActor<CBackGround>(this);
 	BackGround->InitalizeBackGround(L"resources/image/Map/MushroomStage/MushroomStage.png");

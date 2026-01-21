@@ -4,67 +4,71 @@
 #include "GameCore.h"
 #include "WzCharacterLoader.h"
 
+#include "01.Base/Manager/WzLoader.h"
+
 void CWzPart::Composite()
 {
-    // [공통 계산] 이미지 중심 대비 포인트들의 상대 오프셋 (Y축 반전 포함)
-    const std::wstring& ImagePath = SpriteRenderComponent->GetImagePath();
-    if (ImagePath.empty()) return;
+	// [공통 계산] 이미지 중심 대비 포인트들의 상대 오프셋 (Y축 반전 포함)
+	const std::wstring& ImagePath = SpriteRenderComponent->GetImagePath();
+	if (ImagePath.empty()) return;
 
-    Vector2 ImageCenter = GetImageScale(ImagePath) * 0.5f;
-    Vector2 Origin = PartData.Origin;
+	Vector2 ImageCenter = GetImageScale(ImagePath) * 0.5f;
+	Vector2 Origin = PartData.Origin;
 
-    // 각 포인트들이 이미지 중심에서 얼마나 떨어져 있는지 계산
-    FinalNavel = Vector2(1.0f, -1.0f) * ((Origin + PartData.Map.Navel) - ImageCenter);
-    FinalHand = Vector2(1.0f, -1.0f) * ((Origin + PartData.Map.Hand) - ImageCenter);
-    FinalHandMove = Vector2(1.0f, -1.0f) * ((Origin + PartData.Map.HandMove) - ImageCenter);
+	// 각 포인트들이 이미지 중심에서 얼마나 떨어져 있는지 계산
+	FinalNavel = Vector2(1.0f, -1.0f) * ((Origin + PartData.Map.Navel) - ImageCenter);
+	FinalHand = Vector2(1.0f, -1.0f) * ((Origin + PartData.Map.Hand) - ImageCenter);
+	FinalHandMove = Vector2(1.0f, -1.0f) * ((Origin + PartData.Map.HandMove) - ImageCenter);
 
-    EWzPartType PartType = GetPartType();
+	EWzPartType PartType = GetPartType();
 	Vector2 ResultPos;
 
-    switch (PartType)
-    {
-    case EWzPartType::Body:
-        // 바디는 루트이므로 원점에 배치 (혹은 캐릭터 월드 좌표)
+	switch (PartType)
+	{
+	case EWzPartType::Body:
+		// 바디는 루트이므로 원점에 배치 (혹은 캐릭터 월드 좌표)
 		ResultPos;
-        break;
+		break;
 
-    case EWzPartType::Arm:
-        // Arm(navel) -> Body(navel) 연결
-        ResultPos = OwnerPart->FinalNavel - FinalNavel;
-        // 다음 자식(LHand)을 위해 자신의 Hand 포인트 위치를 업데이트
-        // (현재 좌표에 자신의 Hand 오프셋을 더함)
-        FinalHand = ResultPos + FinalHand;
-        break;
+	case EWzPartType::Arm:
+		// Arm(navel) -> Body(navel) 연결
+		ResultPos = OwnerPart->FinalNavel - FinalNavel;
+		// 다음 자식(LHand)을 위해 자신의 Hand 포인트 위치를 업데이트
+		// (현재 좌표에 자신의 Hand 오프셋을 더함)
+		FinalHand = ResultPos + FinalHand;
+		break;
 
-    case EWzPartType::LHand:
-        // LHand(handMove) -> Arm(hand) 연결
-        // Arm이 위에서 업데이트한 FinalHand(월드기준)를 사용함
-        //ResultPos = OwnerPart->FinalHand - FinalHandMove;
+	case EWzPartType::LHand:
+		// LHand(handMove) -> Arm(hand) 연결
+		// Arm이 위에서 업데이트한 FinalHand(월드기준)를 사용함
+		//ResultPos = OwnerPart->FinalHand - FinalHandMove;
 		// Todo: 알아내긴 해야함
-		ResultPos = (Vector2(1.0f, -1.0f) * (Origin + PartData.Map.HandMove- ImageCenter));
-        break;
+		ResultPos = (Vector2(1.0f, -1.0f) * (Origin + PartData.Map.HandMove - ImageCenter));
+		break;
 
-    case EWzPartType::RHand:
-        // RHand(navel) -> Body(navel) 연결
+	case EWzPartType::RHand:
+	{
+		// RHand(navel) -> Body(navel) 연결
 		// Todo: rHand계산법도 뭔가 이상함. 그냥 가만히 있던데 alert에서 rHand는
-        ResultPos = OwnerPart->FinalNavel - FinalNavel;
-		FinalNavel = ResultPos;
-        break;
+		Vector3 WP = CWzUtils::GetWorldPositionFromOrigin(*SpriteRenderComponent, Origin);
+		ResultPos = Vector2(WP.x, WP.y);
+		//FinalNavel = ResultPos;
+		break;
+	}
+	case EWzPartType::Hand: // 보통의 Hand 파츠
+		ResultPos = OwnerPart->FinalNavel - FinalNavel;
+		break;
 
-    case EWzPartType::Hand: // 보통의 Hand 파츠
-        ResultPos = OwnerPart->FinalNavel - FinalNavel;
-        break;
+	default:
+		break;
+	}
 
-    default:
-        break;
-    }
+	// 최종 트랜스폼 적용
+	Transform->SetPosition(Vector3(ResultPos.x, ResultPos.y, 0.0f));
 
-    // 최종 트랜스폼 적용
-    Transform->SetPosition(Vector3(ResultPos.x, ResultPos.y, 0.0f));
-
-    // 자식들에게 전파
-    for (CWzPart* ChildPart : ChildParts)
-        ChildPart->Composite();
+	// 자식들에게 전파
+	for (CWzPart* ChildPart : ChildParts)
+		ChildPart->Composite();
 }
 CWzPartsManager::CWzPartsManager(std::array<CWzPart*, static_cast<size_t>(EWzPartType::End)>&& InParts)
 	: Parts(std::move(InParts))

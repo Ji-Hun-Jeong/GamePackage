@@ -103,7 +103,7 @@ public:
 					return InA.RenderPass < InB.RenderPass;
 				return InA.RenderLayer < InB.RenderLayer;
 			});
-		static float ClearColor[4] = { 1.0f, 0.0f, 1.0f, 1.0f };
+		static float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Context.ClearRenderTarget(RenderTargetView.get(), ClearColor);
 
 		//// copy buffer

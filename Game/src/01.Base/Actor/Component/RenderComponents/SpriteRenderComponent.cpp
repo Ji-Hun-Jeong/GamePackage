@@ -73,7 +73,7 @@ void CSpriteRenderComponent::SetMesh(const Graphics::TMeshData& InMeshData)
 	Mesh = CRenderResourceLoader::GetInst().LoadMesh(InMeshData);
 	MeshData = InMeshData;
 }
-void CSpriteRenderComponent::SetDiffuseImage(const std::wstring& InImagePath)
+void CSpriteRenderComponent::SetDiffuseImage(const wchar_t* InImagePath)
 {
 	MaterialData.PixelShaderPath = L"resources/shader/BasicPixelShader.hlsl";
 	MaterialData.ImagePaths[0] = InImagePath;

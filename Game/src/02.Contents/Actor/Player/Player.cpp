@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "GameCore.h"
 
+#include "01.Base/Manager/WzLoader.h"
 CPlayer::CPlayer()
 {
 	Transform->SetScale(Vector3(37.0f, 37.0f, 1.0f));
@@ -17,16 +18,18 @@ CPlayer::CPlayer()
 
 CPlayer::~CPlayer()
 {
-	
+
 }
 
 void CPlayer::BeginPlay()
 {
 	CWzCharacterLoader& CharacterLoader = CWzCharacterLoader::GetInst();
-	/*CWzLoader WzLoader("resources/data/Character/Character.00002000.img.json");
-	if (WzLoader.OpenWzData())
+	CWzLoader WzLoader;
+	auto Node = WzLoader.LoadWzData("resources/data/Character/Character.00002000.img.json");
+	CharacterLoader.LoadWzCharacterAnimation(*Node, "00002000.img", "walk1", CharacterAnimator);
+	/*if (WzLoader.OpenWzData("resources/data/Character/Character.00002000.img.json"))
 	{
-		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "walk1", CharacterAnimator);
+
 		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "walk2", CharacterAnimator);
 		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "stand1", CharacterAnimator);
 		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "stand2", CharacterAnimator);
@@ -37,7 +40,7 @@ void CPlayer::BeginPlay()
 		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "fly", CharacterAnimator);
 
 		WzLoader.CloseWzData();
-		CharacterAnimator->SetCurrentAnimation("walk1", true);
+		CharacterAnimator->SetCurrentAnimation("alert", true);
 	}*/
 
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
