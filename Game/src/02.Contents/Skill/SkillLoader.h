@@ -1,7 +1,7 @@
 #pragma once
 #include "SkillCaster.h"
 #include "Common/Json.h"
-#include "01.Base/Manager/WzLoader.h"
+#include "02.Contents/Wz/WzLoader.h"
 
 class CSkillLoader
 {
@@ -10,33 +10,6 @@ public:
 	~CSkillLoader() = default;
 
 public:
-	void LoadMeleeAttackData(CWzLoader& InWzLoader, const char* InDataPath)
-	{
-		InWzLoader.OpenWzData(InDataPath);
-
-		const rapidjson::Document& LoadData = InWzLoader.GetLoadData();
-
-		auto LoadObject = LoadData.GetObject();
-		for (auto Iter = LoadObject.MemberBegin(); Iter != LoadObject.MemberEnd(); ++Iter)
-		{
-			const auto& SkillNumberData = Iter->name;
-			const auto& SkillData = Iter->value;
-
-			TMeleeAttackData MeleeAttackData;
-
-			DeSerialize(SkillData, &MeleeAttackData.SkillData);
-
-			if (SkillData.HasMember("Animation") && SkillData["Animation"].IsObject())
-				MeleeAttackData.Animation.DeSerialize(SkillData["Animation"]);
-
-			DeSerialize(SkillData, &MeleeAttackData.HitBoxData);
-
-			MeleeAttackDatas.emplace(MeleeAttackData.SkillData.Name, MeleeAttackData);
-		}
-
-		InWzLoader.CloseWzData();
-	}
-
 	const TMeleeAttackData* GetMeleeAttackData(const std::string& InSkillName) const
 	{
 		auto Iter = MeleeAttackDatas.find(InSkillName);

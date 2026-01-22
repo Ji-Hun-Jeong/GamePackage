@@ -191,11 +191,11 @@
     <ClCompile Include="src\02.Contents\Actor\Player\PlayerController.cpp" />
     <ClCompile Include="src\02.Contents\Component\Input\InputComponent.cpp" />
     <ClCompile Include="src\02.Contents\Component\Input\InputDispatcher.cpp" />
-    <ClCompile Include="src\01.Base\Manager\WzLoader.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzLoader.cpp" />
     <ClCompile Include="src\02.Contents\Skill\SkillLoader.cpp" />
     <ClCompile Include="src\02.Contents\Skill\SkillCaster.cpp" />
     <ClCompile Include="src\02.Contents\Skill\Skill.cpp" />
-    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimator.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimator.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RigidBody.cpp" />
     <ClCompile Include="src\02.Contents\ActorComponent\GroundDetector.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\ImGUIInteracter.cpp" />
@@ -270,9 +270,10 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UIManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp" />
     <ClCompile Include="src\Utils.cpp" />
-    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzPartData.cpp" />
-    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzPartsManager.cpp" />
-    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimation.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPartData.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPartsManager.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimation.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\02.Contents\Actor\Manager\SkillDataLinker.h" />
@@ -280,11 +281,11 @@
     <ClInclude Include="src\02.Contents\Actor\Player\PlayerController.h" />
     <ClInclude Include="src\02.Contents\Component\Input\InputComponent.h" />
     <ClInclude Include="src\02.Contents\Component\Input\InputDispatcher.h" />
-    <ClInclude Include="src\01.Base\Manager\WzLoader.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzLoader.h" />
     <ClInclude Include="src\02.Contents\Skill\SkillLoader.h" />
     <ClInclude Include="src\02.Contents\Skill\SkillCaster.h" />
     <ClInclude Include="src\02.Contents\Skill\Skill.h" />
-    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimator.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimator.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RigidBody.h" />
     <ClInclude Include="src\02.Contents\ActorComponent\GroundDetector.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\ImGUIInteracter.h" />
@@ -355,9 +356,10 @@
     <ClInclude Include="src\02.Contents\Actor\UI\UIManager.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h" />
     <ClInclude Include="src\Utils.h" />
-    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzPartData.h" />
-    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzPartsManager.h" />
-    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimation.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPartData.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPartsManager.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimation.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzType.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">
@@ -392,6 +394,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\Downloads\Skill.2411.img.json" />
     <None Include="resources\shader\Common.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -11,8 +11,6 @@
 #include "02.Contents/Actor/Player/PlayerController.h"
 #include "02.Contents/Skill/SkillManager.h"
 
-#include "01.Base/Manager/WzLoader.h"
-
 CTestScene::CTestScene()
 {
 }

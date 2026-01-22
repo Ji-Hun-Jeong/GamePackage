@@ -2,7 +2,8 @@
 #include "Player.h"
 #include "GameCore.h"
 
-#include "01.Base/Manager/WzLoader.h"
+#include "02.Contents/Skill/Skill.h"
+
 CPlayer::CPlayer()
 {
 	Transform->SetScale(Vector3(37.0f, 37.0f, 1.0f));
@@ -24,7 +25,10 @@ CPlayer::~CPlayer()
 void CPlayer::BeginPlay()
 {
 	CWzLoader WzLoader;
-	WzLoader.OpenWzData("resources/data/Character/Character.00002000.img.json");
+	WzLoader.OpenWzData("resources/data/Skill/Skill.2411.img.json");
+	TSkillData SkillData;
+	DeSerializeSkillData(WzLoader.GetLoadData()["skill"], "24111000", &SkillData);
+	/*WzLoader.OpenWzData("resources/data/Character/Character.00002000.img.json");
 	CharacterAnimator->AddAnimation(WzLoader, "walk1");
 	CharacterAnimator->AddAnimation(WzLoader, "walk2");
 	CharacterAnimator->AddAnimation(WzLoader, "stand1");
@@ -32,7 +36,7 @@ void CPlayer::BeginPlay()
 	CharacterAnimator->AddAnimation(WzLoader, "swingO1");
 	CharacterAnimator->AddAnimation(WzLoader, "swingO2");
 	CharacterAnimator->AddAnimation(WzLoader, "swingO3");
-	CharacterAnimator->SetCurrentAnimation("walk1", true);
+	CharacterAnimator->SetCurrentAnimation("walk1", true);*/
 
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));

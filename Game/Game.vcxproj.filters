@@ -222,7 +222,7 @@
     <ClCompile Include="src\Utils.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimator.cpp">
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Skill\Skill.cpp">
@@ -234,7 +234,7 @@
     <ClCompile Include="src\02.Contents\Skill\SkillLoader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\01.Base\Manager\WzLoader.cpp">
+    <ClCompile Include="src\02.Contents\Wz\WzLoader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Component\Input\InputDispatcher.cpp">
@@ -252,13 +252,16 @@
     <ClCompile Include="src\02.Contents\Actor\Manager\SkillDataLinker.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzPartData.cpp">
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPartData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzPartsManager.cpp">
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPartsManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimation.cpp">
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Wz\WzType.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -473,7 +476,7 @@
     <ClInclude Include="src\Common\Json.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimator.h">
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Skill\Skill.h">
@@ -485,7 +488,7 @@
     <ClInclude Include="src\02.Contents\Skill\SkillLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\01.Base\Manager\WzLoader.h">
+    <ClInclude Include="src\02.Contents\Wz\WzLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Component\Input\InputDispatcher.h">
@@ -503,13 +506,16 @@
     <ClInclude Include="src\02.Contents\Actor\Manager\SkillDataLinker.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzPartData.h">
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPartData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzPartsManager.h">
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPartsManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimation.h">
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimation.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Wz\WzType.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -520,5 +526,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shader\Common.hlsli" />
+    <None Include="..\..\..\..\Downloads\Skill.2411.img.json" />
   </ItemGroup>
 </Project>

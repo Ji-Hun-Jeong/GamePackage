@@ -6,7 +6,7 @@
 
 void CSkillDataLinker::SetupUI(CUIManager& InUIManager)
 {
-	SkillManagementUI = GetWorld()->SpawnActor<CUI>(this);
+	/*SkillManagementUI = GetWorld()->SpawnActor<CUI>(this);
 	SkillManagementUI->SetUIScale(Vector2(50.0f, 50.0f));
 	SkillManagementUI->SetMouseClickEvent([this]()->void
 		{
@@ -28,5 +28,5 @@ void CSkillDataLinker::SetupUI(CUIManager& InUIManager)
 	KeyBoardUI->SetUIScale(Vector2(50.0f, 50.0f));
 
 	InUIManager.AddUI(*SkillManagementUI);
-	InUIManager.AddUI(*KeyBoardUI);
+	InUIManager.AddUI(*KeyBoardUI);*/
 }

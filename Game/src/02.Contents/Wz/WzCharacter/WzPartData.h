@@ -1,5 +1,5 @@
 #pragma once
-#include "01.Base/Manager/WzLoader.h"
+#include "02.Contents/Wz/WzLoader.h"
 
 enum class EWzPartType
 {
