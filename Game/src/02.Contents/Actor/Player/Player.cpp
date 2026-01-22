@@ -23,25 +23,16 @@ CPlayer::~CPlayer()
 
 void CPlayer::BeginPlay()
 {
-	CWzCharacterLoader& CharacterLoader = CWzCharacterLoader::GetInst();
 	CWzLoader WzLoader;
-	auto Node = WzLoader.LoadWzData("resources/data/Character/Character.00002000.img.json");
-	CharacterLoader.LoadWzCharacterAnimation(*Node, "00002000.img", "walk1", CharacterAnimator);
-	/*if (WzLoader.OpenWzData("resources/data/Character/Character.00002000.img.json"))
-	{
-
-		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "walk2", CharacterAnimator);
-		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "stand1", CharacterAnimator);
-		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "stand2", CharacterAnimator);
-		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "swingO1", CharacterAnimator);
-		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "swingO2", CharacterAnimator);
-		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "swingO3", CharacterAnimator);
-		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "alert", CharacterAnimator);
-		CharacterLoader.LoadWzCharacterAnimation(WzLoader.GetLoadData(), "Base", "fly", CharacterAnimator);
-
-		WzLoader.CloseWzData();
-		CharacterAnimator->SetCurrentAnimation("alert", true);
-	}*/
+	WzLoader.OpenWzData("resources/data/Character/Character.00002000.img.json");
+	CharacterAnimator->AddAnimation(WzLoader, "walk1");
+	CharacterAnimator->AddAnimation(WzLoader, "walk2");
+	CharacterAnimator->AddAnimation(WzLoader, "stand1");
+	CharacterAnimator->AddAnimation(WzLoader, "stand2");
+	CharacterAnimator->AddAnimation(WzLoader, "swingO1");
+	CharacterAnimator->AddAnimation(WzLoader, "swingO2");
+	CharacterAnimator->AddAnimation(WzLoader, "swingO3");
+	CharacterAnimator->SetCurrentAnimation("walk1", true);
 
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));

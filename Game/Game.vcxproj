@@ -195,8 +195,7 @@
     <ClCompile Include="src\02.Contents\Skill\SkillLoader.cpp" />
     <ClCompile Include="src\02.Contents\Skill\SkillCaster.cpp" />
     <ClCompile Include="src\02.Contents\Skill\Skill.cpp" />
-    <ClCompile Include="src\01.Base\Actor\Component\Animation\WzCharacterLoader.cpp" />
-    <ClCompile Include="src\01.Base\Actor\Component\Animation\WzCharacterAnimator.cpp" />
+    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimator.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RigidBody.cpp" />
     <ClCompile Include="src\02.Contents\ActorComponent\GroundDetector.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\ImGUIInteracter.cpp" />
@@ -271,7 +270,9 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UIManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp" />
     <ClCompile Include="src\Utils.cpp" />
-    <ClCompile Include="src\01.Base\Actor\Component\Animation\WzAnimationLoader.cpp" />
+    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzPartData.cpp" />
+    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzPartsManager.cpp" />
+    <ClCompile Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\02.Contents\Actor\Manager\SkillDataLinker.h" />
@@ -283,8 +284,7 @@
     <ClInclude Include="src\02.Contents\Skill\SkillLoader.h" />
     <ClInclude Include="src\02.Contents\Skill\SkillCaster.h" />
     <ClInclude Include="src\02.Contents\Skill\Skill.h" />
-    <ClInclude Include="src\01.Base\Actor\Component\Animation\WzCharacterLoader.h" />
-    <ClInclude Include="src\01.Base\Actor\Component\Animation\WzCharacterAnimator.h" />
+    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimator.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RigidBody.h" />
     <ClInclude Include="src\02.Contents\ActorComponent\GroundDetector.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\ImGUIInteracter.h" />
@@ -355,7 +355,9 @@
     <ClInclude Include="src\02.Contents\Actor\UI\UIManager.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h" />
     <ClInclude Include="src\Utils.h" />
-    <ClInclude Include="src\01.Base\Actor\Component\Animation\WzAnimationLoader.h" />
+    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzPartData.h" />
+    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzPartsManager.h" />
+    <ClInclude Include="src\02.Contents\Component\WzCharacter\WzCharacterAnimation.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

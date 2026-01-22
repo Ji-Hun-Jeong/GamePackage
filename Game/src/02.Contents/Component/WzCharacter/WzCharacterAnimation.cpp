@@ -1,10 +1,88 @@
 #include "pch.h"
-#include "WzCharacterAnimator.h"
+#include "WzCharacterAnimation.h"
 
-#include "GameCore.h"
-#include "WzCharacterLoader.h"
-
-#include "01.Base/Manager/WzLoader.h"
+/*
+{
+  "dir":
+  {
+	"@name": "00002000.img",
+	"dir":
+	[
+	  {
+		"@name": "info",
+		"string":
+		[
+		  { "@name": "islot", "@value": "Bd" },
+		  { "@name": "vslot", "@value": "Bd" }
+		],
+		"int32": { "@name": "cash", "@value": "0" }
+	  },
+	  {
+		"@name": "walk1",
+		"dir":
+		[
+		  {
+			"@name": "0",
+			"png":
+			[
+			  {
+				"@name": "body",
+				"@value": "iVBOR... (생략)",
+				"vector": { "@name": "origin", "@value": "19, 32" },
+				"dir":
+				{
+				  "@name": "map",
+				  "vector":
+				  [
+					{ "@name": "neck", "@value": "-4, -32" },
+					{ "@name": "navel", "@value": "-6, -20" }
+				  ]
+				},
+				"string":
+				[
+				  { "@name": "z", "@value": "body" },
+				  { "@name": "group", "@value": "skin" },
+				  { "@name": "_outlink", "@value": "Character/_Canvas/00002000.img/walk1/0/body" }
+				]
+			  },
+			  {
+				"@name": "arm",
+				"@value": "iVBOR... (생략)",
+				"vector": { "@name": "origin", "@value": "6, 8" },
+				"dir": {
+				  "@name": "map",
+				  "vector": [
+					{ "@name": "navel", "@value": "-12, 2" },
+					{ "@name": "hand", "@value": "1, 5" }
+				  ]
+				},
+				"string": [
+				  { "@name": "z", "@value": "arm" },
+				  { "@name": "group", "@value": "skin" },
+				  { "@name": "_outlink", "@value": "Character/_Canvas/00002000.img/walk1/0/arm" }
+				]
+			  }
+			],
+			"int16": { "@name": "face", "@value": "1" },
+			"int32": { "@name": "delay", "@value": "180" }
+		  },
+		  {
+			"@name": "1",
+			"png": [
+			  {
+				"@name": "body",
+				"@value": "iVBOR... (생략)",
+				"vector": { "@name": "origin", "@value": "16, 32" }
+			  }
+			],
+			"int32": { "@name": "delay", "@value": "180" }
+		  }
+		]
+	  }
+	]
+  }
+}
+*/
 
 void CWzPart::Composite()
 {
@@ -70,45 +148,8 @@ void CWzPart::Composite()
 	for (CWzPart* ChildPart : ChildParts)
 		ChildPart->Composite();
 }
-CWzPartsManager::CWzPartsManager(std::array<CWzPart*, static_cast<size_t>(EWzPartType::End)>&& InParts)
-	: Parts(std::move(InParts))
-{
-	for (size_t i = 0; i < Parts.size(); ++i)
-		assert(Parts[i]);
 
-	CWzPart* BodyPart = GetPart(EWzPartType::Body);
-	CWzPart* ArmPart = GetPart(EWzPartType::Arm);
-	CWzPart* HandPart = GetPart(EWzPartType::Hand);
-	CWzPart* ArmOverHairPart = GetPart(EWzPartType::ArmOverHair);
-	CWzPart* LHandPart = GetPart(EWzPartType::LHand);
-	CWzPart* RHandPart = GetPart(EWzPartType::RHand);
-
-	BodyPart->AttachChildPart(*ArmPart);
-	BodyPart->AttachChildPart(*HandPart);
-	BodyPart->AttachChildPart(*RHandPart);
-	BodyPart->AttachChildPart(*LHandPart);
-}
-
-void CWzPartsManager::UpdateParts()
-{
-	GetPart(EWzPartType::Body)->Composite();
-}
-
-void CWzPartsManager::CompositeParts(const CWzFrameData& InFrameData)
-{
-	for (size_t PartIndex = 0; PartIndex < static_cast<size_t>(EWzPartType::End); ++PartIndex)
-	{
-		EWzPartType PartType = static_cast<EWzPartType>(PartIndex);
-
-		const TWzPartData& PartData = InFrameData.GetPartData(PartType);
-
-		CWzPart* Part = GetPart(PartType);
-		Part->SetPartData(PartData);
-		Part->GetSpriteRenderComponent()->SetDiffuseImage(std::wstring(PartData.OutLink.begin(), PartData.OutLink.end()));
-	}
-}
-
-EWzPartType CWzPart::GetPartTypeByName(const std::string& InPartName)
+EWzPartType CWzPart::GetPartTypeByName(const std::string_view InPartName)
 {
 	if (InPartName == "body")			return EWzPartType::Body;
 	if (InPartName == "arm")				return EWzPartType::Arm;
@@ -118,29 +159,3 @@ EWzPartType CWzPart::GetPartTypeByName(const std::string& InPartName)
 	if (InPartName == "rHand")			return EWzPartType::RHand;
 	return EWzPartType::End;
 }
-
-void CWzCharacterAnimator::InitalizeComponent()
-{
-	std::array<CWzPart*, static_cast<size_t>(EWzPartType::End)> Parts;
-	for (size_t i = 0; i < Parts.size(); ++i)
-	{
-		Parts[i] = GetWorld()->SpawnActor<CWzPart>(GetOwnerActor());
-		Parts[i]->SetPartType(EWzPartType(i));
-	}
-	PartsManager = std::make_unique<CWzPartsManager>(std::move(Parts));
-}
-
-void CWzCharacterAnimator::Update(float InDeltaTime)
-{
-	if (CurrentAnimation == nullptr)
-		return;
-	if (CurrentAnimation->IsFrameChanged())
-	{
-		const auto& CurrentFrameData = CurrentAnimation->GetCurrentFrame();
-		PartsManager->CompositeParts(CurrentFrameData);
-	}
-	PartsManager->UpdateParts();
-
-	CurrentAnimation->PlayAnimation(InDeltaTime);
-}
-
