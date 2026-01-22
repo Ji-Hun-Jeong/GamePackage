@@ -43,21 +43,26 @@
 
 // C:/Users/Jeong/Downloads/Skill.2411.img.xml
 
+
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
 #include "rapidxml/rapidxml.hpp"
-#include "rapidxml/rapidxml_utils.hpp"
-#include "nlohmann/json.hpp" // nlohmann json 라이브러리 사용
+#include "nlohmann/json.hpp"
 
 using namespace rapidxml;
-using json = nlohmann::ordered_json; // 순서 보존을 위해 ordered_json 사용
+// 상단 선언부 변경
+// using json = nlohmann::json; // 기존
+using json = nlohmann::ordered_json; // 순서 보존용 타입으로 변경
 
-// 1. 핵심 커스텀 변환 함수 (재귀)
-json ConvertCompressed(xml_node<>* node) {
+// 나머지 변환 로직(ConvertNode)은 그대로 두어도 
+// j["key"] = value; 할 때 입력한 순서가 기억됩니다.
+
+json ConvertNode(xml_node<>* node) {
     json j = json::object();
 
+    // 자식 노드 순회
     for (xml_node<>* child = node->first_node(); child; child = child->next_sibling()) {
         xml_attribute<>* nameAttr = child->first_attribute("name");
         xml_attribute<>* valueAttr = child->first_attribute("value");
@@ -65,73 +70,52 @@ json ConvertCompressed(xml_node<>* node) {
         if (nameAttr) {
             std::string key = nameAttr->value();
 
+            // 1. 자식이 없고 value만 있는 노드 (예: int32, string)
+            // 바로 값을 할당해서 계층을 줄임
             if (child->first_node() == nullptr && valueAttr) {
                 j[key] = valueAttr->value();
             }
+            // 2. 자식이 있는 노드 (예: dir, canvas)
             else {
-                j[key] = ConvertCompressed(child);
-
-                // 부모 노드 자체가 값을 가지고 있다면 'value'라는 키로 저장
-                if (valueAttr) {
-                    j[key]["value"] = valueAttr->value();
-                }
+                j[key] = ConvertNode(child);
+                // 태그 정보가 필요하다면 별도 저장 (선택 사항)
+                // j[key]["_type"] = child->name(); 
             }
         }
     }
+
+    // 만약 현재 노드 자체가 value를 가지고 있다면 (png 데이터 등)
+    xml_attribute<>* selfValue = node->first_attribute("value");
+    if (selfValue && j.empty()) {
+        return selfValue->value();
+    }
+
     return j;
 }
 
 int main() {
-    // 경로 설정
-    std::string xmlPath = "C:/Users/Jeong/Downloads/Skill.2411.img.xml";
-    std::string jsonPath = "E:/source/repos/GamePackage/Game/resources/data/Skill/Skill.2411.img.json";
+    // 1. XML 파일 읽기
+    std::ifstream file("C:/Users/user/Downloads/Character.00002000.img.xml");
+    if (!file.is_open()) return -1;
 
-    try {
-        std::cout << "XML 읽는 중..." << std::endl;
+    std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    buffer.push_back('\0');
 
-        // 2. XML 파일 로드 (BOM 무시를 위해 포인터 조정)
-        rapidxml::file<> xmlFile(xmlPath.c_str());
-        char* xmlData = xmlFile.data();
+    // 2. RapidXML 파싱
+    xml_document<> doc;
+    doc.parse<0>(&buffer[0]);
 
-        // UTF-8 BOM(0xEF, 0xBB, 0xBF) 체크 및 제거
-        if (static_cast<unsigned char>(xmlData[0]) == 0xEF &&
-            static_cast<unsigned char>(xmlData[1]) == 0xBB &&
-            static_cast<unsigned char>(xmlData[2]) == 0xBF) {
-            xmlData += 3;
-        }
+    // 3. 첫 번째 노드(보통 <dir name="000.img">)부터 변환 시작
+    xml_node<>* root = doc.first_node();
+    if (!root) return -1;
 
-        xml_document<> doc;
-        doc.parse<0>(xmlData);
+    json result = ConvertNode(root);
 
-        // 3. 변환 시작 (첫 번째 루트 노드부터)
-        xml_node<>* root = doc.first_node();
-        if (!root) return -1;
+    // 4. JSON 파일 저장
+    std::ofstream outFile("C:/Users/user/Downloads/Character.00002000.img.json");
+    outFile << result.dump(4);
 
-        std::cout << "JSON 변환 중..." << std::endl;
-        json result;
-
-        // 루트 노드의 name이 있으면 그것을 최상위 키로 사용
-        xml_attribute<>* rootName = root->first_attribute("name");
-        if (rootName) {
-            result[rootName->value()] = ConvertCompressed(root);
-        }
-        else {
-            result = ConvertCompressed(root);
-        }
-
-        // 4. JSON 파일 저장
-        std::ofstream outFile(jsonPath);
-        if (outFile.is_open()) {
-            // 들여쓰기 4칸으로 저장 (Pretty Print)
-            outFile << result.dump(4);
-            outFile.close();
-            std::cout << "성공: " << jsonPath << " 저장 완료!" << std::endl;
-        }
-    }
-    catch (const std::exception& e) {
-        std::cerr << "에러 발생: " << e.what() << std::endl;
-        return -1;
-    }
+    std::cout << "Success: 2411.img.json created." << std::endl;
 
     return 0;
 }
