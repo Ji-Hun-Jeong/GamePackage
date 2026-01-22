@@ -526,6 +526,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shader\Common.hlsli" />
-    <None Include="..\..\..\..\Downloads\Skill.2411.img.json" />
   </ItemGroup>
 </Project>
