@@ -1,40 +1,41 @@
 #pragma once
 #include "Common/Json.h"
 
-//class CWzNode
-//{
-//public:
-//	CWzNode(const std::string& InName) : Name(InName) {}
-//	CWzNode() = default;
-//
-//	void AddChildNode(const std::string_view InNodeName, std::unique_ptr<CWzNode> InChildNode) {
-//		ChildNodes.emplace(InNodeName, std::move(InChildNode));
-//	}
-//	CWzNode* GetChildNode(const std::string_view InNodeName) const {
-//		auto Iter = ChildNodes.find(InNodeName);
-//		return (Iter != ChildNodes.end()) ? Iter->second.get() : nullptr;
-//	}
-//	const CWzNode& operator[](const std::string_view InNodeName) const
-//	{
-//		return *GetChildNode(InNodeName);
-//	}
-//	// CWzNode.cpp 또는 헤더 내부
-//	void SetName(const std::string_view InName) { Name = InName; }
-//	void SetValue(const std::string& InValue) { Value = InValue; }
-//	const std::string& GetValue() const { return Value; }
-//	const std::string& GetName() const { return Name; }
-//	bool HasMember(const std::string_view InMemberName) const
-//	{
-//		return ChildNodes.contains(InMemberName);
-//	}
-//
-//	const std::map<std::string, std::unique_ptr<CWzNode>, std::less<>>& GetMembers() const { return ChildNodes; }
-//
-//private:
-//	std::string Name;
-//	std::string Value;
-//	std::map<std::string, std::unique_ptr<CWzNode>, std::less<>> ChildNodes;
-//};
+class CWzNode
+{
+public:
+	CWzNode(const std::string& InName) : Name(InName) {}
+	CWzNode() = default;
+
+	void AddChildNode(const std::string_view InNodeName, std::unique_ptr<CWzNode> InChildNode) {
+		ChildNodes.emplace(InNodeName, std::move(InChildNode));
+	}
+	CWzNode* GetChildNode(const std::string_view InNodeName) const {
+		auto Iter = ChildNodes.find(InNodeName);
+		return (Iter != ChildNodes.end()) ? Iter->second.get() : nullptr;
+	}
+	const CWzNode& operator[](const std::string_view InNodeName) const
+	{
+		return *GetChildNode(InNodeName);
+	}
+	// CWzNode.cpp 또는 헤더 내부
+	void SetName(const std::string_view InName) { Name = InName; }
+	void SetValue(const std::string& InValue) { Value = InValue; }
+	const std::string& GetValue() const { return Value; }
+	const std::string& GetName() const { return Name; }
+	bool HasMember(const std::string_view InMemberName) const
+	{
+		return ChildNodes.contains(InMemberName);
+	}
+
+	const std::map<std::string, std::unique_ptr<CWzNode>, std::less<>>& GetMembers() const { return ChildNodes; }
+
+private:
+	std::string Name;
+	std::string Value;
+	std::map<std::string, std::unique_ptr<CWzNode>, std::less<>> ChildNodes;
+
+};
 
 class CWzLoader
 {
@@ -76,36 +77,6 @@ public:
 	}
 
 	const rapidjson::Document& GetLoadData() const { return Document; }
-
-private:
-	/*void ParseJsonValue(const rapidjson::Value& InValue, CWzNode* OutNode)
-	{
-		if (InValue.IsObject())
-		{
-			CWzNode* NewNode = nullptr;
-			auto Object = InValue.GetObject();
-			for (auto Iter = Object.MemberBegin(); Iter != Object.MemberEnd(); ++Iter)
-			{
-				std::string Name = Iter->name.GetString();
-				auto& Value = Iter->value;
-				if (Name == "@name")
-				{
-					NewNode = new CWzNode(Value.GetString());
-					OutNode->AddChildNode(Value.GetString(), std::unique_ptr<CWzNode>(NewNode));
-				}
-				else if (Name == "@value")
-					NewNode->SetValue(Value.GetString());
-				else
-					ParseJsonValue(Value, NewNode);
-			}
-		}
-		else if (InValue.IsArray())
-		{
-			auto Arr = InValue.GetArray();
-			for (auto& Element : Arr)
-				ParseJsonValue(Element, OutNode);
-		}
-	}*/
 
 private:
 	std::string WzJsonPath;

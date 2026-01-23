@@ -95,7 +95,7 @@ json ConvertNode(xml_node<>* node) {
 
 int main() {
     // 1. XML 파일 읽기
-    std::ifstream file("C:/Users/user/Downloads/Character.00002000.img.xml");
+    std::ifstream file("C:/Users/Jeong/Downloads/Skill.2411.img.xml");
     if (!file.is_open()) return -1;
 
     std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
@@ -112,7 +112,7 @@ int main() {
     json result = ConvertNode(root);
 
     // 4. JSON 파일 저장
-    std::ofstream outFile("C:/Users/user/Downloads/Character.00002000.img.json");
+    std::ofstream outFile("E:/source/repos/GamePackage/Game/resources/data/Skill/Skill.2411.img.json");
     outFile << result.dump(4);
 
     std::cout << "Success: 2411.img.json created." << std::endl;
