@@ -12,8 +12,7 @@ void CWorld::RenderWorld(CSpriteRenderer& InRenderer)
 {
 	for (auto& WorldActor : WorldActors)
 	{
-		if (WorldActor->IsActivate())
-			WorldActor->RenderActor(InRenderer);
+		WorldActor->RenderActor(InRenderer);
 	}
 	InRenderer.Draw();
 }

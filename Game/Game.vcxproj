@@ -186,6 +186,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\02.Contents\Global\EffectPool.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Manager\SkillDataLinker.cpp" />
     <ClCompile Include="src\02.Contents\Skill\SkillManager.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Player\PlayerController.cpp" />
@@ -276,6 +277,7 @@
     <ClCompile Include="src\02.Contents\Wz\WzType.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\02.Contents\Global\EffectPool.h" />
     <ClInclude Include="src\02.Contents\Actor\Manager\SkillDataLinker.h" />
     <ClInclude Include="src\02.Contents\Skill\SkillManager.h" />
     <ClInclude Include="src\02.Contents\Actor\Player\PlayerController.h" />

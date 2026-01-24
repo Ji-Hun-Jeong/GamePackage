@@ -10,9 +10,11 @@
 #include "02.Contents/Component/Input/InputDispatcher.h"
 #include "02.Contents/Actor/Player/PlayerController.h"
 #include "02.Contents/Skill/SkillManager.h"
+#include "02.Contents/Global/EffectPool.h"
 
 CTestScene::CTestScene()
 {
+	CEffectPool::GetInst().Initalize(*GetWorld(), 50);
 }
 
 void CTestScene::BeginPlay()

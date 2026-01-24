@@ -26,10 +26,10 @@ public:
 private:
 	CActor* Owner;
 	bool bActive;
-
 	std::vector<CActor*> Childs;
 
 public:
+
 	void Attach(CActor* InChild)
 	{
 		if (InChild == nullptr)
@@ -244,5 +244,6 @@ public:
 		CImage* Image = CRenderResourceLoader::GetInst().GetImage(InImagePath);
 		return Image->GetTexture2D().GetTextureSize();
 	}
+
 };
 

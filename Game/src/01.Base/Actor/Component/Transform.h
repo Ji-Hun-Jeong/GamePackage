@@ -83,7 +83,15 @@ public:
 	{
 		return InEnd - InStart;
 	}
-
+	void Reset()
+	{
+		WorldPosition = Vector3(0.0f);
+		Position = Vector3(0.0f);
+		Rotation = Vector3(0.0f);
+		Scale = Vector3(1.0f);
+		bChangePosition = false;
+		while (PositionOffsets.empty() == false) PositionOffsets.pop();
+	}
 private:
 	void ChangePosition();
 

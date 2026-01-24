@@ -4,29 +4,8 @@
 
 #include "GameCore.h"
 #include "02.Contents/Wz/WzLoader.h"
+#include "02.Contents/Global/EffectPool.h"
 
-class CSkillHitActor : public CStaticActor
-{
-	GENERATE_OBJECT(CSkillHitActor)
-public:
-	CSkillHitActor()
-	{
-		AddComponent<CAnimator>();
-	}
-	~CSkillHitActor() = default;
-
-public:
-	void Update(float InDeltaTime) override
-	{
-		CStaticActor::Update(InDeltaTime);
-
-		if (Animator->GetCurrentAnimation()->IsFinish())
-			Destroy();
-	}
-
-private:
-
-};
 class CInstanceSkillActor : public CStaticActor
 {
 	GENERATE_OBJECT(CInstanceSkillActor)
@@ -44,7 +23,8 @@ public:
 	{
 		if (bHit == false)
 			return;
-		GenerateHitEffect(*InTargetCollider.GetOwnerActor());
+		if (HitAction)
+			HitAction(InTargetCollider);
 	}
 	void Update(float InDeltaTime) override
 	{
@@ -80,40 +60,38 @@ public:
 		}
 		Animator->SetCurrentAnimation("Effect");
 	}
-	void AddHitEffect(const TSkillHit& InHitData)
-	{
-		SkillHitDatas.push_back(InHitData);
-	}
 
-private:
-	void GenerateHitEffect(const CActor& InTargetActor)
-	{
-		CSkillHitActor* HitActor = GetWorld()->SpawnActor<CSkillHitActor>(nullptr);
-		HitActor->GetTransform()->SetPosition(InTargetActor.GetTransform()->GetWorldPosition());
-		CAnimator* Animator = HitActor->AddComponent<CAnimator>();
-		CAnimation& Anim = Animator->AddAnimationRef("Hit");
-
-		int32_t RandIndex = std::rand() % int32_t(SkillHitDatas.size());
-		const TSkillHit& SkillHitData = SkillHitDatas[RandIndex];
-
-		Anim.Reserve(SkillHitData.Anim.size());
-		for (size_t i = 0; i < SkillHitData.Anim.size(); ++i)
-		{
-			TFrame& Frame = Anim.AddFrame();
-			Frame.Duration = static_cast<float>(SkillHitData.Anim[i].Delay) / 1000.0f;
-			Frame.ImagePath = SkillHitData.Anim[i].OutLink;
-			Frame.Offset = CWzUtils::GetWorldPositionFromOrigin(Frame.ImagePath, SkillHitData.Anim[i].Origin);
-		}
-		Animator->SetCurrentAnimation("Hit");
-	}
+	void SetHitAction(std::function<void(CCollider&)> InHitAction) { HitAction = InHitAction; }
 
 private:
 	CRectCollider* HitBox = nullptr;
-	std::vector<TSkillHit> SkillHitDatas;
+	
 
 	bool bHit = false;
+	std::function<void(CCollider&)> HitAction;
 
 };
+
+void GenerateHitEffect(const CActor& InTargetActor, const std::vector<TSkillHit>& SkillHitDatas)
+{
+	CEffector* Effector = CEffectPool::GetInst().GetEffector();
+	Effector->GetTransform()->SetPosition(InTargetActor.GetTransform()->GetWorldPosition());
+	CAnimator* Animator = Effector->AddComponent<CAnimator>();
+	CAnimation& Anim = Animator->AddAnimationRef("Effect");
+
+	int32_t RandIndex = std::rand() % int32_t(SkillHitDatas.size());
+	const TSkillHit& SkillHitData = SkillHitDatas[RandIndex];
+
+	Anim.Reserve(SkillHitData.Anim.size());
+	for (size_t i = 0; i < SkillHitData.Anim.size(); ++i)
+	{
+		TFrame& Frame = Anim.AddFrame();
+		Frame.Duration = static_cast<float>(SkillHitData.Anim[i].Delay) / 1000.0f;
+		Frame.ImagePath = SkillHitData.Anim[i].OutLink;
+		Frame.Offset = CWzUtils::GetWorldPositionFromOrigin(Frame.ImagePath, SkillHitData.Anim[i].Origin);
+	}
+	Animator->SetCurrentAnimation("Effect");
+}
 
 void CSkillCaster::CastInstantSkill(const TSkillData& InSkillData)
 {
@@ -121,6 +99,8 @@ void CSkillCaster::CastInstantSkill(const TSkillData& InSkillData)
 
 	InstanceSkillActor->SetHitBox(InSkillData.Common.LeftTop, InSkillData.Common.RightBottom);
 	InstanceSkillActor->SetEffect(InSkillData.Effect);
-	for(const auto& HitData : InSkillData.Hit)
-		InstanceSkillActor->AddHitEffect(HitData);
+	InstanceSkillActor->SetHitAction([&InSkillData](CCollider& InTargetCollider)->void
+		{
+			GenerateHitEffect(*InTargetCollider.GetOwnerActor(), InSkillData.Hit);
+		});
 }

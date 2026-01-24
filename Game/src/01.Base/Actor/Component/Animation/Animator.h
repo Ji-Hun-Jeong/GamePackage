@@ -56,6 +56,11 @@ public:
 			return nullptr;
 		return &Iter->second;
 	}
+	void Reset()
+	{
+		Animations.clear();
+		CurrentAnimation = nullptr;
+	}
 
 private:
 	std::map<std::string, CAnimation> Animations;

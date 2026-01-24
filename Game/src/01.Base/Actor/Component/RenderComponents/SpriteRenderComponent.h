@@ -37,6 +37,18 @@ public:
 	Vector2 GetImageScale() const { return Vector2(ImageScale.x, ImageScale.y); }
 	const std::wstring& GetImagePath() const { return ImagePath; }
 
+	void Reset()
+	{
+		ClearState();
+		bUIPass = false;
+		RenderLayer = 0;
+		SpriteData = TSpriteData{};
+		bUpdatedSpriteData = true;
+		bRender = true;
+		SetDiffuseImage(L"");
+		PSOType = EPSOType::Basic;
+	}
+
 private:
 	void ClearState()
 	{

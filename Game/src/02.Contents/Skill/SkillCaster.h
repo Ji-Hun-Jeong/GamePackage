@@ -10,6 +10,10 @@ public:
 	~CSkillCaster() = default;
 
 public:
+	void Update(float InDeltaTime)
+	{
+
+	}
 	void CastInstantSkill(const TSkillData& InSkillData);
 
 private:
