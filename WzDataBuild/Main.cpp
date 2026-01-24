@@ -60,62 +60,63 @@ using json = nlohmann::ordered_json; // 순서 보존용 타입으로 변경
 // j["key"] = value; 할 때 입력한 순서가 기억됩니다.
 
 json ConvertNode(xml_node<>* node) {
-    json j = json::object();
+	json j = json::object();
 
-    // 자식 노드 순회
-    for (xml_node<>* child = node->first_node(); child; child = child->next_sibling()) {
-        xml_attribute<>* nameAttr = child->first_attribute("name");
-        xml_attribute<>* valueAttr = child->first_attribute("value");
+	// 자식 노드 순회
+	for (xml_node<>* child = node->first_node(); child; child = child->next_sibling()) {
+		xml_attribute<>* nameAttr = child->first_attribute("name");
+		xml_attribute<>* valueAttr = child->first_attribute("value");
 
-        if (nameAttr) {
-            std::string key = nameAttr->value();
+		if (nameAttr) {
+			std::string key = nameAttr->value();
 
-            // 1. 자식이 없고 value만 있는 노드 (예: int32, string)
-            // 바로 값을 할당해서 계층을 줄임
-            if (child->first_node() == nullptr && valueAttr) {
-                j[key] = valueAttr->value();
-            }
-            // 2. 자식이 있는 노드 (예: dir, canvas)
-            else {
-                j[key] = ConvertNode(child);
-                // 태그 정보가 필요하다면 별도 저장 (선택 사항)
-                // j[key]["_type"] = child->name(); 
-            }
-        }
-    }
+			// 1. 자식이 없고 value만 있는 노드 (예: int32, string)
+			// 바로 값을 할당해서 계층을 줄임
+			if (child->first_node() == nullptr && valueAttr) {
+				j[key] = valueAttr->value();
+			}
+			// 2. 자식이 있는 노드 (예: dir, canvas)
+			else {
+				j[key] = ConvertNode(child);
+				// 태그 정보가 필요하다면 별도 저장 (선택 사항)
+				// j[key]["_type"] = child->name(); 
+			}
+		}
+	}
 
-    // 만약 현재 노드 자체가 value를 가지고 있다면 (png 데이터 등)
-    xml_attribute<>* selfValue = node->first_attribute("value");
-    if (selfValue && j.empty()) {
-        return selfValue->value();
-    }
+	// 만약 현재 노드 자체가 value를 가지고 있다면 (png 데이터 등)
+	xml_attribute<>* selfValue = node->first_attribute("value");
+	if (selfValue && j.empty()) {
+		return selfValue->value();
+	}
 
-    return j;
+	return j;
 }
 
 int main() {
-    // 1. XML 파일 읽기
-    std::ifstream file("C:/Users/Jeong/Downloads/Skill.2411.img.xml");
-    if (!file.is_open()) return -1;
+	std::string FileName = "Skill.2412.img";
+	// 1. XML 파일 읽기
+	std::ifstream file("C:/Users/user/Downloads/" + FileName + ".xml");
+	if (!file.is_open()) return -1;
 
-    std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    buffer.push_back('\0');
+	std::vector<char> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	buffer.push_back('\0');
 
-    // 2. RapidXML 파싱
-    xml_document<> doc;
-    doc.parse<0>(&buffer[0]);
+	// 2. RapidXML 파싱
+	xml_document<> doc;
+	doc.parse<0>(&buffer[0]);
 
-    // 3. 첫 번째 노드(보통 <dir name="000.img">)부터 변환 시작
-    xml_node<>* root = doc.first_node();
-    if (!root) return -1;
+	// 3. 첫 번째 노드(보통 <dir name="000.img">)부터 변환 시작
+	xml_node<>* root = doc.first_node();
+	if (!root) return -1;
 
-    json result = ConvertNode(root);
+	json result = ConvertNode(root);
 
-    // 4. JSON 파일 저장
-    std::ofstream outFile("E:/source/repos/GamePackage/Game/resources/data/Skill/Skill.2411.img.json");
-    outFile << result.dump(4);
+	// 4. JSON 파일 저장
+	std::ofstream outFile("C:/Users/user/source/repos/GamePackage/Game/resources/data/Skill/" + FileName + ".json");
+	outFile << result.dump(4);
 
-    std::cout << "Success: 2411.img.json created." << std::endl;
+	std::cout << "Success: 2411.img.json created." << std::endl;
 
-    return 0;
+	return 0;
 }

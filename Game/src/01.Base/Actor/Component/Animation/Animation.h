@@ -90,6 +90,10 @@ public:
 		if (CurrentFrame.Duration <= ProgressTime)
 			EnterFrame(CurrentFrameIndex + 1);
 	}
+	void Reserve(size_t InCapacity)
+	{
+		Frames.reserve(InCapacity);
+	}
 	void EnterFrame(size_t InFrameIndex)
 	{
 		bFrameChange = true;

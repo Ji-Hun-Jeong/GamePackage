@@ -1,0 +1,478 @@
+{
+    "info": {
+        "icon": {
+            "origin": "-4, 30",
+            "_outlink": "Skill/_Canvas/100.img/info/icon"
+        }
+    },
+    "skill": {
+        "24001000": {
+            "icon": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001000/icon"
+            },
+            "iconMouseOver": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001000/iconMouseOver"
+            },
+            "iconDisabled": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001000/iconDisabled"
+            },
+            "common": {
+                "mpCon": "10+d(x/5)",
+                "damage": "118+3*x",
+                "mobCount": "4",
+                "attackCount": "2",
+                "lt": "-210, -90",
+                "rb": "-10, 0",
+                "maxLevel": "20"
+            },
+            "PVPcommon": {
+                "mpCon": "15+d(x/3)",
+                "damage": "70+x",
+                "mobCount": "2",
+                "attackCount": "2",
+                "lt": "-200, -50",
+                "rb": "-10, 0",
+                "maxLevel": "20"
+            },
+            "effect": {
+                "0": {
+                    "origin": "168, 97",
+                    "delay": "120",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001000/effect/0"
+                },
+                "1": {
+                    "origin": "170, 90",
+                    "delay": "120",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001000/effect/1"
+                },
+                "2": {
+                    "origin": "171, 88",
+                    "delay": "120",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001000/effect/2"
+                },
+                "3": {
+                    "origin": "198, 85",
+                    "delay": "120",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001000/effect/3"
+                },
+                "4": {
+                    "origin": "202, 90",
+                    "delay": "120",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001000/effect/4"
+                },
+                "5": {
+                    "origin": "205, 94",
+                    "delay": "120",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001000/effect/5"
+                },
+                "6": {
+                    "origin": "164, 52",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001000/effect/6"
+                }
+            },
+            "hit": {
+                "0": {
+                    "0": {
+                        "origin": "56, 68",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/0"
+                    },
+                    "1": {
+                        "origin": "57, 69",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/1"
+                    },
+                    "2": {
+                        "origin": "81, 71",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/2"
+                    },
+                    "3": {
+                        "origin": "81, 60",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/3"
+                    },
+                    "4": {
+                        "origin": "83, 45",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/4"
+                    },
+                    "5": {
+                        "origin": "79, 18",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/5"
+                    },
+                    "onlyOnce": "1"
+                },
+                "1": {
+                    "0": {
+                        "origin": "70, 74",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/0"
+                    },
+                    "1": {
+                        "origin": "71, 75",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/1"
+                    },
+                    "2": {
+                        "origin": "61, 51",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/1/2"
+                    },
+                    "3": {
+                        "origin": "63, 54",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/4"
+                    },
+                    "4": {
+                        "origin": "59, 27",
+                        "delay": "90",
+                        "_outlink": "Skill/_Canvas/2400.img/skill/24001000/hit/0/5"
+                    },
+                    "onlyOnce": "1"
+                }
+            },
+            "action": {
+                "0": "HTdoublePiercing"
+            },
+            "info": {
+                "type": "1",
+                "areaAttack": "1"
+            },
+            "weapon": "36",
+            "subWeapon": "35",
+            "finalAttack": {
+                "4341054": {
+                    "0": "36"
+                }
+            }
+        },
+        "24001001": {
+            "icon": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001001/icon"
+            },
+            "iconMouseOver": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001001/iconMouseOver"
+            },
+            "iconDisabled": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001001/iconDisabled"
+            },
+            "common": {
+                "maxLevel": "20",
+                "x": "x",
+                "cooltime": "30"
+            },
+            "PVPcommon": {
+                "maxLevel": "20",
+                "x": "x"
+            },
+            "info": {
+                "type": "1"
+            },
+            "weapon": "36",
+            "subWeapon": "35"
+        },
+        "24001002": {
+            "icon": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001002/icon"
+            },
+            "iconMouseOver": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001002/iconMouseOver"
+            },
+            "iconDisabled": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001002/iconDisabled"
+            },
+            "common": {
+                "maxLevel": "15",
+                "mpCon": "35-x",
+                "x": "350+20*x",
+                "y": "250+10*x",
+                "psdSpeed": "5+2*x",
+                "speedMax": "5+x",
+                "psdJump": "5+x",
+                "u": "140+5+x"
+            },
+            "PVPcommon": {
+                "maxLevel": "15",
+                "mpCon": "40-x",
+                "x": "350+20*x",
+                "y": "250+10*x",
+                "psdSpeed": "5+x",
+                "speedMax": "5+x",
+                "psdJump": "5+x",
+                "u": "140+5+x"
+            },
+            "info": {
+                "type": "40",
+                "casterMove": "1",
+                "avaliableInJumpingState": "1"
+            },
+            "effect": {
+                "0": {
+                    "origin": "104, 78",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001002/effect/0"
+                },
+                "1": {
+                    "origin": "104, 73",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001002/effect/1"
+                },
+                "2": {
+                    "origin": "102, 72",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001002/effect/2"
+                },
+                "3": {
+                    "origin": "98, 69",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001002/effect/3"
+                }
+            },
+            "psd": "1"
+        },
+        "24001005": {
+            "icon": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001005/icon"
+            },
+            "iconMouseOver": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001005/iconMouseOver"
+            },
+            "iconDisabled": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24001005/iconDisabled"
+            },
+            "info": {
+                "type": "40",
+                "casterMove": "1",
+                "avaliableInJumpingState": "1"
+            },
+            "common": {
+                "maxLevel": "15",
+                "mpCon": "35-x",
+                "y": "650+30*x",
+                "x": "0"
+            },
+            "effect": {
+                "0": {
+                    "origin": "40, 85",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/effect/0"
+                },
+                "1": {
+                    "origin": "41, 85",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/effect/1"
+                },
+                "2": {
+                    "origin": "41, 85",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/effect/2"
+                },
+                "3": {
+                    "origin": "39, 83",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/effect/3"
+                }
+            },
+            "special": {
+                "0": {
+                    "origin": "63, 54",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/special/0"
+                },
+                "1": {
+                    "origin": "56, 62",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/special/1"
+                },
+                "2": {
+                    "origin": "60, 64",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/special/2"
+                },
+                "3": {
+                    "origin": "63, 25",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/special/3"
+                },
+                "4": {
+                    "origin": "66, 21",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/special/4"
+                },
+                "5": {
+                    "origin": "69, 15",
+                    "z": "0",
+                    "delay": "90",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24001005/special/5"
+                },
+                "z": "-2",
+                "fix": "1"
+            },
+            "invisible": "1",
+            "notResetDarkSight": "1"
+        },
+        "24000003": {
+            "icon": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24000003/icon"
+            },
+            "iconMouseOver": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24000003/iconMouseOver"
+            },
+            "iconDisabled": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24000003/iconDisabled"
+            },
+            "common": {
+                "maxLevel": "10",
+                "er": "2*x"
+            },
+            "PVPcommon": {
+                "maxLevel": "10",
+                "er": "3*d(x/2)"
+            },
+            "info": {
+                "type": "50"
+            },
+            "psd": "1"
+        },
+        "24000004": {
+            "icon": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24000004/icon"
+            },
+            "iconMouseOver": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24000004/iconMouseOver"
+            },
+            "iconDisabled": {
+                "origin": "0, 32",
+                "z": "0",
+                "_outlink": "Skill/_Canvas/2400.img/skill/24000004/icon"
+            },
+            "invisible": "1",
+            "special": {
+                "0": {
+                    "origin": "97, 120",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/0"
+                },
+                "1": {
+                    "origin": "94, 112",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/1"
+                },
+                "2": {
+                    "origin": "91, 180",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/2"
+                },
+                "3": {
+                    "origin": "129, 149",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/3"
+                },
+                "4": {
+                    "origin": "82, 125",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/4"
+                },
+                "5": {
+                    "origin": "102, 94",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/5"
+                },
+                "6": {
+                    "origin": "86, 180",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/6"
+                },
+                "7": {
+                    "origin": "111, 116",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/7"
+                },
+                "8": {
+                    "origin": "63, 86",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/8"
+                },
+                "9": {
+                    "origin": "48, 74",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/9"
+                },
+                "10": {
+                    "origin": "27, 56",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/10"
+                },
+                "11": {
+                    "origin": "25, 54",
+                    "delay": "80",
+                    "_outlink": "Skill/_Canvas/2400.img/skill/24000004/special/11"
+                }
+            },
+            "common": {
+                "maxLevel": "1",
+                "prop": "15",
+                "time": "20"
+            },
+            "PVPcommon": {
+                "maxLevel": "1",
+                "prop": "20",
+                "time": "20"
+            },
+            "info": {
+                "type": "51",
+                "condition": "attack"
+            }
+        }
+    }
+}

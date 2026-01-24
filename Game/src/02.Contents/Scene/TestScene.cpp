@@ -44,6 +44,11 @@ void CTestScene::BeginPlay()
 	CStaticActor* UI4 = GetWorld()->SpawnActor<CStaticActor>(Root);
 	UI4->GetSpriteRenderComponent()->SetDiffuseImage(L"resources/image/UI/UIWindow2.img/Skill/main/Skill.main.skill0.png");
 	CWzUtils::SetWorldPositionFromOrigin(*UI4, Vector2(0.0f, 0.0f));*/
+	CStaticActor* Actor = GetWorld()->SpawnActor<CStaticActor>(this);
+	Actor->GetTransform()->SetPosition(Vector3(-200.0f, 0.0f, 0.0f));
+	CRectCollider* RectCollider = Actor->AddComponent<CRectCollider>();
+	RectCollider->SetRectScale(Vector2(100.0f, 100.0f));
+	RectCollider->SetDebugRender(true);
 
 	CPlayer* Player = GetWorld()->SpawnActor<CPlayer>(this);
 	Player->GetTransform()->SetPosition(Vector3(0.0f, 50.0f, 0.0f));

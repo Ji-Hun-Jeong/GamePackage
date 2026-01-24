@@ -15,8 +15,8 @@ public:
 	}
 	virtual ~CObject() = 0
 	{
-		for (auto& DestroyEvent : ObjectDestroyEvents)
-			(*DestroyEvent)();
+		if (ObjectDestroyEvent)
+			ObjectDestroyEvent();
 	}
 
 private:
@@ -29,18 +29,13 @@ public:
 
 	virtual void Serialize(CSerializer& InSerializer) const {}
 	virtual void Deserialize(const CSerializer& InDeserializer) {}
+	void SetObjectDestroyEvent(std::function<void()> InObjectDestroyEvent)
+	{
+		ObjectDestroyEvent = InObjectDestroyEvent;
+	}
 
-public:
-	void AddObjectDestroyEvent(std::function<void()>* InObjectDestroyEvent)
-	{
-		ObjectDestroyEvents.insert(InObjectDestroyEvent);
-	}
-	void RemoveObjectDestroyEvent(std::function<void()>* InObjectDestroyEvent)
-	{
-		ObjectDestroyEvents.erase(InObjectDestroyEvent);
-	}
 private:
-	std::set<std::function<void()>*> ObjectDestroyEvents;
+	std::function<void()> ObjectDestroyEvent;
 
 public:
 	virtual ObjectType GetType() const = 0;

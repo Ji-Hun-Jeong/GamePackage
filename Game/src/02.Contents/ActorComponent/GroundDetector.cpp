@@ -8,6 +8,7 @@ CGroundDetector::CGroundDetector()
 	: DetectCollider(AddComponent<CRectCollider>())
 {
 	DetectCollider->SetDebugRender(true);
+	Activate(false);
 }
 
 void CGroundDetector::AdjustPlayerPosition(CPlayer& InPlayer)

@@ -14,7 +14,7 @@ CPlayer::CPlayer()
 	AddComponent<CRigidBody>();
 
 	CharacterAnimator = AddComponent<CWzCharacterAnimator>();
-
+	SkillCaster = AddComponent<CSkillCaster>();
 }
 
 CPlayer::~CPlayer()
@@ -25,9 +25,8 @@ CPlayer::~CPlayer()
 void CPlayer::BeginPlay()
 {
 	CWzLoader WzLoader;
-	WzLoader.OpenWzData("resources/data/Skill/Skill.2411.img.json");
-	TSkillData SkillData;
-	DeSerializeSkillData(WzLoader.GetLoadData()["skill"], "24111000", &SkillData);
+	WzLoader.OpenWzData("resources/data/Skill/Skill.2410.img.json");
+	SkillLoad::DeSerializeSkillData(WzLoader.GetLoadData()["skill"], "24101000", &SkillData);
 	/*WzLoader.OpenWzData("resources/data/Character/Character.00002000.img.json");
 	CharacterAnimator->AddAnimation(WzLoader, "walk1");
 	CharacterAnimator->AddAnimation(WzLoader, "walk2");
@@ -41,4 +40,5 @@ void CPlayer::BeginPlay()
 	GroundDetector = GetWorld()->SpawnActor<CGroundDetector>(this);
 	GroundDetector->SetDetectScale(Vector2(70.0f, 10.0f));
 	GroundDetector->GetTransform()->SetPosition(Vector3(0.0f, -10.0f, 0.0f));
+
 }

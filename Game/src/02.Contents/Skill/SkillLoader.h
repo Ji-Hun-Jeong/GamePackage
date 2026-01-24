@@ -10,13 +10,6 @@ public:
 	~CSkillLoader() = default;
 
 public:
-	const TMeleeAttackData* GetMeleeAttackData(const std::string& InSkillName) const
-	{
-		auto Iter = MeleeAttackDatas.find(InSkillName);
-		if (Iter == MeleeAttackDatas.end())
-			return nullptr;
-		return &Iter->second;
-	}
 
 	void LoadSkillData(CWzLoader& InWzLoader, const std::string_view InWzJsonPath)
 	{
@@ -30,8 +23,5 @@ public:
 
 		InWzLoader.CloseWzData();
 	}
-
-private:
-	std::map<std::string, TMeleeAttackData> MeleeAttackDatas;
 
 };

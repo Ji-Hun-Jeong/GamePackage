@@ -4,10 +4,12 @@
 
 #include "01.Base/Actor/Component/RigidBody.h"
 #include "02.Contents/Wz/WzCharacter/WzCharacterAnimator.h"
+#include "02.Contents/Skill/SkillCaster.h"
 #include "04.Renderer/ImGuiManager.h"
 
 // 플레이어는 단순히 어떻게 생겨먹었는지 정의하기만 하기
 // 다른 정보들은 플레이어가 죽어도 유지되어야하기 때문에 다른걸로 빼는게 나을듯
+
 class CPlayer : public CActor
 {
 	GENERATE_OBJECT(CPlayer)
@@ -24,6 +26,10 @@ public:
 
 		if (CharacterAnimator)
 			CharacterAnimator->Update(InDeltaTime);
+
+		if (GetKey(EKeyType::A, EButtonState::Tap))
+			SkillCaster->CastInstantSkill(SkillData);
+
 	}
 	void LateUpdate(float InDeltaTime) override
 	{
@@ -66,6 +72,7 @@ private:
 	CGroundDetector* GroundDetector = nullptr;
 	CWzCharacterAnimator* CharacterAnimator = nullptr;
 	
-
+	TSkillData SkillData;
+	CSkillCaster* SkillCaster = nullptr;
 };
 

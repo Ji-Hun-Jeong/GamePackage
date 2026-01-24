@@ -128,14 +128,6 @@ public:
 		}
 		return FoundComponents;
 	}
-	void AddEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.insert(&InEndEvent); }
-	void AddBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.insert(&InBeginEvent); }
-	void RemoveEndEvent(std::function<void(CObject&)>& InEndEvent) { EndEvents.erase(&InEndEvent); }
-	void RemoveBeginEvent(std::function<void(CObject&)>& InBeginEvent) { BeginEvents.erase(&InBeginEvent); }
-
-private:
-	std::set<std::function<void(CObject&)>*> EndEvents;
-	std::set<std::function<void(CObject&)>*> BeginEvents;
 
 public:
 	virtual void BeginPlay()

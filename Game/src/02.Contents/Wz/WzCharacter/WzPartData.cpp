@@ -17,6 +17,7 @@ bool ParseVectorObject(const rapidjson::GenericObject<true, rapidjson::Value>& I
 
 bool ParsePartPngObject(const rapidjson::GenericObject<true, rapidjson::Value>& InPngObject, TWzPartData* OutPartData)
 {
+	// Todo
 	if (InPngObject.HasMember("@value"))
 		OutPartData->Value = InPngObject["@value"].GetString();
 
@@ -88,6 +89,8 @@ bool ParsePartPngObject(const rapidjson::GenericObject<true, rapidjson::Value>& 
 			if (ParseStringData(StringMember, OutPartData) == false)
 				return false;
 	}
+
+	return true;
 }
 
 bool ParseStringData(const rapidjson::Value& InStringValue, TWzPartData* OutPartData)
@@ -108,6 +111,8 @@ bool ParseStringData(const rapidjson::Value& InStringValue, TWzPartData* OutPart
 		OutPartData->Group = VectorValue;
 	else if (VectorName == "_outlink")
 		OutPartData->OutLink = "resources/image/" + std::string(VectorValue) + ".png";
+
+	return true;
 }
 
 bool ParseMapData(const rapidjson::Value& InVectorValue, TWzPartData* OutPartData)

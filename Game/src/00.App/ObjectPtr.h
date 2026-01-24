@@ -13,12 +13,14 @@ public:
 	//------------------
 	CObjectPtr() noexcept
 		: RefPtr(nullptr)
-	{}
+	{
+	}
 
 	// nullptr constructor
 	CObjectPtr(std::nullptr_t) noexcept
 		: CObjectPtr()
-	{}
+	{
+	}
 
 	// Raw pointer constructor (Takes ownership conceptually, registers event)
 	explicit CObjectPtr(T* InPtr)
@@ -70,7 +72,6 @@ public:
 			UnregisterDestroyEvent();
 
 			RefPtr = Other.RefPtr;
-			DetectObjectDestroy = Other.DetectObjectDestroy;
 
 			Other.Reset();
 		}
@@ -98,7 +99,6 @@ public:
 		UnregisterDestroyEvent();
 
 		RefPtr = nullptr;
-		DetectObjectDestroy = std::function<void()>();
 	}
 
 	// Gets the raw pointer
@@ -152,23 +152,21 @@ private:
 	{
 		if (RefPtr)
 		{
-			DetectObjectDestroy = [this]()->void
+			RefPtr->SetObjectDestroyEvent([this]()->void
 				{
 					RefPtr = nullptr;
-				};
-			RefPtr->AddObjectDestroyEvent(&DetectObjectDestroy);
+				});
 		}
 	}
 
 	void UnregisterDestroyEvent()
 	{
 		if (RefPtr)
-			RefPtr->RemoveObjectDestroyEvent(&DetectObjectDestroy);
+			RefPtr->SetObjectDestroyEvent(nullptr);
 	}
 
 private:
 	T* RefPtr = nullptr;
-	std::function<void()> DetectObjectDestroy;
 
 };
 
