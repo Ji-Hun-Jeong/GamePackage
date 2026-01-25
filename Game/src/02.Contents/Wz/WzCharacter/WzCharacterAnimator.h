@@ -1,8 +1,18 @@
 #pragma once
 #include "01.Base/Actor/Component/Component.h"
-#include "01.Base/Actor/StaticActor.h"
-#include "WzCharacterAnimation.h"
-#include "WzPartsManager.h"
+#include "WzPartData.h"
+
+struct TWzCharacterAnimation
+{
+	std::string AnimName;
+	std::vector<TWzCharacterFrameData> Frames;
+	bool bLoop = false;
+};
+
+namespace Wz
+{
+	extern bool ParseWzCharacterAnimation(const JValue& InValue, TWzCharacterAnimation* OutCharacterAnimation);
+}
 
 class CWzCharacterAnimator : public CComponent
 {
@@ -12,8 +22,7 @@ public:
 	~CWzCharacterAnimator() = default;
 
 public:
-	void InitalizeComponent() override;
-	void Update(float InDeltaTime);
+	void PlayCurrentAnimation(float InDeltaTime);
 	void SetCurrentAnimation(const std::string& InAnimName, bool bInLoop = false)
 	{
 		auto Iter = WzCharacterAnimations.find(InAnimName);
@@ -22,79 +31,74 @@ public:
 			std::cout << "[CWzCharacterAnimator::PlayAnimation] 애니메이션을 찾을 수 없습니다: " << InAnimName << std::endl;
 			return;
 		}
-		CWzCharacterAnimation& Animation = Iter->second;
+		TWzCharacterAnimation& Animation = Iter->second;
 		CurrentAnimation = &Animation;
 
-		CurrentAnimation->SetLoop(bInLoop);
-		CurrentAnimation->EnterFrame(0);
+		CurrentAnimation->bLoop = bInLoop;
+		EnterFrame(-1);
 	}
-	CWzCharacterAnimation& GetAnimationRef(const std::string& InAnimName)
+	TWzCharacterAnimation& GetAnimationRef(const std::string& InAnimName)
 	{
 		if (WzCharacterAnimations.contains(InAnimName) == false)
 			WzCharacterAnimations.emplace(InAnimName, InAnimName);
 		return WzCharacterAnimations.at(InAnimName);
 	}
-	CWzCharacterAnimation* GetAnimation(const std::string& InAnimName)
+	TWzCharacterAnimation* GetAnimation(const std::string& InAnimName)
 	{
 		auto Iter = WzCharacterAnimations.find(InAnimName);
 		if (Iter == WzCharacterAnimations.end())
 			return nullptr;
 		return &Iter->second;
 	}
-	void AddAnimation(const CWzCharacterAnimation& InAnimation)
+	void AddAnimation(const TWzCharacterAnimation& InAnimation)
 	{
-		auto Iter = WzCharacterAnimations.find(InAnimation.GetAnimName());
+		auto Iter = WzCharacterAnimations.find(InAnimation.AnimName);
 		if (Iter == WzCharacterAnimations.end())
-			WzCharacterAnimations.emplace(InAnimation.GetAnimName(), InAnimation);
-	}
-	void AddAnimation(CWzLoader& InWzLoader, const std::string_view InFindAnimName)
-	{
-		CWzCharacterAnimation Animation;
-		if (DeserializeAnimation(InWzLoader, InFindAnimName, &Animation))
-			AddAnimation(Animation);
+			WzCharacterAnimations.emplace(InAnimation.AnimName, InAnimation);
 	}
 
-	static bool DeserializeAnimation(CWzLoader& InWzLoader, const std::string_view InFindAnimName
-		, CWzCharacterAnimation* OutAnimation)
+	bool IsStopped() const { return bStop; }
+	// Frame이 변경됐는지는 무조건 PlayAnimation이후에 체크
+	bool IsFrameChanged() const { return bFrameChange; }
+	bool IsCurrentAnimExist() const { return CurrentAnimation; }
+	const TWzCharacterFrameData& GetCurrentFrameData() const { return CurrentAnimation->Frames[CurrentFrameIndex]; }
+	void EnterFrame(int32_t InFrameIndex)
 	{
-		assert(OutAnimation);
-		if (InWzLoader.IsOpen() == false)
-			return false;
-
-		const auto& Document = InWzLoader.GetLoadData();
-
-		if (Document.HasMember("dir") == false)
-			return false;
-
-		const auto& ImgValue = Document["dir"];
-		if (ImgValue.IsObject() == false)
-			return false;
-
-		const auto& ImgObject = ImgValue.GetObject();
-		if (ImgObject.HasMember("dir") == false)
-			return false;
-
-		const auto& DirValue = ImgObject["dir"];
-		if (DirValue.IsArray() == false)
-			return false;
-
-		const auto& DirArray = DirValue.GetArray();
-		for (const auto& AnimValue : DirArray)
+		bFrameChange = true;
+		int32_t FinalFrame = InFrameIndex;
+		if (FinalFrame == CurrentAnimation->Frames.size())
 		{
-			const std::string_view AnimName = AnimValue["@name"].GetString();
-			if (AnimName == InFindAnimName)
-				return OutAnimation->ParseBasicAnimationFromWz(AnimValue);
+			if (CurrentAnimation->bLoop)
+				FinalFrame = 0;
+			else
+			{
+				bStop = true;
+				return;
+			}
 		}
 
-		return false;
+		CurrentFrameIndex = FinalFrame;
+		ProgressTime = 0.0f;
+		bStop = false;
+
+		if (InFrameIndex < 0)
+			CurrentFrameDelay = 0.0f;
+		else
+			CurrentFrameDelay = CurrentAnimation->Frames[CurrentFrameIndex].Delay;
 	}
-
 private:
-	std::unique_ptr<CWzPartsManager> PartsManager;
+	std::unordered_map<std::string, TWzCharacterAnimation> WzCharacterAnimations;
 
-	std::unordered_map<std::string, CWzCharacterAnimation> WzCharacterAnimations;
+	TWzCharacterAnimation* CurrentAnimation = nullptr;
 
-	CWzCharacterAnimation* CurrentAnimation = nullptr;
+	int32_t CurrentFrameIndex = 0;
+
+	float ProgressTime = 0.0f;
+
+	bool bFrameChange = false;
+	bool bStop = false;
+
+	float CurrentFrameDelay = 0.0f;
 
 };
 

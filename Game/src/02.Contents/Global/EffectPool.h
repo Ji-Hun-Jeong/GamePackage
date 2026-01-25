@@ -61,7 +61,7 @@ private:
 	{
 		Effectors[InIndex]->Reset();
 		Effectors[InIndex]->Activate(false);
-		std::cout << "Return: " << InIndex << '\n';
+		
 		Indices.emplace(InIndex);
 	}
 private:

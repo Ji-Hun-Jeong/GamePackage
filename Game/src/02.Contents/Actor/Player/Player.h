@@ -4,6 +4,7 @@
 
 #include "01.Base/Actor/Component/RigidBody.h"
 #include "02.Contents/Wz/WzCharacter/WzCharacterAnimator.h"
+#include "02.Contents/Wz/WzCharacter/WzPart.h"
 #include "02.Contents/Skill/SkillCaster.h"
 #include "04.Renderer/ImGuiManager.h"
 
@@ -25,7 +26,15 @@ public:
 		CActor::Update(InDeltaTime);
 
 		if (CharacterAnimator)
-			CharacterAnimator->Update(InDeltaTime);
+		{
+			CharacterAnimator->PlayCurrentAnimation(InDeltaTime);
+			bool bExistCurrentAnimation = CharacterAnimator->IsCurrentAnimExist();
+			if (CharacterAnimator->IsFrameChanged() && bExistCurrentAnimation)
+			{
+				const TWzCharacterFrameData& FrameData = CharacterAnimator->GetCurrentFrameData();
+				PartsManager->CompositeParts(FrameData);
+			}
+		}
 
 		if (GetKey(EKeyType::A, EButtonState::Tap))
 			SkillCaster->CastInstantSkill(SkillData);
@@ -71,6 +80,7 @@ public:
 private:
 	CGroundDetector* GroundDetector = nullptr;
 	CWzCharacterAnimator* CharacterAnimator = nullptr;
+	CWzPartsManager* PartsManager = nullptr;
 	
 	TSkillData SkillData;
 	CSkillCaster* SkillCaster = nullptr;

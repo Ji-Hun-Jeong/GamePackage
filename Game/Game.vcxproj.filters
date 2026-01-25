@@ -231,9 +231,6 @@
     <ClCompile Include="src\02.Contents\Skill\SkillCaster.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Skill\SkillLoader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\02.Contents\Wz\WzLoader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -255,16 +252,16 @@
     <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPartData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPartsManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimation.cpp">
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPart.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Wz\WzType.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="src\02.Contents\Global\EffectPool.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\02.Contents\Wz\WzBase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -488,9 +485,6 @@
     <ClInclude Include="src\02.Contents\Skill\SkillCaster.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Skill\SkillLoader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="src\02.Contents\Wz\WzLoader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -512,16 +506,16 @@
     <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPartData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPartsManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimation.h">
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPart.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Wz\WzType.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Global\EffectPool.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Wz\WzBase.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

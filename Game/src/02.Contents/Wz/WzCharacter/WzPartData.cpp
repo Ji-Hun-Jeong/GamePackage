@@ -3,140 +3,128 @@
 
 #include "Utils.h"
 
-bool ParseVectorObject(const rapidjson::GenericObject<true, rapidjson::Value>& InVectorObject, Vector2* OutWzVector)
+namespace Wz
 {
-	if (InVectorObject.HasMember("@name") == false)
-		return false;
-	if (InVectorObject.HasMember("@value") == false)
-		return false;
-	const std::string_view Name = InVectorObject["@name"].GetString();
-	const std::string_view Value = InVectorObject["@value"].GetString();
-
-	return StrToVec2(Value, OutWzVector);
-}
-
-bool ParsePartPngObject(const rapidjson::GenericObject<true, rapidjson::Value>& InPngObject, TWzPartData* OutPartData)
-{
-	// Todo
-	if (InPngObject.HasMember("@value"))
-		OutPartData->Value = InPngObject["@value"].GetString();
-
-	if (InPngObject.HasMember("vector"))
+	bool BrachPartPng(const JValue& InValue, const std::string_view InName, TWzPartData* OutPartPngData)
 	{
-		const auto& VectorMember = InPngObject["vector"];
-		if (VectorMember.IsArray())
+		if (InName == "origin")
 		{
-			const auto& VectorArray = VectorMember.GetArray();
-			for (const auto& Vector : VectorArray)
-			{
-				if (Vector.IsObject() == false)
-					return false;
-				if (ParseVectorObject(Vector.GetObject(), &OutPartData->Origin) == false)
-					return false;
-			}
+			Vector2 Origin;
+			if (StrToVec2(InValue.GetString(), &Origin) == false)
+				return false;
+			OutPartPngData->Origin = Origin;
 		}
-		else if (VectorMember.IsObject())
-			if (ParseVectorObject(VectorMember.GetObject(), &OutPartData->Origin) == false)
-				return false;
-	}
-
-
-	if (InPngObject.HasMember("dir"))
-	{
-		// dir은 일단 map 하나만 있다고 가정
-		const auto& DirMember = InPngObject["dir"];
-		if (DirMember.IsObject())
+		else if (InName == "map")
 		{
-			const auto& DirObject = DirMember.GetObject();
-			if (DirObject.HasMember("@name") == false)
-				return false;
-			const std::string_view Name = DirObject["@name"].GetString();
-			if (Name != "map")
-				return false;
-
-			if (DirObject.HasMember("vector"))
+			const auto& MapObject = InValue.GetObject();
+			for (const auto& Member : MapObject)
 			{
-				const auto& VectorMember = DirObject["vector"];
-				if (VectorMember.IsArray())
+				const std::string_view Name = Member.name.GetString();
+				if (Member.value.IsString())
 				{
-					const auto& VectorArray = VectorMember.GetArray();
-					for (const auto& Vector : VectorArray)
-					{
-						if (ParseMapData(Vector, OutPartData) == false)
-							return false;
-					}
+					const std::string_view Value = Member.value.GetString();
+
+					Vector2* OutputData = nullptr;
+					if (Name == "neck")
+						OutputData = &OutPartPngData->Map.Neck;
+					else if (Name == "navel")
+						OutputData = &OutPartPngData->Map.Navel;
+					else if (Name == "hand")
+						OutputData = &OutPartPngData->Map.Hand;
+					else if (Name == "handMove")
+						OutputData = &OutPartPngData->Map.HandMove;
+					if (StrToVec2(Value, OutputData) == false)
+						return false;
 				}
-				else if (VectorMember.IsObject())
-					return ParseMapData(VectorMember, OutPartData);
+				else
+				{
+					CWzNode* Node = Wz::GenerateWzData(Member.value);
+					OutPartPngData->AddMember(InName, *Node);
+				}				
 			}
 		}
-	}
-	if (InPngObject.HasMember("string"))
-	{
-		const auto& StringMember = InPngObject["string"];
-		if (StringMember.IsArray())
+		else if (InName == "z")
+			OutPartPngData->Z = InValue.GetString();
+		else if (InName == "group")
+			OutPartPngData->Group = InValue.GetString();
+		else if (InName == "_outlink")
 		{
-			const auto& StringArray = StringMember.GetArray();
-			for (const auto& String : StringArray)
-			{
-				if (String.IsObject() == false)
-					return false;
-				if (ParseStringData(String, OutPartData) == false)
-					return false;
-			}
+			std::string Str = InValue.GetString();
+			Str = "resources/image/" + Str + ".png";
+			std::wstring OutLink = std::wstring(Str.begin(), Str.end());
+			OutPartPngData->OutLink = OutLink;
 		}
-		else if (StringMember.IsObject())
-			if (ParseStringData(StringMember, OutPartData) == false)
-				return false;
+		else
+		{
+			CWzNode* Node = Wz::GenerateWzData(InValue);
+			OutPartPngData->AddMember(InName, *Node);
+		}
+		return true;
 	}
 
-	return true;
+	EWzPartType GetPartTypeByName(const std::string_view InPartName)
+	{
+		if (InPartName == "body")			return EWzPartType::Body;
+		if (InPartName == "arm")				return EWzPartType::Arm;
+		if (InPartName == "hand")			return EWzPartType::Hand;
+		if (InPartName == "armOverHair")		return EWzPartType::ArmOverHair;
+		if (InPartName == "lHand")			return EWzPartType::LHand;
+		if (InPartName == "rHand")			return EWzPartType::RHand;
+		return EWzPartType::End;
+	}
+
+	bool ParsePartPng(const JValue& InValue, TWzPartData* OutPartPngData)
+	{
+		assert(OutPartPngData);
+		if (InValue.IsObject() == false)
+			return false;
+
+		const auto& PartObject = InValue.GetObject();
+		for (const auto& Member : PartObject)
+		{
+			const std::string_view Name = Member.name.GetString();
+			if (BrachPartPng(Member.value, Name, OutPartPngData) == false)
+				return false;
+		}
+		return true;
+	}
+	bool BrachCharacterFrame(const JValue& InValue, const std::string_view InName, TWzCharacterFrameData* OutCharacterFrameData)
+	{
+		assert(OutCharacterFrameData);
+		if (InName == "face")
+			OutCharacterFrameData->Face = std::stoi(InValue.GetString());
+		else if (InName == "delay")
+			OutCharacterFrameData->Delay = std::stoi(InValue.GetString());
+		else if (InName == "body" || InName == "arm" || InName == "hand" ||
+			InName == "armOverHair" || InName == "lHand" || InName == "rHand")
+		{
+			OutCharacterFrameData->PartDatas.emplace_back();
+			auto& PartPngData = OutCharacterFrameData->PartDatas.back();
+			EWzPartType PartType = GetPartTypeByName(InName);
+			PartPngData.WzPartType = PartType;
+			return ParsePartPng(InValue, &PartPngData);
+		}
+		else
+		{
+			CWzNode* Node = Wz::GenerateWzData(InValue);
+			OutCharacterFrameData->AddMember(InName, *Node);
+		}
+		return true;
+	}
+
+	bool ParseCharacterFrame(const JValue& InValue, TWzCharacterFrameData* OutCharacterFrameData)
+	{
+		if (InValue.IsObject() == false)
+			return false;
+		const auto& FrameObject = InValue.GetObject();
+
+		for (const auto& FrameData : FrameObject)
+		{
+			const std::string_view FrameDataName = FrameData.name.GetString();
+			if (BrachCharacterFrame(FrameData.value, FrameDataName, OutCharacterFrameData) == false)
+				return false;
+		}
+		return true;
+	}
 }
 
-bool ParseStringData(const rapidjson::Value& InStringValue, TWzPartData* OutPartData)
-{
-	if (InStringValue.IsObject() == false)
-		return false;
-
-	const auto& StringObject = InStringValue.GetObject();
-	if (StringObject.HasMember("@name") == false)
-		return false;
-
-	const std::string_view VectorName = StringObject["@name"].GetString();
-	const std::string_view VectorValue = StringObject["@value"].GetString();
-
-	if (VectorName == "z")
-		OutPartData->Z = VectorValue;
-	else if (VectorName == "group")
-		OutPartData->Group = VectorValue;
-	else if (VectorName == "_outlink")
-		OutPartData->OutLink = "resources/image/" + std::string(VectorValue) + ".png";
-
-	return true;
-}
-
-bool ParseMapData(const rapidjson::Value& InVectorValue, TWzPartData* OutPartData)
-{
-	if (InVectorValue.IsObject() == false)
-		return false;
-
-	const auto& VectorObject = InVectorValue.GetObject();
-	if (VectorObject.HasMember("@name") == false)
-		return false;
-
-	const std::string_view VectorName = VectorObject["@name"].GetString();
-	Vector2* OutputData = nullptr;
-	if (VectorName == "neck")
-		OutputData = &OutPartData->Map.Neck;
-	else if (VectorName == "navel")
-		OutputData = &OutPartData->Map.Navel;
-	else if (VectorName == "hand")
-		OutputData = &OutPartData->Map.Hand;
-	else if (VectorName == "handMove")
-		OutputData = &OutPartData->Map.HandMove;
-
-	if (ParseVectorObject(VectorObject, OutputData) == false)
-		return false;
-
-	return true;
-}

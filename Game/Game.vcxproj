@@ -193,7 +193,6 @@
     <ClCompile Include="src\02.Contents\Component\Input\InputComponent.cpp" />
     <ClCompile Include="src\02.Contents\Component\Input\InputDispatcher.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzLoader.cpp" />
-    <ClCompile Include="src\02.Contents\Skill\SkillLoader.cpp" />
     <ClCompile Include="src\02.Contents\Skill\SkillCaster.cpp" />
     <ClCompile Include="src\02.Contents\Skill\Skill.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimator.cpp" />
@@ -272,9 +271,9 @@
     <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPartData.cpp" />
-    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPartsManager.cpp" />
-    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimation.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPart.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzType.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\02.Contents\Global\EffectPool.h" />
@@ -284,7 +283,6 @@
     <ClInclude Include="src\02.Contents\Component\Input\InputComponent.h" />
     <ClInclude Include="src\02.Contents\Component\Input\InputDispatcher.h" />
     <ClInclude Include="src\02.Contents\Wz\WzLoader.h" />
-    <ClInclude Include="src\02.Contents\Skill\SkillLoader.h" />
     <ClInclude Include="src\02.Contents\Skill\SkillCaster.h" />
     <ClInclude Include="src\02.Contents\Skill\Skill.h" />
     <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimator.h" />
@@ -359,9 +357,9 @@
     <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPartData.h" />
-    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPartsManager.h" />
-    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimation.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPart.h" />
     <ClInclude Include="src\02.Contents\Wz\WzType.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzBase.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

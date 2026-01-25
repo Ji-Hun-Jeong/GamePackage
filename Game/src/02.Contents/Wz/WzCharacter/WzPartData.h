@@ -1,5 +1,5 @@
 #pragma once
-#include "02.Contents/Wz/WzLoader.h"
+#include "02.Contents/Wz/WzBase.h"
 
 enum class EWzPartType
 {
@@ -12,25 +12,36 @@ enum class EWzPartType
 	End,
 };
 
-struct TWzPartData
+struct TWzMap : public CWzNode
 {
-	std::string Value;
-	Vector2 Origin;
-	struct TMap
-	{
-		Vector2 Neck;
-		Vector2 Navel;
-		Vector2 Hand;
-		Vector2 HandMove;
-	} Map;
-	std::string Z;
-	std::string Group;
-	std::string OutLink;
+	Vector2 Neck;
+	Vector2 Navel;
+	Vector2 Hand;
+	Vector2 HandMove;
 };
 
-extern bool ParseVectorObject(const rapidjson::GenericObject<true, rapidjson::Value>& InVectorObject
-	, Vector2* OutWzVector);
-extern bool ParsePartPngObject(const rapidjson::GenericObject<true, rapidjson::Value>& InPngObject
-	, TWzPartData* OutPartData);
-extern bool ParseStringData(const rapidjson::Value& InStringValue, TWzPartData* OutPartData);
-extern bool ParseMapData(const rapidjson::Value& InVectorValue, TWzPartData* OutPartData);
+struct TWzPartData : public CWzNode
+{
+	EWzPartType WzPartType;
+	TWzMap Map;
+	Vector2 Origin;
+	std::string Z;
+	std::string Group;
+	std::wstring OutLink;
+};
+
+struct TWzCharacterFrameData : public CWzNode
+{
+	std::vector<TWzPartData> PartDatas;
+	int16_t Face = 0;
+	int32_t Delay = 0;
+	int32_t Frame = 0;
+	int32_t Move = 0;
+};
+
+namespace Wz
+{
+	extern EWzPartType GetPartTypeByName(const std::string_view InPartName);
+	extern bool ParsePartPng(const JValue& InValue, TWzPartData* OutPartPngData);
+	extern bool ParseCharacterFrame(const JValue& InValue, TWzCharacterFrameData* OutCharacterFrameData);
+}

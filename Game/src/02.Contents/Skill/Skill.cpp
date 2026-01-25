@@ -6,50 +6,13 @@
 
 namespace SkillLoad
 {
-	CSkillNode* ParseWzData(const JValue& InValue)
-	{
-		CSkillNode* NewNode = new CSkillNode();
-
-		if (InValue.IsObject())
-		{
-			const auto& Object = InValue.GetObject();
-			for (const auto& Member : Object)
-			{
-				const std::string_view Name = Member.name.GetString();
-
-				CSkillNode* ChildNode = ParseWzData(Member.value);
-				if (ChildNode)
-					NewNode->AddMember(Name, *ChildNode);
-			}
-		}
-		else if (InValue.IsArray())
-		{
-			// 배열인 경우 (예: [ {..}, {..} ]) 
-			// 키를 "0", "1", "2" 문자열로 변환하여 자식으로 편입
-			const auto& Array = InValue.GetArray();
-			for (rapidjson::SizeType i = 0; i < Array.Size(); ++i)
-			{
-				CSkillNode* ChildNode = ParseWzData(Array[i]);
-				if (ChildNode)
-					NewNode->AddMember(std::to_string(i), *ChildNode);
-			}
-		}
-		else
-		{
-			if (InValue.IsString())
-				NewNode->SetValue(InValue.GetString());
-		}
-
-		return NewNode;
-	}
-
-	bool ParseSkillPng(const JValue& InPngValue, TSkillPng* OutSkillPng)
+	bool ParseSkillPng(const JValue& InPngValue, TWzPng* OutSkillPng)
 	{
 		if (InPngValue.IsObject() == false)
 			return false;
 
 		// 1. 멤버별 처리를 담당할 람다 정의
-		auto ParseMember = [](const std::string_view InName, const JValue& InValue, TSkillPng* OutSkillPng) -> bool
+		auto ParseMember = [](const std::string_view InName, const JValue& InValue, TWzPng* OutSkillPng) -> bool
 			{
 				if (InValue.IsString() == false)
 					return false;
@@ -72,7 +35,7 @@ namespace SkillLoad
 					OutSkillPng->Delay = std::stoi(ValStr.data());
 				else
 				{
-					CSkillNode* NewNode = ParseWzData(InValue);
+					CWzNode* NewNode = Wz::GenerateWzData(InValue);
 					OutSkillPng->AddMember(InName, *NewNode);
 				}
 				return true;
@@ -132,7 +95,7 @@ namespace SkillLoad
 					StrToVec2(Value.GetString(), &OutSkillData->Common.RightBottom);
 				else
 				{
-					CSkillNode* NewNode = ParseWzData(Value);
+					CWzNode* NewNode = Wz::GenerateWzData(Value);
 					OutSkillData->Common.AddMember(Property, *NewNode);
 				}
 			}
@@ -160,12 +123,12 @@ namespace SkillLoad
 				{
 					if (fit->value.IsObject())
 					{
-						TSkillPng png;
+						TWzPng png;
 						ParseSkillPng(fit->value, &png);
 						Hit.Anim.emplace_back(std::move(png));
 					}
 					else
-						Hit.AddMember(fit->name.GetString(), *ParseWzData(fit->value));
+						Hit.AddMember(fit->name.GetString(), *Wz::GenerateWzData(fit->value));
 				}
 			}
 		}
@@ -182,12 +145,12 @@ namespace SkillLoad
 				else if (Property == "areaAttack")
 					OutSkillData->Info.AreaAttack = std::stoi(Value.GetString());
 				else
-					OutSkillData->Info.AddMember(Property, *ParseWzData(Value));
+					OutSkillData->Info.AddMember(Property, *Wz::GenerateWzData(Value));
 			}
 		}
 		else
 		{
-			CSkillNode* NewNode = ParseWzData(InValue);
+			CWzNode* NewNode = Wz::GenerateWzData(InValue);
 			OutSkillData->AddMember(InMemberName, *NewNode);
 		}
 

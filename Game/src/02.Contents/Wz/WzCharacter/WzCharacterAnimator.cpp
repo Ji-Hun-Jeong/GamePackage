@@ -3,27 +3,34 @@
 
 #include "GameCore.h"
 
-void CWzCharacterAnimator::InitalizeComponent()
-{
-	std::array<CWzPart*, static_cast<size_t>(EWzPartType::End)> Parts;
-	for (size_t i = 0; i < Parts.size(); ++i)
-	{
-		Parts[i] = GetWorld()->SpawnActor<CWzPart>(GetOwnerActor());
-		Parts[i]->SetPartType(EWzPartType(i));
-	}
-	PartsManager = std::make_unique<CWzPartsManager>(std::move(Parts));
-}
-
-void CWzCharacterAnimator::Update(float InDeltaTime)
+void CWzCharacterAnimator::PlayCurrentAnimation(float InDeltaTime)
 {
 	if (CurrentAnimation == nullptr)
 		return;
-	if (CurrentAnimation->IsFrameChanged())
-	{
-		const auto& CurrentFrameData = CurrentAnimation->GetCurrentFrame();
-		PartsManager->CompositeParts(CurrentFrameData);
-	}
-	PartsManager->UpdateParts();
+	if (bStop)
+		return;
 
-	CurrentAnimation->PlayAnimation(InDeltaTime);
+	ProgressTime += InDeltaTime * 0.5f;
+
+	if (CurrentFrameDelay <= ProgressTime * 1000.0f)
+		EnterFrame(CurrentFrameIndex + 1);
+}
+
+namespace Wz
+{
+	bool ParseWzCharacterAnimation(const JValue& InValue, TWzCharacterAnimation* OutCharacterAnimation)
+	{
+		if (InValue.IsObject() == false)
+			return false;
+		const auto& AnimObject = InValue.GetObject();
+		OutCharacterAnimation->Frames.resize(AnimObject.MemberCount());
+		size_t i = 0;
+		for (const auto& Frame : AnimObject)
+		{
+			const std::string_view FrameNumber = Frame.name.GetString();
+			if (ParseCharacterFrame(Frame.value, &OutCharacterAnimation->Frames[i++]) == false)
+				return false;
+		}
+		return true;
+	}
 }
