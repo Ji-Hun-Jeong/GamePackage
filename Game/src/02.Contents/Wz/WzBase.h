@@ -106,3 +106,12 @@ namespace Wz
 {
 	extern CWzNode* GenerateWzData(const JValue& InValue);
 }
+
+class CWzUtils
+{
+public:
+	static Vector3 GetWorldPositionFromWzPosition(Vector2 InImageScale, Vector2 InWzOrigin);
+	static Vector3 GetWorldPositionFromWzPosition(const std::wstring& InImagePath, Vector2 InWzOrigin);
+	static Vector3 GetWorldPositionFromWzPosition(const class CSpriteRenderComponent& InSpriteRenderComponent, Vector2 InWzOrigin);
+	static bool SetWorldPositionFromWzPosition(class CActor& InActor, Vector2 InWzOrigin);
+};

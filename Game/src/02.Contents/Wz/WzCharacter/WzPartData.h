@@ -22,7 +22,7 @@ struct TWzMap : public CWzNode
 
 struct TWzPartData : public CWzNode
 {
-	EWzPartType WzPartType;
+	std::string Uol;
 	TWzMap Map;
 	Vector2 Origin;
 	std::string Z;
@@ -32,7 +32,8 @@ struct TWzPartData : public CWzNode
 
 struct TWzCharacterFrameData : public CWzNode
 {
-	std::vector<TWzPartData> PartDatas;
+	std::map<EWzPartType, TWzPartData> PartDatas;
+	std::string Action;
 	int16_t Face = 0;
 	int32_t Delay = 0;
 	int32_t Frame = 0;
@@ -42,6 +43,4 @@ struct TWzCharacterFrameData : public CWzNode
 namespace Wz
 {
 	extern EWzPartType GetPartTypeByName(const std::string_view InPartName);
-	extern bool ParsePartPng(const JValue& InValue, TWzPartData* OutPartPngData);
-	extern bool ParseCharacterFrame(const JValue& InValue, TWzCharacterFrameData* OutCharacterFrameData);
 }

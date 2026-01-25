@@ -274,6 +274,7 @@
     <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPart.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzType.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzBase.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\02.Contents\Global\EffectPool.h" />
@@ -360,6 +361,7 @@
     <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPart.h" />
     <ClInclude Include="src\02.Contents\Wz\WzType.h" />
     <ClInclude Include="src\02.Contents\Wz\WzBase.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzAnimation.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

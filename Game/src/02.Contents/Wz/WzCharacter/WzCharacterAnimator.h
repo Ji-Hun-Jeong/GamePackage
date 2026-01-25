@@ -1,18 +1,8 @@
 #pragma once
 #include "01.Base/Actor/Component/Component.h"
-#include "WzPartData.h"
 
-struct TWzCharacterAnimation
-{
-	std::string AnimName;
-	std::vector<TWzCharacterFrameData> Frames;
-	bool bLoop = false;
-};
+#include "WzAnimation.h"
 
-namespace Wz
-{
-	extern bool ParseWzCharacterAnimation(const JValue& InValue, TWzCharacterAnimation* OutCharacterAnimation);
-}
 
 class CWzCharacterAnimator : public CComponent
 {
@@ -23,9 +13,9 @@ public:
 
 public:
 	void PlayCurrentAnimation(float InDeltaTime);
-	void SetCurrentAnimation(const std::string& InAnimName, bool bInLoop = false)
+	void SetCurrentAnimation(const std::string_view InAnimName, bool bInLoop = false)
 	{
-		auto Iter = WzCharacterAnimations.find(InAnimName);
+		auto Iter = WzCharacterAnimations.find(InAnimName.data());
 		if (Iter == WzCharacterAnimations.end())
 		{
 			std::cout << "[CWzCharacterAnimator::PlayAnimation] 애니메이션을 찾을 수 없습니다: " << InAnimName << std::endl;
@@ -85,6 +75,10 @@ public:
 			CurrentFrameDelay = 0.0f;
 		else
 			CurrentFrameDelay = CurrentAnimation->Frames[CurrentFrameIndex].Delay;
+	}
+	bool IsExistAnim(const std::string_view InFindAnimName)
+	{
+		return WzCharacterAnimations.contains(InFindAnimName.data());
 	}
 private:
 	std::unordered_map<std::string, TWzCharacterAnimation> WzCharacterAnimations;

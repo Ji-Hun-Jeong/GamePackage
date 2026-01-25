@@ -56,7 +56,7 @@ public:
 			TFrame& Frame = Anim.AddFrame();
 			Frame.Duration = static_cast<float>(Effects[i].Delay) / 1000.0f;
 			Frame.ImagePath = Effects[i].OutLink;
-			Frame.Offset = CWzUtils::GetWorldPositionFromOrigin(Frame.ImagePath, Effects[i].Origin);
+			Frame.Offset = CWzUtils::GetWorldPositionFromWzPosition(Frame.ImagePath, Effects[i].Origin);
 		}
 		Animator->SetCurrentAnimation("Effect");
 	}
@@ -88,7 +88,7 @@ void GenerateHitEffect(const CActor& InTargetActor, const std::vector<TSkillHit>
 		TFrame& Frame = Anim.AddFrame();
 		Frame.Duration = static_cast<float>(SkillHitData.Anim[i].Delay) / 1000.0f;
 		Frame.ImagePath = SkillHitData.Anim[i].OutLink;
-		Frame.Offset = CWzUtils::GetWorldPositionFromOrigin(Frame.ImagePath, SkillHitData.Anim[i].Origin);
+		Frame.Offset = CWzUtils::GetWorldPositionFromWzPosition(Frame.ImagePath, SkillHitData.Anim[i].Origin);
 	}
 	Animator->SetCurrentAnimation("Effect");
 }

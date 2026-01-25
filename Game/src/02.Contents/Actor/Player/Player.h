@@ -5,6 +5,7 @@
 #include "01.Base/Actor/Component/RigidBody.h"
 #include "02.Contents/Wz/WzCharacter/WzCharacterAnimator.h"
 #include "02.Contents/Wz/WzCharacter/WzPart.h"
+#include "02.Contents/Wz/WzLoader.h"
 #include "02.Contents/Skill/SkillCaster.h"
 #include "04.Renderer/ImGuiManager.h"
 
@@ -36,8 +37,8 @@ public:
 			}
 		}
 
-		if (GetKey(EKeyType::A, EButtonState::Tap))
-			SkillCaster->CastInstantSkill(SkillData);
+	/*	if (GetKey(EKeyType::A, EButtonState::Tap))
+			SkillCaster->CastInstantSkill(SkillData);*/
 
 	}
 	void LateUpdate(float InDeltaTime) override
@@ -47,32 +48,7 @@ public:
 		GroundDetector->AdjustPlayerPosition(*this);
 	}
 
-	void CaptureSnapShot() override
-	{
-		CActor::CaptureSnapShot();
-
-		// 입력받은 문자열을 저장할 버퍼 (정적 변수나 멤버 변수 권장)
-		static char inputBuffer[256] = "";
-
-		ImGui::Begin("Snapshot Event");
-
-		// 엔터키를 쳤을 때만 true를 반환하도록 설정
-		if (ImGui::InputText("Command", inputBuffer, IM_ARRAYSIZE(inputBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
-		{
-			// 여기서 이벤트 발생!
-			std::string command = inputBuffer;
-
-			CharacterAnimator->SetCurrentAnimation(command, true);
-
-			// 입력 후 버퍼 비우기 (필요 시)
-			memset(inputBuffer, 0, sizeof(inputBuffer));
-
-			// 입력 칸에 계속 포커스를 유지하고 싶다면
-			ImGui::SetKeyboardFocusHere(-1);
-		}
-
-		ImGui::End();
-	}
+	void CaptureSnapShot() override;
 
 public:
 	bool IsOnGround() const { return GroundDetector->IsOnGround(); }
@@ -84,5 +60,8 @@ private:
 	
 	TSkillData SkillData;
 	CSkillCaster* SkillCaster = nullptr;
+
+	CWzLoader WzLoader;
+
 };
 

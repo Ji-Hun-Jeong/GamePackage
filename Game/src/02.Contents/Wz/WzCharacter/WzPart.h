@@ -6,30 +6,12 @@ class CWzPart : public CStaticActor
 {
 	GENERATE_OBJECT(CWzPart)
 public:
-	CWzPart() : PartType(EWzPartType::End) {}
+	CWzPart() = default;
 	~CWzPart() = default;
 
 public:
-	void Composite();
-	void SetPartType(EWzPartType InPartType) { PartType = InPartType; }
-	EWzPartType GetPartType() const { return PartType; }
-
-	void AttachChildPart(CWzPart& InChildPart)
-	{
-		InChildPart.OwnerPart = this;
-		ChildParts.push_back(&InChildPart);
-	}
 
 private:
-	EWzPartType PartType;
-
-	CWzPart* OwnerPart = nullptr;
-	std::vector<CWzPart*> ChildParts;
-
-	Vector2 FinalNeck;
-	Vector2 FinalNavel;
-	Vector2 FinalHand;
-	Vector2 FinalHandMove;
 
 };
 
@@ -43,13 +25,10 @@ public:
 public:
 	void InitalizeComponent() override;
 	void CompositeParts(const TWzCharacterFrameData& InFrameData);
-	CWzPart* GetPart(EWzPartType InPartType) const
+	CWzPart* GetPart(EWzPartType InPartType)
 	{
-		if (InPartType == EWzPartType::End)
-		{
-			std::cout << "[CWzCharacterAnimator::GetPart] 잘못된 파트 타입 요청: End" << std::endl;
+		if (InPartType >= EWzPartType::End)
 			return nullptr;
-		}
 		return Parts[static_cast<size_t>(InPartType)];
 	}
 

@@ -54,11 +54,3 @@ private:
 
 };
 
-class CWzUtils
-{
-public:
-	static Vector3 GetWorldPositionFromOrigin(Vector2 InImageScale, Vector2 InWzOrigin);
-	static Vector3 GetWorldPositionFromOrigin(const std::wstring& InImagePath, Vector2 InWzOrigin);
-	static Vector3 GetWorldPositionFromOrigin(const class CSpriteRenderComponent& InSpriteRenderComponent, Vector2 InWzOrigin);
-	static bool SetWorldPositionFromOrigin(class CActor& InActor, Vector2 InWzOrigin);
-};

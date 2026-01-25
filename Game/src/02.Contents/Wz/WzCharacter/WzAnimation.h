@@ -1,0 +1,33 @@
+#pragma once
+#include "WzPartData.h"
+
+struct TWzCharacterAnimation
+{
+	std::string AnimName;
+	std::vector<TWzCharacterFrameData> Frames;
+	bool bLoop = false;
+};
+
+
+class CWzAnimationLoader
+{
+	SINGLE(CWzAnimationLoader)
+public:
+	~CWzAnimationLoader() = default;
+
+public:
+	TWzCharacterAnimation* ParseWzCharacterAnimation(const JValue& InValue, const std::string_view InAnimName);
+
+private:
+	bool BrachPartPng(const JValue& InValue, const std::string_view InName, TWzPartData* OutPartPngData);
+
+	bool ParsePartPng(const JValue& InValue, TWzPartData* OutPartPngData);
+
+	bool BrachCharacterFrame(const JValue& InValue, const std::string_view InName, TWzCharacterFrameData* OutCharacterFrameData);
+
+	bool ParseCharacterFrame(const JValue& InValue, TWzCharacterFrameData* OutCharacterFrameData);
+
+private:
+	std::map<std::string, TWzCharacterAnimation> CharacterAnimations;
+
+};

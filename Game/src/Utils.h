@@ -17,3 +17,8 @@ bool EraseOnVector(std::vector<T*>& InVector, T& InErasedElement)
 }
 
 bool StrToVec2(const std::string_view InStr, Vector2* OutVec2);
+
+std::vector<std::string> ToTokens(std::string InStr)
+{
+	// Todo:
+}
