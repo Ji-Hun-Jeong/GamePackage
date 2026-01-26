@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "WzAnimation.h"
 
+#include "01.Base/Manager/Path.h"
 #include "Utils.h"
-
 CWzAnimationLoader::CWzAnimationLoader()
 {
 
@@ -65,14 +65,41 @@ bool CWzAnimationLoader::BrachPartPng(const JValue& InValue, const std::string_v
 	return true;
 }
 
-bool CWzAnimationLoader::ParsePartPng(const JValue& InValue, TWzPartData* OutPartPngData)
+bool CWzAnimationLoader::ParsePart(const JValue& InValue, TWzPartData* OutPartPngData)
 {
 	assert(OutPartPngData);
 	if (InValue.IsObject() == false)
 	{
 		if (InValue.IsString() == false)
 			return false;
-		OutPartPngData->Uol = InValue.GetString();
+		std::string_view Uol = InValue.GetString();
+		std::vector<std::string> Elements = CPath::RelativePathToTokens(Uol);
+		size_t RefFrameNumber = 0;
+		std::string_view RefPartName;
+		TWzCharacterAnimation* RefCharacterAnimation = nullptr;
+		if (Elements.size() == 2)
+		{
+			RefCharacterAnimation = CurrentEditAnimation;
+			RefFrameNumber = std::stoi(Elements[0]);
+			RefPartName = Elements[1];
+		}
+		else if (Elements.size() == 3)
+		{
+			const std::string_view RefAnimName = Elements[0];
+			RefCharacterAnimation = FindCharacterAnimation(RefAnimName);
+			if (RefCharacterAnimation == nullptr)
+				return false;
+			RefFrameNumber = std::stoi(Elements[1]);
+			RefPartName = Elements[2];
+		}
+		else
+		{
+			std::cout << "WzAnimation -> ParseWzCharacterAnimation Exception\n";
+			return false;
+		}
+		EWzPartType RefPartType = Wz::GetPartTypeByName(RefPartName);
+		TWzPartData& RefPartData = RefCharacterAnimation->Frames[RefFrameNumber].PartDatas[RefPartType];
+		OutPartPngData->Uol = &RefPartData;
 	}
 	else
 	{
@@ -99,7 +126,7 @@ bool CWzAnimationLoader::BrachCharacterFrame(const JValue& InValue, const std::s
 		EWzPartType PartType = Wz::GetPartTypeByName(InName);
 		auto Pair = OutCharacterFrameData->PartDatas.emplace(PartType, TWzPartData{});
 		auto& PartPngData = Pair.first->second;
-		return ParsePartPng(InValue, &PartPngData);
+		return ParsePart(InValue, &PartPngData);
 	}
 	else if (InName == "action")
 		OutCharacterFrameData->Action = InValue.GetString();
@@ -137,6 +164,8 @@ TWzCharacterAnimation* CWzAnimationLoader::ParseWzCharacterAnimation(const JValu
 	OutCharacterAnimation.Frames.resize(AnimObject.MemberCount());
 	OutCharacterAnimation.AnimName = InAnimName;
 
+	CurrentEditAnimation = &OutCharacterAnimation;
+
 	size_t i = 0;
 	for (const auto& Frame : AnimObject)
 	{
@@ -145,21 +174,11 @@ TWzCharacterAnimation* CWzAnimationLoader::ParseWzCharacterAnimation(const JValu
 		if (ParseCharacterFrame(Frame.value, &OutFrame) == false)
 		{
 			CharacterAnimations.erase(InAnimName.data());
+			CurrentEditAnimation = nullptr;
 			return nullptr;
 		}
 	}
 
-	for (auto& Frame : OutCharacterAnimation.Frames)
-	{
-		auto& Parts = Frame.PartDatas;
-		for (auto& Pair : Parts)
-		{
-			TWzPartData& PartData = Pair.second;
-			if (PartData.Uol.empty())
-				continue;
-
-		}
-	}
-
+	CurrentEditAnimation = nullptr;
 	return &OutCharacterAnimation;
 }

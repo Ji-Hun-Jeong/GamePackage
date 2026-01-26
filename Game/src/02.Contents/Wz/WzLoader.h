@@ -48,6 +48,8 @@ public:
 		return true;
 	}
 
+	const rapidjson::Document& GetDocument() const { return Document; }
+
 private:
 	std::string WzJsonPath;
 	rapidjson::Document Document;

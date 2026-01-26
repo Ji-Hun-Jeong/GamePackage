@@ -17,17 +17,25 @@ public:
 
 public:
 	TWzCharacterAnimation* ParseWzCharacterAnimation(const JValue& InValue, const std::string_view InAnimName);
+	TWzCharacterAnimation* FindCharacterAnimation(const std::string_view InAnimName)
+	{
+		auto Iter = CharacterAnimations.find(InAnimName);
+		if (Iter == CharacterAnimations.end())
+			return nullptr;
+		return &Iter->second;
+	}
 
 private:
 	bool BrachPartPng(const JValue& InValue, const std::string_view InName, TWzPartData* OutPartPngData);
 
-	bool ParsePartPng(const JValue& InValue, TWzPartData* OutPartPngData);
+	bool ParsePart(const JValue& InValue, TWzPartData* OutPartPngData);
 
 	bool BrachCharacterFrame(const JValue& InValue, const std::string_view InName, TWzCharacterFrameData* OutCharacterFrameData);
 
 	bool ParseCharacterFrame(const JValue& InValue, TWzCharacterFrameData* OutCharacterFrameData);
 
 private:
-	std::map<std::string, TWzCharacterAnimation> CharacterAnimations;
+	std::map<std::string, TWzCharacterAnimation, std::less<>> CharacterAnimations;
+	TWzCharacterAnimation* CurrentEditAnimation = nullptr;
 
 };

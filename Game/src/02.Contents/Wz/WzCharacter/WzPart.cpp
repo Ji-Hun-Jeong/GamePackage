@@ -24,12 +24,13 @@ void CWzPartsManager::CompositeParts(const TWzCharacterFrameData& InFrameData)
 		}
 		else
 		{
-			const TWzPartData& PartData = Iter->second;
+			const TWzPartData* PartData = &Iter->second;
+			PartData = CWzPartsManager::GetFinalPartData(*PartData);
 			Part->Activate(true);
-			Part->GetSpriteRenderComponent()->SetDiffuseImage(PartData.OutLink);
+			Part->GetSpriteRenderComponent()->SetDiffuseImage(PartData->OutLink);
 
 			bool bBodyOrNotNavel = false;
-			if ((PartType == EWzPartType::Body) || (PartData.Map.Navel == Vector2(0.0f)))
+			if ((PartType == EWzPartType::Body) || (PartData->Map.Navel == Vector2(0.0f)))
 				bBodyOrNotNavel = true;
 
 			Vector3 Offset;
@@ -37,17 +38,18 @@ void CWzPartsManager::CompositeParts(const TWzCharacterFrameData& InFrameData)
 			{
 				GetOwnerActor()->Attach(Part);
 				Offset = CWzUtils::GetWorldPositionFromWzPosition(*Part->GetSpriteRenderComponent()
-					, PartData.Origin);
+					, PartData->Origin);
 			}
 			else
 			{
 				GetPart(EWzPartType::Body)->Attach(Part);
 
-				const auto& BodyPartData = PartDatas.find(EWzPartType::Body)->second;
+				const TWzPartData* BodyPartData = &PartDatas.find(EWzPartType::Body)->second;
+				BodyPartData = CWzPartsManager::GetFinalPartData(*BodyPartData);
 				Offset = CWzUtils::GetWorldPositionFromWzPosition(*Part->GetSpriteRenderComponent()
-					, PartData.Origin + PartData.Map.Navel) -
-					CWzUtils::GetWorldPositionFromWzPosition(BodyPartData.OutLink
-						, BodyPartData.Origin + BodyPartData.Map.Navel);
+					, PartData->Origin + PartData->Map.Navel) -
+					CWzUtils::GetWorldPositionFromWzPosition(BodyPartData->OutLink
+						, BodyPartData->Origin + BodyPartData->Map.Navel);
 			}
 			Part->GetTransform()->AddPositionOffset(Offset);
 		}

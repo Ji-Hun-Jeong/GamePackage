@@ -31,6 +31,7 @@ void CPlayer::BeginPlay()
 	{
 		SkillLoad::DeSerializeSkillData(*SkillValue, "24101000", &SkillData);
 	}*/
+
 	WzLoader.OpenWzData("resources/data/Character/Character.00002000.img.json");
 
 	/*CharacterAnimator->AddAnimation(WzLoader, "walk1");

@@ -22,12 +22,12 @@ struct TWzMap : public CWzNode
 
 struct TWzPartData : public CWzNode
 {
-	std::string Uol;
 	TWzMap Map;
 	Vector2 Origin;
 	std::string Z;
 	std::string Group;
 	std::wstring OutLink;
+	TWzPartData* Uol = nullptr;
 };
 
 struct TWzCharacterFrameData : public CWzNode
