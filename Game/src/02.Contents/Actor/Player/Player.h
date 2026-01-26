@@ -32,7 +32,7 @@ public:
 			bool bExistCurrentAnimation = CharacterAnimator->IsCurrentAnimExist();
 			if (CharacterAnimator->IsFrameChanged() && bExistCurrentAnimation)
 			{
-				const TWzCharacterFrameData& FrameData = CharacterAnimator->GetCurrentFrameData();
+				const TWzFrameData& FrameData = CharacterAnimator->GetCurrentFrameData();
 				PartsManager->CompositeParts(FrameData);
 			}
 		}

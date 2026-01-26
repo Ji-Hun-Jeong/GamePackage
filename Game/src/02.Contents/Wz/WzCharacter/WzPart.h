@@ -24,7 +24,8 @@ public:
 
 public:
 	void InitalizeComponent() override;
-	void CompositeParts(const TWzCharacterFrameData& InFrameData);
+	// Todo: 머리도 가져와서 세팅하기
+	void CompositeParts(const TWzFrameData& InFrameData);
 	CWzPart* GetPart(EWzPartType InPartType)
 	{
 		if (InPartType >= EWzPartType::End)

@@ -9,9 +9,9 @@ void CWzPartsManager::InitalizeComponent()
 		Parts[i] = GetWorld()->SpawnActor<CWzPart>(GetOwnerActor());
 }
 
-void CWzPartsManager::CompositeParts(const TWzCharacterFrameData& InFrameData)
+void CWzPartsManager::CompositeParts(const TWzFrameData& InFrameData)
 {
-	const TWzCharacterFrameData* FinalFrameData = &InFrameData;
+	const TWzFrameData* FinalFrameData = &InFrameData;
 	FinalFrameData = Wz::GetFinalFrameData(*FinalFrameData);
 
 	const auto& PartDatas = FinalFrameData->PartDatas;

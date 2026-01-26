@@ -94,7 +94,7 @@ json ConvertNode(xml_node<>* node) {
 }
 
 int main() {
-	std::string FileName = "Character.00002000.img";
+	std::string FileName = "Character.Face.00020000.img";
 	// 1. XML 파일 읽기
 	std::ifstream file("C:/Users/user/Downloads/" + FileName + ".xml");
 	if (!file.is_open()) return -1;

@@ -1,16 +1,16 @@
 #pragma once
 #include "WzPartData.h"
 
-struct TWzCharacterAnimation
+struct TWzAnimation
 {
 	std::string AnimName;
-	std::vector<TWzCharacterFrameData> Frames;
+	std::vector<TWzFrameData> Frames;
 	bool bLoop = false;
 };
 
 namespace Wz
 {
-	extern const TWzCharacterFrameData* GetFrameFromCharacterAnimation(const TWzCharacterAnimation& InCharacterAnimation
+	extern const TWzFrameData* GetFrameFromCharacterAnimation(const TWzAnimation& InCharacterAnimation
 	, size_t InFrame);
 }
 
@@ -21,26 +21,32 @@ public:
 	~CWzAnimationLoader() = default;
 
 public:
-	TWzCharacterAnimation* ParseWzCharacterAnimation(const JValue& InValue, const std::string_view InAnimName);
-	TWzCharacterAnimation* FindCharacterAnimation(const std::string_view InAnimName)
+	TWzAnimation* ParseWzCharacterAnimation(const JValue& InValue, const std::string_view InAnimName);
+	void ParseWzDefaultSkinAnimation(const JValue& InValue, const std::string_view InAnimName);
+	TWzAnimation* ParseWzSkinAnimation(const JValue& InValue, const std::string_view InAnimName);
+	TWzAnimation* FindCharacterAnimation(const std::string_view InAnimName)
 	{
 		auto Iter = CharacterAnimations.find(InAnimName);
 		if (Iter == CharacterAnimations.end())
 			return nullptr;
 		return &Iter->second;
-	}
+	}	
 
 private:
 	bool BrachPartPng(const JValue& InValue, const std::string_view InName, TWzPartData* OutPartPngData);
 
 	bool ParsePart(const JValue& InValue, TWzPartData* OutPartPngData);
 
-	bool BrachCharacterFrame(const JValue& InValue, const std::string_view InName, TWzCharacterFrameData* OutCharacterFrameData);
+	bool BrachFrame(const JValue& InValue, const std::string_view InName, TWzFrameData* OutCharacterFrameData);
 
-	bool ParseCharacterFrame(const JValue& InValue, TWzCharacterFrameData* OutCharacterFrameData);
+	bool ParseFrame(const JValue& InValue, TWzFrameData* OutCharacterFrameData);
 
 private:
-	std::map<std::string, TWzCharacterAnimation, std::less<>> CharacterAnimations;
-	TWzCharacterAnimation* CurrentEditAnimation = nullptr;
+	std::map<std::string, TWzAnimation, std::less<>> CharacterAnimations;
+	std::map<std::string, TWzAnimation, std::less<>> SkinAnimations;
+	TWzFrameData FrontSkin;
+	TWzFrameData BackSkin;
+
+	TWzAnimation* CurrentEditAnimation = nullptr;
 
 };
