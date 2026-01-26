@@ -130,6 +130,8 @@ bool CWzAnimationLoader::BrachCharacterFrame(const JValue& InValue, const std::s
 	}
 	else if (InName == "action")
 		OutCharacterFrameData->Action = InValue.GetString();
+	else if (InName == "frame")
+		OutCharacterFrameData->Frame = std::stoi(InValue.GetString());
 	else
 	{
 		CWzNode* Node = Wz::GenerateWzData(InValue);
@@ -150,6 +152,28 @@ bool CWzAnimationLoader::ParseCharacterFrame(const JValue& InValue, TWzCharacter
 		if (BrachCharacterFrame(FrameData.value, FrameDataName, OutCharacterFrameData) == false)
 			return false;
 	}
+
+	auto& CharacterFrameDatas = CurrentEditAnimation->Frames;
+	for (size_t i = 0; i < CharacterFrameDatas.size(); ++i)
+	{
+		TWzCharacterFrameData& CharacterFrameData = CharacterFrameDatas[i];
+		if (CharacterFrameData.Action.empty())
+			continue;
+		std::string_view AnimName = CharacterFrameData.Action;
+		TWzCharacterAnimation* Anim = FindCharacterAnimation(AnimName);
+		if (Anim == nullptr)
+		{
+			std::cout << "CWzAnimationLoader.BrachCharacterFrame: " << AnimName << " Not yet loaded." << std::endl;
+			return false;
+		}
+		int32_t Frame = CharacterFrameData.Frame;
+		int32_t Delay = CharacterFrameData.Delay;
+		const TWzCharacterFrameData* RefFrameData = Wz::GetFrameFromCharacterAnimation(*Anim
+			, static_cast<size_t>(Frame));
+		
+		OutCharacterFrameData->RefFrame = RefFrameData;
+	}
+	
 	return true;
 }
 
@@ -182,3 +206,16 @@ TWzCharacterAnimation* CWzAnimationLoader::ParseWzCharacterAnimation(const JValu
 	CurrentEditAnimation = nullptr;
 	return &OutCharacterAnimation;
 }
+
+namespace Wz
+{
+	const TWzCharacterFrameData* GetFrameFromCharacterAnimation(const TWzCharacterAnimation& InCharacterAnimation
+		, size_t InFrame)
+	{
+		if (InFrame >= InCharacterAnimation.Frames.size())
+			return nullptr;
+		
+		return &InCharacterAnimation.Frames[InFrame];
+	}
+}
+

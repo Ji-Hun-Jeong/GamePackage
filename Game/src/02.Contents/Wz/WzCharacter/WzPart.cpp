@@ -11,7 +11,10 @@ void CWzPartsManager::InitalizeComponent()
 
 void CWzPartsManager::CompositeParts(const TWzCharacterFrameData& InFrameData)
 {
-	const auto& PartDatas = InFrameData.PartDatas;
+	const TWzCharacterFrameData* FinalFrameData = &InFrameData;
+	FinalFrameData = Wz::GetFinalFrameData(*FinalFrameData);
+
+	const auto& PartDatas = FinalFrameData->PartDatas;
 	for (size_t i = 0; i < static_cast<size_t>(EWzPartType::End); ++i)
 	{
 		EWzPartType PartType = static_cast<EWzPartType>(i);
@@ -25,7 +28,7 @@ void CWzPartsManager::CompositeParts(const TWzCharacterFrameData& InFrameData)
 		else
 		{
 			const TWzPartData* PartData = &Iter->second;
-			PartData = CWzPartsManager::GetFinalPartData(*PartData);
+			PartData = Wz::GetFinalPartData(*PartData);
 			Part->Activate(true);
 			Part->GetSpriteRenderComponent()->SetDiffuseImage(PartData->OutLink);
 
@@ -45,7 +48,8 @@ void CWzPartsManager::CompositeParts(const TWzCharacterFrameData& InFrameData)
 				GetPart(EWzPartType::Body)->Attach(Part);
 
 				const TWzPartData* BodyPartData = &PartDatas.find(EWzPartType::Body)->second;
-				BodyPartData = CWzPartsManager::GetFinalPartData(*BodyPartData);
+				BodyPartData = Wz::GetFinalPartData(*BodyPartData);
+
 				Offset = CWzUtils::GetWorldPositionFromWzPosition(*Part->GetSpriteRenderComponent()
 					, PartData->Origin + PartData->Map.Navel) -
 					CWzUtils::GetWorldPositionFromWzPosition(BodyPartData->OutLink

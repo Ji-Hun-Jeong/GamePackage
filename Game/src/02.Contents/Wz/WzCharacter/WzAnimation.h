@@ -8,6 +8,11 @@ struct TWzCharacterAnimation
 	bool bLoop = false;
 };
 
+namespace Wz
+{
+	extern const TWzCharacterFrameData* GetFrameFromCharacterAnimation(const TWzCharacterAnimation& InCharacterAnimation
+	, size_t InFrame);
+}
 
 class CWzAnimationLoader
 {

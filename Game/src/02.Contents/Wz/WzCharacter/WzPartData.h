@@ -27,7 +27,7 @@ struct TWzPartData : public CWzNode
 	std::string Z;
 	std::string Group;
 	std::wstring OutLink;
-	TWzPartData* Uol = nullptr;
+	const TWzPartData* Uol = nullptr;
 };
 
 struct TWzCharacterFrameData : public CWzNode
@@ -38,9 +38,12 @@ struct TWzCharacterFrameData : public CWzNode
 	int32_t Delay = 0;
 	int32_t Frame = 0;
 	int32_t Move = 0;
+	const TWzCharacterFrameData* RefFrame = nullptr;
 };
 
 namespace Wz
 {
 	extern EWzPartType GetPartTypeByName(const std::string_view InPartName);
+	extern const TWzPartData* GetFinalPartData(const TWzPartData& InPartData);
+	extern const TWzCharacterFrameData* GetFinalFrameData(const TWzCharacterFrameData& InFrameData);
 }

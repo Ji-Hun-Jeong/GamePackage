@@ -5,7 +5,6 @@
 
 namespace Wz
 {
-
 	EWzPartType GetPartTypeByName(const std::string_view InPartName)
 	{
 		if (InPartName == "body")			return EWzPartType::Body;
@@ -15,6 +14,22 @@ namespace Wz
 		if (InPartName == "lHand")			return EWzPartType::LHand;
 		if (InPartName == "rHand")			return EWzPartType::RHand;
 		return EWzPartType::End;
+	}
+
+	const TWzPartData* GetFinalPartData(const TWzPartData& InPartData)
+	{
+		const TWzPartData* FinalPartData = &InPartData;
+		while (FinalPartData->Uol)
+			FinalPartData = FinalPartData->Uol;
+		return FinalPartData;
+	}
+
+	const TWzCharacterFrameData* GetFinalFrameData(const TWzCharacterFrameData& InFrameData)
+	{
+		const TWzCharacterFrameData* FinalPartData = &InFrameData;
+		while (FinalPartData->RefFrame)
+			FinalPartData = FinalPartData->RefFrame;
+		return FinalPartData;
 	}
 
 }

@@ -31,13 +31,6 @@ public:
 			return nullptr;
 		return Parts[static_cast<size_t>(InPartType)];
 	}
-	static const TWzPartData* GetFinalPartData(const TWzPartData& InPartData)
-	{
-		const TWzPartData* FinalPartData = &InPartData;
-		while (FinalPartData->Uol)
-			FinalPartData = FinalPartData->Uol;
-		return FinalPartData;
-	}
 
 private:
 	std::array<CWzPart*, static_cast<size_t>(EWzPartType::End)> Parts;
