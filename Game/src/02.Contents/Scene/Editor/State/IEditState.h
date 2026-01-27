@@ -8,12 +8,12 @@
 
 struct TTileMapEditContext
 {
-	CUI* MainPanel;
-	CTileMap* TileMap;
+	CUI* MainPanel = nullptr;
+	CTileMap* TileMap = nullptr;
 	CTileMapper TileMapper;
 
-	CTileHandler* TileHandler;
-	CTileFocus* TileFocus;
+	CTileHandler* TileHandler = nullptr;
+	CTileFocus* TileFocus = nullptr;
 
 	bool bOnMainPanel = false;
 

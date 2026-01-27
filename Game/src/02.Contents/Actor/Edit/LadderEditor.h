@@ -89,8 +89,8 @@ private:
 		NewPosition += InLadder.Foot->GetTransform()->GetPosition();
 		for (auto Body : InLadder.Bodys)
 			NewPosition += Body->GetTransform()->GetPosition();
-		NewPosition += InLadder.GetTransform()->GetPosition() * (InLadder.Bodys.size() + 2);
-		NewPosition /= (InLadder.Bodys.size() + 2);
+		NewPosition += InLadder.GetTransform()->GetPosition() * static_cast<float>((InLadder.Bodys.size() + 2));
+		NewPosition /= static_cast<float>((InLadder.Bodys.size() + 2));
 
 		return NewPosition;
 	}

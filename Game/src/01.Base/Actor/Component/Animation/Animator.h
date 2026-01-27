@@ -83,7 +83,7 @@ public:
 		if (InFrameIndex < 0)
 			CurrentFrameDelay = 0.0f;
 		else
-			CurrentFrameDelay = CurrentAnimation->Frames[CurrentFrameIndex].Delay;
+			CurrentFrameDelay = static_cast<float>(CurrentAnimation->Frames[CurrentFrameIndex].Delay);
 	}
 	bool IsExistAnim(const std::string_view InFindAnimName)
 	{

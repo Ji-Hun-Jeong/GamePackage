@@ -5,6 +5,7 @@ struct TWzFaceAnimation
 {
 
 };
+// Todo: 
 class CWzFaceLoader
 {
 	SINGLE(CWzFaceLoader)

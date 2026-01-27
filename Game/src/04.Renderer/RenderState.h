@@ -19,18 +19,18 @@ enum class ERenderPass
 
 struct TRenderState
 {
-	Graphics::CMesh* Mesh;
+	Graphics::CMesh* Mesh = nullptr;
 	Vector3 Position;
 	Vector3 Rotation;
 	Vector3 Scale;
-	CPSO* PSO;
+	CPSO* PSO = nullptr;
 
-	std::array<const Graphics::CShaderResourceView*, 6> VertexShaderResources;
-	Graphics::CMaterial* Material;
+	std::array<const Graphics::CShaderResourceView*, 6> VertexShaderResources = { nullptr };
+	Graphics::CMaterial* Material = nullptr;
 
-	std::array<Graphics::CBuffer*, 6> VertexConstBuffers;
-	std::array<Graphics::CBuffer*, 6> PixelConstBuffers;
+	std::array<Graphics::CBuffer*, 6> VertexConstBuffers = { nullptr };
+	std::array<Graphics::CBuffer*, 6> PixelConstBuffers = { nullptr };
 
 	ERenderPass RenderPass = ERenderPass::Opaque;
-	uint32_t RenderLayer;
+	uint32_t RenderLayer = 0;
 };

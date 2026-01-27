@@ -16,7 +16,7 @@ CPlayer::CPlayer()
 
 	PartsManager = AddComponent<CWzPartsManager>();
 	SkillCaster = AddComponent<CSkillCaster>();
-	AAnimator = AddComponent<CAnimator<TWzHumanAnimation, TWzHumanFrameData>>();
+	PartsAnimator = AddComponent<CAnimator<TWzHumanAnimation, TWzHumanFrameData>>();
 }
 
 CPlayer::~CPlayer()
@@ -72,7 +72,7 @@ void CPlayer::CaptureSnapShot()
 		// 여기서 이벤트 발생!
 		std::string command = inputBuffer;
 
-		if (AAnimator->IsExistAnim(command) == false)
+		if (PartsAnimator->IsExistAnim(command) == false)
 		{
 			JValue* CharacterAnimValue = nullptr;
 			JValue* SkinAnimValue = nullptr;
@@ -84,12 +84,12 @@ void CPlayer::CaptureSnapShot()
 				if (Anim && SkinAnim)
 				{
 					TWzHumanAnimation HumanAnimation = Wz::TransformToHumanAnimation(*Anim, *SkinAnim);
-					AAnimator->AddAnimation(command, HumanAnimation);
+					PartsAnimator->AddAnimation(command, HumanAnimation);
 				}
 			}
 		}
 
-		AAnimator->SetCurrentAnimation(command, true);
+		PartsAnimator->SetCurrentAnimation(command, true);
 
 		// 입력 후 버퍼 비우기 (필요 시)
 		memset(inputBuffer, 0, sizeof(inputBuffer));

@@ -57,9 +57,9 @@ void CMapEditorScene::Update(float InDeltaTime)
 		bLayTiles = false;
 	}
 
-	const int32_t MouseX = UIManager.GetMouseWorldPosition().x;
-	const int32_t MouseY = UIManager.GetMouseWorldPosition().y;
-	Vector2 MouseWorld2DPosition = Vector2(float(MouseX), float(MouseY));
+	const float MouseX = static_cast<float>(UIManager.GetMouseWorldPosition().x);
+	const float MouseY = static_cast<float>(UIManager.GetMouseWorldPosition().y);
+	Vector2 MouseWorld2DPosition = Vector2(MouseX, MouseY);
 
 	CurrentEditState->SetMouseWorldPosition(MouseWorld2DPosition);
 	CurrentEditState->OnEditState();

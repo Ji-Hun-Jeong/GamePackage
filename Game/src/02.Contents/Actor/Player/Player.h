@@ -26,17 +26,17 @@ public:
 	{
 		CActor::Update(InDeltaTime);
 
-		if (AAnimator)
+		if (PartsAnimator)
 		{
-			AAnimator->PlayCurrentAnimation(InDeltaTime);
-			bool bExistCurrentAnimation = AAnimator->IsCurrentAnimExist();
-			if (AAnimator->IsFrameChanged() && bExistCurrentAnimation)
+			PartsAnimator->PlayCurrentAnimation(InDeltaTime);
+			bool bExistCurrentAnimation = PartsAnimator->IsCurrentAnimExist();
+			if (PartsAnimator->IsFrameChanged() && bExistCurrentAnimation)
 			{
-				const TWzHumanFrameData& FrameData = AAnimator->GetCurrentFrameData();
+				const TWzHumanFrameData& FrameData = PartsAnimator->GetCurrentFrameData();
 				PartsManager->CompositeParts(*FrameData.CharacerFrames, *FrameData.SkinFrames);
 			}
 		}
-
+		int a = 1;
 	/*	if (GetKey(EKeyType::A, EButtonState::Tap))
 			SkillCaster->CastInstantSkill(SkillData);*/
 
@@ -63,6 +63,7 @@ private:
 	CWzLoader CharacterLoader;
 	CWzLoader SkinLoader;
 
-	CAnimator<TWzHumanAnimation, TWzHumanFrameData>* AAnimator = nullptr;
+	CAnimator<TWzHumanAnimation, TWzHumanFrameData>* PartsAnimator = nullptr;
+
 };
 
