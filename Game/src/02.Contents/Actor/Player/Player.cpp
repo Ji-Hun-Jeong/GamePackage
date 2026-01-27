@@ -4,6 +4,7 @@
 
 #include "02.Contents/Skill/Skill.h"
 
+#include "02.Contents/Wz/WzPart/WzSkin.h"
 CPlayer::CPlayer()
 {
 	Transform->SetScale(Vector3(37.0f, 37.0f, 1.0f));
@@ -32,8 +33,15 @@ void CPlayer::BeginPlay()
 		SkillLoad::DeSerializeSkillData(*SkillValue, "24101000", &SkillData);
 	}*/
 
-	WzLoader.OpenWzData("resources/data/Character/Character.00002000.img.json");
-	
+	CharacterLoader.OpenWzData("resources/data/Character/Character.00002000.img.json");
+	SkinLoader.OpenWzData("resources/data/Character/Character.00012000.img.json");
+
+	JValue* Value = nullptr;
+	if (SkinLoader.GetLoadData("front", &Value))
+		CWzSkinLoader::GetInst().LoadSkinBaseData(*Value, "front");
+	if (SkinLoader.GetLoadData("back", &Value))
+		CWzSkinLoader::GetInst().LoadSkinBaseData(*Value, "back");
+
 	/*CharacterAnimator->AddAnimation(WzLoader, "walk1");
 	CharacterAnimator->AddAnimation(WzLoader, "walk2");
 	CharacterAnimator->AddAnimation(WzLoader, "stand1");
@@ -66,12 +74,15 @@ void CPlayer::CaptureSnapShot()
 
 		if (CharacterAnimator->IsExistAnim(command) == false)
 		{
-			JValue* AnimValue;
-			if (WzLoader.GetLoadData(command, &AnimValue))
+			JValue* CharacterAnimValue = nullptr;
+			JValue* SkinAnimValue = nullptr;
+			if (CharacterLoader.GetLoadData(command, &CharacterAnimValue)
+				&& SkinLoader.GetLoadData(command, &SkinAnimValue))
 			{
-				TWzAnimation* Anim = CWzAnimationLoader::GetInst().ParseWzCharacterAnimation(*AnimValue, command);
-				if (Anim)
-					CharacterAnimator->AddAnimation(*Anim);
+				const TWzAnimation* Anim = CWzAnimationLoader::GetInst().ParseWzCharacterAnimation(*CharacterAnimValue, command);
+				const TWzSkinAnimation* SkinAnim = CWzSkinLoader::GetInst().LoadSkinAnimation(*SkinAnimValue, command);
+				if (Anim && SkinAnim)
+					CharacterAnimator->AddAnimation(*Anim, *SkinAnim);
 			}
 		}
 

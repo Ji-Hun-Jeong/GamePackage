@@ -1,16 +1,16 @@
 #pragma once
-#include "WzPartData.h"
+#include "../WzPart/WzPartData.h"
 
 struct TWzAnimation
 {
 	std::string AnimName;
-	std::vector<TWzFrameData> Frames;
+	std::vector<TWzCharacterFrameData> Frames;
 	bool bLoop = false;
 };
 
 namespace Wz
 {
-	extern const TWzFrameData* GetFrameFromCharacterAnimation(const TWzAnimation& InCharacterAnimation
+	extern const TWzCharacterFrameData* GetFrameFromCharacterAnimation(const TWzAnimation& InCharacterAnimation
 	, size_t InFrame);
 }
 
@@ -21,7 +21,7 @@ public:
 	~CWzAnimationLoader() = default;
 
 public:
-	TWzAnimation* ParseWzCharacterAnimation(const JValue& InValue, const std::string_view InAnimName);
+	const TWzAnimation* ParseWzCharacterAnimation(const JValue& InValue, const std::string_view InAnimName);
 	TWzAnimation* FindCharacterAnimation(const std::string_view InAnimName)
 	{
 		auto Iter = CharacterAnimations.find(InAnimName);
@@ -35,9 +35,9 @@ private:
 
 	bool ParsePart(const JValue& InValue, TWzPartData* OutPartPngData);
 
-	bool BrachFrame(const JValue& InValue, const std::string_view InName, TWzFrameData* OutCharacterFrameData);
+	bool BrachFrame(const JValue& InValue, const std::string_view InName, TWzCharacterFrameData* OutCharacterFrameData);
 
-	bool ParseFrame(const JValue& InValue, TWzFrameData* OutCharacterFrameData);
+	bool ParseFrame(const JValue& InValue, TWzCharacterFrameData* OutCharacterFrameData);
 
 private:
 	std::map<std::string, TWzAnimation, std::less<>> CharacterAnimations;

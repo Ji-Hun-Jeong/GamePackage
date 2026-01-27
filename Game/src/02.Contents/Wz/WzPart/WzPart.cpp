@@ -7,11 +7,13 @@ void CWzPartsManager::InitalizeComponent()
 {
 	for (size_t i = 0; i < Parts.size(); ++i)
 		Parts[i] = GetWorld()->SpawnActor<CWzPart>(GetOwnerActor());
+	Head = GetWorld()->SpawnActor<CWzPart>(GetOwnerActor());
+	Ear = GetWorld()->SpawnActor<CWzPart>(GetOwnerActor());
 }
 
-void CWzPartsManager::CompositeParts(const TWzFrameData& InBodyData)
+void CWzPartsManager::CompositeParts(const TWzCharacterFrameData& InFrameData, const TWzSkinFrameData& InSkinData)
 {
-	const TWzFrameData* FinalFrameData = &InBodyData;
+	const TWzCharacterFrameData* FinalFrameData = &InFrameData;
 	FinalFrameData = Wz::GetFinalFrameData(*FinalFrameData);
 
 	const auto& PartDatas = FinalFrameData->PartDatas;
@@ -57,5 +59,32 @@ void CWzPartsManager::CompositeParts(const TWzFrameData& InBodyData)
 			}
 			Part->GetTransform()->AddPositionOffset(Offset);
 		}
+	}
+
+	const TWzPartData* BodyPartData = &PartDatas.find(EWzPartType::Body)->second;
+	BodyPartData = Wz::GetFinalPartData(*BodyPartData);
+	const Vector3 BodyNeckWorldPosition = CWzUtils::GetWorldPositionFromWzPosition(BodyPartData->OutLink,
+		BodyPartData->Origin + BodyPartData->Map.Neck);
+
+	TWzSkinPng* HeadSkinData = InSkinData.RefSkins[static_cast<uint8_t>(EWzSkinType::Head)];
+	Head->GetSpriteRenderComponent()->SetDiffuseImage(HeadSkinData->OutLink);
+	Vector3 Offset = CWzUtils::GetWorldPositionFromWzPosition(*Head->GetSpriteRenderComponent()
+		, HeadSkinData->Origin + HeadSkinData->Map.Neck) - BodyNeckWorldPosition;
+	Head->GetTransform()->AddPositionOffset(Offset);
+	GetPart(EWzPartType::Body)->Attach(Head);
+
+	TWzSkinPng* EarSkinData = InSkinData.RefSkins[static_cast<uint8_t>(EarType)];
+	if (EarSkinData)
+	{
+		Ear->GetSpriteRenderComponent()->SetDiffuseImage(EarSkinData->OutLink);
+		Offset = CWzUtils::GetWorldPositionFromWzPosition(*Ear->GetSpriteRenderComponent()
+			, EarSkinData->Origin + EarSkinData->Map.Neck) - BodyNeckWorldPosition;
+		Ear->GetTransform()->AddPositionOffset(Offset);
+		GetPart(EWzPartType::Body)->Attach(Ear);
+	}
+	else
+	{
+		Ear->GetSpriteRenderComponent()->SetDiffuseImage(L"");
+		Ear->Activate(false);
 	}
 }

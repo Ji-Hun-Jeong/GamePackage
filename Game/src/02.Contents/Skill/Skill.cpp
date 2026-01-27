@@ -6,13 +6,13 @@
 
 namespace SkillLoad
 {
-	bool ParseSkillPng(const JValue& InPngValue, TWzPng* OutSkillPng)
+	bool ParseSkillPng(const JValue& InPngValue, TWzSkillPng* OutSkillPng)
 	{
 		if (InPngValue.IsObject() == false)
 			return false;
 
 		// 1. 멤버별 처리를 담당할 람다 정의
-		auto ParseMember = [](const std::string_view InName, const JValue& InValue, TWzPng* OutSkillPng) -> bool
+		auto ParseMember = [](const std::string_view InName, const JValue& InValue, TWzSkillPng* OutSkillPng) -> bool
 			{
 				if (InValue.IsString() == false)
 					return false;
@@ -123,7 +123,7 @@ namespace SkillLoad
 				{
 					if (fit->value.IsObject())
 					{
-						TWzPng png;
+						TWzSkillPng png;
 						ParseSkillPng(fit->value, &png);
 						Hit.Anim.emplace_back(std::move(png));
 					}

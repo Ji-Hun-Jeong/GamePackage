@@ -3,6 +3,8 @@
 
 #include "01.Base/Actor/Actor.h"
 #include "04.Renderer/RenderResourceLoader.h"
+#include "Utils.h"
+
 Vector3 CWzUtils::GetWorldPositionFromWzPosition(Vector2 InImageScale, Vector2 InWzOrigin)
 {
 	float FinalX = (InImageScale.x / 2.0f) - InWzOrigin.x;
@@ -70,5 +72,33 @@ namespace Wz
 		}
 
 		return NewNode;
+	}
+	bool ParseWzBaseMap(const JValue& InValue, TWzMap* OutMap)
+	{
+		if (InValue.IsObject() == false)
+			return false;
+
+		const auto& MapObject = InValue.GetObject();
+		for (const auto& Member : MapObject)
+		{
+			const std::string_view Name = Member.name.GetString();
+			if (Member.value.IsString())
+			{
+				const std::string_view Value = Member.value.GetString();
+
+				Vector2* OutputData = nullptr;
+				if (Name == "neck")
+					OutputData = &OutMap->Neck;
+				else if (Name == "navel")
+					OutputData = &OutMap->Navel;
+				else if (Name == "hand")
+					OutputData = &OutMap->Hand;
+				else if (Name == "handMove")
+					OutputData = &OutMap->HandMove;
+				if (StrToVec2(Value, OutputData) == false)
+					return false;
+			}
+		}
+		return true;
 	}
 }

@@ -271,11 +271,11 @@
     <ClCompile Include="src\02.Contents\Actor\UI\UIManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\Editor\State\TileEditState.cpp" />
     <ClCompile Include="src\Utils.cpp" />
-    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPartData.cpp" />
-    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzPart.cpp" />
-    <ClCompile Include="src\02.Contents\Wz\WzType.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzPart\WzPartData.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzPart\WzPart.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzBase.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzAnimation.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzPart\WzSkin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01.Base\Manager\Path.h" />
@@ -359,11 +359,11 @@
     <ClInclude Include="src\02.Contents\Actor\UI\UIManager.h" />
     <ClInclude Include="src\02.Contents\Scene\Editor\State\TileEditState.h" />
     <ClInclude Include="src\Utils.h" />
-    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPartData.h" />
-    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzPart.h" />
-    <ClInclude Include="src\02.Contents\Wz\WzType.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzPart\WzPartData.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzPart\WzPart.h" />
     <ClInclude Include="src\02.Contents\Wz\WzBase.h" />
     <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzAnimation.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzPart\WzSkin.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

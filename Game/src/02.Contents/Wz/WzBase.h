@@ -97,14 +97,21 @@ protected:
 struct TWzPng : public CWzNode
 {
 	Vector2 Origin;
-	int32_t Z = 0;
-	int32_t Delay = 0;
 	std::wstring OutLink;
+};
+
+struct TWzMap
+{
+	Vector2 Neck;
+	Vector2 Navel;
+	Vector2 Hand;
+	Vector2 HandMove;
 };
 
 namespace Wz
 {
 	extern CWzNode* GenerateWzData(const JValue& InValue);
+	extern bool ParseWzBaseMap(const JValue& InValue, TWzMap* OutMap);
 }
 
 class CWzUtils

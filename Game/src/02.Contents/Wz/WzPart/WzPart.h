@@ -1,6 +1,7 @@
 #pragma once
 #include "01.Base/Actor/StaticActor.h"
 #include "WzPartData.h"
+#include "WzSkin.h"
 
 class CWzPart : public CStaticActor
 {
@@ -25,7 +26,7 @@ public:
 public:
 	void InitalizeComponent() override;
 	// Todo: 머리도 가져와서 세팅하기
-	void CompositeParts(const TWzFrameData& InBodyData);
+	void CompositeParts(const TWzCharacterFrameData& InBodyData, const TWzSkinFrameData& InSkinData);
 	CWzPart* GetPart(EWzPartType InPartType)
 	{
 		if (InPartType >= EWzPartType::End)
@@ -35,5 +36,10 @@ public:
 
 private:
 	std::array<CWzPart*, static_cast<size_t>(EWzPartType::End)> Parts;
+
+	CWzPart* Head = nullptr;
+	CWzPart* Ear = nullptr;
+
+	EWzSkinType EarType = EWzSkinType::HumanEar;
 
 };

@@ -19,21 +19,27 @@ struct TSkillInfo : public CWzNode
 	int32_t AreaAttack = 0;
 };
 
+struct TWzSkillPng : public TWzPng
+{
+	int32_t Z = 0;
+	int32_t Delay = 0;
+};
+
 struct TSkillHit : public CWzNode
 {
-	std::vector<TWzPng> Anim;
+	std::vector<TWzSkillPng> Anim;
 };
 
 struct TSkillEffect : public CWzNode
 {
-	std::vector<TWzPng> Anim;
+	std::vector<TWzSkillPng> Anim;
 };
 
 struct TSkillData : public CWzNode
 {
-	TWzPng Icon;
-	TWzPng IconMouseOver;
-	TWzPng IconDisabled;
+	TWzSkillPng Icon;
+	TWzSkillPng IconMouseOver;
+	TWzSkillPng IconDisabled;
 
 	TSkillCommon Common;
 	std::vector<TSkillHit> Hit;

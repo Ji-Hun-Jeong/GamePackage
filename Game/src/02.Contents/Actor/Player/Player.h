@@ -4,7 +4,7 @@
 
 #include "01.Base/Actor/Component/RigidBody.h"
 #include "02.Contents/Wz/WzCharacter/WzCharacterAnimator.h"
-#include "02.Contents/Wz/WzCharacter/WzPart.h"
+#include "02.Contents/Wz/WzPart/WzPart.h"
 #include "02.Contents/Wz/WzLoader.h"
 #include "02.Contents/Skill/SkillCaster.h"
 #include "04.Renderer/ImGuiManager.h"
@@ -32,8 +32,9 @@ public:
 			bool bExistCurrentAnimation = CharacterAnimator->IsCurrentAnimExist();
 			if (CharacterAnimator->IsFrameChanged() && bExistCurrentAnimation)
 			{
-				const TWzFrameData& FrameData = CharacterAnimator->GetCurrentFrameData();
-				PartsManager->CompositeParts(FrameData);
+				const TWzCharacterFrameData& FrameData = CharacterAnimator->GetCurrentFrameData();
+				const TWzSkinFrameData& SkinData = CharacterAnimator->GetCurrentSkinFrameData();
+				PartsManager->CompositeParts(FrameData, SkinData);
 			}
 		}
 
@@ -61,7 +62,8 @@ private:
 	TSkillData SkillData;
 	CSkillCaster* SkillCaster = nullptr;
 
-	CWzLoader WzLoader;
+	CWzLoader CharacterLoader;
+	CWzLoader SkinLoader;
 
 };
 

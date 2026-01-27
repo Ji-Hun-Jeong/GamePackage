@@ -13,8 +13,6 @@ namespace Wz
 		if (InPartName == "armOverHair")	return EWzPartType::ArmOverHair;
 		if (InPartName == "lHand")			return EWzPartType::LHand;
 		if (InPartName == "rHand")			return EWzPartType::RHand;
-		if (InPartName == "head")			return EWzPartType::Head;
-		if (InPartName == "humanEar")		return EWzPartType::HumanEar;
 		return EWzPartType::End;
 	}
 
@@ -26,9 +24,9 @@ namespace Wz
 		return FinalPartData;
 	}
 
-	const TWzFrameData* GetFinalFrameData(const TWzFrameData& InFrameData)
+	const TWzCharacterFrameData* GetFinalFrameData(const TWzCharacterFrameData& InFrameData)
 	{
-		const TWzFrameData* FinalPartData = &InFrameData;
+		const TWzCharacterFrameData* FinalPartData = &InFrameData;
 		while (FinalPartData->RefFrame)
 			FinalPartData = FinalPartData->RefFrame;
 		return FinalPartData;

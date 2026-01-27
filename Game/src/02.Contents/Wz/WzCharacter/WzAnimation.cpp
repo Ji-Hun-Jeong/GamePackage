@@ -19,37 +19,8 @@ bool CWzAnimationLoader::BrachPartPng(const JValue& InValue, const std::string_v
 	}
 	else if (InName == "map")
 	{
-		const auto& MapObject = InValue.GetObject();
-		for (const auto& Member : MapObject)
-		{
-			const std::string_view Name = Member.name.GetString();
-			if (Member.value.IsString())
-			{
-				const std::string_view Value = Member.value.GetString();
-
-				Vector2* OutputData = nullptr;
-				if (Name == "neck")
-					OutputData = &OutPartPngData->Map.Neck;
-				else if (Name == "navel")
-					OutputData = &OutPartPngData->Map.Navel;
-				else if (Name == "hand")
-					OutputData = &OutPartPngData->Map.Hand;
-				else if (Name == "handMove")
-					OutputData = &OutPartPngData->Map.HandMove;
-				else
-				{
-					std::cout << "CWzAnimationLoader::BrachPartPng: " << Name << " Is Strange\n";
-					return false;
-				}
-				if (StrToVec2(Value, OutputData) == false)
-					return false;
-			}
-			else
-			{
-				CWzNode* Node = Wz::GenerateWzData(Member.value);
-				OutPartPngData->AddMember(InName, *Node);
-			}
-		}
+		if (Wz::ParseWzBaseMap(InValue, &OutPartPngData->Map) == false)
+			return false;
 	}
 	else if (InName == "z")
 		OutPartPngData->Z = InValue.GetString();
@@ -91,7 +62,7 @@ bool CWzAnimationLoader::ParsePart(const JValue& InValue, TWzPartData* OutPartPn
 	}
 	return true;
 }
-bool CWzAnimationLoader::BrachFrame(const JValue& InValue, const std::string_view InName, TWzFrameData* OutCharacterFrameData)
+bool CWzAnimationLoader::BrachFrame(const JValue& InValue, const std::string_view InName, TWzCharacterFrameData* OutCharacterFrameData)
 {
 	assert(OutCharacterFrameData);
 	if (InName == "face")
@@ -118,7 +89,7 @@ bool CWzAnimationLoader::BrachFrame(const JValue& InValue, const std::string_vie
 	return true;
 }
 
-bool CWzAnimationLoader::ParseFrame(const JValue& InValue, TWzFrameData* OutCharacterFrameData)
+bool CWzAnimationLoader::ParseFrame(const JValue& InValue, TWzCharacterFrameData* OutCharacterFrameData)
 {
 	if (InValue.IsObject() == false)
 		return false;
@@ -134,7 +105,7 @@ bool CWzAnimationLoader::ParseFrame(const JValue& InValue, TWzFrameData* OutChar
 	auto& CharacterFrameDatas = CurrentEditAnimation->Frames;
 	for (size_t i = 0; i < CharacterFrameDatas.size(); ++i)
 	{
-		TWzFrameData& CharacterFrameData = CharacterFrameDatas[i];
+		TWzCharacterFrameData& CharacterFrameData = CharacterFrameDatas[i];
 		if (CharacterFrameData.Action.empty())
 			continue;
 		std::string_view AnimName = CharacterFrameData.Action;
@@ -146,7 +117,7 @@ bool CWzAnimationLoader::ParseFrame(const JValue& InValue, TWzFrameData* OutChar
 		}
 		int32_t Frame = CharacterFrameData.Frame;
 		int32_t Delay = CharacterFrameData.Delay;
-		const TWzFrameData* RefFrameData = Wz::GetFrameFromCharacterAnimation(*Anim
+		const TWzCharacterFrameData* RefFrameData = Wz::GetFrameFromCharacterAnimation(*Anim
 			, static_cast<size_t>(Frame));
 
 		OutCharacterFrameData->RefFrame = RefFrameData;
@@ -155,7 +126,7 @@ bool CWzAnimationLoader::ParseFrame(const JValue& InValue, TWzFrameData* OutChar
 	return true;
 }
 
-TWzAnimation* CWzAnimationLoader::ParseWzCharacterAnimation(const JValue& InValue, const std::string_view InAnimName)
+const TWzAnimation* CWzAnimationLoader::ParseWzCharacterAnimation(const JValue& InValue, const std::string_view InAnimName)
 {
 	if (InValue.IsObject() == false)
 		return nullptr;
@@ -322,7 +293,7 @@ TWzAnimation* CWzAnimationLoader::ParseWzCharacterAnimation(const JValue& InValu
 
 namespace Wz
 {
-	const TWzFrameData* GetFrameFromCharacterAnimation(const TWzAnimation& InCharacterAnimation
+	const TWzCharacterFrameData* GetFrameFromCharacterAnimation(const TWzAnimation& InCharacterAnimation
 		, size_t InFrame)
 	{
 		if (InFrame >= InCharacterAnimation.Frames.size())
