@@ -196,7 +196,6 @@
     <ClCompile Include="src\02.Contents\Wz\WzLoader.cpp" />
     <ClCompile Include="src\02.Contents\Skill\SkillCaster.cpp" />
     <ClCompile Include="src\02.Contents\Skill\Skill.cpp" />
-    <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimator.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\RigidBody.cpp" />
     <ClCompile Include="src\02.Contents\ActorComponent\GroundDetector.cpp" />
     <ClCompile Include="src\02.Contents\Actor\Base\ImGUIInteracter.cpp" />
@@ -232,7 +231,6 @@
     <ClCompile Include="src\06.Interaction\MouseInteractionManager.cpp" />
     <ClCompile Include="src\02.Contents\Scene\EditUIScene.cpp" />
     <ClCompile Include="src\01.Base\Actor\Scene.cpp" />
-    <ClCompile Include="src\01.Base\Actor\Component\Animation\Animation.cpp" />
     <ClCompile Include="src\01.Base\Actor\Component\Animation\Animator.cpp" />
     <ClCompile Include="src\01.Base\Actor\Camera.cpp" />
     <ClCompile Include="src\04.Renderer\SpriteRendererProvide.cpp" />
@@ -289,7 +287,6 @@
     <ClInclude Include="src\02.Contents\Wz\WzLoader.h" />
     <ClInclude Include="src\02.Contents\Skill\SkillCaster.h" />
     <ClInclude Include="src\02.Contents\Skill\Skill.h" />
-    <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzCharacterAnimator.h" />
     <ClInclude Include="src\01.Base\Actor\Component\RigidBody.h" />
     <ClInclude Include="src\02.Contents\ActorComponent\GroundDetector.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\ImGUIInteracter.h" />
@@ -325,7 +322,6 @@
     <ClInclude Include="src\06.Interaction\MouseInteractionManager.h" />
     <ClInclude Include="src\02.Contents\Scene\EditUIScene.h" />
     <ClInclude Include="src\01.Base\Actor\Scene.h" />
-    <ClInclude Include="src\01.Base\Actor\Component\Animation\Animation.h" />
     <ClInclude Include="src\01.Base\Actor\Component\Animation\Animator.h" />
     <ClInclude Include="src\01.Base\Actor\Camera.h" />
     <ClInclude Include="src\02.Contents\Actor\Base\InputActionManager.h" />

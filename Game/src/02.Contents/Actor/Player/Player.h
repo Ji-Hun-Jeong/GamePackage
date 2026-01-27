@@ -3,8 +3,8 @@
 #include "02.Contents/ActorComponent/GroundDetector.h"
 
 #include "01.Base/Actor/Component/RigidBody.h"
-#include "02.Contents/Wz/WzCharacter/WzCharacterAnimator.h"
 #include "02.Contents/Wz/WzPart/WzPart.h"
+#include "02.Contents/Wz/WzCharacter/WzAnimation.h"
 #include "02.Contents/Wz/WzLoader.h"
 #include "02.Contents/Skill/SkillCaster.h"
 #include "04.Renderer/ImGuiManager.h"
@@ -63,6 +63,6 @@ private:
 	CWzLoader CharacterLoader;
 	CWzLoader SkinLoader;
 
-	CCAnimator<TWzHumanAnimation, TWzHumanFrameData>* AAnimator = nullptr;
+	CAnimator<TWzHumanAnimation, TWzHumanFrameData>* AAnimator = nullptr;
 };
 

@@ -41,7 +41,7 @@ public:
 
 		if (InChild->Owner != nullptr)
 			InChild->Owner->Detach(InChild);
-		
+
 		InChild->Owner = this;
 		Childs.push_back(InChild);
 	}
@@ -57,7 +57,7 @@ public:
 			{
 				Childs.erase(Iter);
 				InChild->Owner = nullptr;
-				break; 
+				break;
 			}
 		}
 	}
@@ -69,14 +69,14 @@ public:
 
 	CTransform* GetTransform() const { return Transform; }
 	CSpriteRenderComponent* GetSpriteRenderComponent() const { return SpriteRenderComponent; }
-	class CAnimator* GetAnimator() const { return Animator; }
+	CAnimator<TAnimation, TFrame>* GetAnimator() const { return Animator; }
 
 protected:
 	// 이거 그냥 나중에는 전부 CObjectPtr로 관리
-	CTransform* Transform							= nullptr;
-	CSpriteRenderComponent* SpriteRenderComponent	= nullptr;
-	class CRigidBody* RigidBody						= nullptr;
-	class CAnimator* Animator						= nullptr;
+	CTransform* Transform = nullptr;
+	CSpriteRenderComponent* SpriteRenderComponent = nullptr;
+	class CRigidBody* RigidBody = nullptr;
+	CAnimator<TAnimation, TFrame>* Animator = nullptr;
 	// class CCAnimator<TAnimation, TFrame>* AAAnimator = nullptr;
 	std::vector<CCollider*> Colliders;
 	std::vector<CComponent*> Components;

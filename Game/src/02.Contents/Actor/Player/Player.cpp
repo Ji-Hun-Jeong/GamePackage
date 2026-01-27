@@ -16,7 +16,7 @@ CPlayer::CPlayer()
 
 	PartsManager = AddComponent<CWzPartsManager>();
 	SkillCaster = AddComponent<CSkillCaster>();
-	AAnimator = AddComponent<CCAnimator<TWzHumanAnimation, TWzHumanFrameData>>();
+	AAnimator = AddComponent<CAnimator<TWzHumanAnimation, TWzHumanFrameData>>();
 }
 
 CPlayer::~CPlayer()

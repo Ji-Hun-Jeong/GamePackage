@@ -8,7 +8,7 @@ class CEffector : public CStaticActor
 public:
 	CEffector()
 	{
-		AddComponent<CAnimator>();
+		AddComponent<CAnimator<TAnimation, TFrame>>();
 	}
 	~CEffector() = default;
 
@@ -17,7 +17,7 @@ public:
 	{
 		CStaticActor::Update(InDeltaTime);
 
-		if (Animator->GetCurrentAnimation()->IsFinish())
+		if (Animator->IsStopped())
 			if (FinishAction)
 				FinishAction(Index);
 	}

@@ -4,15 +4,12 @@
 #include "04.Renderer/SpriteRenderer.h"
 #include "Component/RigidBody.h"
 
-#include "02.Contents/Wz/WzCharacter/WzCharacterAnimator.h"
-
 CActor::CActor()
 	: Owner(nullptr)
 	, bActive(true)
 	, Transform(nullptr)
 {
 	Transform = AddComponent<CTransform>();
-	//AAAnimator = AddComponent<CCAnimator<TAnimation, TFrame>>();
 }
 
 void CActor::AttachComponent(CComponent* InComponent)
@@ -25,7 +22,7 @@ void CActor::AttachComponent(CComponent* InComponent)
 		SpriteRenderComponent = Component;
 	else if (CRigidBody* Component = dynamic_cast<CRigidBody*>(InComponent))
 		RigidBody = Component;
-	else if (CAnimator* Component = dynamic_cast<CAnimator*>(InComponent))
+	else if (CAnimator<TAnimation, TFrame>* Component = dynamic_cast<CAnimator<TAnimation, TFrame>*>(InComponent))
 		Animator = Component;
 }
 
@@ -55,7 +52,7 @@ void CActor::DetachComponent(CComponent* InComponent)
 		SpriteRenderComponent = nullptr;
 	else if (CRigidBody* Component = dynamic_cast<CRigidBody*>(InComponent))
 		RigidBody = nullptr;
-	else if (CAnimator* Component = dynamic_cast<CAnimator*>(InComponent))
+	else if (CAnimator<TAnimation, TFrame>* Component = dynamic_cast<CAnimator<TAnimation, TFrame>*>(InComponent))
 		Animator = nullptr;
 }
 
@@ -64,10 +61,16 @@ void CActor::Update(float InDeltaTime)
 	// 입력, 이동 로직
 	if (RigidBody)
 		RigidBody->Update(*Transform, InDeltaTime);
-	/*if (AAAnimator)
-		AAAnimator->PlayCurrentAnimation(InDeltaTime);*/
 	if (Animator)
-		Animator->PlayAnimation(InDeltaTime);
+	{
+		Animator->PlayCurrentAnimation(InDeltaTime);
+		bool bExistCurrentAnimation = Animator->IsCurrentAnimExist();
+		if (Animator->IsFrameChanged() && bExistCurrentAnimation)
+		{
+			const TFrame& FrameData = Animator->GetCurrentFrameData();
+			SpriteRenderComponent->SetDiffuseImage(FrameData.ImagePath);
+		}
+	}
 }
 
 void CActor::RenderActor(CSpriteRenderer& InRenderer)

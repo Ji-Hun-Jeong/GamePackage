@@ -12,7 +12,7 @@ class CInstanceSkillActor : public CStaticActor
 public:
 	CInstanceSkillActor()
 	{
-		AddComponent<CAnimator>();
+		AddComponent<CAnimator<TAnimation,TFrame>>();
 		HitBox = AddComponent<CRectCollider>();
 		HitBox->SetDebugRender(true);
 	}
@@ -31,11 +31,11 @@ public:
 		CStaticActor::Update(InDeltaTime);
 
 		bHit = false;
-		if (Animator->GetCurrentAnimation()->GetCurrentFrameNumber() == 3
-			&& Animator->GetCurrentAnimation()->IsFrameChanged())
+		if (Animator->GetCurrentFrameNumber() == 3
+			&& Animator->IsFrameChanged())
 			bHit = true;
 
-		if (Animator->GetCurrentAnimation()->IsFinish())
+		if (Animator->IsStopped())
 			Destroy();
 	}
 	void SetHitBox(const Vector2 InLeftTop, const Vector2 InRightBottom)
@@ -48,13 +48,14 @@ public:
 		if (Effects.empty())
 			return;
 
-		CAnimation& Anim = Animator->AddAnimationRef("Effect");
+		TAnimation Anim;
+		Animator->AddAnimation("Effect", Anim);
 
-		Anim.Reserve(Effects.size());
+		Anim.Frames.reserve(Effects.size());
 		for (size_t i = 0; i < Effects.size(); ++i)
 		{
-			TFrame& Frame = Anim.AddFrame();
-			Frame.Duration = static_cast<float>(Effects[i].Delay) / 1000.0f;
+			TFrame& Frame = Anim.Frames.emplace_back(TFrame{});
+			Frame.Delay = static_cast<float>(Effects[i].Delay) / 1000.0f;
 			Frame.ImagePath = Effects[i].OutLink;
 			Frame.Offset = CWzUtils::GetWorldPositionFromWzPosition(Frame.ImagePath, Effects[i].Origin);
 		}
@@ -76,17 +77,18 @@ void GenerateHitEffect(const CActor& InTargetActor, const std::vector<TSkillHit>
 {
 	CEffector* Effector = CEffectPool::GetInst().GetEffector();
 	Effector->GetTransform()->SetPosition(InTargetActor.GetTransform()->GetWorldPosition());
-	CAnimator* Animator = Effector->AddComponent<CAnimator>();
-	CAnimation& Anim = Animator->AddAnimationRef("Effect");
+	auto Animator = Effector->AddComponent<CAnimator<TAnimation, TFrame>>();
+	TAnimation Anim;//  = Animator->AddAnimationRef("Effect");
+	Animator->AddAnimation("Effect", Anim);
 
 	int32_t RandIndex = std::rand() % int32_t(SkillHitDatas.size());
 	const TSkillHit& SkillHitData = SkillHitDatas[RandIndex];
 
-	Anim.Reserve(SkillHitData.Anim.size());
+	Anim.Frames.reserve(SkillHitData.Anim.size());
 	for (size_t i = 0; i < SkillHitData.Anim.size(); ++i)
 	{
-		TFrame& Frame = Anim.AddFrame();
-		Frame.Duration = static_cast<float>(SkillHitData.Anim[i].Delay) / 1000.0f;
+		TFrame& Frame = Anim.Frames.emplace_back(TFrame{});
+		Frame.Delay = static_cast<float>(SkillHitData.Anim[i].Delay) / 1000.0f;
 		Frame.ImagePath = SkillHitData.Anim[i].OutLink;
 		Frame.Offset = CWzUtils::GetWorldPositionFromWzPosition(Frame.ImagePath, SkillHitData.Anim[i].Origin);
 	}
