@@ -4,46 +4,44 @@
 #include "WzAnimation.h"
 #include "../WzPart/WzSkin.h"
 
-class CWzCharacterAnimator : public CComponent
+template <typename T_ANIM, typename T_FRAME>
+class CCAnimator : public CComponent
 {
-	GENERATE_OBJECT(CWzCharacterAnimator)
+	GENERATE_OBJECT(CCAnimator)
 public:
-	CWzCharacterAnimator() = default;
-	~CWzCharacterAnimator() = default;
+	CCAnimator() = default;
+	~CCAnimator() = default;
 
-public:
-	void PlayCurrentAnimation(float InDeltaTime);
+	void PlayCurrentAnimation(float InDeltaTime)
+	{
+		if (CurrentAnimation == nullptr)
+			return;
+		if (bStop)
+			return;
+
+		ProgressTime += InDeltaTime * 0.5f;
+
+		if (CurrentFrameDelay <= ProgressTime * 1000.0f)
+			EnterFrame(CurrentFrameIndex + 1);
+	}
 	void SetCurrentAnimation(const std::string_view InAnimName, bool bInLoop = false)
 	{
-		auto Iter = WzCharacterAnimations.find(InAnimName.data());
-		if (Iter == WzCharacterAnimations.end())
+		auto Iter = Animations.find(InAnimName.data());
+		if (Iter == Animations.end())
 		{
-			std::cout << "[CWzCharacterAnimator::PlayAnimation] 애니메이션을 찾을 수 없습니다: " << InAnimName << std::endl;
+			std::cout << "[CCAnimator::SetCurrentAnimation] 애니메이션을 찾을 수 없습니다: " << InAnimName << std::endl;
 			return;
 		}
-		TWzAnimation& Animation = Iter->second;
-		CurrentAnimation = &Animation;
-
-		auto SkinIter = WzSkinAnimations.find(InAnimName.data());
-		if (SkinIter == WzSkinAnimations.end())
-		{
-			std::cout << "[CWzCharacterAnimator::PlayAnimation] 애니메이션을 찾을 수 없습니다: " << InAnimName << std::endl;
-			return;
-		}
-		TWzSkinAnimation& SkinAnimation = SkinIter->second;
-		CurrentSkinAnimation = &SkinAnimation;
+		CurrentAnimation = &Iter->second;
 
 		CurrentAnimation->bLoop = bInLoop;
 		EnterFrame(-1);
 	}
-	void AddAnimation(const TWzAnimation& InAnimation, const TWzSkinAnimation& InSkinAnimation)
+	void AddAnimation(const std::string_view InAnimName, const T_ANIM& InAnimation)
 	{
-		auto Iter = WzCharacterAnimations.find(InAnimation.AnimName);
-		if (Iter == WzCharacterAnimations.end())
-			WzCharacterAnimations.emplace(InAnimation.AnimName, InAnimation);
-		auto SkinIter = WzSkinAnimations.find(InAnimation.AnimName);
-		if (SkinIter == WzSkinAnimations.end())
-			WzSkinAnimations.emplace(InAnimation.AnimName, InSkinAnimation);
+		auto Iter = Animations.find(InAnimName.data());
+		if (Iter == Animations.end())
+			Animations.emplace(InAnimName, InAnimation);
 	}
 
 	bool IsStopped() const { return bStop; }
@@ -51,8 +49,7 @@ public:
 	bool IsFrameChanged() const { return bFrameChange; }
 	bool IsCurrentAnimExist() const { return CurrentAnimation; }
 
-	const TWzSkinFrameData& GetCurrentSkinFrameData() const { return CurrentSkinAnimation->SkinFrames[CurrentFrameIndex]; }
-	const TWzCharacterFrameData& GetCurrentFrameData() const { return CurrentAnimation->Frames[CurrentFrameIndex]; }
+	const T_FRAME& GetCurrentFrameData() const { return CurrentAnimation->Frames[CurrentFrameIndex]; }
 	void EnterFrame(int32_t InFrameIndex)
 	{
 		bFrameChange = true;
@@ -79,14 +76,13 @@ public:
 	}
 	bool IsExistAnim(const std::string_view InFindAnimName)
 	{
-		return WzCharacterAnimations.contains(InFindAnimName.data()) && WzSkinAnimations.contains(InFindAnimName.data());
+		return Animations.contains(InFindAnimName.data());
 	}
-private:
-	std::unordered_map<std::string, TWzAnimation> WzCharacterAnimations;
-	std::unordered_map<std::string, TWzSkinAnimation> WzSkinAnimations;
 
-	TWzAnimation* CurrentAnimation = nullptr;
-	TWzSkinAnimation* CurrentSkinAnimation = nullptr;
+private:
+	std::unordered_map<std::string, T_ANIM> Animations;
+
+	T_ANIM* CurrentAnimation = nullptr;
 
 	int32_t CurrentFrameIndex = 0;
 
@@ -98,4 +94,3 @@ private:
 	float CurrentFrameDelay = 0.0f;
 
 };
-

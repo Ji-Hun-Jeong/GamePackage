@@ -13,16 +13,9 @@ enum class EWzSkinType : uint8_t
 	End,
 };
 
-struct TWzSkinMap : public TWzMap
-{
-	Vector2 EarOverHead;
-	Vector2 EarBelowHead;
-	Vector2 Brow;
-};
-
 struct TWzSkinPng : public TWzPng
 {
-	TWzSkinMap Map;
+	TWzMap Map;
 	std::string Z;
 	std::string Group;
 };
@@ -39,7 +32,7 @@ struct TWzSkinFrameData
 
 struct TWzSkinAnimation
 {
-	std::vector<TWzSkinFrameData> SkinFrames;
+	std::vector<TWzSkinFrameData> Frames;
 };
 
 class CWzSkinLoader
@@ -64,10 +57,10 @@ public:
 		TWzSkinAnimation& SkinAnimation = Iter->second;
 
 		const auto& FrameObject = InAnimValue.GetObject();
-		SkinAnimation.SkinFrames.reserve(FrameObject.MemberCount());
+		SkinAnimation.Frames.reserve(FrameObject.MemberCount());
 		for (const auto& Frame : FrameObject)
 		{
-			TWzSkinFrameData& SkinFrameData = SkinAnimation.SkinFrames.emplace_back(TWzSkinFrameData{});
+			TWzSkinFrameData& SkinFrameData = SkinAnimation.Frames.emplace_back(TWzSkinFrameData{});
 
 			const std::string_view FrameNumber = Frame.name.GetString();
 			const auto& FrameValue = Frame.value;

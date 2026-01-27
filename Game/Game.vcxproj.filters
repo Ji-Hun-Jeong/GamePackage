@@ -270,6 +270,9 @@
     <ClCompile Include="src\02.Contents\Wz\WzPart\WzSkin.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\02.Contents\Wz\WzPart\WzFace.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -528,6 +531,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\02.Contents\Wz\WzPart\WzSkin.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\02.Contents\Wz\WzPart\WzFace.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -106,6 +106,9 @@ struct TWzMap
 	Vector2 Navel;
 	Vector2 Hand;
 	Vector2 HandMove;
+	Vector2 EarOverHead;
+	Vector2 EarBelowHead;
+	Vector2 Brow;
 };
 
 namespace Wz

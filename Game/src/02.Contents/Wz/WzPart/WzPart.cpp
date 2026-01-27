@@ -88,3 +88,18 @@ void CWzPartsManager::CompositeParts(const TWzCharacterFrameData& InFrameData, c
 		Ear->Activate(false);
 	}
 }
+
+namespace Wz
+{
+	TWzHumanAnimation TransformToHumanAnimation(const TWzAnimation& InCharacterAnimation, const TWzSkinAnimation& InSkinAnimation)
+	{
+		TWzHumanAnimation HumanAnimation;
+		assert(InCharacterAnimation.Frames.size() == InSkinAnimation.Frames.size());
+
+		for (size_t i = 0; i < InCharacterAnimation.Frames.size(); ++i)
+			HumanAnimation.Frames.emplace_back(&InCharacterAnimation.Frames[i], &InSkinAnimation.Frames[i]
+			, InCharacterAnimation.Frames[i].Delay);
+
+		return HumanAnimation;
+	}
+}

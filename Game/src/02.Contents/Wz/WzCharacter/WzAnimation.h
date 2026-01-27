@@ -1,13 +1,6 @@
 #pragma once
 #include "../WzPart/WzPartData.h"
 
-struct TWzAnimation
-{
-	std::string AnimName;
-	std::vector<TWzCharacterFrameData> Frames;
-	bool bLoop = false;
-};
-
 namespace Wz
 {
 	extern const TWzCharacterFrameData* GetFrameFromCharacterAnimation(const TWzAnimation& InCharacterAnimation

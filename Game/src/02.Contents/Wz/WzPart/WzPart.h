@@ -16,6 +16,26 @@ private:
 
 };
 
+struct TWzHumanFrameData
+{
+	const TWzCharacterFrameData* CharacerFrames = nullptr;
+	const TWzSkinFrameData* SkinFrames = nullptr;
+	int32_t Delay = 0;
+};
+
+struct TWzHumanAnimation
+{
+	std::vector<TWzHumanFrameData> Frames;
+	bool bLoop = false;
+};
+
+namespace Wz
+{
+	extern TWzHumanAnimation TransformToHumanAnimation(const TWzAnimation& InCharacterAnimation
+		, const TWzSkinAnimation& InSkinAnimation);
+}
+
+
 class CWzPartsManager : public CComponent
 {
 	GENERATE_OBJECT(CWzPartsManager)

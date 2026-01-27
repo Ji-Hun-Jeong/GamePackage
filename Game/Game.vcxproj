@@ -276,6 +276,7 @@
     <ClCompile Include="src\02.Contents\Wz\WzBase.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzCharacter\WzAnimation.cpp" />
     <ClCompile Include="src\02.Contents\Wz\WzPart\WzSkin.cpp" />
+    <ClCompile Include="src\02.Contents\Wz\WzPart\WzFace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\01.Base\Manager\Path.h" />
@@ -364,6 +365,7 @@
     <ClInclude Include="src\02.Contents\Wz\WzBase.h" />
     <ClInclude Include="src\02.Contents\Wz\WzCharacter\WzAnimation.h" />
     <ClInclude Include="src\02.Contents\Wz\WzPart\WzSkin.h" />
+    <ClInclude Include="src\02.Contents\Wz\WzPart\WzFace.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="resources\shader\BasicPixelShader.hlsl">

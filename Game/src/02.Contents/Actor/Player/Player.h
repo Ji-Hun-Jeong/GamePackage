@@ -26,15 +26,14 @@ public:
 	{
 		CActor::Update(InDeltaTime);
 
-		if (CharacterAnimator)
+		if (AAnimator)
 		{
-			CharacterAnimator->PlayCurrentAnimation(InDeltaTime);
-			bool bExistCurrentAnimation = CharacterAnimator->IsCurrentAnimExist();
-			if (CharacterAnimator->IsFrameChanged() && bExistCurrentAnimation)
+			AAnimator->PlayCurrentAnimation(InDeltaTime);
+			bool bExistCurrentAnimation = AAnimator->IsCurrentAnimExist();
+			if (AAnimator->IsFrameChanged() && bExistCurrentAnimation)
 			{
-				const TWzCharacterFrameData& FrameData = CharacterAnimator->GetCurrentFrameData();
-				const TWzSkinFrameData& SkinData = CharacterAnimator->GetCurrentSkinFrameData();
-				PartsManager->CompositeParts(FrameData, SkinData);
+				const TWzHumanFrameData& FrameData = AAnimator->GetCurrentFrameData();
+				PartsManager->CompositeParts(*FrameData.CharacerFrames, *FrameData.SkinFrames);
 			}
 		}
 
@@ -56,7 +55,6 @@ public:
 
 private:
 	CGroundDetector* GroundDetector = nullptr;
-	CWzCharacterAnimator* CharacterAnimator = nullptr;
 	CWzPartsManager* PartsManager = nullptr;
 	
 	TSkillData SkillData;
@@ -65,5 +63,6 @@ private:
 	CWzLoader CharacterLoader;
 	CWzLoader SkinLoader;
 
+	CCAnimator<TWzHumanAnimation, TWzHumanFrameData>* AAnimator = nullptr;
 };
 

@@ -95,6 +95,12 @@ namespace Wz
 					OutputData = &OutMap->Hand;
 				else if (Name == "handMove")
 					OutputData = &OutMap->HandMove;
+				else if(Name == "earOverHead")
+					OutputData = &OutMap->EarOverHead;
+				else if (Name == "earBelowHead")
+					OutputData = &OutMap->EarBelowHead;
+				else if (Name == "brow")
+					OutputData = &OutMap->Brow;
 				if (StrToVec2(Value, OutputData) == false)
 					return false;
 			}

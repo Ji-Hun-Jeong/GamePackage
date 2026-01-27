@@ -32,6 +32,12 @@ struct TWzCharacterFrameData : public CWzNode
 	const TWzCharacterFrameData* RefFrame = nullptr;
 };
 
+struct TWzAnimation
+{
+	std::vector<TWzCharacterFrameData> Frames;
+	bool bLoop = false;
+};
+
 namespace Wz
 {
 	extern EWzPartType GetPartTypeByName(const std::string_view InPartName);

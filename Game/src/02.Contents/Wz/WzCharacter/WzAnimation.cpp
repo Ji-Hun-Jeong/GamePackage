@@ -135,7 +135,7 @@ const TWzAnimation* CWzAnimationLoader::ParseWzCharacterAnimation(const JValue& 
 	auto Pair = CharacterAnimations.emplace(InAnimName, TWzAnimation{});
 	TWzAnimation& OutCharacterAnimation = Pair.first->second;
 	OutCharacterAnimation.Frames.resize(AnimObject.MemberCount());
-	OutCharacterAnimation.AnimName = InAnimName;
+	//OutCharacterAnimation.AnimName = InAnimName;
 
 	CurrentEditAnimation = &OutCharacterAnimation;
 

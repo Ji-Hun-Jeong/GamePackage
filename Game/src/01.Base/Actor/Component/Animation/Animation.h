@@ -9,6 +9,12 @@ struct TFrame
 	float Duration = 0.0f;
 };
 
+struct TAnimation
+{
+	std::vector<TFrame> Frames;
+	bool bLoop = false;
+};
+
 class CAnimation
 {
 public:
@@ -134,4 +140,3 @@ private:
 	bool bFinish = false;
 
 };
-

@@ -4,12 +4,15 @@
 #include "04.Renderer/SpriteRenderer.h"
 #include "Component/RigidBody.h"
 
+#include "02.Contents/Wz/WzCharacter/WzCharacterAnimator.h"
+
 CActor::CActor()
 	: Owner(nullptr)
 	, bActive(true)
 	, Transform(nullptr)
 {
 	Transform = AddComponent<CTransform>();
+	//AAAnimator = AddComponent<CCAnimator<TAnimation, TFrame>>();
 }
 
 void CActor::AttachComponent(CComponent* InComponent)
@@ -61,6 +64,8 @@ void CActor::Update(float InDeltaTime)
 	// 입력, 이동 로직
 	if (RigidBody)
 		RigidBody->Update(*Transform, InDeltaTime);
+	/*if (AAAnimator)
+		AAAnimator->PlayCurrentAnimation(InDeltaTime);*/
 	if (Animator)
 		Animator->PlayAnimation(InDeltaTime);
 }

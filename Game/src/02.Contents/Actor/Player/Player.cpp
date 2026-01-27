@@ -14,9 +14,9 @@ CPlayer::CPlayer()
 	SpriteRenderComponent->SetColor(Vector3(0.0f, 1.0f, 0.0f), 1.0f);
 	AddComponent<CRigidBody>();
 
-	CharacterAnimator = AddComponent<CWzCharacterAnimator>();
 	PartsManager = AddComponent<CWzPartsManager>();
 	SkillCaster = AddComponent<CSkillCaster>();
+	AAnimator = AddComponent<CCAnimator<TWzHumanAnimation, TWzHumanFrameData>>();
 }
 
 CPlayer::~CPlayer()
@@ -72,7 +72,7 @@ void CPlayer::CaptureSnapShot()
 		// 여기서 이벤트 발생!
 		std::string command = inputBuffer;
 
-		if (CharacterAnimator->IsExistAnim(command) == false)
+		if (AAnimator->IsExistAnim(command) == false)
 		{
 			JValue* CharacterAnimValue = nullptr;
 			JValue* SkinAnimValue = nullptr;
@@ -82,11 +82,14 @@ void CPlayer::CaptureSnapShot()
 				const TWzAnimation* Anim = CWzAnimationLoader::GetInst().ParseWzCharacterAnimation(*CharacterAnimValue, command);
 				const TWzSkinAnimation* SkinAnim = CWzSkinLoader::GetInst().LoadSkinAnimation(*SkinAnimValue, command);
 				if (Anim && SkinAnim)
-					CharacterAnimator->AddAnimation(*Anim, *SkinAnim);
+				{
+					TWzHumanAnimation HumanAnimation = Wz::TransformToHumanAnimation(*Anim, *SkinAnim);
+					AAnimator->AddAnimation(command, HumanAnimation);
+				}
 			}
 		}
 
-		CharacterAnimator->SetCurrentAnimation(command, true);
+		AAnimator->SetCurrentAnimation(command, true);
 
 		// 입력 후 버퍼 비우기 (필요 시)
 		memset(inputBuffer, 0, sizeof(inputBuffer));

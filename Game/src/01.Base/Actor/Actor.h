@@ -77,6 +77,7 @@ protected:
 	CSpriteRenderComponent* SpriteRenderComponent	= nullptr;
 	class CRigidBody* RigidBody						= nullptr;
 	class CAnimator* Animator						= nullptr;
+	// class CCAnimator<TAnimation, TFrame>* AAAnimator = nullptr;
 	std::vector<CCollider*> Colliders;
 	std::vector<CComponent*> Components;
 
