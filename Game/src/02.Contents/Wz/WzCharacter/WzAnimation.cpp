@@ -36,12 +36,6 @@ bool CWzAnimationLoader::BrachPartPng(const JValue& InValue, const std::string_v
 					OutputData = &OutPartPngData->Map.Hand;
 				else if (Name == "handMove")
 					OutputData = &OutPartPngData->Map.HandMove;
-				else if (Name == "earOverHead")
-					OutputData = &OutPartPngData->Map.EarOverHead;
-				else if (Name == "earBelowHead")
-					OutputData = &OutPartPngData->Map.EarBelowHead;
-				else if (Name == "brow")
-					OutputData = &OutPartPngData->Map.Brow;
 				else
 				{
 					std::cout << "CWzAnimationLoader::BrachPartPng: " << Name << " Is Strange\n";
@@ -105,8 +99,7 @@ bool CWzAnimationLoader::BrachFrame(const JValue& InValue, const std::string_vie
 	else if (InName == "delay")
 		OutCharacterFrameData->Delay = std::stoi(InValue.GetString());
 	else if (InName == "body" || InName == "arm" || InName == "hand" ||
-		InName == "armOverHair" || InName == "lHand" || InName == "rHand" ||
-		InName == "head" || InName == "humanEar")
+		InName == "armOverHair" || InName == "lHand" || InName == "rHand")
 	{
 		EWzPartType PartType = Wz::GetPartTypeByName(InName);
 		auto Pair = OutCharacterFrameData->PartDatas.emplace(PartType, TWzPartData{});
@@ -231,101 +224,101 @@ TWzAnimation* CWzAnimationLoader::ParseWzCharacterAnimation(const JValue& InValu
 	return &OutCharacterAnimation;
 }
 
-void CWzAnimationLoader::ParseWzDefaultSkinAnimation(const JValue& InValue, const std::string_view InAnimName)
-{
-	if (InValue.IsObject() == false)
-		return;
-	const auto& AnimObject = InValue.GetObject();
-
-	TWzFrameData* DefaultSkinData = nullptr;
-	if (InAnimName == "front")
-		DefaultSkinData = &FrontSkin;
-	else if (InAnimName == "back")
-		DefaultSkinData = &BackSkin;
-	else
-		return;
-
-	for (const auto& Anim : AnimObject)
-	{
-		const std::string_view Name = Anim.name.GetString();
-		const auto& Value = Anim.value;
-		EWzPartType PartType = Wz::GetPartTypeByName(Name);
-		if (PartType == EWzPartType::End)
-			continue;
-
-		DefaultSkinData->PartDatas.emplace(PartType, TWzPartData{});
-		TWzPartData& PartData = DefaultSkinData->PartDatas.find(PartType)->second;
-		ParsePart(Value, &PartData);
-	}
-}
-
-TWzAnimation* CWzAnimationLoader::ParseWzSkinAnimation(const JValue& InValue, const std::string_view InAnimName)
-{
-	if (InValue.IsObject() == false)
-		return nullptr;
-	const auto& AnimObject = InValue.GetObject();
-
-	auto Pair = SkinAnimations.emplace(InAnimName, TWzAnimation{});
-	TWzAnimation& OutSkinAnimation = Pair.first->second;
-	OutSkinAnimation.Frames.resize(AnimObject.MemberCount());
-	OutSkinAnimation.AnimName = InAnimName;
-
-	CurrentEditAnimation = &OutSkinAnimation;
-
-	size_t i = 0;
-	for (const auto& Frame : AnimObject)
-	{
-		const std::string_view FrameNumber = Frame.name.GetString();
-		auto& OutFrame = OutSkinAnimation.Frames[i++];
-		if (ParseFrame(Frame.value, &OutFrame) == false)
-		{
-			SkinAnimations.erase(InAnimName.data());
-			CurrentEditAnimation = nullptr;
-			return nullptr;
-		}
-	}
-
-	auto& Frames = CurrentEditAnimation->Frames;
-	for (auto& Frame : Frames)
-	{
-		auto& PartDatas = Frame.PartDatas;
-		for (auto& Pair : PartDatas)
-		{
-			auto& PartData = Pair.second;
-			if (PartData.Uol.empty())
-				continue;
-
-			std::vector<std::string> Elements = CPath::RelativePathToTokens(PartData.Uol);
-			if (Elements.size() == 2)
-			{
-				const std::string_view RefAnimName = Elements[0];
-				const std::string_view RefPartName = Elements[1];
-				EWzPartType RefPartType = Wz::GetPartTypeByName(RefPartName);
-				if (RefPartType == EWzPartType::End)
-					continue;
-
-				TWzFrameData* RefSkinData = nullptr;
-				if (RefAnimName == "front")
-					RefSkinData = &FrontSkin;
-				else if (RefAnimName == "back")
-					RefSkinData = &BackSkin;
-				else
-					return nullptr;
-
-				TWzPartData& RefPartData = RefSkinData->PartDatas[RefPartType];
-				PartData.RefPartData = &RefPartData;
-			}
-			else
-			{
-				std::cout << "WzAnimation -> ParseWzCharacterAnimation Exception\n";
-				return nullptr;
-			}
-		}
-	}
-	CurrentEditAnimation = nullptr;
-
-	return &OutSkinAnimation;
-}
+//void CWzAnimationLoader::ParseWzDefaultSkinAnimation(const JValue& InValue, const std::string_view InAnimName)
+//{
+//	if (InValue.IsObject() == false)
+//		return;
+//	const auto& AnimObject = InValue.GetObject();
+//
+//	TWzFrameData* DefaultSkinData = nullptr;
+//	if (InAnimName == "front")
+//		DefaultSkinData = &FrontSkin;
+//	else if (InAnimName == "back")
+//		DefaultSkinData = &BackSkin;
+//	else
+//		return;
+//
+//	for (const auto& Anim : AnimObject)
+//	{
+//		const std::string_view Name = Anim.name.GetString();
+//		const auto& Value = Anim.value;
+//		EWzPartType PartType = Wz::GetPartTypeByName(Name);
+//		if (PartType == EWzPartType::End)
+//			continue;
+//
+//		DefaultSkinData->PartDatas.emplace(PartType, TWzPartData{});
+//		TWzPartData& PartData = DefaultSkinData->PartDatas.find(PartType)->second;
+//		ParsePart(Value, &PartData);
+//	}
+//}
+//
+//TWzAnimation* CWzAnimationLoader::ParseWzSkinAnimation(const JValue& InValue, const std::string_view InAnimName)
+//{
+//	if (InValue.IsObject() == false)
+//		return nullptr;
+//	const auto& AnimObject = InValue.GetObject();
+//
+//	auto Pair = SkinAnimations.emplace(InAnimName, TWzAnimation{});
+//	TWzAnimation& OutSkinAnimation = Pair.first->second;
+//	OutSkinAnimation.Frames.resize(AnimObject.MemberCount());
+//	OutSkinAnimation.AnimName = InAnimName;
+//
+//	CurrentEditAnimation = &OutSkinAnimation;
+//
+//	size_t i = 0;
+//	for (const auto& Frame : AnimObject)
+//	{
+//		const std::string_view FrameNumber = Frame.name.GetString();
+//		auto& OutFrame = OutSkinAnimation.Frames[i++];
+//		if (ParseFrame(Frame.value, &OutFrame) == false)
+//		{
+//			SkinAnimations.erase(InAnimName.data());
+//			CurrentEditAnimation = nullptr;
+//			return nullptr;
+//		}
+//	}
+//
+//	auto& Frames = CurrentEditAnimation->Frames;
+//	for (auto& Frame : Frames)
+//	{
+//		auto& PartDatas = Frame.PartDatas;
+//		for (auto& Pair : PartDatas)
+//		{
+//			auto& PartData = Pair.second;
+//			if (PartData.Uol.empty())
+//				continue;
+//
+//			std::vector<std::string> Elements = CPath::RelativePathToTokens(PartData.Uol);
+//			if (Elements.size() == 2)
+//			{
+//				const std::string_view RefAnimName = Elements[0];
+//				const std::string_view RefPartName = Elements[1];
+//				EWzPartType RefPartType = Wz::GetPartTypeByName(RefPartName);
+//				if (RefPartType == EWzPartType::End)
+//					continue;
+//
+//				TWzFrameData* RefSkinData = nullptr;
+//				if (RefAnimName == "front")
+//					RefSkinData = &FrontSkin;
+//				else if (RefAnimName == "back")
+//					RefSkinData = &BackSkin;
+//				else
+//					return nullptr;
+//
+//				TWzPartData& RefPartData = RefSkinData->PartDatas[RefPartType];
+//				PartData.RefPartData = &RefPartData;
+//			}
+//			else
+//			{
+//				std::cout << "WzAnimation -> ParseWzCharacterAnimation Exception\n";
+//				return nullptr;
+//			}
+//		}
+//	}
+//	CurrentEditAnimation = nullptr;
+//
+//	return &OutSkinAnimation;
+//}
 
 namespace Wz
 {

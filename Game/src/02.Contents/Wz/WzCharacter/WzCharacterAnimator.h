@@ -3,7 +3,6 @@
 
 #include "WzAnimation.h"
 
-
 class CWzCharacterAnimator : public CComponent
 {
 	GENERATE_OBJECT(CWzCharacterAnimator)

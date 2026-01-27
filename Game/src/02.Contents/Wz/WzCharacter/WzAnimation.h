@@ -22,8 +22,6 @@ public:
 
 public:
 	TWzAnimation* ParseWzCharacterAnimation(const JValue& InValue, const std::string_view InAnimName);
-	void ParseWzDefaultSkinAnimation(const JValue& InValue, const std::string_view InAnimName);
-	TWzAnimation* ParseWzSkinAnimation(const JValue& InValue, const std::string_view InAnimName);
 	TWzAnimation* FindCharacterAnimation(const std::string_view InAnimName)
 	{
 		auto Iter = CharacterAnimations.find(InAnimName);
@@ -43,9 +41,6 @@ private:
 
 private:
 	std::map<std::string, TWzAnimation, std::less<>> CharacterAnimations;
-	std::map<std::string, TWzAnimation, std::less<>> SkinAnimations;
-	TWzFrameData FrontSkin;
-	TWzFrameData BackSkin;
 
 	TWzAnimation* CurrentEditAnimation = nullptr;
 

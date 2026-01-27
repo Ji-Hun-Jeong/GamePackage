@@ -32,12 +32,7 @@ void CPlayer::BeginPlay()
 		SkillLoad::DeSerializeSkillData(*SkillValue, "24101000", &SkillData);
 	}*/
 
-	WzLoader.OpenWzData("resources/data/Character/Character.00012000.img.json");
-	JValue* Value = nullptr;
-	if (WzLoader.GetLoadData("front", &Value))
-		CWzAnimationLoader::GetInst().ParseWzDefaultSkinAnimation(*Value, "front");
-	if (WzLoader.GetLoadData("back", &Value))
-		CWzAnimationLoader::GetInst().ParseWzDefaultSkinAnimation(*Value, "back");
+	WzLoader.OpenWzData("resources/data/Character/Character.00002000.img.json");
 	
 	/*CharacterAnimator->AddAnimation(WzLoader, "walk1");
 	CharacterAnimator->AddAnimation(WzLoader, "walk2");
@@ -74,7 +69,7 @@ void CPlayer::CaptureSnapShot()
 			JValue* AnimValue;
 			if (WzLoader.GetLoadData(command, &AnimValue))
 			{
-				TWzAnimation* Anim = CWzAnimationLoader::GetInst().ParseWzSkinAnimation(*AnimValue, command);
+				TWzAnimation* Anim = CWzAnimationLoader::GetInst().ParseWzCharacterAnimation(*AnimValue, command);
 				if (Anim)
 					CharacterAnimator->AddAnimation(*Anim);
 			}
